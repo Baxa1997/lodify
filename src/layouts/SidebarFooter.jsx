@@ -1,8 +1,22 @@
-import {Box, Flex, Text} from "@chakra-ui/react";
+import {Box, Flex, Text, Button} from "@chakra-ui/react";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {authActions} from "../store/auth/auth.slice";
 import styles from "./AdminLayout.module.scss";
 import React from "react";
 
 const SidebarFooter = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userInfo = useSelector((state) => state?.auth?.userInfo);
+
+  const handleLogout = () => {
+    dispatch(authActions.logout());
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("refreshToken");
+    navigate("/login", {replace: true});
+  };
+
   return (
     <div className={styles.sidebarFooter}>
       <Flex p={"8px 12px"} gap={"8px"} h={"40px"} mb={"16px"}>
@@ -53,6 +67,24 @@ const SidebarFooter = () => {
           </Text>
         </Flex>
       </Flex>
+
+      <Button
+        onClick={handleLogout}
+        bg="transparent"
+        color="#94979C"
+        border="1px solid #22262F"
+        borderRadius="8px"
+        h="40px"
+        w="100%"
+        mt="12px"
+        _hover={{
+          bg: "rgba(255, 255, 255, 0.1)",
+          color: "#fff",
+        }}
+        fontSize="14px"
+        fontWeight="500">
+        Logout
+      </Button>
     </div>
   );
 };

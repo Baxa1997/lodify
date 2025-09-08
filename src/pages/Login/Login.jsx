@@ -1,31 +1,409 @@
-import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {useEffect, useMemo, useState} from "react";
+import {Link, useNavigate, useLocation} from "react-router-dom";
+import {useForm} from "react-hook-form";
 import styles from "./Auth.module.scss";
+import authService from "../../services/auth/authService";
+import {useQuery} from "react-query";
+import connectionService from "../../services/connectionService";
+import {authActions} from "../../store/auth/auth.slice";
+import {useDispatch, useSelector} from "react-redux";
+import {showAlert} from "../../store/alert/alert.thunk";
+import listToOptions from "../../utils/listTopOptions";
+import {loginAction} from "../../store/auth/auth.thunk";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isAuth = useSelector((state) => state?.auth?.isAuth);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUserId, setIsUserId] = useState();
+  const [companies, setCompanies] = useState([]);
+  const [connectionCheck, setConnectionCheck] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+    watch,
+    setValue,
+  } = useForm({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+    mode: "onChange",
+  });
+
+  const selectedCompanyID = watch("company_id");
+  const selectedProjectID = watch("project_id");
+  const selectedClientTypeID = watch("client_type");
+  const selectedEnvID = watch("environment_id");
+  const getFormValue = watch();
+
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (isAuth) {
+      const from = location.state?.from?.pathname || "/admin/dashboard";
+      navigate(from, {replace: true});
+    }
+  }, [isAuth, navigate, location.state]);
+
+  //=======COMPUTE COMPANIES
+  const computedCompanies = useMemo(() => {
+    return listToOptions(companies, "name");
+  }, [companies]);
+
+  //=======COMPUTE PROJECTS
+  const computedProjects = useMemo(() => {
+    const company = companies?.find(
+      (company) => company.id === selectedCompanyID
+    );
+    return listToOptions(company?.projects, "name");
+  }, [companies, selectedCompanyID]);
+
+  //=======COMPUTE ENVIRONMENTS
+  const computedEnvironments = useMemo(() => {
+    const company = companies?.find(
+      (company) => company.id === selectedCompanyID
+    );
+    const companyProject = company?.projects?.find(
+      (el) => el?.id === selectedProjectID
+    );
+
+    return companyProject?.resource_environments?.map((item) => ({
+      label: item?.name,
+      value: item?.environment_id,
+      access_type: item?.access_type,
+    }));
+  }, [selectedEnvID, companies, selectedProjectID]);
+
+  //======COMPUTE CLIENTTYPES
+  const computedClientTypes = useMemo(() => {
+    const company = companies?.find(
+      (company) => company.id === selectedCompanyID
+    );
+    const companyProject = company?.projects?.find(
+      (el) => el?.id === selectedProjectID
+    );
+
+    const companyEnvironment = companyProject?.resource_environments?.find(
+      (el) => el?.environment_id === selectedEnvID
+    );
+
+    return companyEnvironment?.client_types?.response?.map((item) => ({
+      label: item?.name,
+      value: item?.guid,
+    }));
+  }, [companies, selectedCompanyID, selectedEnvID, selectedProjectID]);
+
+  const {data: computedConnections = []} = useQuery(
+    [
+      "GET_CONNECTION_LIST",
+      {"project-id": selectedProjectID},
+      {"environment-id": selectedEnvID},
+      {"user-id": isUserId},
+    ],
+    () => {
+      return connectionService.getList(
+        {
+          "project-id": selectedProjectID,
+          client_type_id: selectedClientTypeID,
+          "user-id": isUserId,
+        },
+        {"environment-id": selectedEnvID}
+      );
+    },
+    {
+      enabled: !!selectedClientTypeID,
+      select: (res) => res.data.response ?? [],
+      onSuccess: (res) => {
+        computeConnections(res);
+        setConnectionCheck(true);
+      },
+      onError: () => {
+        setIsLoading(false);
+      },
+    }
+  );
+
+  const watchedValues = watch();
+  const isFormValid =
+    !errors.username &&
+    !errors.password &&
+    watchedValues.username &&
+    watchedValues.password;
+
+  const checkConnections = useMemo(() => {
+    if (getFormValue?.tables) {
+      const tableKeys = Object.keys(getFormValue.tables);
+      return tableKeys.every((key) => {
+        const item = getFormValue.tables[key];
+        return item?.object_id && item?.table_slug;
+      });
+    }
+    return false;
+  }, [getFormValue]);
+
+  const onSubmit = async (data) => {
+    getCompany(data);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const getCompany = (values) => {
     setIsLoading(true);
+    const data = {
+      password: values?.password ? values?.password : "",
+      username: values?.username ? values?.password : "",
+      ...values,
+    };
 
-    setTimeout(() => {
-      setIsLoading(false);
-      navigate("/admin/dashboard");
-    }, 1000);
+    authService
+      .multiCompanyLogin(data)
+      .then((res) => {
+        // setLoading(false);
+        if (res?.companies) {
+          setIsUserId(res?.user_id ?? "");
+          setCompanies(res?.companies ?? {});
+          computeCompanyElement(res?.companies ?? "");
+          localStorage.setItem(
+            "new_router",
+            res?.companies?.[0]?.projects?.[0]?.new_router || "false"
+          );
+          localStorage.setItem(
+            "newUi",
+            res?.companies?.[0]?.projects?.[0]?.new_design || false
+          );
+          res?.companies?.[0]?.projects?.[0]?.new_layout
+            ? localStorage.setItem("detailPage", "SidePeek")
+            : localStorage.setItem("detailPage", "");
+          localStorage.setItem(
+            "newLayout",
+            res?.companies?.[0]?.projects?.[0]?.new_layout || false
+          );
+        } else {
+          dispatch(showAlert("The company does not exist", "error"));
+        }
+        // if (index === 1) register(values);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        dispatch(showAlert(err?.data?.data));
+        setIsLoading(false);
+      });
   };
+  console.log("getFormValue", getFormValue);
+  const computeConnections = (connections) => {
+    const data = {
+      ...getFormValue,
+    };
+
+    if (
+      (Array.isArray(connections) && connections?.length === 0) ||
+      connections === undefined
+    ) {
+      if (
+        getFormValue?.username &&
+        getFormValue?.password &&
+        getFormValue?.client_type &&
+        getFormValue?.project_id &&
+        getFormValue?.environment_id
+      ) {
+        onSubmitDialog(data);
+      } else if (getFormValue?.firebase) {
+        onSubmitDialog(data);
+      } else if (googleAuth?.type === "google" && googleAuth?.google_token) {
+        onSubmitDialog(data);
+      } else if (
+        !getFormValue?.username ||
+        !getFormValue?.password ||
+        !getFormValue?.company_id ||
+        !getFormValue?.project_id ||
+        !getFormValue?.environment_id ||
+        !getFormValue?.client_type
+      ) {
+      }
+    } else if (Array.isArray(connections) && connections?.length > 0) {
+      if (
+        getFormValue?.username &&
+        getFormValue?.password &&
+        getFormValue?.client_type &&
+        getFormValue?.project_id &&
+        getFormValue?.environment_id &&
+        checkConnections
+      ) {
+        onSubmitDialog(getFormValue);
+      } else {
+        if (connections?.length > 1) {
+          // handleClickOpen();
+        }
+      }
+    }
+  };
+
+  const computeCompanyElement = (company) => {
+    const validLength = company?.length === 1;
+    if (validLength) {
+      setValue("company_id", company?.[0]?.id);
+    } else {
+      setValue("company_id", company?.[0]?.id);
+    }
+    if (validLength) {
+      if (company?.[0]?.projects?.length === 1) {
+        setValue("project_id", company?.[0]?.projects?.[0]?.id);
+      }
+    } else {
+      setValue("project_id", company?.[0]?.projects?.[0]?.id);
+    }
+
+    if (validLength) {
+      if (company?.[0]?.projects?.length === 1) {
+        if (company?.[0]?.projects?.[0]?.resource_environments?.length === 1) {
+          setValue(
+            "environment_id",
+            company?.[0]?.projects?.[0]?.resource_environments?.[0]
+              ?.environment_id
+          );
+        }
+      }
+    } else {
+      setValue(
+        "environment_id",
+        company?.[0]?.projects?.[0]?.resource_environments?.[0]?.environment_id
+      );
+    }
+
+    if (validLength) {
+      if (company?.[0]?.projects?.length === 1) {
+        if (company?.[0]?.projects?.[0]?.resource_environments?.length === 1) {
+          if (
+            company?.[0]?.projects?.[0]?.resource_environments?.[0]
+              ?.client_types?.response?.length === 1
+          ) {
+            setValue(
+              "client_type",
+              company?.[0]?.projects?.[0]?.resource_environments?.[0]
+                ?.client_types?.response?.[0]?.guid
+            );
+          } else if (
+            company?.[0]?.projects?.[0]?.resource_environments?.[0]
+              ?.client_types?.response?.length > 1
+          ) {
+            setValue(
+              "client_type",
+              company?.[0]?.projects?.[0]?.resource_environments?.[0]
+                ?.client_types?.response?.[0]?.guid
+            );
+          }
+        }
+      }
+    } else {
+      if (company?.[0]?.projects?.length === 1) {
+        if (company?.[0]?.projects?.[0]?.resource_environments?.length === 1) {
+          if (
+            company?.[0]?.projects?.[0]?.resource_environments?.[0]
+              ?.client_types?.response?.length === 1
+          ) {
+            setValue(
+              "client_type",
+              company?.[0]?.projects?.[0]?.resource_environments?.[0]
+                ?.client_types?.response?.[0]?.guid
+            );
+          }
+        }
+      }
+    }
+  };
+
+  const onSubmitDialog = (values) => {
+    const data = {
+      ...values,
+      type: values?.phone
+        ? "phone"
+        : values?.email
+        ? "email"
+        : values?.type === "google"
+        ? "google"
+        : undefined,
+    };
+    const computedProject = companies[0]?.projects
+      ?.find((item) => item?.id === selectedProjectID)
+      ?.resource_environments?.map((el) => el?.environment_id);
+    const computedEnv = computedEnvironments?.find(
+      (item) => item?.value === selectedEnvID
+    );
+
+    dispatch(authActions.setStatus(computedEnv?.access_type));
+    dispatch(
+      loginAction({
+        ...data,
+        environment_ids: computedProject,
+      })
+    );
+  };
+
+  const setCompanyId = () => {
+    setValue("company_id", computedCompanies?.[0]?.value);
+    setValue("project_id", computedProjects?.[0]?.value);
+  };
+
+  useEffect(() => {
+    if (computedConnections?.length > 0) {
+      computedConnections.forEach((connection, index) => {
+        if (connection?.options?.length === 1) {
+          setValue(`tables[${index}].object_id`, connection?.options[0]?.guid);
+          setSelectedCollection(connection.options[0]?.value);
+          setValue(`tables[${index}].table_slug`, connection?.table_slug);
+        } else {
+          handleClickOpen();
+        }
+      });
+    }
+  }, [computedConnections]);
+
+  useEffect(() => {
+    if (computedCompanies?.length === 1) {
+      setValue("company_id", computedCompanies?.[0]?.value);
+    } else {
+      setValue("company_id", computedCompanies?.[0]?.value);
+    }
+    if (computedProjects?.length === 1) {
+      setValue("project_id", computedProjects?.[0]?.value);
+    }
+    if (computedEnvironments?.length === 1) {
+      setValue("environment_id", computedEnvironments?.[0]?.value);
+    }
+    if (computedClientTypes?.length === 1) {
+      setValue("client_type", computedClientTypes?.[0]?.value);
+    }
+  }, [
+    computedCompanies,
+    computedProjects,
+    computedEnvironments,
+    computedClientTypes,
+  ]);
+
+  useEffect(() => {
+    const shouldOpen =
+      computedCompanies?.length > 1 ||
+      computedProjects?.length > 1 ||
+      computedEnvironments?.length > 1 ||
+      computedClientTypes?.length > 1;
+
+    if (shouldOpen) {
+      setCompanyId();
+    }
+  }, [
+    computedCompanies,
+    computedProjects,
+    computedEnvironments,
+    computedClientTypes,
+  ]);
+
+  useEffect(() => {
+    if (connectionCheck && getFormValue?.tables) {
+      computeConnections(getFormValue?.tables);
+    }
+  }, [connectionCheck, getFormValue?.tables]);
 
   return (
     <div className={styles.authContainer}>
@@ -35,18 +413,36 @@ const Login = () => {
           <p>Sign in to your admin account</p>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.authForm}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.authForm}>
           <div className={styles.formGroup}>
-            <label htmlFor="email">Login</label>
+            <label htmlFor="username">Login</label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder="Enter your email"
+              type="text"
+              id="username"
+              placeholder="Enter your Username"
+              className={errors.username ? "error" : ""}
+              {...register("username", {
+                required: "Username is required",
+                minLength: {
+                  value: 3,
+                  message: "Username must be at least 3 characters",
+                },
+                maxLength: {
+                  value: 50,
+                  message: "Username must be less than 50 characters",
+                },
+                pattern: {
+                  value: /^[a-zA-Z0-9_@.-]+$/,
+                  message:
+                    "Username can only contain letters, numbers, and @._-",
+                },
+              })}
             />
+            {errors.username && (
+              <span className={styles.errorMessage}>
+                {errors.username.message}
+              </span>
+            )}
           </div>
 
           <div className={styles.formGroup}>
@@ -54,17 +450,30 @@ const Login = () => {
             <input
               type="password"
               id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
               placeholder="Enter your password"
+              className={errors.password ? "error" : ""}
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+                maxLength: {
+                  value: 100,
+                  message: "Password must be less than 100 characters",
+                },
+              })}
             />
+            {errors.password && (
+              <span className={styles.errorMessage}>
+                {errors.password.message}
+              </span>
+            )}
           </div>
 
           <div className={styles.formOptions}>
             <label className={styles.checkboxLabel}>
-              <input type="checkbox" />
+              <input type="checkbox" {...register("rememberMe")} />
               <span>Remember me</span>
             </label>
             <Link to="/forgot-password" className={styles.forgotLink}>
@@ -75,7 +484,7 @@ const Login = () => {
           <button
             type="submit"
             className={styles.authButton}
-            disabled={isLoading}>
+            disabled={isLoading || !isFormValid}>
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>

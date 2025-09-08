@@ -84,6 +84,19 @@ $border-radius-lg: 12px;
       background: $white;
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
+
+    &.error {
+      border-color: #e53e3e;
+      box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+    }
+  }
+
+  .errorMessage {
+    color: #e53e3e;
+    font-size: 14px;
+    margin-top: 4px;
+    display: block;
+    font-weight: 500;
   }
 }
 

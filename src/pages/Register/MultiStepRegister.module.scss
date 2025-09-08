@@ -1,0 +1,468 @@
+// Multi-Step Registration Styles
+$primary-color: #3b82f6;
+$primary-hover: #2563eb;
+$success-color: #10b981;
+$text-primary: #1e293b;
+$text-secondary: #374151;
+$text-muted: #64748b;
+$background-light: #f8fafc;
+$white: white;
+$border-color: #e2e8f0;
+$disabled-bg: #e2e8f0;
+$disabled-text: #9ca3af;
+$sidebar-bg: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+$sidebar-text: #cbd5e1;
+$sidebar-text-muted: #94a3b8;
+$border-radius: 8px;
+$border-radius-lg: 12px;
+$shadow-light: 0 4px 20px rgba(0, 0, 0, 0.1);
+$shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
+
+.multiStepContainer {
+  display: flex;
+  min-height: 100vh;
+  // background-color: $background-light;
+}
+
+// Sidebar Styles
+.sidebar {
+  width: 300px;
+  background: $sidebar-bg;
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 30px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0px 0;
+  position: relative;
+
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 40px;
+    width: 2px;
+    height: 20px;
+    background: #3a3d42;
+    z-index: 1;
+  }
+
+  .stepIndicator {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    background: #2d3035;
+    color: $white;
+    border: 2px solid #3a3d42;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #606468;
+      transition: all 0.3s ease;
+    }
+  }
+
+  .stepTitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: $sidebar-text;
+    transition: color 0.3s ease;
+  }
+
+  &.active {
+    .stepIndicator {
+      background: #4285f4;
+      border: 2px solid #3a7ae0;
+      outline: 3px solid #3a7ae0;
+      outline-offset: 3px;
+
+      &::before {
+        background: $white;
+        width: 11px;
+        height: 11px;
+      }
+    }
+
+    .stepTitle {
+      color: $white;
+    }
+  }
+
+  &.completed {
+    .stepIndicator {
+      background: #2d3035;
+      border: 2px solid #3a3d42;
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+
+      &::before {
+        background: #606468;
+      }
+    }
+
+    .stepTitle {
+      color: $sidebar-text;
+    }
+  }
+}
+
+.sidebarFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: $sidebar-text-muted;
+  margin-top: 40px;
+}
+
+.footerLeft,
+.footerRight {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 500px;
+  background: $white;
+  border-radius: $border-radius-lg;
+  padding: 40px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: 16px;
+    margin: 0 0 30px 0;
+  }
+}
+
+.stepContent {
+  margin-bottom: 30px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-secondary;
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid $border-color;
+    border-radius: $border-radius;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    background: $white;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+
+  small {
+    display: block;
+    color: $text-muted;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.inputWithDropdown {
+  position: relative;
+
+  input {
+    padding-right: 40px;
+  }
+}
+
+.dropdownIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $text-muted;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+// Verification Styles
+.verificationContent {
+  text-align: center;
+
+  h3 {
+    font-size: 30px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: 16px;
+    margin: 0 0 30px 0;
+  }
+}
+
+.verificationContentOtp {
+  width: 360px;
+  margin: 0 auto;
+}
+
+.verificationIcon {
+  font-size: 48px;
+}
+
+.verificationCode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 30px;
+  width: 100%;
+
+  input {
+    width: 80px;
+    height: 80px;
+    border: 2px solid $border-color;
+    border-radius: $border-radius;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    background: $background-light;
+
+    &:focus {
+      border-color: $primary-color;
+      background: $white;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+}
+
+.verifyBtn {
+  width: 100%;
+  background: $primary-color;
+  color: $white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: $border-radius;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+
+  &:hover {
+    background: $primary-hover;
+    transform: translateY(-1px);
+    box-shadow: $shadow-button;
+  }
+}
+
+.resendText {
+  color: $text-muted;
+  font-size: 14px;
+  margin: 0;
+}
+
+.resendLink {
+  color: $primary-color;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: $primary-hover;
+  }
+}
+
+// Button Styles
+.continueBtn {
+  width: 100%;
+  padding: 14px 24px;
+  background: $primary-color;
+  color: $white;
+  border: none;
+  border-radius: $border-radius;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 30px;
+
+  &:hover:not(:disabled) {
+    background: $primary-hover;
+    transform: translateY(-1px);
+    box-shadow: $shadow-button;
+  }
+
+  &:disabled {
+    background: $disabled-bg;
+    color: $disabled-text;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Step Dots
+.stepDots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $border-color;
+  transition: background-color 0.3s ease;
+
+  &.active {
+    background: $primary-color;
+  }
+}
+
+// Back Link
+.backLink {
+  text-align: center;
+
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .multiStepContainer {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 20px;
+    min-height: auto;
+  }
+
+  .steps {
+    flex-direction: row;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .step {
+    flex-direction: column;
+    text-align: center;
+    min-width: 100px;
+
+    .stepTitle {
+      font-size: 12px;
+      text-align: center;
+    }
+  }
+
+  .mainContent {
+    padding: 20px;
+  }
+
+  .formContainer {
+    padding: 30px 20px;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .verificationCode {
+    gap: 8px;
+
+    input {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .formContainer {
+    padding: 20px 15px;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .verificationCode {
+    input {
+      width: 45px;
+      height: 45px;
+      font-size: 18px;
+    }
+  }
+}

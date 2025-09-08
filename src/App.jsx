@@ -89,7 +89,7 @@ function App() {
             isAuth ? (
               <Navigate to="/admin/dashboard" replace />
             ) : (
-              <Navigate to="/role-selection" replace />
+              <Navigate to="/login" replace />
             )
           }
         />

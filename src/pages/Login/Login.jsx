@@ -3,7 +3,7 @@ import {Link, useNavigate, useLocation} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import styles from "./Auth.module.scss";
 import authService from "../../services/auth/authService";
-import {useQuery} from "react-query";
+import {useQuery} from "@tanstack/react-query";
 import connectionService from "../../services/connectionService";
 import {authActions} from "../../store/auth/auth.slice";
 import {useDispatch, useSelector} from "react-redux";
@@ -41,7 +41,6 @@ const Login = () => {
   const selectedEnvID = watch("environment_id");
   const getFormValue = watch();
 
-  // Redirect to dashboard if already authenticated
   useEffect(() => {
     if (isAuth) {
       const from = location.state?.from?.pathname || "/admin/dashboard";
@@ -97,14 +96,18 @@ const Login = () => {
     }));
   }, [companies, selectedCompanyID, selectedEnvID, selectedProjectID]);
 
-  const {data: computedConnections = []} = useQuery(
-    [
+  const {
+    data: computedConnections = [],
+    isSuccess,
+    isError,
+  } = useQuery({
+    queryKey: [
       "GET_CONNECTION_LIST",
       {"project-id": selectedProjectID},
       {"environment-id": selectedEnvID},
       {"user-id": isUserId},
     ],
-    () => {
+    queryFn: () => {
       return connectionService.getList(
         {
           "project-id": selectedProjectID,
@@ -114,18 +117,22 @@ const Login = () => {
         {"environment-id": selectedEnvID}
       );
     },
-    {
-      enabled: !!selectedClientTypeID,
-      select: (res) => res.data.response ?? [],
-      onSuccess: (res) => {
-        computeConnections(res);
-        setConnectionCheck(true);
-      },
-      onError: () => {
-        setIsLoading(false);
-      },
+    enabled: !!selectedClientTypeID,
+    select: (res) => res.data.response ?? [],
+  });
+
+  useEffect(() => {
+    if (isSuccess && computedConnections) {
+      computeConnections(computedConnections);
+      setConnectionCheck(true);
     }
-  );
+  }, [isSuccess, computedConnections]);
+
+  useEffect(() => {
+    if (isError) {
+      setIsLoading(false);
+    }
+  }, [isError]);
 
   const watchedValues = watch();
   const isFormValid =

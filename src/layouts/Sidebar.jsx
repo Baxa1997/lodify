@@ -1,0 +1,101 @@
+import React, {useState} from "react";
+import {menuItems} from "../utils/menuItems";
+import styles from "./AdminLayout.module.scss";
+import {useNavigate, useLocation} from "react-router-dom";
+import SidebarFooter from "./SidebarFooter";
+
+const Sidebar = ({sidebarOpen = false, searchValue = ""}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [expandedItems, setExpandedItems] = useState(new Set());
+
+  const isActiveRoute = (path) => {
+    return location.pathname === path;
+  };
+
+  const toggleExpanded = (itemId) => {
+    setExpandedItems((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(itemId)) {
+        newSet.delete(itemId);
+      } else {
+        newSet.add(itemId);
+      }
+      return newSet;
+    });
+  };
+
+  const filteredMenuItems = menuItems.filter((item) =>
+    item?.label.toLowerCase().includes(searchValue.toLowerCase())
+  );
+  return (
+    <>
+      <nav className={styles.sidebarNav}>
+        <ul className={styles.navList}>
+          {filteredMenuItems.map((item) => {
+            const hasChildren = item.children && item.children.length > 0;
+            const isExpanded = expandedItems.has(item.id);
+            const isActive =
+              isActiveRoute(item.path) ||
+              (hasChildren &&
+                item.children.some((child) => isActiveRoute(child.path)));
+
+            return (
+              <li key={item.id} className={styles.navItem}>
+                <button
+                  className={`${styles.navLink} ${
+                    isActive ? styles.active : ""
+                  }`}
+                  onClick={() => {
+                    if (hasChildren) {
+                      toggleExpanded(item.id);
+                    } else {
+                      navigate(item.path);
+                    }
+                  }}>
+                  <span className={styles.navIcon}>
+                    <img src={item.icon} alt="" />
+                  </span>
+                  {sidebarOpen && (
+                    <span className={styles.navLabel}>{item.label}</span>
+                  )}
+                  {sidebarOpen && hasChildren && (
+                    <span
+                      className={`${styles.accordionIcon} ${
+                        isExpanded ? styles.expanded : ""
+                      }`}>
+                      <img src="/img/iconDown.svg" alt="" />
+                    </span>
+                  )}
+                </button>
+
+                {hasChildren && sidebarOpen && (
+                  <ul
+                    className={`${styles.subNavList} ${
+                      isExpanded ? styles.expanded : ""
+                    }`}>
+                    {item.children.map((child) => (
+                      <li key={child.id} className={styles.subNavItem}>
+                        <button
+                          className={`${styles.navLink} ${styles.subNavLink} ${
+                            isActiveRoute(child.path) ? styles.active : ""
+                          }`}
+                          onClick={() => navigate(child.path)}>
+                          <span className={styles.navLabel}>{child.label}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <SidebarFooter />
+    </>
+  );
+};
+
+export default Sidebar;

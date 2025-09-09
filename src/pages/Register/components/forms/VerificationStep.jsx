@@ -46,7 +46,7 @@ const VerificationStep = ({watch, setValue}) => {
         }
       )
       .then((res) => {
-        console.log("resresres", res);
+        console.log("resresressss", res);
       });
   };
 

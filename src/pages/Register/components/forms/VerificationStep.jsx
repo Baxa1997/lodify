@@ -35,16 +35,20 @@ const VerificationStep = ({watch, setValue}) => {
   };
 
   const handleVerify = () => {
-    authService.verifyCode(
-      smsId,
-      otp,
-      {
-        provider: "mail",
-      },
-      {
-        project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
-      }
-    );
+    authService
+      .verifyCode(
+        smsId,
+        otp,
+        {
+          provider: "mail",
+        },
+        {
+          project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
+        }
+      )
+      .then((res) => {
+        console.log("resresres", res);
+      });
   };
 
   const isOtpComplete = otp.length === 4;

@@ -1,13 +1,12 @@
-// Multi-Step Registration Styles
 $primary-color: #3b82f6;
 $primary-hover: #2563eb;
 $success-color: #10b981;
 $text-primary: #1e293b;
-$text-secondary: #374151;
+$text-secondary: #414651;
 $text-muted: #64748b;
 $background-light: #f8fafc;
 $white: white;
-$border-color: #e2e8f0;
+$border-color: #d5d7da;
 $disabled-bg: #e2e8f0;
 $disabled-text: #9ca3af;
 $sidebar-bg: linear-gradient(180deg, #1e293b 0%, #334155 100%);
@@ -21,10 +20,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 .multiStepContainer {
   display: flex;
   min-height: 100vh;
-  // background-color: $background-light;
 }
 
-// Sidebar Styles
 .sidebar {
   width: 300px;
   background: $sidebar-bg;
@@ -55,8 +52,13 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     top: 40px;
     width: 2px;
     height: 20px;
-    background: #3a3d42;
+    background: #3b82f6;
     z-index: 1;
+    transition: background 0.3s ease;
+  }
+
+  &.pending:not(:last-child)::after {
+    background: #9ca3af;
   }
 
   .stepIndicator {
@@ -68,23 +70,30 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     justify-content: center;
     font-size: 12px;
     font-weight: 600;
-    background: #2d3035;
-    color: $white;
-    border: 2px solid #3a3d42;
     transition: all 0.3s ease;
     position: relative;
     z-index: 2;
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
 
-    &::before {
-      content: "";
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #606468;
-      transition: all 0.3s ease;
-    }
+  .checkmark {
+    color: $white;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .activeDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: $white;
+  }
+
+  .pendingDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #9ca3af;
   }
 
   .stepTitle {
@@ -96,16 +105,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
   &.active {
     .stepIndicator {
-      background: #4285f4;
-      border: 2px solid #3a7ae0;
-      outline: 3px solid #3a7ae0;
-      outline-offset: 3px;
-
-      &::before {
-        background: $white;
-        width: 11px;
-        height: 11px;
-      }
+      background: #3b82f6;
+      border: 2px solid #3b82f6;
     }
 
     .stepTitle {
@@ -115,17 +116,32 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
   &.completed {
     .stepIndicator {
-      background: #2d3035;
-      border: 2px solid #3a3d42;
-      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+      background: #3b82f6;
+      border: 2px solid #3b82f6;
+    }
 
-      &::before {
-        background: #606468;
-      }
+    .stepTitle {
+      color: $white;
+    }
+  }
+
+  &.pending {
+    .stepIndicator {
+      background: transparent;
+      border: 2px solid #9ca3af;
     }
 
     .stepTitle {
       color: $sidebar-text;
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+
+    .stepTitle {
+      color: #6b7280;
     }
   }
 }
@@ -176,7 +192,9 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .stepContent {
-  margin-bottom: 30px;
+  p {
+    margin-bottom: 24px;
+  }
 }
 
 .formGroup {
@@ -190,10 +208,23 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     margin-bottom: 6px;
   }
 
+  .formLabel {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-secondary;
+    margin-bottom: 6px;
+
+    span {
+      color: #1570ef;
+    }
+  }
+
   input {
+    height: 44px;
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid $border-color;
+    padding: 10px 14px;
+    border: 1px solid $border-color;
     border-radius: $border-radius;
     font-size: 16px;
     transition: all 0.2s ease;
@@ -238,8 +269,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   pointer-events: none;
 }
 
-// Verification Styles
 .verificationContent {
+  width: 360px;
   text-align: center;
 
   h3 {
@@ -263,16 +294,25 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
 .verificationIcon {
   font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .verificationCode {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
   justify-content: center;
   margin-bottom: 30px;
   width: 100%;
+  gap: 4px !important;
+
+  div {
+    width: 360px;
+    gap: 4px !important;
+  }
 
   input {
     width: 80px;

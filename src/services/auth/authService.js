@@ -10,9 +10,10 @@ const authService = {
   register: (data) => requestAuth.post("/company", data),
   refreshToken: (data, params) => requestV2.put(`v2/refresh`, data, {params}),
   updateToken: (data, params) => requestV2.put(`v2/refresh`, data, {params}),
-  verifyCode: (sms_id, otp, data) =>
-    requestAuth.post(`/verify/${sms_id}/${otp}`, data),
+  verifyCode: (sms_id, otp, data, params) =>
+    requestAuth.post(`v2/auth/verify/${sms_id}/${otp}`, data, {params}),
   sendAccessToken: (data) => requestAuth.post(`v2/auth/logout`, data),
+  sendCode: (data, params) => requestAuth.post(`v2/send-code`, data, {params}),
 };
 
 export default authService;

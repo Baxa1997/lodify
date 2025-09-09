@@ -412,7 +412,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 // Button Styles
 .continueBtn {
   width: 360px;
-  padding: 14px 24px;
+  height: 44px;
+  padding: 0 24px;
   background: $primary-color;
   color: $white;
   border: none;
@@ -422,6 +423,9 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover:not(:disabled) {
     background: $primary-hover;

@@ -46,41 +46,44 @@ const RegisterForm = ({
           />
 
           {currentStep < 4 && (
-            <Button
-              type="button"
-              className={styles.continueBtn}
-              onClick={onNext}
-              disabled={isLoading || !getStepValidation(currentStep)}
-              width="360px"
-              padding="14px 24px"
-              background="#3b82f6"
-              color="white"
-              border="none"
-              borderRadius="8px"
-              fontSize="16px"
-              fontWeight="600"
-              cursor="pointer"
-              transition="all 0.2s ease"
-              marginBottom="30px"
-              _hover={{
-                background: "#2563eb",
-                transform: "translateY(-1px)",
-                boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
-              }}
-              _disabled={{
-                background: "#e2e8f0",
-                color: "#9ca3af",
-                cursor: "not-allowed",
-                transform: "none",
-              }}>
-              {isLoading
-                ? "Loading..."
-                : `Continue ${
-                    !getStepValidation(currentStep)
-                      ? "(Fill required fields)"
-                      : ""
-                  }`}
-            </Button>
+            <Box display="flex" justifyContent="center" width="100%">
+              <Button
+                type="button"
+                className={styles.continueBtn}
+                onClick={onNext}
+                disabled={isLoading || !getStepValidation(currentStep)}
+                width="360px"
+                height="44px"
+                padding="0 24px"
+                background="#3b82f6"
+                color="white"
+                border="none"
+                borderRadius="8px"
+                fontSize="16px"
+                fontWeight="600"
+                cursor="pointer"
+                transition="all 0.2s ease"
+                marginBottom="30px"
+                _hover={{
+                  background: "#2563eb",
+                  transform: "translateY(-1px)",
+                  boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
+                }}
+                _disabled={{
+                  background: "#e2e8f0",
+                  color: "#9ca3af",
+                  cursor: "not-allowed",
+                  transform: "none",
+                }}>
+                {isLoading
+                  ? "Loading..."
+                  : `Continue ${
+                      !getStepValidation(currentStep)
+                        ? "(Fill required fields)"
+                        : ""
+                    }`}
+              </Button>
+            </Box>
           )}
         </Box>
 

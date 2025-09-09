@@ -243,7 +243,6 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 }
 
-// Resend Text
 .resendText {
   color: $text-muted;
   font-size: 14px;
@@ -260,7 +259,6 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 }
 
-// Step Dots
 .stepDots {
   display: flex;
   justify-content: center;
@@ -280,7 +278,6 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 }
 
-// Back Link
 .backLink {
   text-align: center;
 
@@ -296,7 +293,6 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 }
 
-// Responsive Design
 @media (max-width: 768px) {
   .phoneVerificationContainer {
     flex-direction: column;

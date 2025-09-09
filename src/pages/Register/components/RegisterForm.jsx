@@ -36,7 +36,7 @@ const RegisterForm = ({
           </>
         )}
 
-        <Box as="form" onSubmit={handleSubmit}>
+        <Box width="100%" as="form" onSubmit={handleSubmit}>
           <StepRenderer
             currentStep={currentStep}
             register={register}

@@ -61,7 +61,6 @@ const Register = () => {
   };
 
   const validateStep3 = (data) => {
-    // Only check email field since the form accepts either email or phone in one field
     return data.email && data.email.trim() !== "";
   };
 
@@ -86,7 +85,6 @@ const Register = () => {
       }
     })();
 
-    // Debug logging for step 3 (email validation)
     if (step === 3) {
       console.log("Step 3 validation debug:", {
         email: data.email,

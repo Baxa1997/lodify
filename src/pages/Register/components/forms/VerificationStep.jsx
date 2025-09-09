@@ -14,7 +14,7 @@ const VerificationStep = ({watch, setValue}) => {
       return authService.sendCode(
         {
           type: "MAILCHIMP",
-          recipient: watch("email"),
+          recipient: "info@u-code.io",
           sms_template_id: "4b73c53e-df0b-4f24-8d24-e7f03d858cda",
           field_slug: "text",
           variables: {},
@@ -28,7 +28,6 @@ const VerificationStep = ({watch, setValue}) => {
     select: (res) => res?.sms_id,
   });
 
-  console.log("smsId", smsId);
   const handleOtpChange = (value) => {
     setOtp(value);
     setValue("emailCode", value);
@@ -38,9 +37,9 @@ const VerificationStep = ({watch, setValue}) => {
     authService
       .verifyCode(
         smsId,
-        otp,
         {
-          provider: "mail",
+          provider: "email",
+          otp: otp,
         },
         {
           project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",

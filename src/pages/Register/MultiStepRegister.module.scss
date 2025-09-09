@@ -186,23 +186,37 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     font-weight: 700;
     color: $text-primary;
     margin: 0 0 8px 0;
+    text-align: center;
   }
 
   p {
     color: $text-muted;
     font-size: 16px;
     margin: 0 0 30px 0;
+    text-align: center;
   }
 }
 
 .stepContent {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+
   p {
     margin-bottom: 24px;
+    text-align: center;
   }
 }
 
 .formGroup {
   margin-bottom: 20px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   label {
     display: block;
@@ -210,6 +224,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     font-weight: 500;
     color: $text-secondary;
     margin-bottom: 6px;
+    text-align: left;
+    width: 100%;
   }
 
   .formLabel {
@@ -218,6 +234,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     font-weight: 500;
     color: $text-secondary;
     margin-bottom: 6px;
+    text-align: left;
+    width: 100%;
 
     span {
       color: #1570ef;
@@ -226,7 +244,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
   input {
     height: 44px;
-    width: 100%;
+    width: 360px;
     padding: 10px 14px;
     border: 1px solid $border-color;
     border-radius: $border-radius;
@@ -246,6 +264,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     color: $text-muted;
     font-size: 12px;
     margin-top: 4px;
+    text-align: left;
+    width: 100%;
   }
 }
 
@@ -253,6 +273,16 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  width: 360px;
+  margin: 0 auto;
+
+  .formGroup {
+    width: 100%;
+    
+    input {
+      width: 100%;
+    }
+  }
 }
 
 .inputWithDropdown {
@@ -276,6 +306,11 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 .verificationContent {
   width: 360px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 
   h3 {
     font-size: 30px;
@@ -308,14 +343,16 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  justify-content: center;
   margin-bottom: 30px;
-  width: 100%;
+  width: 360px;
   gap: 4px !important;
+  margin: 0 auto 30px auto;
 
   div {
     width: 360px;
     gap: 4px !important;
+    display: flex;
+    justify-content: center;
   }
 
   input {
@@ -337,7 +374,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .verifyBtn {
-  width: 100%;
+  width: 360px;
   background: $primary-color;
   color: $white;
   border: none;
@@ -374,7 +411,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
 // Button Styles
 .continueBtn {
-  width: 100%;
+  width: 360px;
   padding: 14px 24px;
   background: $primary-color;
   color: $white;
@@ -478,18 +515,64 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
   }
 
+  .stepContent {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .formGroup {
+    width: 100%;
+    max-width: 360px;
+
+    input {
+      width: 100%;
+    }
+  }
+
   .formRow {
     grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 360px;
+
+    .formGroup {
+      width: 100%;
+      
+      input {
+        width: 100%;
+      }
+    }
+  }
+
+  .verificationContent {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .verificationContentOtp {
+    width: 100%;
+    max-width: 360px;
   }
 
   .verificationCode {
+    width: 100%;
+    max-width: 360px;
     gap: 8px;
+
+    div {
+      width: 100%;
+    }
 
     input {
       width: 50px;
       height: 50px;
       font-size: 20px;
     }
+  }
+
+  .verifyBtn,
+  .continueBtn {
+    width: 100%;
+    max-width: 360px;
   }
 }
 
@@ -502,11 +585,61 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
   }
 
+  .stepContent {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .formGroup {
+    width: 100%;
+    max-width: 360px;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  .formRow {
+    width: 100%;
+    max-width: 360px;
+
+    .formGroup {
+      width: 100%;
+      
+      input {
+        width: 100%;
+      }
+    }
+  }
+
+  .verificationContent {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .verificationContentOtp {
+    width: 100%;
+    max-width: 360px;
+  }
+
   .verificationCode {
+    width: 100%;
+    max-width: 360px;
+
+    div {
+      width: 100%;
+    }
+
     input {
       width: 45px;
       height: 45px;
       font-size: 18px;
     }
+  }
+
+  .verifyBtn,
+  .continueBtn {
+    width: 100%;
+    max-width: 360px;
   }
 }

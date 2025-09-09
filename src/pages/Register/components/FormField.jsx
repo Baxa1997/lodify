@@ -32,7 +32,7 @@ const FormField = ({
           errorBorderColor="#e53e3e"
           className={styles.formInput}
           sx={{
-            width: "100%",
+            width: "360px",
             padding: hasDropdown ? "12px 40px 12px 16px" : "12px 16px",
             border: "2px solid #e2e8f0",
             borderRadius: "8px",

@@ -6,7 +6,8 @@ const authService = {
     requestV2.post(`v2/login`, data, {
       headers: {"environment-id": data.environment_id},
     }),
-  multiCompanyLogin: (data) => requestAuth.post("v2/multi-company/login", data),
+  multiCompanyLogin: (data, params) =>
+    requestAuth.post("v2/multi-company/login", data, {params}),
   register: (data) => requestAuth.post("/company", data),
   refreshToken: (data, params) => requestV2.put(`v2/refresh`, data, {params}),
   updateToken: (data, params) => requestV2.put(`v2/refresh`, data, {params}),

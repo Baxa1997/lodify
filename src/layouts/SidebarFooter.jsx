@@ -8,7 +8,6 @@ import React from "react";
 const SidebarFooter = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userInfo = useSelector((state) => state?.auth?.userInfo);
 
   const handleLogout = () => {
     dispatch(authActions.logout());

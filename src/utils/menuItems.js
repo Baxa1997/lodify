@@ -15,7 +15,7 @@ export const menuItems = [
     id: "user",
     label: "User",
     icon: "/img/user.svg",
-    path: "#",
+    path: "/admin/users",
   },
   {
     id: "resources",

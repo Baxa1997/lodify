@@ -165,9 +165,10 @@ const Login = () => {
     };
 
     authService
-      .multiCompanyLogin(data)
+      .multiCompanyLogin(data, {
+        project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
+      })
       .then((res) => {
-        // setLoading(false);
         if (res?.companies) {
           setIsUserId(res?.user_id ?? "");
           setCompanies(res?.companies ?? {});
@@ -190,7 +191,6 @@ const Login = () => {
         } else {
           dispatch(showAlert("The company does not exist", "error"));
         }
-        // if (index === 1) register(values);
       })
       .catch((err) => {
         console.log("err", err);

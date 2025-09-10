@@ -1,13 +1,23 @@
-import React from "react";
+import React, {lazy, Suspense} from "react";
 import {Routes, Route, Navigate, useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
-import Login from "../pages/Login/Login";
-import RoleSelection from "../pages/RoleSelection/RoleSelection";
-import Register from "../pages/Register/Register";
-import PhoneVerification from "../pages/PhoneVerification/PhoneVerification";
+import LoadingSpinner from "../components/LoadingSpinner";
+
 import AdminLayout from "../layouts/AdminLayout";
-import Dashboard from "../pages/admin/Dashboard";
-import Users from "../pages/Users";
+
+const Login = lazy(() => import("../pages/Login/Login"));
+const RoleSelection = lazy(() =>
+  import("../pages/RoleSelection/RoleSelection")
+);
+const Register = lazy(() => import("../pages/Register/Register"));
+const PhoneVerification = lazy(() =>
+  import("../pages/PhoneVerification/PhoneVerification")
+);
+const Dashboard = lazy(() => import("../pages/admin/Dashboard"));
+const Users = lazy(() => import("../pages/Users"));
+const Drivers = lazy(() => import("../pages/Drivers"));
+const SingleDriver = lazy(() => import("../pages/Drivers/SingleDriver"));
+const AssetsPage = lazy(() => import("../pages/AssetsPage"));
 
 const ProtectedRoute = ({children}) => {
   const isAuth = useSelector((state) => state?.auth?.isAuth);
@@ -41,7 +51,9 @@ const Router = () => {
         path="/login"
         element={
           <PublicRoute>
-            <Login />
+            <Suspense fallback={<LoadingSpinner />}>
+              <Login />
+            </Suspense>
           </PublicRoute>
         }
       />
@@ -49,7 +61,9 @@ const Router = () => {
         path="/role-selection"
         element={
           <PublicRoute>
-            <RoleSelection />
+            <Suspense fallback={<LoadingSpinner />}>
+              <RoleSelection />
+            </Suspense>
           </PublicRoute>
         }
       />
@@ -57,7 +71,9 @@ const Router = () => {
         path="/register"
         element={
           <PublicRoute>
-            <Register />
+            <Suspense fallback={<LoadingSpinner />}>
+              <Register />
+            </Suspense>
           </PublicRoute>
         }
       />
@@ -65,7 +81,9 @@ const Router = () => {
         path="/phone-verification"
         element={
           <PublicRoute>
-            <PhoneVerification />
+            <Suspense fallback={<LoadingSpinner />}>
+              <PhoneVerification />
+            </Suspense>
           </PublicRoute>
         }
       />
@@ -80,6 +98,9 @@ const Router = () => {
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="users" element={<Users />} />
+        <Route path="drivers" element={<Drivers />} />
+        <Route path="drivers/:id" element={<SingleDriver />} />
+        <Route path="assets" element={<AssetsPage />} />
       </Route>
 
       <Route

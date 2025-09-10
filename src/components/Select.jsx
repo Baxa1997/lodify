@@ -1,0 +1,242 @@
+import React, {useState, useRef, useEffect, memo} from "react";
+import {Box, Text, VStack, HStack, Portal} from "@chakra-ui/react";
+import {LuChevronDown, LuCheck} from "react-icons/lu";
+
+const Select = ({
+  placeholder = "Select an option",
+  options = [],
+  value,
+  onChange,
+  size = "md",
+  variant = "outline",
+  bg = "white",
+  borderColor = "gray.300",
+  focusBorderColor = "blue.400",
+  color = "gray.700",
+  placeholderStyle = {
+    color: "#6B7280",
+    fontSize: "16px",
+  },
+  iconColor = "#6B7280",
+  iconSize = 20,
+  showIcon = true,
+  isDisabled = false,
+  isRequired = false,
+  isInvalid = false,
+  errorBorderColor = "red.400",
+  ...props
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+    position: "below",
+  });
+  const selectRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  const selectedOption = options.find((option) => option.value === value);
+
+  const calculateDropdownPosition = () => {
+    if (!selectRef.current) return;
+
+    const rect = selectRef.current.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const dropdownHeight = 200; // maxH="200px"
+    const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    let top, position;
+
+    if (spaceBelow >= dropdownHeight || spaceBelow >= spaceAbove) {
+      // Position below
+      top = rect.bottom + 4;
+      position = "below";
+    } else {
+      // Position above
+      top = rect.top - dropdownHeight - 4;
+      position = "above";
+    }
+
+    setDropdownPosition({
+      top,
+      left: rect.left,
+      width: rect.width,
+      position,
+    });
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+        setIsFocused(false);
+      }
+    };
+
+    const handleResize = () => {
+      if (isOpen) {
+        calculateDropdownPosition();
+      }
+    };
+
+    const handleScroll = () => {
+      if (isOpen) {
+        calculateDropdownPosition();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isOpen]);
+
+  const handleToggle = () => {
+    if (!isDisabled) {
+      if (!isOpen) {
+        calculateDropdownPosition();
+      }
+      setIsOpen(!isOpen);
+      setIsFocused(!isOpen);
+    }
+  };
+
+  const handleSelect = (option) => {
+    if (onChange) {
+      onChange(option.value);
+    }
+    setIsOpen(false);
+    setIsFocused(false);
+  };
+
+  const getSizeStyles = () => {
+    switch (size) {
+      case "sm":
+        return {height: "32px", py: "6px", px: "12px", fontSize: "14px"};
+      case "lg":
+        return {height: "48px", py: "12px", px: "20px", fontSize: "18px"};
+      default:
+        return {height: "40px", py: "8px", px: "16px", fontSize: "16px"};
+    }
+  };
+
+  return (
+    <Box position="relative" ref={dropdownRef} {...props}>
+      <Box
+        ref={selectRef}
+        onClick={handleToggle}
+        onFocus={() => setIsFocused(true)}
+        bg={bg}
+        border="1px solid"
+        borderColor={
+          isInvalid
+            ? errorBorderColor
+            : isFocused || isOpen
+            ? focusBorderColor
+            : borderColor
+        }
+        color={color}
+        borderRadius="lg"
+        pr={showIcon ? "40px" : "20px"}
+        pl="16px"
+        cursor={isDisabled ? "not-allowed" : "pointer"}
+        opacity={isDisabled ? 0.6 : 1}
+        transition="all 0.2s ease"
+        display="flex"
+        alignItems="center"
+        _hover={{
+          borderColor: isDisabled ? borderColor : focusBorderColor,
+        }}
+        _focus={{
+          outline: "none",
+          borderColor: isInvalid ? errorBorderColor : focusBorderColor,
+          boxShadow: `0 0 0 1px var(--chakra-colors-${
+            isInvalid ? "red" : "blue"
+          }-400)`,
+        }}
+        {...getSizeStyles()}>
+        <Text
+          color={selectedOption ? color : placeholderStyle.color}
+          fontSize={selectedOption ? "inherit" : placeholderStyle.fontSize}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </Text>
+
+        {showIcon && (
+          <Box
+            position="absolute"
+            right="12px"
+            top="50%"
+            color={iconColor}
+            zIndex={1}
+            pointerEvents="none"
+            transition="transform 0.2s ease"
+            transform={`translateY(-50%) ${isOpen ? "rotate(180deg)" : ""}`}>
+            <LuChevronDown size={iconSize} />
+          </Box>
+        )}
+      </Box>
+
+      {isOpen && !isDisabled && (
+        <Portal>
+          <Box
+            position="fixed"
+            top={`${dropdownPosition.top}px`}
+            left={`${dropdownPosition.left}px`}
+            width={`${dropdownPosition.width}px`}
+            bg="white"
+            border="1px solid"
+            borderColor={borderColor}
+            borderRadius="lg"
+            boxShadow="0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+            zIndex={9999}
+            maxH="200px"
+            overflowY="auto">
+            <VStack spacing={0} align="stretch">
+              {options.length > 0 ? (
+                options.map((option, index) => (
+                  <Box
+                    key={index}
+                    onClick={() => handleSelect(option)}
+                    px="16px"
+                    py="8px"
+                    cursor={option.isDisabled ? "not-allowed" : "pointer"}
+                    bg={option.value === value ? "blue.50" : "transparent"}
+                    color={option.isDisabled ? "gray.400" : color}
+                    opacity={option.isDisabled ? 0.6 : 1}
+                    _hover={{
+                      bg: option.isDisabled ? "transparent" : "gray.50",
+                    }}
+                    transition="all 0.2s ease">
+                    <HStack justify="space-between" align="center">
+                      <Text fontSize="16px">{option.label}</Text>
+                      {option.value === value && (
+                        <LuCheck
+                          size={16}
+                          color="var(--chakra-colors-blue-500)"
+                        />
+                      )}
+                    </HStack>
+                  </Box>
+                ))
+              ) : (
+                <Box px="16px" py="8px" color="gray.500" textAlign="center">
+                  <Text fontSize="16px">No options</Text>
+                </Box>
+              )}
+            </VStack>
+          </Box>
+        </Portal>
+      )}
+    </Box>
+  );
+};
+
+export default memo(Select);

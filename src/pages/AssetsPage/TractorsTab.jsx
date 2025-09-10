@@ -1,123 +1,62 @@
-import React, {useState, useCallback} from "react";
-import {Box, Flex, Text, Badge} from "@chakra-ui/react";
+import React from "react";
+import FiltersComponent from "../../components/FiltersComponent";
+import {Badge, Box} from "@chakra-ui/react";
 import {
   CTable,
+  CTableBody,
   CTableHead,
   CTableTh,
-  CTableBody,
   CTableTd,
 } from "../../components/tableElements";
-import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import {useTablePagination} from "../../hooks";
-import {USER_STATUS} from "../../constants";
+import {useState} from "react";
 import CTableRow from "../../components/tableElements/CTableRow";
-import FiltersComponent from "../../components/FiltersComponent";
 
-const Users = () => {
-  const [users] = useState([
-    {
-      id: 1,
-      fullName: "Javlon",
-      email: "javlon@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Dispatcher",
-      domiciles: "CMH",
-      status: "Invite Expired",
-    },
-    {
-      id: 2,
-      fullName: "Jamshid",
-      email: "jamshid@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Admin",
-      domiciles: "No domiciles selected",
-      status: "Active",
-    },
-    {
-      id: 4,
-      fullName: "Olim",
-      email: "olim@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Primary Admin",
-      domiciles: "No domiciles selected",
-      status: "Active",
-    },
-    {
-      id: 4,
-      fullName: "Olim",
-      email: "olim@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Primary Admin",
-      domiciles: "No domiciles selected",
-      status: "Active",
-    },
-    {
-      id: 4,
-      fullName: "Olim",
-      email: "olim@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Primary Admin",
-      domiciles: "No domiciles selected",
-      status: "Active",
-    },
-  ]);
+const TractorsTab = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [sortConfig, setSortConfig] = useState({
+    key: "fullName",
+    direction: "asc",
+  });
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const [sortConfig, setSortConfig] = useState({key: null, direction: "asc"});
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-  const {
-    currentPage,
-    pageSize,
-    totalPages,
-    paginatedData: paginatedUsers,
-    handlePageChange,
-    handlePageSizeChange,
-  } = useTablePagination(users, 10);
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+  };
 
-  const handleSort = useCallback(
-    (key) => {
-      let direction = "asc";
-      if (sortConfig.key === key && sortConfig.direction === "asc") {
-        direction = "desc";
-      }
-      setSortConfig({key, direction});
-    },
-    [sortConfig]
-  );
+  const handleSort = (key) => {
+    setSortConfig({
+      key,
+      direction: sortConfig.direction === "asc" ? "desc" : "asc",
+    });
+  };
 
-  const getStatusColor = useCallback((status) => {
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const getStatusColor = (status) => {
     switch (status) {
-      case USER_STATUS.ACTIVE:
+      case "Active":
         return "green";
-      case USER_STATUS.INVITE_EXPIRED:
-        return "orange";
-      case USER_STATUS.PENDING:
-        return "yellow";
-      case USER_STATUS.INACTIVE:
+      case "Inactive":
         return "red";
       default:
         return "gray";
     }
-  }, []);
-
+  };
   return (
-    <>
-      <Flex flexDir={"column"} gap={"20px"}>
-        <HeadBreadCrumb />
-        <Box h={"32px"}>
-          <Text
-            h={"32px"}
-            color={"#181D27"}
-            fontWeight={"600"}
-            fontSize={"24px"}>
-            Users
-          </Text>
-        </Box>
-      </Flex>
-
+    <Box mt={"32px"}>
       <FiltersComponent
-        filterByDomicile={true}
-        addButton={true}
+        filterButton={true}
         verifySelect={true}
+        actionButton={true}
       />
 
       <Box mt={6}>
@@ -181,7 +120,7 @@ const Users = () => {
           </CTableHead>
 
           <CTableBody>
-            {paginatedUsers.map((user, index) => (
+            {[].map((user, index) => (
               <CTableRow
                 key={user.id}
                 style={{
@@ -209,8 +148,8 @@ const Users = () => {
           </CTableBody>
         </CTable>
       </Box>
-    </>
+    </Box>
   );
 };
 
-export default Users;
+export default TractorsTab;

@@ -26,12 +26,12 @@ export const menuItems = [
       {
         id: "drivers",
         label: "Drivers",
-        path: "#",
+        path: "drivers",
       },
       {
         id: "assets",
         label: "Assets",
-        path: "#",
+        path: "assets",
       },
     ],
   },

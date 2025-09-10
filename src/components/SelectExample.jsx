@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Box, VStack, Text, Heading } from "@chakra-ui/react";
-import { Select } from "./SearchInput";
+import React, {useState} from "react";
+import {Box, VStack, Text, Heading} from "@chakra-ui/react";
+import Select from "./Select";
 
 const SelectExample = () => {
   const [selectedDomicile, setSelectedDomicile] = useState("");
@@ -8,23 +8,23 @@ const SelectExample = () => {
 
   // Example options for domicile filter (matching the image)
   const domicileOptions = [
-    { value: "", label: "Filter by Domicile(s)" },
-    { value: "us", label: "United States" },
-    { value: "uk", label: "United Kingdom" },
-    { value: "ca", label: "Canada" },
-    { value: "au", label: "Australia" },
-    { value: "de", label: "Germany" },
-    { value: "fr", label: "France" },
-    { value: "jp", label: "Japan" },
+    {value: "", label: "Filter by Domicile(s)"},
+    {value: "us", label: "United States"},
+    {value: "uk", label: "United Kingdom"},
+    {value: "ca", label: "Canada"},
+    {value: "au", label: "Australia"},
+    {value: "de", label: "Germany"},
+    {value: "fr", label: "France"},
+    {value: "jp", label: "Japan"},
   ];
 
   // Example options for country selection
   const countryOptions = [
-    { value: "", label: "Select Country" },
-    { value: "us", label: "United States" },
-    { value: "uk", label: "United Kingdom" },
-    { value: "ca", label: "Canada" },
-    { value: "au", label: "Australia" },
+    {value: "", label: "Select Country"},
+    {value: "us", label: "United States"},
+    {value: "uk", label: "United Kingdom"},
+    {value: "ca", label: "Canada"},
+    {value: "au", label: "Australia"},
   ];
 
   return (

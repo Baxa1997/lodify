@@ -1,9 +1,10 @@
-import {useState} from "react";
+import {useState, Suspense} from "react";
 import {Outlet, useNavigate, useLocation} from "react-router-dom";
 import styles from "./AdminLayout.module.scss";
 import {Box} from "@chakra-ui/react";
 import SearchInput from "../components/SearchInput";
 import Sidebar from "./Sidebar";
+import ContentLoader from "../components/ContentLoader";
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -38,8 +39,10 @@ const AdminLayout = () => {
       </div>
 
       <div className={styles.mainContent}>
-        <main className={styles.pageContent}>
-          <Outlet />
+        <main className={styles.pageContent} style={{position: "relative"}}>
+          <Suspense fallback={<ContentLoader />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

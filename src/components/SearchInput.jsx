@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
-import {Box, Input, Kbd, IconButton, Select as ChakraSelect, Text} from "@chakra-ui/react";
-import {LuSearch, LuX, LuChevronDown} from "react-icons/lu";
+import {Box, Input, Kbd, IconButton} from "@chakra-ui/react";
+import {LuSearch, LuX} from "react-icons/lu";
 
 const SearchInput = ({
   placeholder = "Search",
@@ -122,100 +122,4 @@ const SearchInput = ({
   );
 };
 
-const Select = ({
-  placeholder = "Select an option",
-  options = [],
-  value,
-  onChange,
-  size = "md",
-  variant = "outline",
-  bg = "white",
-  borderColor = "gray.200",
-  focusBorderColor = "blue.400",
-  color = "gray.700",
-  placeholderStyle = {
-    color: "#6B7280",
-    fontSize: "16px",
-  },
-  iconColor = "#6B7280",
-  iconSize = 20,
-  showIcon = true,
-  isDisabled = false,
-  isRequired = false,
-  isInvalid = false,
-  errorBorderColor = "red.400",
-  ...props
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleChange = (event) => {
-    if (onChange) {
-      onChange(event.target.value);
-    }
-  };
-
-  return (
-    <Box position="relative" {...props}>
-      <Box position="relative">
-        <ChakraSelect
-          value={value || ""}
-          onChange={handleChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder={placeholder}
-          variant={variant}
-          bg={bg}
-          border="1px solid"
-          borderColor={
-            isInvalid
-              ? errorBorderColor
-              : isFocused
-              ? focusBorderColor
-              : borderColor
-          }
-          color={color}
-          _placeholder={{...placeholderStyle}}
-          _focus={{
-            borderColor: isInvalid ? errorBorderColor : focusBorderColor,
-            boxShadow: `0 0 0 1px var(--chakra-colors-${isInvalid ? 'red' : 'blue'}-400)`,
-          }}
-          _invalid={{
-            borderColor: errorBorderColor,
-            boxShadow: `0 0 0 1px var(--chakra-colors-red-400)`,
-          }}
-          borderRadius="lg"
-          pr={showIcon ? "40px" : "20px"}
-          pl="16px"
-          size={size}
-          isDisabled={isDisabled}
-          isRequired={isRequired}
-          isInvalid={isInvalid}
-          cursor={isDisabled ? "not-allowed" : "pointer"}
-          opacity={isDisabled ? 0.6 : 1}
-        >
-          {options.map((option, index) => (
-            <option key={index} value={option.value} disabled={option.isDisabled}>
-              {option.label}
-            </option>
-          ))}
-        </ChakraSelect>
-
-        {showIcon && (
-          <Box
-            position="absolute"
-            right="12px"
-            top="50%"
-            transform="translateY(-50%)"
-            color={iconColor}
-            zIndex={1}
-            pointerEvents="none">
-            <LuChevronDown size={iconSize} />
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
-};
-
-export {SearchInput, Select};
 export default SearchInput;

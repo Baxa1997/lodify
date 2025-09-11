@@ -107,6 +107,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     .stepIndicator {
       background: #3b82f6;
       border: 2px solid #3b82f6;
+      outline: 2px solid $primary-color;
+      outline-offset: 2px;
     }
 
     .stepTitle {
@@ -278,7 +280,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
   .formGroup {
     width: 100%;
-    
+
     input {
       width: 100%;
     }
@@ -540,7 +542,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
     .formGroup {
       width: 100%;
-      
+
       input {
         width: 100%;
       }
@@ -609,7 +611,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
     .formGroup {
       width: 100%;
-      
+
       input {
         width: 100%;
       }

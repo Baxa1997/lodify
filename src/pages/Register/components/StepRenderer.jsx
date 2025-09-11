@@ -4,7 +4,14 @@ import AddressDetails from "./forms/AddressDetails";
 import ContactDetails from "./forms/ContactDetails";
 import VerificationStep from "./forms/VerificationStep";
 
-const StepRenderer = ({currentStep, register, errors, watch, setValue}) => {
+const StepRenderer = ({
+  currentStep,
+  register,
+  errors,
+  watch,
+  setValue,
+  onSubmit,
+}) => {
   switch (currentStep) {
     case 1:
       return <CompanyDetails register={register} errors={errors} />;
@@ -13,7 +20,13 @@ const StepRenderer = ({currentStep, register, errors, watch, setValue}) => {
     case 3:
       return <ContactDetails register={register} errors={errors} />;
     case 4:
-      return <VerificationStep watch={watch} setValue={setValue} />;
+      return (
+        <VerificationStep
+          watch={watch}
+          setValue={setValue}
+          onSubmit={onSubmit}
+        />
+      );
     default:
       return null;
   }

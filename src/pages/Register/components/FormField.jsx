@@ -50,12 +50,6 @@ const FormField = ({
         {hasDropdown && <Text className={styles.dropdownIcon}>▼</Text>}
       </Box>
 
-      {errors[name] && (
-        <Text color="#e53e3e" fontSize="12px" mt="4px">
-          {errors[name].message}
-        </Text>
-      )}
-
       {children}
     </Box>
   );

@@ -4,6 +4,7 @@ import {useForm} from "react-hook-form";
 import {Flex} from "@chakra-ui/react";
 import RegisterSidebar from "./components/RegisterSidebar";
 import RegisterForm from "./components/RegisterForm";
+import authService from "../../services/auth/authService";
 import styles from "./MultiStepRegister.module.scss";
 
 const Register = () => {
@@ -24,48 +25,52 @@ const Register = () => {
   } = useForm({
     defaultValues: {
       type: role,
-      companyName: "",
-      fmcsa: "",
-      carrierIdentifier: "",
-      legalName: "",
-      usdot: "",
-      mc: "",
-      operatingStatus: "",
-      mailingAddress: "",
-      addressLine1: "",
-      addressLine2: "",
+      company_name: "",
+      us_dot: "",
+      identifier: "",
+      legal_name: "",
+      operating_status: "",
+      mailing_address: "",
+      physical_address1: "",
+      physical_address2: "",
       city: "",
       state: "",
-      zipCode: "",
+      zip_code: "",
       country: "United States",
+      login: "",
+      password: "",
       email: "",
       phone: "",
-      emailCode: "",
-      phoneCode: "",
+      type: "phone",
+      client_type_id: "706337d3-80dc-4aca-80b3-67fad16cd0d6",
+      role_id: "abc236d0-8a9a-4b10-9f44-6b51fcb35e9f",
     },
     mode: "onChange",
   });
 
   const validateStep1 = (data) => {
-    const requiredFields = ["companyName", "fmcsa", "carrierIdentifier"];
+    const requiredFields = ["company_name", "us_dot", "identifier"];
     return requiredFields.every(
       (field) => data[field] && data[field].trim() !== ""
     );
   };
 
   const validateStep2 = (data) => {
-    const requiredFields = ["addressLine1", "city", "state", "zipCode"];
+    const requiredFields = ["physical_address1", "city", "state", "zip_code"];
     return requiredFields.every(
       (field) => data[field] && data[field].trim() !== ""
     );
   };
 
   const validateStep3 = (data) => {
-    return data.email && data.email.trim() !== "";
+    const requiredFields = ["email", "login", "password"];
+    return requiredFields.every(
+      (field) => data[field] && data[field].trim() !== ""
+    );
   };
 
   const validateStep4 = (data) => {
-    return data.emailCode && data.emailCode.length === 4;
+    return data.emailCode && data.emailCode.trim() !== "";
   };
 
   const getStepValidation = (step) => {
@@ -113,7 +118,7 @@ const Register = () => {
     },
     {
       id: 3,
-      title: "Email and Phone number",
+      title: "Info",
       completed: completedSteps.has(3),
       active: currentStep === 3,
     },
@@ -134,10 +139,9 @@ const Register = () => {
     }
   }, [location.state, navigate]);
 
-  const handleNext = async () => {
+  const handleNext = () => {
     if (currentStep < 4) {
-      const isValid = await trigger();
-      if (isValid && getStepValidation(currentStep)) {
+      if (getStepValidation(currentStep)) {
         setCompletedSteps((prev) => new Set([...prev, currentStep]));
         setCurrentStep(currentStep + 1);
       }
@@ -161,10 +165,34 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const apiData = {
+        company_name: data.company_name,
+        us_dot: data.us_dot,
+        identifier: data.identifier,
+        physical_address: data.physical_address1,
+        mailing_address: data.mailing_address,
+        city: data.city,
+        state: data.state,
+        zip_code: data.zip_code,
+        country: data.country,
+        login: data.login,
+        password: data.password,
+        phone: data.phone || "",
+        email: data.email,
+        type: data.type,
+        client_type_id: data.client_type_id,
+        role_id: data.role_id,
+      };
+
+      const response = await authService.register(apiData);
+
       navigate("/admin/dashboard");
-    }, 1000);
+    } catch (error) {
+      console.error("Registration failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!role) {
@@ -179,6 +207,7 @@ const Register = () => {
         handleStepChange={handleStepChange}
       />
       <RegisterForm
+        onSubmit={onSubmit}
         currentStep={currentStep}
         steps={steps}
         register={register}

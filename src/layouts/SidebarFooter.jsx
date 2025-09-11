@@ -171,7 +171,7 @@ const SidebarFooter = ({sidebarOpen = true}) => {
                 minW="150px"
                 zIndex={99999}
                 position="absolute"
-                left="100%"
+                left="60px"
                 top="0"
                 mt="0">
                 <MenuItem

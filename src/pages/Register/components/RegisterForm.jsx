@@ -16,6 +16,7 @@ const RegisterForm = ({
   onBack,
   isLoading,
   getStepValidation,
+  onSubmit = () => {},
 }) => {
   return (
     <Box className={styles.mainContent}>
@@ -43,6 +44,7 @@ const RegisterForm = ({
             errors={errors}
             watch={watch}
             setValue={setValue}
+            onSubmit={onSubmit}
           />
 
           {currentStep < 4 && (
@@ -75,13 +77,7 @@ const RegisterForm = ({
                   cursor: "not-allowed",
                   transform: "none",
                 }}>
-                {isLoading
-                  ? "Loading..."
-                  : `Continue ${
-                      !getStepValidation(currentStep)
-                        ? "(Fill required fields)"
-                        : ""
-                    }`}
+                {isLoading ? "Loading..." : "Continue"}
               </Button>
             </Box>
           )}

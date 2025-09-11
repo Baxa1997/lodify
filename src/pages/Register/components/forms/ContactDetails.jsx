@@ -7,24 +7,36 @@ const ContactDetails = ({register, errors}) => {
   return (
     <Box className={styles.stepContent}>
       <FormField
-        label="Email or phone number"
+        type="email"
+        label="Email Address"
         name="email"
-        placeholder="name@domain.com or +1 555-123-4567"
+        placeholder="Enter email address"
         register={register}
         errors={errors}
         isRequired
-        validation={{
-          required: "Email or phone number is required",
-          pattern: {
-            value:
-              /^(\+?1[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}$|^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            message: "Please enter a valid email or phone number",
-          },
-        }}>
-        <Text pt={"6px"} fontSize="12px" color="#64748b">
-          We'll send a one-time code to what you enter.
-        </Text>
-      </FormField>
+        validation={{}}
+      />
+
+      <FormField
+        label="Login"
+        name="login"
+        placeholder="Create a login"
+        register={register}
+        errors={errors}
+        isRequired
+        validation={{}}
+      />
+
+      <FormField
+        type="password"
+        label="Password"
+        name="password"
+        placeholder="Create a password"
+        register={register}
+        errors={errors}
+        isRequired
+        validation={{}}
+      />
     </Box>
   );
 };

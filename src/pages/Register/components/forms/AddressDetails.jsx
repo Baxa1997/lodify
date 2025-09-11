@@ -8,23 +8,17 @@ const AddressDetails = ({register, errors}) => {
     <Box className={styles.stepContent}>
       <FormField
         label="Address Line 1"
-        name="addressLine1"
+        name="physical_address1"
         placeholder="606 Hillrose Ave Unit B"
         register={register}
         errors={errors}
         isRequired
-        validation={{
-          required: "Address Line 1 is required",
-          minLength: {
-            value: 5,
-            message: "Address must be at least 5 characters",
-          },
-        }}
+        validation={{}}
       />
 
       <FormField
         label="Address Line 2"
-        name="addressLine2"
+        name="physical_address2"
         placeholder="Address Line 2 (Optional)"
         register={register}
         errors={errors}
@@ -38,13 +32,7 @@ const AddressDetails = ({register, errors}) => {
           register={register}
           errors={errors}
           isRequired
-          validation={{
-            required: "City is required",
-            minLength: {
-              value: 2,
-              message: "City must be at least 2 characters",
-            },
-          }}
+          validation={{}}
         />
 
         <FormField
@@ -55,31 +43,19 @@ const AddressDetails = ({register, errors}) => {
           errors={errors}
           isRequired
           hasDropdown
-          validation={{
-            required: "State is required",
-            minLength: {
-              value: 2,
-              message: "State must be at least 2 characters",
-            },
-          }}
+          validation={{}}
         />
       </Flex>
 
       <Flex className={styles.formRow}>
         <FormField
           label="Zip code"
-          name="zipCode"
+          name="zip_code"
           placeholder="45404"
           register={register}
           errors={errors}
           isRequired
-          validation={{
-            required: "Zip code is required",
-            pattern: {
-              value: /^\d{5}(-\d{4})?$/,
-              message: "Please enter a valid zip code",
-            },
-          }}
+          validation={{}}
         />
 
         <FormField

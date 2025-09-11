@@ -1,11 +1,15 @@
 import React, {useState} from "react";
-import {Box, Flex, Text, Button, HStack} from "@chakra-ui/react";
+import {Box, Text, Button} from "@chakra-ui/react";
 import OtpInput from "react-otp-input";
 import styles from "../../MultiStepRegister.module.scss";
 import {useQuery} from "@tanstack/react-query";
 import authService from "../../../../services/auth/authService";
 
-const VerificationStep = ({watch, setValue}) => {
+const VerificationStep = ({
+  watch,
+  setValue = () => {},
+  onSubmit = () => {},
+}) => {
   const [otp, setOtp] = useState("");
 
   const {data: smsId, refetch} = useQuery({
@@ -14,7 +18,7 @@ const VerificationStep = ({watch, setValue}) => {
       return authService.sendCode(
         {
           type: "MAILCHIMP",
-          recipient: "info@u-code.io",
+          recipient: "info@u-code.io" || watch("email"),
           sms_template_id: "4b73c53e-df0b-4f24-8d24-e7f03d858cda",
           field_slug: "text",
           variables: {},
@@ -24,7 +28,7 @@ const VerificationStep = ({watch, setValue}) => {
         }
       );
     },
-    enabled: !!watch("email"),
+    enabled: Boolean(watch("email")),
     select: (res) => res?.sms_id,
   });
 
@@ -46,6 +50,7 @@ const VerificationStep = ({watch, setValue}) => {
         }
       )
       .then((res) => {
+        onSubmit(watch());
         console.log("resresressss", res);
       });
   };

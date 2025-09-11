@@ -8,51 +8,33 @@ const CompanyDetails = ({register, errors}) => {
     <Box className={styles.stepContent}>
       <FormField
         label="Company name"
-        name="companyName"
+        name="company_name"
         placeholder="Company name"
         register={register}
         errors={errors}
         isRequired
-        validation={{
-          required: "Company name is required",
-          minLength: {
-            value: 2,
-            message: "Company name must be at least 2 characters",
-          },
-        }}
+        validation={{}}
       />
 
       <FormField
         label="FMCSA"
-        name="fmcsa"
+        name="us_dot"
         placeholder="e.g., USDOT 1234567 or MC 654321"
         register={register}
         errors={errors}
         isRequired
         hasDropdown
-        validation={{
-          required: "FMCSA is required",
-          minLength: {
-            value: 3,
-            message: "FMCSA must be at least 3 characters",
-          },
-        }}
+        validation={{}}
       />
 
       <FormField
         label="Carrier Identifier"
-        name="carrierIdentifier"
+        name="identifier"
         placeholder="SCAC"
         register={register}
         errors={errors}
         isRequired
-        validation={{
-          required: "Carrier Identifier is required",
-          minLength: {
-            value: 2,
-            message: "Carrier Identifier must be at least 2 characters",
-          },
-        }}
+        validation={{}}
       />
     </Box>
   );

@@ -187,7 +187,7 @@ const Register = () => {
 
       const response = await authService.register(apiData);
 
-      navigate("/admin/dashboard");
+      navigate("/login");
     } catch (error) {
       console.error("Registration failed:", error);
     } finally {

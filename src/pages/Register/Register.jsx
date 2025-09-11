@@ -180,7 +180,7 @@ const Register = () => {
         password: data.password,
         phone: data.phone || "",
         email: data.email,
-        type: data.type,
+        type: "phone",
         client_type_id: data.client_type_id,
         role_id: data.role_id,
       };

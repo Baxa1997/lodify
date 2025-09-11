@@ -18,7 +18,7 @@ const VerificationStep = ({
       return authService.sendCode(
         {
           type: "MAILCHIMP",
-          recipient: "info@u-code.io" || watch("email"),
+          recipient: watch("email"),
           sms_template_id: "4b73c53e-df0b-4f24-8d24-e7f03d858cda",
           field_slug: "text",
           variables: {},

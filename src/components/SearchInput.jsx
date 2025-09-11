@@ -91,6 +91,7 @@ const SearchInput = ({
           pl="40px"
           pr={showKeyboardShortcut ? "80px" : "30px"}
           size={size}
+          height={height}
         />
 
         <Box

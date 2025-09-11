@@ -62,6 +62,26 @@ const DriversTab = () => {
       loadEligibility: "Eligible",
       medicalCard: "Yes (exp. Aug 31, 2025)",
     },
+    {
+      id: "3",
+      name: "Maria Lopez",
+      cdlClass: "Class A",
+      licenseNumber: "452118229",
+      region: "TX",
+      status: "Inactive",
+      loadEligibility: "Not Eligible",
+      medicalCard: "NO",
+    },
+    {
+      id: "4",
+      name: "David Johnson",
+      cdlClass: "Class C",
+      licenseNumber: "993217700",
+      region: "CA",
+      status: "Active",
+      loadEligibility: "Eligible",
+      medicalCard: "Yes (exp. Aug 31, 2025)",
+    },
   ]);
   const [searchTerm, setSearchTerm] = useState("");
 

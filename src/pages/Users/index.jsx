@@ -12,57 +12,20 @@ import {useTablePagination} from "../../hooks";
 import {USER_STATUS} from "../../constants";
 import CTableRow from "../../components/tableElements/CTableRow";
 import FiltersComponent from "../../components/FiltersComponent";
+import usersService from "../../services/usersService";
+import {useQuery} from "@tanstack/react-query";
 
 const Users = () => {
-  const [users] = useState([
-    {
-      id: 1,
-      fullName: "Javlon",
-      email: "javlon@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Dispatcher",
-      domiciles: "CMH",
-      status: "Invite Expired",
-    },
-    {
-      id: 2,
-      fullName: "Jamshid",
-      email: "jamshid@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Admin",
-      domiciles: "No domiciles selected",
-      status: "Active",
-    },
-    {
-      id: 4,
-      fullName: "Olim",
-      email: "olim@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Primary Admin",
-      domiciles: "No domiciles selected",
-      status: "Active",
-    },
-    {
-      id: 4,
-      fullName: "Olim",
-      email: "olim@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Primary Admin",
-      domiciles: "No domiciles selected",
-      status: "Active",
-    },
-    {
-      id: 4,
-      fullName: "Olim",
-      email: "olim@lodify.com",
-      phone: "+1 44035583165",
-      roles: "Primary Admin",
-      domiciles: "No domiciles selected",
-      status: "Active",
-    },
-  ]);
-
   const [sortConfig, setSortConfig] = useState({key: null, direction: "asc"});
+
+  const {data: users = []} = useQuery({
+    queryKey: ["GET_USERS_LIST"],
+    queryFn: () => {
+      return usersService.getList();
+    },
+    enabled: true,
+    select: (res) => res?.data?.response ?? [],
+  });
 
   const {
     currentPage,
@@ -98,7 +61,7 @@ const Users = () => {
         return "gray";
     }
   }, []);
-
+  console.log("users", users);
   return (
     <>
       <Flex flexDir={"column"} gap={"20px"}>
@@ -181,16 +144,16 @@ const Users = () => {
           </CTableHead>
 
           <CTableBody>
-            {paginatedUsers.map((user, index) => (
+            {users?.map((user, index) => (
               <CTableRow
                 key={user.id}
                 style={{
                   backgroundColor: "white",
                 }}>
-                <CTableTd>{user.fullName}</CTableTd>
+                <CTableTd>{user.full_name}</CTableTd>
                 <CTableTd>{user.email}</CTableTd>
                 <CTableTd>{user.phone}</CTableTd>
-                <CTableTd>{user.roles}</CTableTd>
+                <CTableTd>{user.role_id_data?.name}</CTableTd>
                 <CTableTd>{user.domiciles}</CTableTd>
                 <CTableTd>
                   <Badge

@@ -188,7 +188,7 @@ const Select = ({
         <Portal>
           <Box
             position="fixed"
-            top={`${dropdownPosition.top}px`}
+            top={`${dropdownPosition.top + 25}px`}
             left={`${dropdownPosition.left}px`}
             width={`${dropdownPosition.width}px`}
             bg="white"

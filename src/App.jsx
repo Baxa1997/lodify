@@ -1,6 +1,7 @@
-import Router from "./router/router";
+import {ChakraProvider} from "@chakra-ui/react";
 import ErrorBoundary from "./components/ErrorBoundary";
-import 'react-tabs/style/react-tabs.css';
+import Router from "./router/router";
+import "react-tabs/style/react-tabs.css";
 
 function App() {
   return (

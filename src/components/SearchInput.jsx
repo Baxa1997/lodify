@@ -12,10 +12,13 @@ const SearchInput = ({
   focusBorderColor = "blue.400",
   borderColor = "gray.600",
   color = "#fff",
+  height = "40px",
   placeholderStyle = {
     color: "#85888E",
     fontSize: "16px",
   },
+  _hover,
+  _focus,
   ...props
 }) => {
   const [searchValue, setSearchValue] = useState("");
@@ -77,13 +80,16 @@ const SearchInput = ({
           borderColor={isFocused ? focusBorderColor : borderColor}
           color={color}
           _placeholder={{...placeholderStyle}}
-          _focus={{
-            borderColor: focusBorderColor,
-            boxShadow: "0 0 0 1px var(--chakra-colors-blue-400)",
-          }}
+          _hover={_hover}
+          _focus={
+            _focus || {
+              borderColor: focusBorderColor,
+              boxShadow: "0 0 0 1px var(--chakra-colors-blue-400)",
+            }
+          }
           borderRadius="lg"
           pl="40px"
-          pr={showKeyboardShortcut ? "80px" : "20px"}
+          pr={showKeyboardShortcut ? "80px" : "30px"}
           size={size}
         />
 

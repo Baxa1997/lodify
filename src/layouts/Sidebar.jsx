@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {menuItems} from "../utils/menuItems";
 import styles from "./AdminLayout.module.scss";
 import {useNavigate, useLocation} from "react-router-dom";
+import {Tooltip} from "@chakra-ui/react";
 import SidebarFooter from "./SidebarFooter";
 
 const Sidebar = ({sidebarOpen = false, searchValue = ""}) => {
@@ -42,32 +43,50 @@ const Sidebar = ({sidebarOpen = false, searchValue = ""}) => {
 
             return (
               <li key={item.id} className={styles.navItem}>
-                <button
-                  className={`${styles.navLink} ${
-                    isActive ? styles.active : ""
-                  }`}
-                  onClick={() => {
-                    if (hasChildren) {
-                      toggleExpanded(item.id);
-                    } else {
-                      navigate(item.path);
-                    }
-                  }}>
-                  <span className={styles.navIcon}>
-                    <img src={item.icon} alt="" />
-                  </span>
-                  {sidebarOpen && (
-                    <span className={styles.navLabel}>{item.label}</span>
-                  )}
-                  {sidebarOpen && hasChildren && (
-                    <span
-                      className={`${styles.accordionIcon} ${
-                        isExpanded ? styles.expanded : ""
-                      }`}>
-                      <img src="/img/iconDown.svg" alt="" />
+                {!sidebarOpen ? (
+                  <Tooltip placement="right" label={item?.label || ""} hasArrow>
+                    <button
+                      className={`${styles.navLink} ${
+                        isActive ? styles.active : ""
+                      }`}
+                      onClick={() => {
+                        if (hasChildren) {
+                          toggleExpanded(item.id);
+                        } else {
+                          navigate(item.path);
+                        }
+                      }}>
+                      <span className={styles.navIcon}>
+                        <img src={item.icon} alt="" />
+                      </span>
+                    </button>
+                  </Tooltip>
+                ) : (
+                  <button
+                    className={`${styles.navLink} ${
+                      isActive ? styles.active : ""
+                    }`}
+                    onClick={() => {
+                      if (hasChildren) {
+                        toggleExpanded(item.id);
+                      } else {
+                        navigate(item.path);
+                      }
+                    }}>
+                    <span className={styles.navIcon}>
+                      <img src={item.icon} alt="" />
                     </span>
-                  )}
-                </button>
+                    <span className={styles.navLabel}>{item.label}</span>
+                    {hasChildren && (
+                      <span
+                        className={`${styles.accordionIcon} ${
+                          isExpanded ? styles.expanded : ""
+                        }`}>
+                        <img src="/img/iconDown.svg" alt="" />
+                      </span>
+                    )}
+                  </button>
+                )}
 
                 {hasChildren && sidebarOpen && (
                   <ul
@@ -93,7 +112,7 @@ const Sidebar = ({sidebarOpen = false, searchValue = ""}) => {
         </ul>
       </nav>
 
-      <SidebarFooter />
+      <SidebarFooter sidebarOpen={sidebarOpen} />
     </>
   );
 };

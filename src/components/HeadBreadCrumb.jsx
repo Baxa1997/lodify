@@ -33,37 +33,33 @@ const HeadBreadCrumb = ({customPath = null}) => {
       ));
     }
 
-    // Default behavior
     let path = location.pathname.split("/").pop();
     const title = path.charAt(0).toUpperCase() + path.slice(1);
 
     return (
       <>
         <Button
-          width={"20px"}
-          maxWidth={"20px"}
-          minWidth={"20px"}
-          height={"20px"}
-          maxHeight={"20px"}
-          minHeight={"20px"}
+          width={"24px"}
+          maxWidth={"24px"}
+          minWidth={"24px"}
+          height={"28px"}
+          maxHeight={"28px"}
+          minHeight={"28px"}
+          padding={"4px"}
           bg={"none"}>
-          <img
-            src="/img/sidebar.svg"
-            width={"15px"}
-            height={"15px"}
-            alt="add"
-          />
+          <img src="/img/sidebar.svg" alt="add" />
         </Button>
 
         <Button
-          width={"20px"}
-          maxWidth={"20px"}
-          minWidth={"20px"}
-          height={"20px"}
-          maxHeight={"20px"}
-          minHeight={"20px"}
+          width={"24px"}
+          maxWidth={"24px"}
+          minWidth={"24px"}
+          height={"28px"}
+          maxHeight={"28px"}
+          minHeight={"28px"}
+          padding={"4px"}
           bg={"none"}>
-          <img src="/img/home.svg" alt="add" width={"15px"} height={"15px"} />
+          <img src="/img/home.svg" alt="add" />
         </Button>
 
         <Flex

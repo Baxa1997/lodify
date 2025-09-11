@@ -137,7 +137,7 @@ const SingleDriver = () => {
                   pb={"24px"}
                   mb={"24px"}>
                   <Flex gap={"32px"}>
-                    <Box w={"280px"}>{/* Empty left side */}</Box>
+                    <Box w={"280px"}></Box>
                     <Box w={"512px"}>
                       <Text
                         fontWeight={"600"}
@@ -171,7 +171,6 @@ const SingleDriver = () => {
                   pb={"24px"}
                   mb={"24px"}>
                   <Flex gap={"32px"}>
-                    {/* First part - Section name */}
                     <Box w={"280px"}>
                       <Text
                         fontWeight={"600"}
@@ -466,7 +465,7 @@ const SingleDriver = () => {
                         color={"#181D27"}>
                         Statement Email
                       </Text>
-                      <Text fontSize={"12px"} color={"#718096"} mb={"12px"}>
+                      <Text fontSize={"14px"} color={"#718096"} mb={"12px"}>
                         Note: The system send generated statements to this email
                         address
                       </Text>
@@ -582,16 +581,15 @@ const SingleDriver = () => {
                   </Flex>
                 </Box>
 
-                {/* Action Buttons */}
                 <Box w={"100%"} mt={"24px"}>
                   <Flex justify={"space-between"}>
-                    {/* Left side - Exit button */}
                     <Button
                       type="button"
                       variant="outline"
                       size="md"
                       onClick={handleBackToDrivers}
                       bg={"#F7FAFC"}
+                      border={"1px solid #E9EAEB"}
                       borderColor={"#E2E8F0"}
                       color={"#4A5568"}
                       borderRadius={"8px"}
@@ -601,7 +599,6 @@ const SingleDriver = () => {
                       Exit
                     </Button>
 
-                    {/* Right side - Save & Exit and Next buttons */}
                     <Flex gap={"12px"}>
                       <Button
                         type="button"
@@ -609,7 +606,7 @@ const SingleDriver = () => {
                         size="md"
                         onClick={handleSaveAndExit}
                         bg={"white"}
-                        borderColor={"#E2E8F0"}
+                        border={"1px solid #E9EAEB"}
                         color={"#4A5568"}
                         borderRadius={"8px"}
                         px={"16px"}

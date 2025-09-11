@@ -34,10 +34,10 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
   height: 100vh;
   z-index: 1000;
   box-shadow: $shadow-sidebar;
-  overflow: hidden;
+  overflow: visible;
 
   &.closed {
-    width: 70px;
+    width: 80px;
     padding: 24px 0;
   }
 }
@@ -111,6 +111,10 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
 
 .navItem {
   margin-bottom: 4px;
+
+  .sidebar.closed & {
+    margin-bottom: 8px;
+  }
 }
 
 .navLink {
@@ -146,8 +150,12 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
   }
 
   .sidebar.closed & {
-    padding: 12px;
+    padding: 8px;
     justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+    border-radius: 8px;
   }
 
   &.active {
@@ -163,6 +171,22 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .sidebar.closed & {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
 }
 
 .navLabel {
@@ -179,6 +203,10 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
 
 .sidebarFooter {
   padding: 0px 24px;
+
+  .sidebar.closed & {
+    padding: 0px 8px;
+  }
 }
 
 .sidebarSearch {
@@ -189,6 +217,41 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: scale(0.8);
     pointer-events: none;
+  }
+}
+
+.sidebarSearchIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0 12px;
+
+  .sidebar.closed & {
+    display: flex;
+    padding: 0;
+    margin-top: 20px;
+  }
+}
+
+.searchIconButton {
+  .sidebar.closed & {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 8px !important;
+  }
+}
+
+.footerIconButton {
+  .sidebar.closed & {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+    }
   }
 }
 
@@ -225,7 +288,7 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .adminLayout:has(.sidebar.closed) .mainContent {
-  margin-left: 70px;
+  margin-left: 80px;
 }
 
 .topHeader {

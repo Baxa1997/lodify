@@ -29,7 +29,7 @@ const SidebarFooter = ({sidebarOpen = true}) => {
   };
 
   const handleSettingsClick = () => {
-    navigate("#");
+    navigate("settings");
   };
 
   useEffect(() => {

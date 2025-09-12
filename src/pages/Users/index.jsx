@@ -1,5 +1,6 @@
 import React, {useState, useCallback} from "react";
 import {Box, Flex, Text, Badge} from "@chakra-ui/react";
+import {useNavigate} from "react-router-dom";
 import {
   CTable,
   CTableHead,
@@ -16,6 +17,7 @@ import usersService from "../../services/usersService";
 import {useQuery} from "@tanstack/react-query";
 
 const Users = () => {
+  const navigate = useNavigate();
   const [sortConfig, setSortConfig] = useState({key: null, direction: "asc"});
 
   const {data: users = []} = useQuery({
@@ -61,7 +63,14 @@ const Users = () => {
         return "gray";
     }
   }, []);
-  console.log("users", users);
+
+  const handleUserClick = useCallback(
+    (userId) => {
+      navigate(`/admin/users/${userId}`);
+    },
+    [navigate]
+  );
+
   return (
     <>
       <Flex flexDir={"column"} gap={"20px"}>
@@ -147,8 +156,13 @@ const Users = () => {
             {users?.map((user, index) => (
               <CTableRow
                 key={user.id}
+                onClick={() => handleUserClick(user.guid)}
                 style={{
                   backgroundColor: "white",
+                  cursor: "pointer",
+                }}
+                _hover={{
+                  backgroundColor: "gray.50",
                 }}>
                 <CTableTd>{user.full_name}</CTableTd>
                 <CTableTd>{user.email}</CTableTd>

@@ -13,8 +13,8 @@ const Register = lazy(() => import("../pages/Register/Register"));
 const PhoneVerification = lazy(() =>
   import("../pages/PhoneVerification/PhoneVerification")
 );
-const Dashboard = lazy(() => import("../pages/admin/Dashboard"));
 const Users = lazy(() => import("../pages/Users"));
+const SingleUser = lazy(() => import("../pages/Users/SingleUser"));
 const Drivers = lazy(() => import("../pages/Drivers"));
 const SingleDriver = lazy(() => import("../pages/Drivers/SingleDriver"));
 const AssetsPage = lazy(() => import("../pages/AssetsPage"));
@@ -96,8 +96,9 @@ const Router = () => {
           </ProtectedRoute>
         }>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="dashboard" element={<Dashboard />} />
+        {/* <Route path="dashboard" element={<Dashboard />} /> */}
         <Route path="users" element={<Users />} />
+        <Route path="users/:id" element={<SingleUser />} />
         <Route path="drivers" element={<Drivers />} />
         <Route path="drivers/:id" element={<SingleDriver />} />
         <Route path="assets" element={<AssetsPage />} />

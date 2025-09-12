@@ -7,36 +7,7 @@ const HeadBreadCrumb = ({customPath = null}) => {
   const navigate = useNavigate();
 
   const renderBreadcrumb = () => {
-    if (customPath && Array.isArray(customPath)) {
-      return customPath.map((item, index) => (
-        <React.Fragment key={index}>
-          {index > 0 && (
-            <Flex
-              alignItems={"center"}
-              justifyContent={"center"}
-              w={"16px"}
-              h={"16px"}>
-              <img src="/img/chevron-right.svg" alt="" />
-            </Flex>
-          )}
-          <Flex>
-            <Text
-              fontSize={"14px"}
-              fontWeight={"600"}
-              color={"#181D27"}
-              cursor={item.path ? "pointer" : "default"}
-              onClick={item.path ? () => navigate(item.path) : undefined}>
-              {item.label}
-            </Text>
-          </Flex>
-        </React.Fragment>
-      ));
-    }
-
-    let path = location.pathname.split("/").pop();
-    const title = path.charAt(0).toUpperCase() + path.slice(1);
-
-    return (
+    const baseElements = (
       <>
         <Button
           width={"24px"}
@@ -47,7 +18,7 @@ const HeadBreadCrumb = ({customPath = null}) => {
           minHeight={"28px"}
           padding={"4px"}
           bg={"none"}>
-          <img src="/img/sidebar.svg" alt="add" />
+          <img src="/img/sidebar.svg" alt="sidebar" />
         </Button>
 
         <Button
@@ -59,7 +30,7 @@ const HeadBreadCrumb = ({customPath = null}) => {
           minHeight={"28px"}
           padding={"4px"}
           bg={"none"}>
-          <img src="/img/home.svg" alt="add" />
+          <img src="/img/home.svg" alt="home" />
         </Button>
 
         <Flex
@@ -67,9 +38,49 @@ const HeadBreadCrumb = ({customPath = null}) => {
           justifyContent={"center"}
           w={"16px"}
           h={"16px"}>
-          <img src="/img/chevron-right.svg" alt="" />
+          <img src="/img/chevron-right.svg" alt="arrow" />
         </Flex>
+      </>
+    );
 
+    if (customPath && Array.isArray(customPath)) {
+      return (
+        <>
+          {baseElements}
+          {customPath.map((item, index) => (
+            <React.Fragment key={index}>
+              <Flex>
+                <Text
+                  fontSize={"14px"}
+                  fontWeight={"600"}
+                  color={"#181D27"}
+                  cursor={item.path ? "pointer" : "default"}
+                  onClick={item.path ? () => navigate(item.path) : undefined}>
+                  {item.label}
+                </Text>
+              </Flex>
+              {index < customPath.length - 1 && (
+                <Flex
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  w={"16px"}
+                  h={"16px"}>
+                  <img src="/img/chevron-right.svg" alt="arrow" />
+                </Flex>
+              )}
+            </React.Fragment>
+          ))}
+        </>
+      );
+    }
+
+    // Default behavior - extract title from pathname
+    let path = location.pathname.split("/").pop();
+    const title = path.charAt(0).toUpperCase() + path.slice(1);
+
+    return (
+      <>
+        {baseElements}
         <Flex>
           <Text fontSize={"14px"} fontWeight={"600"} color={"#181D27"}>
             {title}

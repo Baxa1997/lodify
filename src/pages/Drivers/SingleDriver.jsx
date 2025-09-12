@@ -93,9 +93,8 @@ const SingleDriver = () => {
       <Flex flexDir={"column"} gap={"20px"}>
         <HeadBreadCrumb
           customPath={[
-            {label: "Managing Resource", path: "/admin"},
+            {label: "Driver Info", path: `/admin/drivers/${id}`},
             {label: "Drivers", path: "/admin/drivers"},
-            {label: "Driver Tab", path: `/admin/drivers/${id}`},
           ]}
         />
         <Box>Loading...</Box>
@@ -107,9 +106,8 @@ const SingleDriver = () => {
     <Flex flexDir={"column"} gap={"20px"}>
       <HeadBreadCrumb
         customPath={[
-          {label: "Managing Resource", path: "/admin"},
+          {label: "Driver Info", path: `/admin/drivers/${id}`},
           {label: "Drivers", path: "/admin/drivers"},
-          {label: "Driver Tab", path: `/admin/drivers/${id}`},
         ]}
       />
 

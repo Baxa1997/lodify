@@ -3,7 +3,7 @@ export const menuItems = [
     id: "dashboard",
     label: "Dashboard",
     icon: "/img/dashboard.svg",
-    path: "/admin/dashboard",
+    path: "#",
   },
   {
     id: "trips",

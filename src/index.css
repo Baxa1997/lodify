@@ -46,7 +46,6 @@ body {
   min-height: 100vh;
 }
 
-/* Typography */
 h1,
 h2,
 h3,
@@ -99,7 +98,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Buttons */
 button {
   font-family: inherit;
   font-size: inherit;
@@ -114,7 +112,6 @@ button:disabled {
   opacity: 0.6;
 }
 
-/* Form Elements */
 input,
 textarea,
 select {
@@ -124,7 +121,6 @@ select {
   transition: all 0.2s ease;
 }
 
-/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -143,7 +139,6 @@ select {
   background: #94a3b8;
 }
 
-/* Utility Classes */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -212,7 +207,6 @@ select {
   margin-top: 1rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   :root {
     font-size: 14px;

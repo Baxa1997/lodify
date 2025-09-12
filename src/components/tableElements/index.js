@@ -6,4 +6,3 @@ export {default as CTableTh} from "./CTableTh";
 export {default as CTableTd} from "./CTableTd";
 export {default as CTablePagination} from "./CTablePagination";
 export {default as Table} from "./Table";
-export {default as UsersTable} from "./UsersTable";

@@ -13,12 +13,15 @@ import {useTablePagination} from "../../hooks";
 import {USER_STATUS} from "../../constants";
 import CTableRow from "../../components/tableElements/CTableRow";
 import FiltersComponent from "../../components/FiltersComponent";
+import AddUserModal from "../../components/AddUserModal";
 import usersService from "../../services/usersService";
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 
 const Users = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [sortConfig, setSortConfig] = useState({key: null, direction: "asc"});
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
   const {data: users = []} = useQuery({
     queryKey: ["GET_USERS_LIST"],
@@ -71,6 +74,10 @@ const Users = () => {
     [navigate]
   );
 
+  const handleAddUserClick = useCallback(() => {
+    setIsAddUserModalOpen(true);
+  }, []);
+
   return (
     <>
       <Flex flexDir={"column"} gap={"20px"}>
@@ -90,6 +97,7 @@ const Users = () => {
         filterByDomicile={true}
         addButton={true}
         verifySelect={true}
+        onAddUserClick={handleAddUserClick}
       />
 
       <Box mt={6}>
@@ -186,6 +194,11 @@ const Users = () => {
           </CTableBody>
         </CTable>
       </Box>
+
+      <AddUserModal
+        isOpen={isAddUserModalOpen}
+        onClose={() => setIsAddUserModalOpen(false)}
+      />
     </>
   );
 };

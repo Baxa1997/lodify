@@ -124,7 +124,6 @@ const CommunicationTab = ({
                 border="1px solid #E2E8F0"
                 borderRadius="6px"
                 height="40px"
-                width="120px"
                 _focusWithin={{
                   borderColor: "#E2E8F0",
                   boxShadow: "none",

@@ -9,6 +9,7 @@ const FiltersComponent = ({
   actionButton = false,
   addButton = false,
   verifySelect = false,
+  onAddUserClick = () => {},
 }) => {
   return (
     <Flex
@@ -73,7 +74,8 @@ const FiltersComponent = ({
             bg={"#1570EF"}
             w={"119px"}
             h={"40px"}
-            gap={"8px"}>
+            gap={"8px"}
+            onClick={onAddUserClick}>
             <img src="/img/addIcon.svg" alt="" />
             <Text fontSize={"14px"} fontWeight={"600"} color={"#fff"}>
               Add User

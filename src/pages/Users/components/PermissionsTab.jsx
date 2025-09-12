@@ -4,14 +4,23 @@ import {Box, Button} from "@chakra-ui/react";
 import {Flex} from "@chakra-ui/react";
 import {Text} from "@chakra-ui/react";
 
-function PermissionsTab({userId, watch, setValue}) {
+function PermissionsTab({
+  userId,
+  watch,
+  setValue,
+  control,
+  saveLoading = false,
+  onSave = () => {},
+  onCancel = () => {},
+}) {
   return (
     <Box mt={"24px"}>
       <SaveSection
         title="Permissions"
         description=""
-        onCancel={() => {}}
-        onSave={() => {}}
+        onCancel={onCancel}
+        onSave={onSave}
+        saveLoading={saveLoading}
         borderBottom="1px solid #E9EAEB"
         p={"0 0 20px 0"}
       />

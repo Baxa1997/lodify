@@ -1,5 +1,5 @@
 import React from "react";
-import {Flex, Box, Text, Button} from "@chakra-ui/react";
+import {Flex, Box, Text, Button, Spinner} from "@chakra-ui/react";
 
 const SaveSection = ({
   title,
@@ -8,6 +8,7 @@ const SaveSection = ({
   borderBottom = "none",
   onCancel = () => {},
   onSave = () => {},
+  saveLoading = false,
 }) => {
   return (
     <Flex
@@ -35,12 +36,16 @@ const SaveSection = ({
           Cancel
         </Button>
         <Button
+          width="100px"
           _hover={{bg: "#1570EF"}}
           ml="12px"
           bg={"#1570EF"}
           color={"#fff"}
           borderRadius={"8px"}
-          onClick={onSave}>
+          onClick={onSave}
+          isLoading={saveLoading}
+          loadingText="Saving..."
+          disabled={saveLoading}>
           Save
         </Button>
       </Box>

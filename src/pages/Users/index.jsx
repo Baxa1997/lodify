@@ -75,7 +75,7 @@ const Users = () => {
     <>
       <Flex flexDir={"column"} gap={"20px"}>
         <HeadBreadCrumb />
-        <Box h={"32px"}>
+        <Box mb={"20px"} h={"32px"}>
           <Text
             h={"32px"}
             color={"#181D27"}

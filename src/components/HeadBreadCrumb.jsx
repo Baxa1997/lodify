@@ -74,7 +74,6 @@ const HeadBreadCrumb = ({customPath = null}) => {
       );
     }
 
-    // Default behavior - extract title from pathname
     let path = location.pathname.split("/").pop();
     const title = path.charAt(0).toUpperCase() + path.slice(1);
 

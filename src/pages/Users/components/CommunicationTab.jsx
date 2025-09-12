@@ -1,28 +1,36 @@
 import {
   Box,
+  Button,
+  Checkbox,
   Flex,
   Text,
-  Checkbox,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  Button,
+  Radio,
+  RadioGroup,
 } from "@chakra-ui/react";
 import React from "react";
 import {PhoneInput} from "react-international-phone";
 import "react-international-phone/style.css";
-import SaveSection from "./SaveSection";
 import Select from "../../../components/Select";
-import "react-international-phone/style.css";
+import SaveSection from "./SaveSection";
+import {Controller} from "react-hook-form";
 
-const CommunicationTab = ({userId, control, watch, setValue}) => {
+const CommunicationTab = ({
+  userId,
+  control,
+  watch,
+  setValue,
+  saveLoading = false,
+  onSave = () => {},
+  onCancel = () => {},
+}) => {
   return (
     <Box mt={"24px"}>
       <SaveSection
         title="Communication"
         description=""
-        onCancel={() => {}}
-        onSave={() => {}}
+        onCancel={onCancel}
+        onSave={onSave}
+        saveLoading={saveLoading}
         borderBottom="1px solid #E9EAEB"
         p={"0 0 20px 0"}
       />
@@ -34,17 +42,69 @@ const CommunicationTab = ({userId, control, watch, setValue}) => {
           </Text>
 
           <Flex flexDir="column" gap="16px">
-            <CheckBoxItem
-              title="Account management"
-              description="Receive emails about trip offers, assignments, updates, or cancellations."
+            <Controller
+              name="email_preferences"
+              control={control}
+              render={({field}) => (
+                <CheckBoxItem
+                  title="Account Management"
+                  description="Receive emails about trip offers, assignments, updates, or cancellations."
+                  checked={field.value?.includes("Account Management") || false}
+                  onCheckboxChange={(e) => {
+                    const currentValue = field.value || [];
+                    const newValue = e.target.checked
+                      ? [...currentValue, "Account Management"]
+                      : currentValue.filter(
+                          (item) => item !== "Account Management"
+                        );
+                    field.onChange(newValue);
+                  }}
+                />
+              )}
             />
-            <CheckBoxItem
-              title="Tendered trips"
-              description="Receive emails about trip offers, assignments, updates, or cancellations."
+            <Controller
+              name="email_preferences"
+              control={control}
+              render={({field}) => (
+                <CheckBoxItem
+                  title="Tendered Trips"
+                  description="Receive emails about trip offers, assignments, updates, or cancellations."
+                  checked={field.value?.includes("Tendered Trips") || false}
+                  onCheckboxChange={(e) => {
+                    const currentValue = field.value || [];
+                    const newValue = e.target.checked
+                      ? [...currentValue, "Tendered Trips"]
+                      : currentValue.filter(
+                          (item) => item !== "Tendered Trips"
+                        );
+                    field.onChange(newValue);
+                  }}
+                />
+              )}
             />
-            <CheckBoxItem
-              title="In-progress trips and disruptions"
-              description="Receive notifications about in-transit issues."
+            <Controller
+              name="email_preferences"
+              control={control}
+              render={({field}) => (
+                <CheckBoxItem
+                  title="In-progress trips and disruptions"
+                  description="Receive notifications about in-transit issues."
+                  checked={
+                    field.value?.includes(
+                      "In-progress trips and disruptions"
+                    ) || false
+                  }
+                  onCheckboxChange={(e) => {
+                    const currentValue = field.value || [];
+                    const newValue = e.target.checked
+                      ? [...currentValue, "In-progress trips and disruptions"]
+                      : currentValue.filter(
+                          (item) => item !== "In-progress trips and disruptions"
+                        );
+                    field.onChange(newValue);
+                  }}
+                />
+              )}
             />
           </Flex>
         </Flex>
@@ -57,22 +117,23 @@ const CommunicationTab = ({userId, control, watch, setValue}) => {
           <Flex flexDir="column" gap="16px" w={"48%"}>
             <Box>
               <Text fontSize="14px" fontWeight="500" color="#181D27" mb="8px">
-                Phone number *
+                Phone number <span style={{color: "#1570EF"}}>*</span>
               </Text>
               <Box
                 display="flex"
                 border="1px solid #E2E8F0"
                 borderRadius="6px"
                 height="40px"
+                width="120px"
                 _focusWithin={{
                   borderColor: "#E2E8F0",
                   boxShadow: "none",
                 }}>
                 <PhoneInput
                   defaultCountry="us"
-                  value={watch?.phoneNumber || "+1 (937) 301-3613"}
+                  value={watch("phone") || "+1 (937) 301-3613"}
                   onChange={(phone) => {
-                    setValue?.("phoneNumber", phone);
+                    setValue?.("phone", phone);
                   }}
                   style={{
                     "--rip-border-radius": "0",
@@ -116,39 +177,47 @@ const CommunicationTab = ({userId, control, watch, setValue}) => {
 
             <Box>
               <Text fontSize="14px" fontWeight="500" color="#181D27" mb="8px">
-                Phone type
+                Phone type <span style={{color: "#1570EF"}}>*</span>
               </Text>
-              <Select
-                placeholder="Select phone type"
-                value={watch?.phoneType || "Mobile"}
-                options={[
-                  {value: "Mobile", label: "Mobile"},
-                  {value: "Home", label: "Home"},
-                  {value: "Work", label: "Work"},
-                  {value: "Other", label: "Other"},
-                ]}
-                onChange={(value) => {
-                  setValue?.("phoneType", value);
-                }}
-                borderColor="#E2E8F0"
-                focusBorderColor="#3182CE"
-                name="phoneType"
+              <Controller
+                name="phone_type"
+                control={control}
+                render={({field}) => (
+                  <Select
+                    placeholder="Select phone type"
+                    value={field.value?.[0] || ""}
+                    options={[
+                      {value: "Mobile", label: "Mobile"},
+                      {value: "Home", label: "Home"},
+                      {value: "Work", label: "Work"},
+                      {value: "Other", label: "Other"},
+                    ]}
+                    onChange={(value) => field.onChange([value])}
+                    borderColor="#E2E8F0"
+                    focusBorderColor="#3182CE"
+                  />
+                )}
               />
             </Box>
 
-            <Flex w="100%" gap="8px" alignItems="flex-start">
-              <Checkbox
-                mt="4px"
-                isChecked={watch?.isPrimaryContact || false}
-                onChange={(e) => {
-                  setValue?.("isPrimaryContact", e.target.checked);
-                }}
-                name="isPrimaryContact"
-              />
-              <Text fontSize="14px" fontWeight="500" color="#181D27">
-                Primary contact number
-              </Text>
-            </Flex>
+            <Controller
+              name="primary_contact_number"
+              control={control}
+              render={({field}) => (
+                <Flex w="100%" gap="8px" alignItems="flex-start">
+                  <Checkbox
+                    mt="4px"
+                    isChecked={field.value || false}
+                    onChange={(e) => {
+                      field.onChange(e.target.checked);
+                    }}
+                  />
+                  <Text fontSize="14px" fontWeight="500" color="#181D27">
+                    Primary contact number
+                  </Text>
+                </Flex>
+              )}
+            />
           </Flex>
         </Flex>
 
@@ -159,41 +228,81 @@ const CommunicationTab = ({userId, control, watch, setValue}) => {
 
           <Flex flexDir="column" gap="12px" w={"48%"}>
             <Flex gap="16px" flexWrap="wrap">
-              <CheckBoxItem
-                title="Morning"
-                description=""
-                checked={watch?.availableHours?.morning || true}
-                onCheckboxChange={(e) => {
-                  setValue?.("availableHours.morning", e.target.checked);
-                }}
-                name="availableHours.morning"
+              <Controller
+                name="available_hours"
+                control={control}
+                render={({field}) => (
+                  <CheckBoxItem
+                    title="Morning"
+                    description=""
+                    checked={field.value?.includes("Morning") || false}
+                    onCheckboxChange={(e) => {
+                      const currentValue = field.value || [];
+                      const newValue = e.target.checked
+                        ? [...currentValue, "Morning"]
+                        : currentValue.filter((item) => item !== "Morning");
+                      field.onChange(newValue);
+                    }}
+                    name="available_hours"
+                  />
+                )}
               />
-              <CheckBoxItem
-                title="Afternoon"
-                description=""
-                checked={watch?.availableHours?.afternoon || true}
-                onCheckboxChange={(e) => {
-                  setValue?.("availableHours.afternoon", e.target.checked);
-                }}
-                name="availableHours.afternoon"
+              <Controller
+                name="available_hours"
+                control={control}
+                render={({field}) => (
+                  <CheckBoxItem
+                    title="Afternoon"
+                    description=""
+                    checked={field.value?.includes("Afternoon") || false}
+                    onCheckboxChange={(e) => {
+                      const currentValue = field.value || [];
+                      const newValue = e.target.checked
+                        ? [...currentValue, "Afternoon"]
+                        : currentValue.filter((item) => item !== "Afternoon");
+                      field.onChange(newValue);
+                    }}
+                    name="available_hours"
+                  />
+                )}
               />
-              <CheckBoxItem
-                title="Evening"
-                description=""
-                checked={watch?.availableHours?.evening || false}
-                onCheckboxChange={(e) => {
-                  setValue?.("availableHours.evening", e.target.checked);
-                }}
-                name="availableHours.evening"
+              <Controller
+                name="available_hours"
+                control={control}
+                render={({field}) => (
+                  <CheckBoxItem
+                    title="Evening"
+                    description=""
+                    checked={field.value?.includes("Evening") || false}
+                    onCheckboxChange={(e) => {
+                      const currentValue = field.value || [];
+                      const newValue = e.target.checked
+                        ? [...currentValue, "Evening"]
+                        : currentValue.filter((item) => item !== "Evening");
+                      field.onChange(newValue);
+                    }}
+                    name="available_hours"
+                  />
+                )}
               />
-              <CheckBoxItem
-                title="Night"
-                description=""
-                checked={watch?.availableHours?.night || false}
-                onCheckboxChange={(e) => {
-                  setValue?.("availableHours.night", e.target.checked);
-                }}
-                name="availableHours.night"
+              <Controller
+                name="available_hours"
+                control={control}
+                render={({field}) => (
+                  <CheckBoxItem
+                    title="Night"
+                    description=""
+                    checked={field.value?.includes("Night") || false}
+                    onCheckboxChange={(e) => {
+                      const currentValue = field.value || [];
+                      const newValue = e.target.checked
+                        ? [...currentValue, "Night"]
+                        : currentValue.filter((item) => item !== "Night");
+                      field.onChange(newValue);
+                    }}
+                    name="available_hours"
+                  />
+                )}
               />
             </Flex>
           </Flex>

@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 import AdminLayout from "../layouts/AdminLayout";
+import Dashboard from "../pages/Dashboard";
 
 const Login = lazy(() => import("../pages/Login/Login"));
 const RoleSelection = lazy(() =>
@@ -96,7 +97,7 @@ const Router = () => {
           </ProtectedRoute>
         }>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
-        {/* <Route path="dashboard" element={<Dashboard />} /> */}
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="users" element={<Users />} />
         <Route path="users/:id" element={<SingleUser />} />
         <Route path="drivers" element={<Drivers />} />

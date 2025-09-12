@@ -11,6 +11,8 @@ import {
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import CTableRow from "../../components/tableElements/CTableRow";
+import {useQuery} from "@tanstack/react-query";
+import driversService from "../../services/driversService";
 
 const DriversTab = () => {
   const navigate = useNavigate();
@@ -21,70 +23,17 @@ const DriversTab = () => {
     key: "name",
     direction: "asc",
   });
-  const [filteredUsers, setFilteredUsers] = useState([
-    {
-      id: "1",
-      name: "Khurshid Rakhmatov",
-      cdlClass: "Class A",
-      licenseNumber: "261915590",
-      region: "NY",
-      status: "Active",
-      loadEligibility: "Eligible",
-      medicalCard: "Yes (exp. Aug 31, 2025)",
-    },
-    {
-      id: "2",
-      name: "John Smith",
-      cdlClass: "Class B",
-      licenseNumber: "872334115",
-      region: "NJ",
-      status: "Active",
-      loadEligibility: "Pending",
-      medicalCard: "Yes (exp. Aug 31, 2025)",
-    },
-    {
-      id: "3",
-      name: "Maria Lopez",
-      cdlClass: "Class A",
-      licenseNumber: "452118229",
-      region: "TX",
-      status: "Inactive",
-      loadEligibility: "Not Eligible",
-      medicalCard: "NO",
-    },
-    {
-      id: "4",
-      name: "David Johnson",
-      cdlClass: "Class C",
-      licenseNumber: "993217700",
-      region: "CA",
-      status: "Active",
-      loadEligibility: "Eligible",
-      medicalCard: "Yes (exp. Aug 31, 2025)",
-    },
-    {
-      id: "3",
-      name: "Maria Lopez",
-      cdlClass: "Class A",
-      licenseNumber: "452118229",
-      region: "TX",
-      status: "Inactive",
-      loadEligibility: "Not Eligible",
-      medicalCard: "NO",
-    },
-    {
-      id: "4",
-      name: "David Johnson",
-      cdlClass: "Class C",
-      licenseNumber: "993217700",
-      region: "CA",
-      status: "Active",
-      loadEligibility: "Eligible",
-      medicalCard: "Yes (exp. Aug 31, 2025)",
-    },
-  ]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const {data: drivers = [], isLoading} = useQuery({
+    queryKey: ["GET_DRIVERS_LIST"],
+    queryFn: () => {
+      return driversService.getList();
+    },
+    enabled: true,
+    select: (res) => res?.data?.response ?? [],
+  });
+  console.log(drivers);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -131,6 +80,17 @@ const DriversTab = () => {
         return "gray";
     }
   };
+  if (isLoading) {
+    return (
+      <Box mt={"32px"}>
+        <FiltersComponent filterButton={true} actionButton={true} />
+        <Box mt={6} p={4} textAlign="center">
+          Loading drivers...
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <Box mt={"32px"}>
       <FiltersComponent filterButton={true} actionButton={true} />
@@ -208,43 +168,51 @@ const DriversTab = () => {
           </CTableHead>
 
           <CTableBody>
-            {filteredUsers.map((user, index) => (
+            {drivers.map((driver, index) => (
               <CTableRow
-                key={user.id}
+                key={driver.id || driver.guid || index}
                 style={{
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                onClick={() => handleRowClick(user.id)}>
-                <CTableTd>{user.name}</CTableTd>
-                <CTableTd>{user.cdlClass}</CTableTd>
-                <CTableTd>{user.licenseNumber}</CTableTd>
-                <CTableTd>{user.region}</CTableTd>
+                onClick={() => handleRowClick(driver.id || driver.guid)}>
+                <CTableTd>{driver.full_name || driver.name || "N/A"}</CTableTd>
+                <CTableTd>
+                  {driver.cdl_class || driver.cdlClass || "N/A"}
+                </CTableTd>
+                <CTableTd>
+                  {driver.license_number || driver.licenseNumber || "N/A"}
+                </CTableTd>
+                <CTableTd>{driver.region || "N/A"}</CTableTd>
                 <CTableTd>
                   <Badge
-                    colorScheme={getStatusColor(user.status)}
+                    colorScheme={getStatusColor(driver.status)}
                     variant="subtle"
                     px={3}
                     py={1}
                     borderRadius="full"
                     fontSize="12px"
                     fontWeight="500">
-                    {user.status}
+                    {driver.status || "N/A"}
                   </Badge>
                 </CTableTd>
                 <CTableTd>
                   <Badge
-                    colorScheme={getLoadEligibilityColor(user.loadEligibility)}
+                    colorScheme={getLoadEligibilityColor(
+                      driver.load_eligibility || driver.loadEligibility
+                    )}
                     variant="subtle"
                     px={3}
                     py={1}
                     borderRadius="full"
                     fontSize="12px"
                     fontWeight="500">
-                    {user.loadEligibility}
+                    {driver.load_eligibility || driver.loadEligibility || "N/A"}
                   </Badge>
                 </CTableTd>
-                <CTableTd>{user.medicalCard}</CTableTd>
+                <CTableTd>
+                  {driver.medical_card || driver.medicalCard || "N/A"}
+                </CTableTd>
               </CTableRow>
             ))}
           </CTableBody>

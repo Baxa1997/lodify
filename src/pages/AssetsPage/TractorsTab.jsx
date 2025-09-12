@@ -10,17 +10,27 @@ import {
 } from "../../components/tableElements";
 import {useState} from "react";
 import CTableRow from "../../components/tableElements/CTableRow";
+import {useQuery} from "@tanstack/react-query";
+import assetsService from "../../services/assetsService";
 
 const TractorsTab = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({
-    key: "fullName",
+    key: "name",
     direction: "asc",
   });
-  const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const {data: assets = [], isLoading} = useQuery({
+    queryKey: ["GET_ASSETS_LIST"],
+    queryFn: () => {
+      return assetsService.getList();
+    },
+    enabled: true,
+    select: (res) => res?.data?.response ?? [],
+  });
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -47,10 +57,32 @@ const TractorsTab = () => {
         return "green";
       case "Inactive":
         return "red";
+      case "Available":
+        return "green";
+      case "In Use":
+        return "blue";
+      case "Maintenance":
+        return "orange";
       default:
         return "gray";
     }
   };
+
+  if (isLoading) {
+    return (
+      <Box mt={"32px"}>
+        <FiltersComponent
+          filterButton={true}
+          verifySelect={true}
+          actionButton={true}
+        />
+        <Box mt={6} p={4} textAlign="center">
+          Loading assets...
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <Box mt={"32px"}>
       <FiltersComponent
@@ -71,42 +103,50 @@ const TractorsTab = () => {
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "fullName" ? sortConfig.direction : null
+                  sortConfig.key === "name" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("fullName")}>
-                Full Name
+                onSort={() => handleSort("name")}>
+                Asset Name
               </CTableTh>
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "email" ? sortConfig.direction : null
+                  sortConfig.key === "type" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("email")}>
-                Email Address
+                onSort={() => handleSort("type")}>
+                Type
               </CTableTh>
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "phone" ? sortConfig.direction : null
+                  sortConfig.key === "vin" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("phone")}>
-                Phone Number
+                onSort={() => handleSort("vin")}>
+                VIN
               </CTableTh>
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "roles" ? sortConfig.direction : null
+                  sortConfig.key === "year" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("roles")}>
-                Roles
+                onSort={() => handleSort("year")}>
+                Year
               </CTableTh>
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "domiciles" ? sortConfig.direction : null
+                  sortConfig.key === "make" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("domiciles")}>
-                Domiciles
+                onSort={() => handleSort("make")}>
+                Make
+              </CTableTh>
+              <CTableTh
+                sortable={true}
+                sortDirection={
+                  sortConfig.key === "model" ? sortConfig.direction : null
+                }
+                onSort={() => handleSort("model")}>
+                Model
               </CTableTh>
               <CTableTh
                 sortable={true}
@@ -120,27 +160,29 @@ const TractorsTab = () => {
           </CTableHead>
 
           <CTableBody>
-            {[].map((user, index) => (
+            {assets.map((asset, index) => (
               <CTableRow
-                key={user.id}
+                key={asset.id || asset.guid || index}
                 style={{
                   backgroundColor: "white",
+                  cursor: "pointer",
                 }}>
-                <CTableTd>{user.fullName}</CTableTd>
-                <CTableTd>{user.email}</CTableTd>
-                <CTableTd>{user.phone}</CTableTd>
-                <CTableTd>{user.roles}</CTableTd>
-                <CTableTd>{user.domiciles}</CTableTd>
+                <CTableTd>{asset.name || asset.asset_name || "N/A"}</CTableTd>
+                <CTableTd>{asset.type || asset.asset_type || "N/A"}</CTableTd>
+                <CTableTd>{asset.vin || "N/A"}</CTableTd>
+                <CTableTd>{asset.year || "N/A"}</CTableTd>
+                <CTableTd>{asset.make || "N/A"}</CTableTd>
+                <CTableTd>{asset.model || "N/A"}</CTableTd>
                 <CTableTd>
                   <Badge
-                    colorScheme={getStatusColor(user.status)}
+                    colorScheme={getStatusColor(asset.status)}
                     variant="subtle"
                     px={3}
                     py={1}
                     borderRadius="full"
                     fontSize="12px"
                     fontWeight="500">
-                    {user.status}
+                    {asset.status || "N/A"}
                   </Badge>
                 </CTableTd>
               </CTableRow>

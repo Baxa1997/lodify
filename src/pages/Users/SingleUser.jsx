@@ -4,10 +4,11 @@ import {useForm} from "react-hook-form";
 import {Box, Flex, Text, Button} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import CustomRadio from "../../components/CustomRadio";
-import Select from "../../components/Select";
 import styles from "./SingleUser.module.scss";
 import AccountTab from "./components/AccountTab";
+import CommunicationTab from "./components/CommunicationTab";
+import UserRoleTab from "./components/UserRoleTab";
+import PermissionsTab from "./components/PermissionsTab";
 
 const SingleUser = () => {
   const {id} = useParams();
@@ -20,6 +21,7 @@ const SingleUser = () => {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: {errors, isDirty},
   } = useForm({
     defaultValues: {
@@ -123,21 +125,15 @@ const SingleUser = () => {
         </TabPanel>
 
         <TabPanel>
-          <Box mt={"32px"}>
-            <Text>Communication settings will be displayed here</Text>
-          </Box>
+          <CommunicationTab control={control} watch={watch} userId={id} />
         </TabPanel>
 
         <TabPanel>
-          <Box mt={"32px"}>
-            <Text>User role settings will be displayed here</Text>
-          </Box>
+          <UserRoleTab userId={id} watch={watch} setValue={setValue} />
         </TabPanel>
 
         <TabPanel>
-          <Box mt={"32px"}>
-            <Text>Permissions settings will be displayed here</Text>
-          </Box>
+          <PermissionsTab userId={id} watch={watch} setValue={setValue} />
         </TabPanel>
       </Tabs>
     </Flex>

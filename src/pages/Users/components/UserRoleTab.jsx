@@ -1,198 +1,125 @@
 import React from "react";
-import {
-  Box,
-  Text,
-  VStack,
-  HStack,
-  Badge,
-  Button,
-  Select,
-  FormControl,
-  FormLabel,
-} from "@chakra-ui/react";
-import {EditIcon, AddIcon} from "@chakra-ui/icons";
+import SaveSection from "./SaveSection";
+import {Box, Checkbox, Radio, Input, Textarea, Button} from "@chakra-ui/react";
+import {Flex} from "@chakra-ui/react";
+import {Text} from "@chakra-ui/react";
 
-const UserRoleTab = ({userId}) => {
-  const userRoles = {
-    currentRole: "Administrator",
-    roleId: "admin-001",
-    assignedBy: "System Admin",
-    assignedDate: "2023-06-15",
-    permissions: [
-      "User Management",
-      "System Configuration",
-      "Data Access",
-      "Reports Generation",
-      "Settings Management",
-    ],
-    availableRoles: [
-      {id: "admin", name: "Administrator"},
-      {id: "manager", name: "Manager"},
-      {id: "user", name: "User"},
-      {id: "viewer", name: "Viewer"},
-    ],
-  };
-
+const UserRoleTab = ({userId, watch, setValue}) => {
   return (
-    <Box>
-      <VStack align="stretch" spacing={6}>
-        <HStack justify="space-between" align="center">
-          <Text fontSize="20px" fontWeight="600" color="#1e293b">
-            User Role & Permissions
+    <Box mt={"24px"}>
+      <SaveSection
+        title="User Role"
+        description=""
+        onCancel={() => {}}
+        onSave={() => {}}
+        borderBottom="1px solid #E9EAEB"
+        p={"0 0 20px 0"}
+      />
+
+      <Flex gap="64px" p={"20px 0 24px 0"} borderBottom="1px solid #E9EAEB">
+        <Text w={"26%"} fontSize="14px" fontWeight="600" color="#181D27">
+          Available hours
+        </Text>
+
+        <Flex flexDir="column" gap="12px" w={"48%"}>
+          <Flex gap="16px" flexWrap="wrap">
+            <CheckBoxItem
+              title="Dispatcher"
+              description="Accept and rejects trips, assigns drivers to loads, and updates trip status and timestamps. 
+              Can view and edit capacity. Cant view company account or financial details, inlcuding payouts."
+              checked={watch?.availableHours?.morning || true}
+              onCheckboxChange={(e) => {
+                setValue?.("availableHours.morning", e.target.checked);
+              }}
+              name="availableHours.afternoon"
+            />
+            <CheckBoxItem
+              title="Administrator"
+              description="Updates all data in Lodify, and manages new and existing users. 
+              Can't delete or deactivate Primary Administrator"
+              checked={watch?.availableHours?.afternoon || true}
+              onCheckboxChange={(e) => {
+                setValue?.("availableHours.afternoon", e.target.checked);
+              }}
+              name="availableHours.afternoon"
+            />
+            <CheckBoxItem
+              title="Primary Administrator"
+              description="Performs all tasks of a dispatcher and administrator; 
+              in addition, sets uo company profile and activates or inactivates users."
+              checked={watch?.availableHours?.evening || false}
+              onCheckboxChange={(e) => {
+                setValue?.("availableHours.evening", e.target.checked);
+              }}
+              name="availableHours.afternoon"
+            />
+          </Flex>
+        </Flex>
+      </Flex>
+      <Flex gap="64px" p={"20px 0 24px 0"} borderBottom="1px solid #E9EAEB">
+        <Text w={"26%"} fontSize="14px" fontWeight="600" color="#181D27">
+          Notes
+        </Text>
+
+        <Flex flexDir="column" gap="12px" w={"48%"}>
+          <Flex gap="16px" flexWrap="wrap">
+            <Textarea resize="none" h="120px" placeholder="Enter notes" />
+          </Flex>
+        </Flex>
+      </Flex>
+
+      <Flex paddingTop={"20px"} flexDir="column">
+        <Text fontSize="18px" fontWeight="600" color="#181D27">
+          Delete user account
+        </Text>
+        <Button
+          mt={"10px"}
+          p={0}
+          h={"20px"}
+          display={"flex"}
+          alignItems={"center"}
+          gap="8px"
+          w={"104px"}
+          border={"none"}
+          bg={"none"}
+          _hover={{bg: "none"}}>
+          <img src="/img/trash.svg" width={"15px"} height={"15px"} alt="" />
+          <Text fontSize={"14px"} color={"#B42318"}>
+            Delete user
           </Text>
-          <Button
-            leftIcon={<EditIcon />}
-            colorScheme="blue"
-            variant="outline"
-            size="sm">
-            Edit Role
-          </Button>
-        </HStack>
-
-        <Box>
-          <Text fontSize="18px" fontWeight="600" color="#1e293b" mb={4}>
-            Current Role
-          </Text>
-          <Box
-            bg="gray.50"
-            p={6}
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="gray.200">
-            <VStack align="stretch" spacing={4}>
-              <HStack>
-                <Text fontWeight="500" color="gray.600" minW="120px">
-                  Role:
-                </Text>
-                <Badge
-                  colorScheme="blue"
-                  variant="subtle"
-                  px={3}
-                  py={1}
-                  borderRadius="full"
-                  fontSize="14px">
-                  {userRoles.currentRole}
-                </Badge>
-              </HStack>
-
-              <HStack>
-                <Text fontWeight="500" color="gray.600" minW="120px">
-                  Role ID:
-                </Text>
-                <Text color="gray.800">{userRoles.roleId}</Text>
-              </HStack>
-
-              <HStack>
-                <Text fontWeight="500" color="gray.600" minW="120px">
-                  Assigned By:
-                </Text>
-                <Text color="gray.800">{userRoles.assignedBy}</Text>
-              </HStack>
-
-              <HStack>
-                <Text fontWeight="500" color="gray.600" minW="120px">
-                  Assigned Date:
-                </Text>
-                <Text color="gray.800">{userRoles.assignedDate}</Text>
-              </HStack>
-            </VStack>
-          </Box>
-        </Box>
-
-        <Box>
-          <Text fontSize="18px" fontWeight="600" color="#1e293b" mb={4}>
-            Change Role
-          </Text>
-          <Box
-            bg="gray.50"
-            p={6}
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="gray.200">
-            <VStack align="stretch" spacing={4}>
-              <FormControl>
-                <FormLabel color="gray.800">Select New Role</FormLabel>
-                <Select placeholder="Choose a role" bg="white">
-                  {userRoles.availableRoles.map((role) => (
-                    <option key={role.id} value={role.id}>
-                      {role.name}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <HStack justify="flex-end">
-                <Button size="sm" variant="outline" colorScheme="gray">
-                  Cancel
-                </Button>
-                <Button size="sm" colorScheme="blue">
-                  Update Role
-                </Button>
-              </HStack>
-            </VStack>
-          </Box>
-        </Box>
-
-        <Box>
-          <HStack justify="space-between" align="center" mb={4}>
-            <Text fontSize="18px" fontWeight="600" color="#1e293b">
-              Current Permissions
-            </Text>
-            <Button
-              leftIcon={<AddIcon />}
-              size="sm"
-              variant="outline"
-              colorScheme="blue">
-              Add Permission
-            </Button>
-          </HStack>
-          <Box
-            bg="gray.50"
-            p={6}
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="gray.200">
-            <VStack align="stretch" spacing={3}>
-              {userRoles.permissions.map((permission, index) => (
-                <HStack key={index} justify="space-between">
-                  <Text color="gray.800">{permission}</Text>
-                  <Button size="xs" variant="outline" colorScheme="red">
-                    Remove
-                  </Button>
-                </HStack>
-              ))}
-            </VStack>
-          </Box>
-        </Box>
-
-        <Box>
-          <Text fontSize="18px" fontWeight="600" color="#1e293b" mb={4}>
-            Role History
-          </Text>
-          <Box
-            bg="gray.50"
-            p={6}
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="gray.200">
-            <VStack align="stretch" spacing={3}>
-              <HStack justify="space-between">
-                <Text color="gray.800">Administrator</Text>
-                <Text color="gray.600" fontSize="sm">
-                  2023-06-15 - Present
-                </Text>
-              </HStack>
-              <HStack justify="space-between">
-                <Text color="gray.800">User</Text>
-                <Text color="gray.600" fontSize="sm">
-                  2023-01-01 - 2023-06-14
-                </Text>
-              </HStack>
-            </VStack>
-          </Box>
-        </Box>
-      </VStack>
+        </Button>
+      </Flex>
     </Box>
+  );
+};
+
+const CheckBoxItem = ({
+  title,
+  description,
+  checked = false,
+  onCheckboxChange = () => {},
+  name,
+}) => {
+  return (
+    <Flex w={"100%"} gap="8px" alignItems="flex-start">
+      <Radio
+        mt="4px"
+        isChecked={checked}
+        onChange={onCheckboxChange}
+        name={name}
+      />
+
+      <Flex flexDir="column" gap="2px">
+        <Text fontSize={"14px"} fontWeight="600" color="#181D27">
+          {title}
+        </Text>
+        {description && (
+          <Text fontSize={"14px"} color="#535862" fontWeight="400">
+            {description}
+          </Text>
+        )}
+      </Flex>
+    </Flex>
   );
 };
 

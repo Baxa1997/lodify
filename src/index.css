@@ -207,6 +207,20 @@ select {
   margin-top: 1rem;
 }
 
+.react-international-phone-country-selector-button {
+  border: none !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+}
+
+.react-international-phone-country-selector {
+  border-radius: 12px !important;
+}
+
+.react-international-phone-country-selector-button:hover {
+  background: none !important;
+}
+
 @media (max-width: 768px) {
   :root {
     font-size: 14px;

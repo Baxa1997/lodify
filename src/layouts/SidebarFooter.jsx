@@ -80,6 +80,7 @@ const SidebarFooter = ({sidebarOpen = true}) => {
               placement="right-start">
               <Button
                 as={Flex}
+                justifyContent={"flex-start"}
                 position={"relative"}
                 bg={"#12161C"}
                 alignItems={"center"}

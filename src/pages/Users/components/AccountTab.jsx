@@ -1,6 +1,7 @@
 import {Box, Flex, Text, Button, Radio} from "@chakra-ui/react";
 import React from "react";
 import Select from "../../../components/Select";
+import SaveSection from "./SaveSection";
 
 const AccountTab = ({userId}) => {
   return (
@@ -15,37 +16,18 @@ const AccountTab = ({userId}) => {
         </Text>
       </Box>
 
-      <Flex
-        py={"24px"}
-        gap={"16px"}
-        alignItems={"center"}
-        justifyContent={"space-between"}>
-        <Box>
-          <Text fontSize="18px" fontWeight="600" color="#181D27">
-            Lodify Team
-          </Text>
-          <Text fontSize="14px" color="#535862">
-            lodify@eagleyetruckingllc.com
-          </Text>
-        </Box>
-
-        <Box>
-          <Button
-            bg={"#fff"}
-            border={"1px solid #D5D7DA"}
-            color={"#414651"}
-            borderRadius={"8px"}>
-            Cancel
-          </Button>
-          <Button ml="12px" bg={"#1570EF"} color={"#fff"} borderRadius={"8px"}>
-            Save
-          </Button>
-        </Box>
-      </Flex>
+      <SaveSection
+        py="24px"
+        title="Lodify Team"
+        description="lodify@eagleyetruckingllc.com"
+        onCancel={() => {}}
+        onSave={() => {}}
+        p={"24px 0"}
+      />
 
       <Box pb="18px" borderBottom={"1px solid #E9EAEB"}>
         <Flex gap="64px">
-          <Text w={"26%"} fontSize="18px" fontWeight="600" color="#181D27">
+          <Text w={"26%"} fontSize="14px" fontWeight="600" color="#181D27">
             Status
           </Text>
 
@@ -58,7 +40,7 @@ const AccountTab = ({userId}) => {
 
       <Box pt="18px">
         <Flex gap="64px">
-          <Text w={"26%"} fontSize="18px" fontWeight="600" color="#181D27">
+          <Text w={"26%"} fontSize="14px" fontWeight="600" color="#181D27">
             Assigned Location
           </Text>
 
@@ -139,12 +121,14 @@ const AccountTab = ({userId}) => {
           display={"flex"}
           alignItems={"center"}
           gap="8px"
-          w={"126px"}
+          w={"104px"}
           border={"none"}
           bg={"none"}
           _hover={{bg: "none"}}>
-          <img src="/img/trash.svg" alt="" />
-          <Text color={"#B42318"}>Delete user</Text>
+          <img src="/img/trash.svg" width={"15px"} height={"15px"} alt="" />
+          <Text fontSize={"14px"} color={"#B42318"}>
+            Delete user
+          </Text>
         </Button>
       </Flex>
     </Box>

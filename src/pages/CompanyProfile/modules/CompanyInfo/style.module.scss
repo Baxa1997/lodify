@@ -1,0 +1,27 @@
+@use "../../../../styles/variables.scss" as *;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-top: 32px;
+  border-bottom: 1px solid $border-color;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.formSection {
+  display: flex;
+  align-items: start;
+  padding: 20px 0;
+}
+
+.textFieldWrapper {
+  display: flex;
+  column-gap: 24px;
+}

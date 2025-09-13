@@ -1,19 +1,20 @@
-import React, {lazy, Suspense} from "react";
-import {Routes, Route, Navigate, useLocation} from "react-router-dom";
-import {useSelector} from "react-redux";
+import React, { lazy, Suspense } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 import AdminLayout from "../layouts/AdminLayout";
 import Dashboard from "../pages/Dashboard";
 import Settings from "../pages/Settings";
+import CompanyProfile from "../pages/CompanyProfile";
 
 const Login = lazy(() => import("../pages/Login/Login"));
 const RoleSelection = lazy(() =>
-  import("../pages/RoleSelection/RoleSelection")
+  import("../pages/RoleSelection/RoleSelection"),
 );
 const Register = lazy(() => import("../pages/Register/Register"));
 const PhoneVerification = lazy(() =>
-  import("../pages/PhoneVerification/PhoneVerification")
+  import("../pages/PhoneVerification/PhoneVerification"),
 );
 const Users = lazy(() => import("../pages/Users"));
 const SingleUser = lazy(() => import("../pages/Users/SingleUser"));
@@ -21,24 +22,29 @@ const Drivers = lazy(() => import("../pages/Drivers"));
 const SingleDriver = lazy(() => import("../pages/Drivers/SingleDriver"));
 const AssetsPage = lazy(() => import("../pages/AssetsPage"));
 
-const ProtectedRoute = ({children}) => {
+const ProtectedRoute = ({ children }) => {
   const isAuth = useSelector((state) => state?.auth?.isAuth);
   const location = useLocation();
 
   if (!isAuth) {
-    return <Navigate to="/login" state={{from: location}} replace />;
+    return <Navigate
+      to="/login"
+      state={{ from: location }}
+      replace />;
   }
 
   return children;
 };
 
-const PublicRoute = ({children}) => {
+const PublicRoute = ({ children }) => {
   const isAuth = useSelector((state) => state?.auth?.isAuth);
   const location = useLocation();
 
   if (isAuth) {
     const from = location.state?.from?.pathname || "/admin/dashboard";
-    return <Navigate to={from} replace />;
+    return <Navigate
+      to={from}
+      replace />;
   }
 
   return children;
@@ -98,23 +104,48 @@ const Router = () => {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="users" element={<Users />} />
-        <Route path="users/:id" element={<SingleUser />} />
-        <Route path="drivers" element={<Drivers />} />
-        <Route path="drivers/:id" element={<SingleDriver />} />
-        <Route path="assets" element={<AssetsPage />} />
-        <Route path="settings" element={<Settings />} />
+        <Route
+          index
+          element={<Navigate
+            to="/admin/dashboard"
+            replace />} />
+        <Route
+          path="dashboard"
+          element={<Dashboard />} />
+        <Route
+          path="users"
+          element={<Users />} />
+        <Route
+          path="users/:id"
+          element={<SingleUser />} />
+        <Route
+          path="drivers"
+          element={<Drivers />} />
+        <Route
+          path="drivers/:id"
+          element={<SingleDriver />} />
+        <Route
+          path="assets"
+          element={<AssetsPage />} />
+        <Route
+          path="settings"
+          element={<Settings />} />
+        <Route
+          path="company-profile"
+          element={<CompanyProfile />} />
       </Route>
 
       <Route
         path="/"
         element={
           isAuth ? (
-            <Navigate to="/admin/dashboard" replace />
+            <Navigate
+              to="/admin/dashboard"
+              replace />
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate
+              to="/login"
+              replace />
           )
         }
       />
@@ -123,9 +154,13 @@ const Router = () => {
         path="*"
         element={
           isAuth ? (
-            <Navigate to="/admin/dashboard" replace />
+            <Navigate
+              to="/admin/dashboard"
+              replace />
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate
+              to="/login"
+              replace />
           )
         }
       />

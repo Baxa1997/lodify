@@ -9,7 +9,7 @@ import { PhoneInput } from "react-international-phone";
 import Select from "../../../../components/Select";
 
 export const CompanyInfo = () => {
-  const { control } = useCompanyInfoProps();
+  const { control, watch, setValue } = useCompanyInfoProps();
 
   return <div>
     <div className={styles.header}>
@@ -40,7 +40,7 @@ export const CompanyInfo = () => {
           />
           <HFTextField
             control={control}
-            name="carrier_identifier"
+            name="identifier"
             label="Carrier Identifier"
             placeholder="Carrier Identifier"
             disabled
@@ -48,13 +48,13 @@ export const CompanyInfo = () => {
           />
           <HFTextField
             control={control}
-            name="usdot"
+            name="us_dot_number"
             placeholder="1- to 9-digit number"
             leftAddon="USDOT"
           />
           <HFTextField
             control={control}
-            name="mc"
+            name="mc_number"
             placeholder="3- to 8-digit number"
             leftAddon="MC"
           />
@@ -86,7 +86,7 @@ export const CompanyInfo = () => {
               fontWeight={500}
               mb="6px"
               display="block"
-              htmlFor={name}
+              htmlFor={"phone"}
             >
               Phone number
               <Box
@@ -105,10 +105,11 @@ export const CompanyInfo = () => {
               }}>
               <PhoneInput
                 defaultCountry="us"
-                // value={watch("phone") || "+1 (937) 301-3613"}
+                value={watch("phone")}
                 onChange={(phone) => {
-                  // setValue?.("phone", phone);
+                  setValue("phone", phone);
                 }}
+                id="phone"
                 style={{
                   "--rip-border-radius": "0",
                   "--rip-border-color": "transparent",
@@ -163,7 +164,7 @@ export const CompanyInfo = () => {
         >
           <HFTextField
             control={control}
-            name="address_1"
+            name="physical_address"
             label="Address Line 1"
             placeholder="606 Hillrose Ave Unit B"
             required
@@ -191,15 +192,15 @@ export const CompanyInfo = () => {
           />
           <Select
             placeholder="Select state"
-            value={""}
+            value={watch("state")}
             options={[
               { value: "Ohio", label: "Ohio" },
-              { value: "California", label: "California" },
+              { value: "california", label: "California" },
               { value: "Texas", label: "Texas" },
               { value: "New York", label: "New York" },
             ]}
             onChange={(value) => {
-              console.log("State changed to:", value);
+              setValue("state", value);
             }}
             borderColor={"#E2E8F0"}
             focusBorderColor={"#3182CE"}
@@ -208,7 +209,7 @@ export const CompanyInfo = () => {
           />
           <HFTextField
             control={control}
-            name="city"
+            name="zip_code"
             borderColor={"#E2E8F0"}
             label={"Zip code"}
             placeholder="12345"

@@ -25,6 +25,7 @@ const Select = ({
   isInvalid = false,
   errorBorderColor = "red.400",
   label,
+  name,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);

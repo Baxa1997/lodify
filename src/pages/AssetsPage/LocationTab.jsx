@@ -1,13 +1,7 @@
 import React, {useState, useCallback, useRef} from "react";
 import {Box, Flex, Text, Badge, Icon, Button} from "@chakra-ui/react";
 import GoogleMapReact from "google-map-react";
-import {
-  FaMapMarkerAlt,
-  FaTachometerAlt,
-  FaCar,
-  FaClock,
-  FaCrosshairs,
-} from "react-icons/fa";
+import {FaTachometerAlt, FaCar, FaCrosshairs} from "react-icons/fa";
 import {format} from "date-fns";
 import styles from "./LocationTab.module.scss";
 import assetsService from "../../services/assetsService";
@@ -77,7 +71,7 @@ const LocationTab = () => {
   const mapRef = useRef(null);
 
   const {data: mapData, isLoading: mapLoading} = useQuery({
-    queryKey: ["MAP_INVOKE"],
+    queryKey: ["MAP_INVOKE", location.state?.asset?.guid],
     queryFn: () =>
       assetsService.mapInovke({
         data: {
@@ -89,28 +83,31 @@ const LocationTab = () => {
     select: (data) => data?.data,
   });
 
-  const parseCoordinate = (value, fallback = 0) => {
-    if (!value) return fallback;
+  const parseCoordinate = (value) => {
+    if (!value) return null;
     const parsed = parseFloat(value);
-    return isNaN(parsed) ? fallback : parsed;
+    return isNaN(parsed) ? null : parsed;
   };
 
-  const latitude = parseCoordinate(mapData?.[0]?.latitude, 35.1495);
-  const longitude = parseCoordinate(mapData?.[0]?.longitude, -90.049);
+  const latitude = parseCoordinate(mapData?.[0]?.lat);
+  const longitude = parseCoordinate(mapData?.[0]?.lon);
 
-  // Map load handler
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
   }, []);
 
-  // Focus on asset location
   const focusOnAssetLocation = useCallback(() => {
-    if (mapRef.current && latitude && longitude) {
+    if (
+      mapRef.current &&
+      latitude &&
+      longitude &&
+      latitude !== 0 &&
+      longitude !== 0
+    ) {
       mapRef.current.panTo({lat: latitude, lng: longitude});
-      mapRef.current.setZoom(15); // Zoom level for detailed view
+      mapRef.current.setZoom(15);
     }
   }, [latitude, longitude]);
-
   if (mapLoading) {
     return (
       <Box
@@ -119,6 +116,25 @@ const LocationTab = () => {
         alignItems="center"
         justifyContent="center">
         <Text>Loading map data...</Text>
+      </Box>
+    );
+  }
+
+  // Check if we have valid coordinates
+  if (!mapData || !mapData[0] || !latitude || !longitude) {
+    return (
+      <Box
+        className={styles.mapContainer}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+        gap="10px">
+        <Text>No location data available for this asset</Text>
+        <Text fontSize="sm" color="gray.500">
+          Latitude: {mapData?.[0]?.latitude || "N/A"}, Longitude:{" "}
+          {mapData?.[0]?.longitude || "N/A"}
+        </Text>
       </Box>
     );
   }

@@ -25,11 +25,13 @@ import Select from "./Select";
 import styles from "./AddUserModal.module.scss";
 import {useQueryClient} from "@tanstack/react-query";
 import usersService from "../services/usersService";
+import {useSelector} from "react-redux";
 
 const AddUserModal = ({isOpen, onClose}) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
-
+  const userInfo = useSelector((state) => state.auth);
+  console.log("userInfo", userInfo);
   const handleAddUser = useCallback(
     async (userData) => {
       try {
@@ -56,8 +58,12 @@ const AddUserModal = ({isOpen, onClose}) => {
             available_hours: ["Morning"],
             attributes: {},
             client_type_id: "90df0db1-e295-4f2d-adb4-b4e33d3c3d38",
-            role_id: "1a4bd0a7-8ee9-4cd3-850a-c2db84a2d00c",
-            companies_id: "81db304b-3546-439f-8931-38ea7090800b",
+            role_id:
+              userData.role === "administrator"
+                ? "0dabed5c-f816-4772-8868-18a63bde531a"
+                : "85880d26-5663-4f6d-b61f-68fd3f43492b",
+            companies_id:
+              userInfo?.user_data?.companies_id || userInfo?.user_data?.guid,
             notes: `<p>User added via admin panel</p>`,
           },
         };

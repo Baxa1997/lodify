@@ -1,4 +1,4 @@
-import { Box, Input } from "@chakra-ui/react";
+import { Box, Input, InputGroup, InputLeftAddon, InputLeftElement, InputRightAddon, InputRightElement } from "@chakra-ui/react";
 import { Controller } from "react-hook-form";
 
 const HFTextField = ({
@@ -8,6 +8,10 @@ const HFTextField = ({
   placeholder,
   type = "text",
   required,
+  leftAddon,
+  rightAddon,
+  leftElement,
+  rightElement,
   ...props
 }) => {
   return (
@@ -30,20 +34,34 @@ const HFTextField = ({
               color="blue.500"
             >*</Box>}
           </Box>}
-          <Input
-            {...field}
-            label={label}
-            placeholder={placeholder}
-            type={type}
-            px={"12px"}
-            py={"8px"}
-            id={name}
-            _disabled={{
-              bg: "gray.bg.disabled",
-              color: "gray.color.disabled",
-            }}
-            {...props}
-          />
+          <InputGroup>
+            {
+              leftAddon && <InputLeftAddon bgColor="transparent">{leftAddon}</InputLeftAddon>
+            }
+            {
+              leftElement && <InputLeftElement>{leftElement}</InputLeftElement>
+            }
+            <Input
+              {...field}
+              label={label}
+              placeholder={placeholder}
+              type={type}
+              px={"12px"}
+              py={"8px"}
+              id={name}
+              _disabled={{
+                bg: "gray.bg.disabled",
+                color: "gray.color.disabled",
+              }}
+              {...props}
+            />
+            {
+              rightAddon && <InputRightAddon>{rightAddon}</InputRightAddon>
+            }
+            {
+              rightElement && <InputRightElement>{rightElement}</InputRightElement>
+            }
+          </InputGroup>
         </Box>
       )}
     />

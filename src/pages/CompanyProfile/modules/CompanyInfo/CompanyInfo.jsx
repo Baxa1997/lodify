@@ -9,7 +9,13 @@ import { PhoneInput } from "react-international-phone";
 import Select from "../../../../components/Select";
 
 export const CompanyInfo = () => {
-  const { control, watch, setValue } = useCompanyInfoProps();
+  const { 
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    onSubmit, 
+  } = useCompanyInfoProps();
 
   return <div>
     <div className={styles.header}>
@@ -17,6 +23,7 @@ export const CompanyInfo = () => {
       <div className={styles.actions}>
         <Button variant="outline">Cancel</Button>
         <Button
+          onClick={handleSubmit(onSubmit)}
           colorScheme="blue"
           variant="solid">Save</Button>
       </div>
@@ -150,6 +157,21 @@ export const CompanyInfo = () => {
             </Box>
 
           </Box>
+          <HFTextField
+            control={control}
+            name="login"
+            label="Login"
+            placeholder="Login"
+            required
+          />
+          <HFTextField
+            control={control}
+            name="password"
+            label="Password"
+            placeholder="Password"
+            type="password"
+            required
+          />
         </Box>
       </FormCardSection>
     </div>
@@ -167,6 +189,7 @@ export const CompanyInfo = () => {
             name="physical_address"
             label="Address Line 1"
             placeholder="606 Hillrose Ave Unit B"
+            type="text"
             required
           />
           <HFTextField

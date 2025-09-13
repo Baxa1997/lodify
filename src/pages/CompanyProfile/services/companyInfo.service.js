@@ -3,6 +3,7 @@ import httpRequest from "../../../utils/httpRequest";
 
 const itemService = {
   getSingle: (id) => httpRequest.get(`v1/object-slim/companies/${id}`),
+  updateSingle: (data) => httpRequest.put("/v2/items/companies", data),
 };
 
 export const useGetCompanySingle = (params = {}, id) => {
@@ -14,3 +15,5 @@ export const useGetCompanySingle = (params = {}, id) => {
     ...params,
   });
 };
+
+export const useUpdateCompanySingleMutation = (params) => useMutation({ mutationFn: itemService.updateSingle, ...params });

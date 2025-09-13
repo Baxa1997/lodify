@@ -1,6 +1,6 @@
-import React, {useState, useRef, useEffect, memo} from "react";
-import {Box, Text, VStack, HStack} from "@chakra-ui/react";
-import {LuChevronDown, LuCheck} from "react-icons/lu";
+import React, { useState, useRef, useEffect, memo } from "react";
+import { Box, Text, VStack, HStack } from "@chakra-ui/react";
+import { LuChevronDown, LuCheck } from "react-icons/lu";
 
 const Select = ({
   placeholder = "Select an option",
@@ -24,6 +24,7 @@ const Select = ({
   isRequired = false,
   isInvalid = false,
   errorBorderColor = "red.400",
+  label,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,121 +68,149 @@ const Select = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case "sm":
-        return {height: "32px", py: "6px", px: "12px", fontSize: "14px"};
-      case "lg":
-        return {height: "48px", py: "12px", px: "20px", fontSize: "18px"};
-      default:
-        return {height: "40px", py: "8px", px: "16px", fontSize: "16px"};
+    case "sm":
+      return { height: "32px", py: "6px", px: "12px", fontSize: "14px" };
+    case "lg":
+      return { height: "48px", py: "12px", px: "20px", fontSize: "18px" };
+    default:
+      return { height: "40px", py: "8px", px: "16px", fontSize: "16px" };
     }
   };
 
   return (
-    <Box position="relative" ref={dropdownRef} {...props}>
+    <Box>
+      {label && <Box
+        as="label"
+        color="#414651"
+        fontWeight={500}
+        mb="6px"
+        display="block"
+        htmlFor={name}
+      >
+        {label}
+        {isRequired && <Box
+          as="span"
+          color="blue.500"
+        >*</Box>}
+      </Box>}
       <Box
-        ref={selectRef}
-        onClick={handleToggle}
-        onFocus={() => setIsFocused(true)}
-        bg={bg}
-        border="1px solid"
-        borderColor={
-          isInvalid
-            ? errorBorderColor
-            : isFocused || isOpen
-            ? focusBorderColor
-            : borderColor
-        }
-        color={color}
-        borderRadius="lg"
-        pr={showIcon ? "40px" : "20px"}
-        pl="16px"
-        cursor={isDisabled ? "not-allowed" : "pointer"}
-        opacity={isDisabled ? 0.6 : 1}
-        transition="all 0.2s ease"
-        display="flex"
-        alignItems="center"
-        _hover={{
-          borderColor: isDisabled ? borderColor : focusBorderColor,
-        }}
-        _focus={{
-          outline: "none",
-          borderColor: isInvalid ? errorBorderColor : focusBorderColor,
-          boxShadow: `0 0 0 1px var(--chakra-colors-${
-            isInvalid ? "red" : "blue"
-          }-400)`,
-        }}
-        {...getSizeStyles()}>
-        <Text
-          color={selectedOption ? color : placeholderStyle.color}
-          fontSize={selectedOption ? "inherit" : placeholderStyle.fontSize}>
-          {selectedOption ? selectedOption.label : placeholder}
-        </Text>
+        position="relative"
+        ref={dropdownRef}
+        {...props}>
+        <Box
+          ref={selectRef}
+          onClick={handleToggle}
+          onFocus={() => setIsFocused(true)}
+          bg={bg}
+          border="1px solid"
+          borderColor={
+            isInvalid
+              ? errorBorderColor
+              : isFocused || isOpen
+                ? focusBorderColor
+                : borderColor
+          }
+          color={color}
+          borderRadius="lg"
+          pr={showIcon ? "40px" : "20px"}
+          pl="16px"
+          cursor={isDisabled ? "not-allowed" : "pointer"}
+          opacity={isDisabled ? 0.6 : 1}
+          transition="all 0.2s ease"
+          display="flex"
+          alignItems="center"
+          _hover={{
+            borderColor: isDisabled ? borderColor : focusBorderColor,
+          }}
+          _focus={{
+            outline: "none",
+            borderColor: isInvalid ? errorBorderColor : focusBorderColor,
+            boxShadow: `0 0 0 1px var(--chakra-colors-${
+              isInvalid ? "red" : "blue"
+            }-400)`,
+          }}
+          {...getSizeStyles()}>
+          <Text
+            color={selectedOption ? color : placeholderStyle.color}
+            fontSize={selectedOption ? "inherit" : placeholderStyle.fontSize}>
+            {selectedOption ? selectedOption.label : placeholder}
+          </Text>
 
-        {showIcon && (
+          {showIcon && (
+            <Box
+              position="absolute"
+              right="12px"
+              top="50%"
+              color={iconColor}
+              zIndex={1}
+              pointerEvents="none"
+              transition="transform 0.2s ease"
+              transform={`translateY(-50%) ${isOpen ? "rotate(180deg)" : ""}`}>
+              <LuChevronDown size={iconSize} />
+            </Box>
+          )}
+        </Box>
+
+        {isOpen && !isDisabled && (
           <Box
             position="absolute"
-            right="12px"
-            top="50%"
-            color={iconColor}
-            zIndex={1}
-            pointerEvents="none"
-            transition="transform 0.2s ease"
-            transform={`translateY(-50%) ${isOpen ? "rotate(180deg)" : ""}`}>
-            <LuChevronDown size={iconSize} />
+            top="100%"
+            left="0"
+            right="0"
+            bg="white"
+            border="1px solid"
+            borderColor={borderColor}
+            borderRadius="lg"
+            boxShadow="0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+            zIndex={1000}
+            maxH="200px"
+            overflowY="auto"
+            mt="2px">
+            <VStack
+              spacing={0}
+              align="stretch">
+              {options.length > 0 ? (
+                options.map((option, index) => (
+                  <Box
+                    key={index}
+                    onClick={() => handleSelect(option)}
+                    px="16px"
+                    py="8px"
+                    cursor={option.isDisabled ? "not-allowed" : "pointer"}
+                    bg={option.value === value ? "blue.50" : "transparent"}
+                    color={option.isDisabled ? "gray.400" : color}
+                    opacity={option.isDisabled ? 0.6 : 1}
+                    _hover={{
+                      bg: option.isDisabled ? "transparent" : "gray.50",
+                    }}
+                    transition="all 0.2s ease">
+                    <HStack
+                      justify="space-between"
+                      align="center">
+                      <Text fontSize="16px">{option.label}</Text>
+                      {option.value === value && (
+                        <LuCheck
+                          size={16}
+                          color="var(--chakra-colors-blue-500)"
+                        />
+                      )}
+                    </HStack>
+                  </Box>
+                ))
+              ) : (
+                <Box
+                  px="16px"
+                  py="8px"
+                  color="gray.500"
+                  textAlign="center">
+                  <Text fontSize="16px">No options</Text>
+                </Box>
+              )}
+            </VStack>
           </Box>
         )}
       </Box>
 
-      {isOpen && !isDisabled && (
-        <Box
-          position="absolute"
-          top="100%"
-          left="0"
-          right="0"
-          bg="white"
-          border="1px solid"
-          borderColor={borderColor}
-          borderRadius="lg"
-          boxShadow="0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
-          zIndex={1000}
-          maxH="200px"
-          overflowY="auto"
-          mt="2px">
-          <VStack spacing={0} align="stretch">
-            {options.length > 0 ? (
-              options.map((option, index) => (
-                <Box
-                  key={index}
-                  onClick={() => handleSelect(option)}
-                  px="16px"
-                  py="8px"
-                  cursor={option.isDisabled ? "not-allowed" : "pointer"}
-                  bg={option.value === value ? "blue.50" : "transparent"}
-                  color={option.isDisabled ? "gray.400" : color}
-                  opacity={option.isDisabled ? 0.6 : 1}
-                  _hover={{
-                    bg: option.isDisabled ? "transparent" : "gray.50",
-                  }}
-                  transition="all 0.2s ease">
-                  <HStack justify="space-between" align="center">
-                    <Text fontSize="16px">{option.label}</Text>
-                    {option.value === value && (
-                      <LuCheck
-                        size={16}
-                        color="var(--chakra-colors-blue-500)"
-                      />
-                    )}
-                  </HStack>
-                </Box>
-              ))
-            ) : (
-              <Box px="16px" py="8px" color="gray.500" textAlign="center">
-                <Text fontSize="16px">No options</Text>
-              </Box>
-            )}
-          </VStack>
-        </Box>
-      )}
     </Box>
   );
 };

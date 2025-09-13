@@ -6,6 +6,7 @@ import { FormSectionTitle } from "../../components/FormSectionTitle";
 import { FormCardSection } from "../../components/FormCardSection";
 import HFTextField from "../../../../components/HFTextField";
 import { PhoneInput } from "react-international-phone";
+import Select from "../../../../components/Select";
 
 export const CompanyInfo = () => {
   const { control } = useCompanyInfoProps();
@@ -105,9 +106,9 @@ export const CompanyInfo = () => {
               <PhoneInput
                 defaultCountry="us"
                 // value={watch("phone") || "+1 (937) 301-3613"}
-                // onChange={(phone) => {
-                //   setValue?.("phone", phone);
-                // }}
+                onChange={(phone) => {
+                  // setValue?.("phone", phone);
+                }}
                 style={{
                   "--rip-border-radius": "0",
                   "--rip-border-color": "transparent",
@@ -148,13 +149,6 @@ export const CompanyInfo = () => {
             </Box>
 
           </Box>
-          {/* <HFTextField
-            control={control}
-            name="phone"
-            label="Phone number"
-            placeholder="Phone number"
-            required
-          /> */}
         </Box>
       </FormCardSection>
     </div>
@@ -180,6 +174,71 @@ export const CompanyInfo = () => {
             label="Address Line 2"
             placeholder="Address Line 2 (Optional)"
           />
+        </Box>
+        <Box
+          display="grid"
+          gridTemplateColumns={"repeat(4, 150px)"}
+          gap="24px"
+          mt="24px"
+        >
+          <HFTextField
+            control={control}
+            name="city"
+            borderColor={"#E2E8F0"}
+            label="City"
+            placeholder="Dayton"
+            required
+          />
+          <Select
+            placeholder="Select state"
+            value={""}
+            options={[
+              { value: "Ohio", label: "Ohio" },
+              { value: "California", label: "California" },
+              { value: "Texas", label: "Texas" },
+              { value: "New York", label: "New York" },
+            ]}
+            onChange={(value) => {
+              console.log("State changed to:", value);
+            }}
+            borderColor={"#E2E8F0"}
+            focusBorderColor={"#3182CE"}
+            isRequired
+            label="State"
+          />
+          <HFTextField
+            control={control}
+            name="city"
+            borderColor={"#E2E8F0"}
+            label={"Zip code"}
+            placeholder="12345"
+            required
+          />
+          <HFTextField
+            control={control}
+            name="country"
+            borderColor={"#E2E8F0"}
+            label={"Country"}
+            placeholder="United States"
+          />
+          
+          {/* <Select
+            placeholder="Country"
+            value={""}
+            options={[
+              { value: "Ohio", label: "Ohio" },
+              { value: "California", label: "California" },
+              { value: "Texas", label: "Texas" },
+              { value: "New York", label: "New York" },
+            ]}
+            onChange={(value) => {
+              console.log("State changed to:", value);
+            }}
+            borderColor={"#E2E8F0"}
+            focusBorderColor={"#3182CE"}
+            label="Country"
+            isDisabled
+          /> */}
         </Box>
       </FormCardSection>
     </div>

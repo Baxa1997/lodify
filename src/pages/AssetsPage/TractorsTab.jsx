@@ -31,6 +31,9 @@ const TractorsTab = () => {
       return assetsService.getList();
     },
     enabled: true,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
     select: (res) => res?.data?.response ?? [],
   });
 
@@ -53,8 +56,13 @@ const TractorsTab = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleRowClick = (assetId) => {
-    navigate(`/admin/assets/${assetId}`);
+  const handleRowClick = (assetId, asset) => {
+    console.log("asset", asset);
+    navigate(`/admin/assets/${assetId}`, {
+      state: {
+        asset,
+      },
+    });
   };
 
   const getVerificationStatusColor = (status) => {
@@ -215,7 +223,7 @@ const TractorsTab = () => {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                onClick={() => handleRowClick(asset.id || asset.guid)}>
+                onClick={() => handleRowClick(asset.id || asset.guid, asset)}>
                 <CTableTd>{asset.units || asset.unit_number || "N/A"}</CTableTd>
                 <CTableTd>{asset.type || asset.asset_type || "N/A"}</CTableTd>
                 <CTableTd>{asset.make || "N/A"}</CTableTd>

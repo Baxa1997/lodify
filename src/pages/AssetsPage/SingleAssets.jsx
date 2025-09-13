@@ -9,6 +9,7 @@ import HFTextField from "../../components/HFTextField";
 import Select from "../../components/Select";
 import assetsService from "../../services/assetsService";
 import styles from "./SingleAssets.module.scss";
+import LocationTab from "./LocationTab";
 
 const SingleAssets = () => {
   const {id} = useParams();
@@ -212,6 +213,7 @@ const SingleAssets = () => {
         <TabList>
           <Tab>Asset Info</Tab>
           <Tab>Maintenance</Tab>
+          <Tab>Location</Tab>
         </TabList>
 
         <TabPanel>
@@ -614,6 +616,10 @@ const SingleAssets = () => {
           <Box mt={"32px"}>
             <Text>Asset Maintenance records will be displayed here</Text>
           </Box>
+        </TabPanel>
+
+        <TabPanel>
+          <LocationTab />
         </TabPanel>
       </Tabs>
     </Flex>

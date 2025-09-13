@@ -31,6 +31,9 @@ const DriversTab = () => {
       return driversService.getList();
     },
     enabled: true,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
     select: (res) => res?.data?.response ?? [],
   });
   console.log(drivers);

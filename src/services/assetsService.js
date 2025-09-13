@@ -5,6 +5,11 @@ const assetsService = {
   getAssetById: (id) =>
     httpRequest.get(`v1/object-slim/assets/${id}?from-ofs=true`),
   updateAsset: (id, data) => httpRequest.put(`v2/items/assets/${id}`, data),
+  mapInovke: (data) =>
+    httpRequest.post(
+      "v2/invoke_function/lodify-gateway/assets/latest_status",
+      data
+    ),
   getFuelTypes: () => httpRequest.get("v1/fuel-types"),
 };
 

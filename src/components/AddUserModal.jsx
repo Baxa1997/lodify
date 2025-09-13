@@ -170,14 +170,14 @@ const AddUserModal = ({isOpen, onClose}) => {
         <ModalBody className={styles.modalBody}>
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="stretch" flex="1">
-              <FormControl isInvalid={!!errors.email}>
+              <FormControl>
                 <FormLabel className={styles.fieldLabel}>
                   Full Name <span className={styles.required}>*</span>
                 </FormLabel>
                 <Input
                   type="text"
                   placeholder="Full name"
-                  value={formData.email}
+                  value={formData.full_name}
                   onChange={(e) =>
                     handleInputChange("full_name", e.target.value)
                   }

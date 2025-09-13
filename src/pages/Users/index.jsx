@@ -112,9 +112,9 @@ const Users = () => {
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "fullName" ? sortConfig.direction : null
+                  sortConfig.key === "full_Name" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("fullName")}>
+                onSort={() => handleSort("full_Name")}>
                 Full Name
               </CTableTh>
               <CTableTh
@@ -163,7 +163,7 @@ const Users = () => {
           <CTableBody>
             {users?.map((user, index) => (
               <CTableRow
-                key={user.id}
+                key={user?.id}
                 onClick={() => handleUserClick(user)}
                 style={{
                   backgroundColor: "white",
@@ -172,21 +172,21 @@ const Users = () => {
                 _hover={{
                   backgroundColor: "gray.50",
                 }}>
-                <CTableTd>{user.full_name}</CTableTd>
-                <CTableTd>{user.email}</CTableTd>
-                <CTableTd>{user.phone}</CTableTd>
-                <CTableTd>{user.role_id_data?.name}</CTableTd>
-                <CTableTd>{user.domiciles}</CTableTd>
+                <CTableTd>{user?.full_name}</CTableTd>
+                <CTableTd>{user?.email}</CTableTd>
+                <CTableTd>{user?.phone}</CTableTd>
+                <CTableTd>{user?.role_id_data?.name}</CTableTd>
+                <CTableTd>{user?.domiciles}</CTableTd>
                 <CTableTd>
                   <Badge
-                    colorScheme={getStatusColor(user.status)}
+                    colorScheme={getStatusColor(user?.status)}
                     variant="subtle"
                     px={3}
                     py={1}
                     borderRadius="full"
                     fontSize="12px"
                     fontWeight="500">
-                    {user.status}
+                    {user?.status}
                   </Badge>
                 </CTableTd>
               </CTableRow>

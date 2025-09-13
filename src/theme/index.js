@@ -1,9 +1,19 @@
-// For Chakra UI v3, we'll use a simpler approach
-// The theme configuration is handled differently in v3
+import { extendTheme } from "@chakra-ui/react";
 
-const theme = {
-  // Chakra UI v3 uses a different theming approach
-  // We'll configure this through the ChakraProvider directly
-};
+const theme = extendTheme({
+  colors: {
+    blue: {
+      500: "#1570EF",
+    },
+    gray: {
+      bg: {
+        disabled: "#FAFAFA",
+      },
+      color: {
+        disabled: "#717680",
+      },
+    },
+  },
+});
 
 export default theme;

@@ -69,6 +69,6 @@ export const menuItems = [
     id: "company_profile",
     label: "Company Profile",
     icon: "/img/profile.svg",
-    path: "#",
+    path: "company-profile",
   },
 ];

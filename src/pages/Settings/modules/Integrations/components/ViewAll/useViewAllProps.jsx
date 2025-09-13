@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCreateIntegrationsMutation, useGetIntegrations, useUpdateIntegrationsMutation } from "../../../../services/integrations.service";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { showAlert } from "../../../../../../store/alert/alert.thunk";
+import { useSelector } from "react-redux";
 import { useToast } from "@chakra-ui/react";
 
 const RESOURCES_MAP = {
@@ -64,8 +63,9 @@ const content = [
 
 export const useViewAllProps = () => {
 
-  const { companies_id } = useSelector(state => state.auth.user_data);
-  const dispatch = useDispatch();
+  const { companies_id: companyId, guid } = useSelector(state => state.auth.user_data);
+
+  const companies_id = companyId || guid;
 
   const toast = useToast();
 
@@ -114,7 +114,7 @@ export const useViewAllProps = () => {
     setCurrentContent(null);
   };
 
-  const { data, refetch } = useGetIntegrations();
+  const { data, refetch } = useGetIntegrations({}, companies_id);
 
   const checkedTypes = data?.response?.map(item => item?.type?.[0]);
 

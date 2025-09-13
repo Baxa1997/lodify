@@ -13,49 +13,49 @@ const RESOURCES_MAP = {
 
 const content = [
   {
-    icon: "/public/img/fmcsa.png",
+    icon: "/img/fmcsa.png",
     title: "FMCSS",
     type: ["FMCSS"],
     description: "Federal Motor Carrier Safety System – government database integration for compliance, carrier safety records, and DOT checks.",
   },
   {
-    icon: "/public/img/stripe.svg",
+    icon: "/img/stripe.svg",
     title: "FACTOR ELD",
     type: [RESOURCES_MAP.ELD],
     description: "Online payment processing platform for freight billing, invoicing, and secure transactions.",
   },
   {
-    icon: "/public/img/samsara.png",
+    icon: "/img/samsara.png",
     title: "Samsara",
     type: [RESOURCES_MAP.SAMSARA],
     description: "Electronic Logging Device (ELD) and telematics integration for driver hours, fleet tracking, and compliance reporting.",
   },
   {
-    icon: "/public/img/blue-yonder.png",
+    icon: "/img/blue-yonder.png",
     title: "Blue Yonder",
     type: [RESOURCES_MAP.BLUE_YONDER],
     description: "Transportation Management System for supply chain optimization, load planning, and freight execution.",
   },
   {
-    icon: "/public/img/sumsub.png",
+    icon: "/img/sumsub.png",
     title: "SumSub",
     type: ["SUMSUB"],
     description: "Digital identity verification and liveness detection service for secure onboarding and fraud prevention.",
   },
   {
-    icon: "/public/img/firebase.png",
+    icon: "/img/firebase.png",
     title: "Firebase SMS Auth",
     type: ["Firebase SMS Auth"],
     description: "Google Firebase authentication via SMS OTP for secure user login and access control.",
   },
   {
-    icon: "/public/img/mailchimp.svg",
+    icon: "/img/mailchimp.svg",
     title: "Mailchimp",
     type: ["Mailchimp"],
     description: "Email automation and SMTP integration for notifications, marketing campaigns, and transactional emails.",
   },
   {
-    icon: "/public/img/google-map.svg",
+    icon: "/img/google-map.svg",
     title: "Google Maps API",
     type: ["Google Maps API"],
     description: "Plan, track, and release great software.",
@@ -129,7 +129,6 @@ export const useViewAllProps = () => {
   };
 
   const onError = (error) => {
-    console.log(error);
     toast({
       position: "top right",
       title: "Something went wrong",

@@ -9,12 +9,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "./index.css";
 import App from "./App.jsx";
 import queryClient from "./queries/index.js";
+import theme from "./theme/index.js";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <BrowserRouter>
             <App />
           </BrowserRouter>

@@ -19,6 +19,7 @@
     "@tanstack/react-query-devtools": "^5.87.1",
     "axios": "^1.11.0",
     "date-fns": "^4.1.0",
+    "clsx": "^2.1.1",
     "framer-motion": "10.16.4",
     "google-map-react": "^2.2.5",
     "react": "18",

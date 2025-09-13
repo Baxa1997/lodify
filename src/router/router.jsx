@@ -6,6 +6,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import AdminLayout from "../layouts/AdminLayout";
 import Dashboard from "../pages/Dashboard";
 import Settings from "../pages/Settings";
+import SingleAssets from "../pages/AssetsPage/SingleAssets";
 
 const Login = lazy(() => import("../pages/Login/Login"));
 const RoleSelection = lazy(() =>
@@ -96,8 +97,7 @@ const Router = () => {
           <ProtectedRoute>
             <AdminLayout />
           </ProtectedRoute>
-        }
-      >
+        }>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="users" element={<Users />} />
@@ -105,6 +105,7 @@ const Router = () => {
         <Route path="drivers" element={<Drivers />} />
         <Route path="drivers/:id" element={<SingleDriver />} />
         <Route path="assets" element={<AssetsPage />} />
+        <Route path="assets/:id" element={<SingleAssets />} />
         <Route path="settings" element={<Settings />} />
       </Route>
 

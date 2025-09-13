@@ -9,11 +9,13 @@ import {
   CTableTd,
 } from "../../components/tableElements";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import CTableRow from "../../components/tableElements/CTableRow";
 import {useQuery} from "@tanstack/react-query";
 import assetsService from "../../services/assetsService";
 
 const TractorsTab = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -51,8 +53,11 @@ const TractorsTab = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleRowClick = (assetId) => {
+    navigate(`/admin/assets/${assetId}`);
+  };
+
   const getVerificationStatusColor = (status) => {
-    // Handle array of strings
     if (Array.isArray(status)) {
       const statusValue = status[0]?.toLowerCase();
       switch (statusValue) {
@@ -77,7 +82,6 @@ const TractorsTab = () => {
       }
     }
 
-    // Handle single string
     switch (status?.toLowerCase()) {
       case "verified":
         return "green";
@@ -210,24 +214,25 @@ const TractorsTab = () => {
                 style={{
                   backgroundColor: "white",
                   cursor: "pointer",
-                }}>
-                <CTableTd>
-                  {asset.unit_number || asset.unitNumber || asset.name || "N/A"}
-                </CTableTd>
+                }}
+                onClick={() => handleRowClick(asset.id || asset.guid)}>
+                <CTableTd>{asset.units || asset.unit_number || "N/A"}</CTableTd>
                 <CTableTd>{asset.type || asset.asset_type || "N/A"}</CTableTd>
                 <CTableTd>{asset.make || "N/A"}</CTableTd>
-                <CTableTd>{asset.fuel || asset.fuel_type || "N/A"}</CTableTd>
+                <CTableTd>
+                  {asset.fuel_types_id_data?.name || asset.fuel_type || "N/A"}
+                </CTableTd>
                 <CTableTd>
                   {asset.model_year || asset.modelYear || asset.year || "N/A"}
                 </CTableTd>
                 <CTableTd>
-                  {asset.license_plate || asset.licensePlate || "N/A"}
+                  {asset.licence_plate || asset.licence_plate || "N/A"}
                 </CTableTd>
-                <CTableTd>{asset.vin || "N/A"}</CTableTd>
+                <CTableTd>{asset.vin_number || "N/A"}</CTableTd>
                 <CTableTd>
                   <Badge
                     colorScheme={getVerificationStatusColor(
-                      asset.verification_status || asset.verificationStatus
+                      asset.status || asset.status
                     )}
                     variant="subtle"
                     px={3}
@@ -235,14 +240,9 @@ const TractorsTab = () => {
                     borderRadius="full"
                     fontSize="12px"
                     fontWeight="500">
-                    {Array.isArray(
-                      asset.verification_status || asset.verificationStatus
-                    )
-                      ? (asset.verification_status ||
-                          asset.verificationStatus)[0] || "N/A"
-                      : asset.verification_status ||
-                        asset.verificationStatus ||
-                        "N/A"}
+                    {Array.isArray(asset.status || asset.status)
+                      ? (asset.status || asset.status)[0] || "N/A"
+                      : asset.status || asset.status || "N/A"}
                   </Badge>
                 </CTableTd>
               </CTableRow>

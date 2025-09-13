@@ -31,7 +31,7 @@ const AddUserModal = ({isOpen, onClose}) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
   const userInfo = useSelector((state) => state.auth);
-  console.log("userInfo", userInfo);
+
   const handleAddUser = useCallback(
     async (userData) => {
       try {
@@ -83,6 +83,7 @@ const AddUserModal = ({isOpen, onClose}) => {
   );
 
   const [formData, setFormData] = useState({
+    full_name: "",
     email: "",
     phone: "",
     login: "",
@@ -144,6 +145,7 @@ const AddUserModal = ({isOpen, onClose}) => {
 
   const handleClose = () => {
     setFormData({
+      full_name: "",
       email: "",
       phone: "",
       login: "",
@@ -168,6 +170,24 @@ const AddUserModal = ({isOpen, onClose}) => {
         <ModalBody className={styles.modalBody}>
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="stretch" flex="1">
+              <FormControl isInvalid={!!errors.email}>
+                <FormLabel className={styles.fieldLabel}>
+                  Full Name <span className={styles.required}>*</span>
+                </FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Full name"
+                  value={formData.email}
+                  onChange={(e) =>
+                    handleInputChange("full_name", e.target.value)
+                  }
+                  className={styles.inputField}
+                />
+                {errors.email && (
+                  <Text className={styles.errorText}>{errors.email}</Text>
+                )}
+              </FormControl>
+
               <FormControl isInvalid={!!errors.email}>
                 <FormLabel className={styles.fieldLabel}>
                   Email Address <span className={styles.required}>*</span>
@@ -297,12 +317,12 @@ const AddUserModal = ({isOpen, onClose}) => {
                           />
                           <VStack align="stretch" spacing={1} flex={1}>
                             <Text className={styles.roleLabel}>Dispatcher</Text>
-                            <Text className={styles.roleDescription}>
+                            {/* <Text className={styles.roleDescription}>
                               Accepts and reject trips, assign drivers to loads,
                               and updates trip status and time stamps. Can view
                               and edit capacity. Can't view company account or
                               financial details, including payout.
-                            </Text>
+                            </Text> */}
                           </VStack>
                         </HStack>
                       </Box>
@@ -317,11 +337,11 @@ const AddUserModal = ({isOpen, onClose}) => {
                             <Text className={styles.roleLabel}>
                               Administrator
                             </Text>
-                            <Text className={styles.roleDescription}>
+                            {/* <Text className={styles.roleDescription}>
                               Updates all data in Lodify, and manages new and
                               existing users. Can't delete or deactivate Primary
                               Administrator.
-                            </Text>
+                            </Text> */}
                           </VStack>
                         </HStack>
                       </Box>

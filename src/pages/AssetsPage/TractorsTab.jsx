@@ -51,18 +51,50 @@ const TractorsTab = () => {
     setSearchTerm(e.target.value);
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Active":
+  const getVerificationStatusColor = (status) => {
+    // Handle array of strings
+    if (Array.isArray(status)) {
+      const statusValue = status[0]?.toLowerCase();
+      switch (statusValue) {
+        case "verified":
+          return "green";
+        case "needs attention":
+        case "pending":
+        case "unverified":
+          return "red";
+        case "in review":
+        case "processing":
+          return "orange";
+        case "expired":
+          return "red";
+        case "approved":
+          return "green";
+        case "rejected":
+        case "denied":
+          return "red";
+        default:
+          return "gray";
+      }
+    }
+
+    // Handle single string
+    switch (status?.toLowerCase()) {
+      case "verified":
         return "green";
-      case "Inactive":
+      case "needs attention":
+      case "pending":
+      case "unverified":
         return "red";
-      case "Available":
-        return "green";
-      case "In Use":
-        return "blue";
-      case "Maintenance":
+      case "in review":
+      case "processing":
         return "orange";
+      case "expired":
+        return "red";
+      case "approved":
+        return "green";
+      case "rejected":
+      case "denied":
+        return "red";
       default:
         return "gray";
     }
@@ -103,10 +135,10 @@ const TractorsTab = () => {
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "name" ? sortConfig.direction : null
+                  sortConfig.key === "unitNumber" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("name")}>
-                Asset Name
+                onSort={() => handleSort("unitNumber")}>
+                Unit #
               </CTableTh>
               <CTableTh
                 sortable={true}
@@ -119,22 +151,6 @@ const TractorsTab = () => {
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "vin" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("vin")}>
-                VIN
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "year" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("year")}>
-                Year
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
                   sortConfig.key === "make" ? sortConfig.direction : null
                 }
                 onSort={() => handleSort("make")}>
@@ -143,18 +159,46 @@ const TractorsTab = () => {
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "model" ? sortConfig.direction : null
+                  sortConfig.key === "fuel" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("model")}>
-                Model
+                onSort={() => handleSort("fuel")}>
+                Fuel
               </CTableTh>
               <CTableTh
                 sortable={true}
                 sortDirection={
-                  sortConfig.key === "status" ? sortConfig.direction : null
+                  sortConfig.key === "modelYear" ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("status")}>
-                Status
+                onSort={() => handleSort("modelYear")}>
+                Model year
+              </CTableTh>
+              <CTableTh
+                sortable={true}
+                sortDirection={
+                  sortConfig.key === "licensePlate"
+                    ? sortConfig.direction
+                    : null
+                }
+                onSort={() => handleSort("licensePlate")}>
+                License plate
+              </CTableTh>
+              <CTableTh
+                sortable={true}
+                sortDirection={
+                  sortConfig.key === "vin" ? sortConfig.direction : null
+                }
+                onSort={() => handleSort("vin")}>
+                VIN
+              </CTableTh>
+              <CTableTh
+                sortable={true}
+                sortDirection={
+                  sortConfig.key === "verificationStatus"
+                    ? sortConfig.direction
+                    : null
+                }
+                onSort={() => handleSort("verificationStatus")}>
+                Verification status
               </CTableTh>
             </Box>
           </CTableHead>
@@ -167,22 +211,38 @@ const TractorsTab = () => {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}>
-                <CTableTd>{asset.name || asset.asset_name || "N/A"}</CTableTd>
+                <CTableTd>
+                  {asset.unit_number || asset.unitNumber || asset.name || "N/A"}
+                </CTableTd>
                 <CTableTd>{asset.type || asset.asset_type || "N/A"}</CTableTd>
-                <CTableTd>{asset.vin || "N/A"}</CTableTd>
-                <CTableTd>{asset.year || "N/A"}</CTableTd>
                 <CTableTd>{asset.make || "N/A"}</CTableTd>
-                <CTableTd>{asset.model || "N/A"}</CTableTd>
+                <CTableTd>{asset.fuel || asset.fuel_type || "N/A"}</CTableTd>
+                <CTableTd>
+                  {asset.model_year || asset.modelYear || asset.year || "N/A"}
+                </CTableTd>
+                <CTableTd>
+                  {asset.license_plate || asset.licensePlate || "N/A"}
+                </CTableTd>
+                <CTableTd>{asset.vin || "N/A"}</CTableTd>
                 <CTableTd>
                   <Badge
-                    colorScheme={getStatusColor(asset.status)}
+                    colorScheme={getVerificationStatusColor(
+                      asset.verification_status || asset.verificationStatus
+                    )}
                     variant="subtle"
                     px={3}
                     py={1}
                     borderRadius="full"
                     fontSize="12px"
                     fontWeight="500">
-                    {asset.status || "N/A"}
+                    {Array.isArray(
+                      asset.verification_status || asset.verificationStatus
+                    )
+                      ? (asset.verification_status ||
+                          asset.verificationStatus)[0] || "N/A"
+                      : asset.verification_status ||
+                        asset.verificationStatus ||
+                        "N/A"}
                   </Badge>
                 </CTableTd>
               </CTableRow>

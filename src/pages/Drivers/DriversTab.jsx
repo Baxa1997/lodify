@@ -58,24 +58,79 @@ const DriversTab = () => {
   };
 
   const getStatusColor = (status) => {
-    switch (status) {
-      case "Active":
+    switch (status?.[0]?.toLowerCase()) {
+      case "active":
+      case "available":
+      case "ready":
         return "green";
-      case "Inactive":
+      case "inactive":
+      case "unavailable":
+      case "offline":
         return "red";
+      case "pending":
+      case "pending approval":
+      case "under review":
+        return "orange";
+      case "on duty":
+      case "on trip":
+      case "driving":
+        return "blue";
+      case "maintenance":
+      case "repair":
+        return "purple";
+      case "suspended":
+      case "terminated":
+        return "red";
+      case "part-time":
+      case "limited":
+        return "yellow";
       default:
         return "gray";
     }
   };
 
   const getLoadEligibilityColor = (eligibility) => {
-    switch (eligibility) {
-      case "Eligible":
+    // Handle array of strings
+    if (Array.isArray(eligibility)) {
+      const status = eligibility[0]?.toLowerCase();
+      switch (status) {
+        case "eligible":
+          return "green";
+        case "pending":
+          return "orange";
+        case "not eligible":
+        case "not-eligible":
+          return "red";
+        case "approved":
+          return "green";
+        case "rejected":
+        case "denied":
+          return "red";
+        case "under review":
+        case "processing":
+          return "orange";
+        default:
+          return "gray";
+      }
+    }
+
+    // Handle single string
+    switch (eligibility?.toLowerCase()) {
+      case "eligible":
         return "green";
-      case "Pending":
+      case "pending":
         return "orange";
-      case "Not Eligible":
+      case "not eligible":
+      case "not-eligible":
         return "red";
+      case "approved":
+        return "green";
+      case "rejected":
+      case "denied":
+        return "red";
+      case "under review":
+      case "processing":
+        return "orange";
       default:
         return "gray";
     }
@@ -207,7 +262,14 @@ const DriversTab = () => {
                     borderRadius="full"
                     fontSize="12px"
                     fontWeight="500">
-                    {driver.load_eligibility || driver.loadEligibility || "N/A"}
+                    {Array.isArray(
+                      driver.load_eligibility || driver.loadEligibility
+                    )
+                      ? (driver.load_eligibility ||
+                          driver.loadEligibility)[0] || "N/A"
+                      : driver.load_eligibility ||
+                        driver.loadEligibility ||
+                        "N/A"}
                   </Badge>
                 </CTableTd>
                 <CTableTd>

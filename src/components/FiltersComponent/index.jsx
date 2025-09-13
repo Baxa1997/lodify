@@ -70,6 +70,9 @@ const FiltersComponent = ({
 
         {addButton && (
           <Button
+            _hover={{
+              background: "#1570EF",
+            }}
             borderRadius={"8px"}
             bg={"#1570EF"}
             w={"119px"}

@@ -198,7 +198,7 @@ const Login = () => {
         setIsLoading(false);
       });
   };
-  console.log("getFormValue", getFormValue);
+
   const computeConnections = (connections) => {
     const data = {
       ...getFormValue,
@@ -437,11 +437,6 @@ const Login = () => {
                 maxLength: {
                   value: 50,
                   message: "Username must be less than 50 characters",
-                },
-                pattern: {
-                  value: /^[a-zA-Z0-9_@.-]+$/,
-                  message:
-                    "Username can only contain letters, numbers, and @._-",
                 },
               })}
             />

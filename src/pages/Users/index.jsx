@@ -68,8 +68,8 @@ const Users = () => {
   }, []);
 
   const handleUserClick = useCallback(
-    (userId) => {
-      navigate(`/admin/users/${userId}`);
+    (user) => {
+      navigate(`/admin/users/${user.guid}`, {state: {user}});
     },
     [navigate]
   );
@@ -164,7 +164,7 @@ const Users = () => {
             {users?.map((user, index) => (
               <CTableRow
                 key={user.id}
-                onClick={() => handleUserClick(user.guid)}
+                onClick={() => handleUserClick(user)}
                 style={{
                   backgroundColor: "white",
                   cursor: "pointer",

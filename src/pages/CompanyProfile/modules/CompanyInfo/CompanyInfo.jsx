@@ -1,12 +1,13 @@
 import styles from "./style.module.scss";
 import MainHeading from "../../../../components/MainHeading";
 import { useCompanyInfoProps } from "./useCompanyInfoProps";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { FormSectionTitle } from "../../components/FormSectionTitle";
 import { FormCardSection } from "../../components/FormCardSection";
 import HFTextField from "../../../../components/HFTextField";
 import { PhoneInput } from "react-international-phone";
 import Select from "../../../../components/Select";
+import { CompanyActionBox } from "../../components/CompanyActionBox";
 
 export const CompanyInfo = () => {
   const { 
@@ -20,13 +21,7 @@ export const CompanyInfo = () => {
   return <div>
     <div className={styles.header}>
       <MainHeading size="18px">Company Info</MainHeading>
-      <div className={styles.actions}>
-        <Button variant="outline">Cancel</Button>
-        <Button
-          onClick={handleSubmit(onSubmit)}
-          colorScheme="blue"
-          variant="solid">Save</Button>
-      </div>
+      <CompanyActionBox onSaveClick={handleSubmit(onSubmit)} />
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>Authority details</FormSectionTitle>

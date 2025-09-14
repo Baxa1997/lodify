@@ -100,6 +100,7 @@ export const CompanyInfo = () => {
               display="flex"
               border="1px solid #E2E8F0"
               borderRadius="6px"
+              overflow="hidden"
               height="40px"
               _focusWithin={{
                 borderColor: "#E2E8F0",
@@ -108,9 +109,7 @@ export const CompanyInfo = () => {
               <PhoneInput
                 defaultCountry="us"
                 value={watch("phone")}
-                onChange={(phone) => {
-                  setValue("phone", phone);
-                }}
+                onChange={(phone) => setValue("phone", phone)}
                 id="phone"
                 style={{
                   "--rip-border-radius": "0",
@@ -121,7 +120,10 @@ export const CompanyInfo = () => {
                   "--rip-gap": "0px",
                   "--rip-outline": "none",
                   "--rip-box-shadow": "none",
-                  width: "100%",
+                  // width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  position: "relative",
                 }}
                 inputStyle={{
                   fontSize: "14px",
@@ -131,19 +133,20 @@ export const CompanyInfo = () => {
                   padding: "8px 12px",
                   outline: "none",
                   boxShadow: "none",
-                  _focus: {
-                    border: "none",
-                    outline: "none",
-                    boxShadow: "none",
-                  },
+                  flex: 1,
                 }}
                 countrySelectorStyleProps={{
                   style: {
+                    position: "absolute",
+                    zIndex: 10,
                     background: "#fff",
                     outline: "none",
-                    focus: "none",
+                    border: "none",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
                   },
-                }}
+                }}          
                 hideDropdown={false}
                 showDropdownSearch={true}
                 disableFormatting={false}

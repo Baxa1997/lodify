@@ -20,6 +20,10 @@
   align-items: start;
   gap: 32px;
   padding: 20px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $border-color;
+  }
 }
 
 .textFieldWrapper {

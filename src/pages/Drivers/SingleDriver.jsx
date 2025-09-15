@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import {useForm, Controller} from "react-hook-form";
-import {Box, Flex, Text, Button} from "@chakra-ui/react";
+import {Box, Flex, Text, Button, useToast} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
@@ -15,6 +15,7 @@ const SingleDriver = () => {
   const {id} = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const toast = useToast();
 
   const {
     control,
@@ -67,6 +68,27 @@ const SingleDriver = () => {
       queryClient.invalidateQueries({queryKey: ["GET_DRIVERS_LIST"]});
       reset();
       navigate("/admin/drivers");
+
+      toast({
+        title: "Driver Updated Successfully!",
+        description: "Driver information has been saved",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error Updating Driver",
+        description:
+          error?.response?.data?.message ||
+          "Failed to update driver. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
     },
   });
 

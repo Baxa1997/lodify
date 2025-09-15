@@ -16,6 +16,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  useToast,
 } from "@chakra-ui/react";
 import {useForm, Controller} from "react-hook-form";
 import {PhoneInput} from "react-international-phone";
@@ -29,6 +30,7 @@ const AddDriverModal = ({isOpen, onClose}) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
   const userInfo = useSelector((state) => state.auth);
+  const toast = useToast();
 
   const handleAddDriver = useCallback(
     async (driverData) => {
@@ -70,10 +72,29 @@ const AddDriverModal = ({isOpen, onClose}) => {
         queryClient.invalidateQueries({queryKey: ["GET_DRIVERS_LIST"]});
         handleClose();
         setLoading(false);
-        console.log("Driver added successfully");
+
+        toast({
+          title: "Driver Added Successfully!",
+          description: "The driver has been created and added to the system",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
       } catch (error) {
         setLoading(false);
         console.error("Error adding driver:", error);
+
+        toast({
+          title: "Error Adding Driver",
+          description:
+            error?.response?.data?.message ||
+            "Failed to add driver. Please try again.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
       }
     },
     [queryClient, userInfo]

@@ -18,6 +18,7 @@ import {
   Divider,
   Radio,
   RadioGroup,
+  useToast,
 } from "@chakra-ui/react";
 import {PhoneInput} from "react-international-phone";
 import "react-international-phone/style.css";
@@ -31,6 +32,7 @@ const AddUserModal = ({isOpen, onClose}) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
   const userInfo = useSelector((state) => state.auth);
+  const toast = useToast();
 
   const handleAddUser = useCallback(
     async (userData) => {
@@ -73,10 +75,29 @@ const AddUserModal = ({isOpen, onClose}) => {
         queryClient.invalidateQueries({queryKey: ["GET_USERS_LIST"]});
         handleClose();
         setLoading(false);
-        console.log("User added successfully");
+
+        toast({
+          title: "User Added Successfully!",
+          description: "The user has been created and invited",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
       } catch (error) {
         setLoading(false);
         console.error("Error adding user:", error);
+
+        toast({
+          title: "Error Adding User",
+          description:
+            error?.response?.data?.message ||
+            "Failed to add user. Please try again.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
       }
     },
     [queryClient]

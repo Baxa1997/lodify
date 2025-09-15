@@ -1,4 +1,4 @@
-import {Box, Button, Flex, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, Text, useToast} from "@chakra-ui/react";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import React, {useEffect} from "react";
 import {Controller, useForm} from "react-hook-form";
@@ -16,6 +16,7 @@ const SingleAssets = () => {
   const {id} = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const toast = useToast();
 
   const {
     control,
@@ -72,6 +73,27 @@ const SingleAssets = () => {
     onSuccess: () => {
       navigate("/admin/assets");
       queryClient.invalidateQueries({queryKey: ["GET_ASSETS_LIST"]});
+
+      toast({
+        title: "Asset Updated Successfully!",
+        description: "Asset information has been saved",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error Updating Asset",
+        description:
+          error?.response?.data?.message ||
+          "Failed to update asset. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
     },
   });
 

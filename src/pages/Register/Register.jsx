@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useNavigate, useLocation} from "react-router-dom";
 import {useForm} from "react-hook-form";
-import {Flex} from "@chakra-ui/react";
+import {Flex, useToast} from "@chakra-ui/react";
 import RegisterSidebar from "./components/RegisterSidebar";
 import RegisterForm from "./components/RegisterForm";
 import authService from "../../services/auth/authService";
@@ -14,6 +14,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState("");
   const [completedSteps, setCompletedSteps] = useState(new Set());
+  const toast = useToast();
 
   const {
     register,
@@ -208,9 +209,30 @@ const Register = () => {
 
       const response = await authService.register(apiData);
 
+      toast({
+        title: "Registration Successful!",
+        description:
+          "Your account has been created successfully. Please log in to continue.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+
       navigate("/login");
     } catch (error) {
       console.error("Registration failed:", error);
+
+      toast({
+        title: "Registration Failed",
+        description:
+          error?.response?.data?.message ||
+          "Failed to create account. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
     } finally {
       setIsLoading(false);
     }

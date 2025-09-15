@@ -13,6 +13,7 @@ import {
   VStack,
   HStack,
   Select,
+  useToast,
 } from "@chakra-ui/react";
 import {useForm, Controller} from "react-hook-form";
 import "react-international-phone/style.css";
@@ -26,6 +27,7 @@ const AddAssetsModal = ({isOpen, onClose}) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
   const userInfo = useSelector((state) => state.auth);
+  const toast = useToast();
 
   const handleAddAsset = useCallback(
     async (assetData) => {
@@ -54,10 +56,29 @@ const AddAssetsModal = ({isOpen, onClose}) => {
         queryClient.invalidateQueries({queryKey: ["GET_ASSETS_LIST"]});
         handleClose();
         setLoading(false);
-        console.log("Asset added successfully");
+
+        toast({
+          title: "Asset Added Successfully!",
+          description: "The asset has been created and added to the system",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
       } catch (error) {
         setLoading(false);
         console.error("Error adding asset:", error);
+
+        toast({
+          title: "Error Adding Asset",
+          description:
+            error?.response?.data?.message ||
+            "Failed to add asset. Please try again.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
       }
     },
     [queryClient, userInfo]

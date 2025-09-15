@@ -7,7 +7,7 @@ import { useToast } from "@chakra-ui/react";
 export const useCompanyInfoProps = () => {
   const { company_id, guid, client_type_id, role_id } = useSelector(state => state.auth.user_data);
   const toast = useToast();
-  console.log({ role_id });
+
   const id = company_id || guid;
 
   const { watch, setValue, reset, handleSubmit, control } = useForm({

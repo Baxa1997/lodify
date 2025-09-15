@@ -1,12 +1,13 @@
 import styles from "./style.module.scss";
 import MainHeading from "../../../../components/MainHeading";
 import { useCompanyInfoProps } from "./useCompanyInfoProps";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { FormSectionTitle } from "../../components/FormSectionTitle";
 import { FormCardSection } from "../../components/FormCardSection";
 import HFTextField from "../../../../components/HFTextField";
 import { PhoneInput } from "react-international-phone";
 import Select from "../../../../components/Select";
+import { CompanyActionBox } from "../../components/CompanyActionBox";
 
 export const CompanyInfo = () => {
   const { 
@@ -20,13 +21,7 @@ export const CompanyInfo = () => {
   return <div>
     <div className={styles.header}>
       <MainHeading size="18px">Company Info</MainHeading>
-      <div className={styles.actions}>
-        <Button variant="outline">Cancel</Button>
-        <Button
-          onClick={handleSubmit(onSubmit)}
-          colorScheme="blue"
-          variant="solid">Save</Button>
-      </div>
+      <CompanyActionBox onSaveClick={handleSubmit(onSubmit)} />
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>Authority details</FormSectionTitle>
@@ -105,6 +100,7 @@ export const CompanyInfo = () => {
               display="flex"
               border="1px solid #E2E8F0"
               borderRadius="6px"
+              overflow="hidden"
               height="40px"
               _focusWithin={{
                 borderColor: "#E2E8F0",
@@ -113,9 +109,7 @@ export const CompanyInfo = () => {
               <PhoneInput
                 defaultCountry="us"
                 value={watch("phone")}
-                onChange={(phone) => {
-                  setValue("phone", phone);
-                }}
+                onChange={(phone) => setValue("phone", phone)}
                 id="phone"
                 style={{
                   "--rip-border-radius": "0",
@@ -126,7 +120,10 @@ export const CompanyInfo = () => {
                   "--rip-gap": "0px",
                   "--rip-outline": "none",
                   "--rip-box-shadow": "none",
-                  width: "100%",
+                  // width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  position: "relative",
                 }}
                 inputStyle={{
                   fontSize: "14px",
@@ -136,19 +133,20 @@ export const CompanyInfo = () => {
                   padding: "8px 12px",
                   outline: "none",
                   boxShadow: "none",
-                  _focus: {
-                    border: "none",
-                    outline: "none",
-                    boxShadow: "none",
-                  },
+                  flex: 1,
                 }}
                 countrySelectorStyleProps={{
                   style: {
+                    position: "absolute",
+                    zIndex: 10,
                     background: "#fff",
                     outline: "none",
-                    focus: "none",
+                    border: "none",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
                   },
-                }}
+                }}          
                 hideDropdown={false}
                 showDropdownSearch={true}
                 disableFormatting={false}

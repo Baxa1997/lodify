@@ -2,6 +2,7 @@ import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import MainHeading from "../../components/MainHeading";
 import MainTabs from "../../components/MainTabs";
 import { CompanyInfo } from "./modules/CompanyInfo";
+import { Report } from "./modules/Report";
 
 const CompanyProfile = () => {
   return (
@@ -27,7 +28,7 @@ const CompanyProfile = () => {
           <></>,
           <></>,
           <></>,
-          <></>,
+          <Report key={"FMCSA Report"} />,
         ]} 
       />
     </div>

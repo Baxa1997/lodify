@@ -1,22 +1,60 @@
 import React from "react";
 import {Box, Flex} from "@chakra-ui/react";
-import FormField from "../FormField";
+import InputFormField from "../InputFormField";
+import SelectFormField from "../SelectFormField";
+import {US_STATES, COUNTRIES, ZIP_CODE_PATTERNS} from "../../constants/states";
 import styles from "../../MultiStepRegister.module.scss";
 
-const AddressDetails = ({register, errors}) => {
+const AddressDetails = ({register, errors, watch}) => {
+  const selectedCountry = watch("country");
+
+  const stateValidation = {
+    required: "State is required",
+  };
+
+  const countryValidation = {
+    required: "Country is required",
+  };
+
+  const zipCodeValidation = {
+    required: "Zip code is required",
+    validate: (value) => {
+      if (!selectedCountry) return true;
+
+      const pattern = ZIP_CODE_PATTERNS[selectedCountry];
+      if (!pattern) return true;
+
+      if (!pattern.test(value)) {
+        switch (selectedCountry) {
+          case "United States":
+            return "Please enter a valid US zip code (12345 or 12345-6789)";
+          case "Canada":
+            return "Please enter a valid Canadian postal code (A1A 1A1)";
+          case "Mexico":
+            return "Please enter a valid Mexican zip code (12345)";
+          default:
+            return "Please enter a valid zip code";
+        }
+      }
+      return true;
+    },
+  };
+
   return (
     <Box className={styles.stepContent}>
-      <FormField
+      <InputFormField
         label="Address Line 1"
         name="physical_address1"
         placeholder="606 Hillrose Ave Unit B"
         register={register}
         errors={errors}
         isRequired
-        validation={{}}
+        validation={{
+          required: "Address Line 1 is required",
+        }}
       />
 
-      <FormField
+      <InputFormField
         label="Address Line 2"
         name="physical_address2"
         placeholder="Address Line 2 (Optional)"
@@ -25,46 +63,53 @@ const AddressDetails = ({register, errors}) => {
       />
 
       <Flex className={styles.formRow}>
-        <FormField
+        <InputFormField
           label="City"
           name="city"
           placeholder="Dayton"
           register={register}
           errors={errors}
           isRequired
-          validation={{}}
+          validation={{
+            required: "City is required",
+            minLength: {
+              value: 2,
+              message: "City must be at least 2 characters",
+            },
+          }}
         />
 
-        <FormField
+        <SelectFormField
           label="State"
           name="state"
-          placeholder="OH"
+          placeholder="Select State"
           register={register}
           errors={errors}
           isRequired
-          hasDropdown
-          validation={{}}
+          options={US_STATES}
+          validation={stateValidation}
         />
       </Flex>
 
-      <Flex className={styles.formRow}>
-        <FormField
+      <Flex mt={2} className={styles.formRow}>
+        <InputFormField
           label="Zip code"
           name="zip_code"
           placeholder="45404"
           register={register}
           errors={errors}
           isRequired
-          validation={{}}
+          validation={zipCodeValidation}
         />
 
-        <FormField
+        <SelectFormField
           label="Country"
           name="country"
-          placeholder="United States"
+          placeholder="Select Country"
           register={register}
           errors={errors}
-          hasDropdown
+          options={COUNTRIES}
+          validation={countryValidation}
         />
       </Flex>
     </Box>

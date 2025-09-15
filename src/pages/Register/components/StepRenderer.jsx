@@ -16,7 +16,9 @@ const StepRenderer = ({
     case 1:
       return <CompanyDetails register={register} errors={errors} />;
     case 2:
-      return <AddressDetails register={register} errors={errors} />;
+      return (
+        <AddressDetails register={register} errors={errors} watch={watch} />
+      );
     case 3:
       return <ContactDetails register={register} errors={errors} />;
     case 4:

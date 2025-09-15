@@ -56,10 +56,31 @@ const Register = () => {
   };
 
   const validateStep2 = (data) => {
-    const requiredFields = ["physical_address1", "city", "state", "zip_code"];
-    return requiredFields.every(
+    const requiredFields = [
+      "physical_address1",
+      "city",
+      "state",
+      "zip_code",
+      "country",
+    ];
+    const hasRequiredFields = requiredFields.every(
       (field) => data[field] && data[field].trim() !== ""
     );
+
+    if (data.country && data.zip_code) {
+      const zipCodePatterns = {
+        "United States": /^\d{5}(-\d{4})?$/,
+        Canada: /^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$/,
+        Mexico: /^\d{5}$/,
+      };
+
+      const pattern = zipCodePatterns[data.country];
+      if (pattern && !pattern.test(data.zip_code)) {
+        return false;
+      }
+    }
+
+    return hasRequiredFields;
   };
 
   const validateStep3 = (data) => {

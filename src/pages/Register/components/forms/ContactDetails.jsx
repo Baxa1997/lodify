@@ -1,12 +1,12 @@
 import React from "react";
 import {Box, Text} from "@chakra-ui/react";
-import FormField from "../FormField";
+import InputFormField from "../InputFormField";
 import styles from "../../MultiStepRegister.module.scss";
 
 const ContactDetails = ({register, errors}) => {
   return (
     <Box className={styles.stepContent}>
-      <FormField
+      <InputFormField
         type="email"
         label="Email Address"
         name="email"
@@ -14,20 +14,32 @@ const ContactDetails = ({register, errors}) => {
         register={register}
         errors={errors}
         isRequired
-        validation={{}}
+        validation={{
+          required: "Email is required",
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: "Please enter a valid email address",
+          },
+        }}
       />
 
-      <FormField
+      <InputFormField
         label="Login"
         name="login"
         placeholder="Create a login"
         register={register}
         errors={errors}
         isRequired
-        validation={{}}
+        validation={{
+          required: "Login is required",
+          minLength: {
+            value: 3,
+            message: "Login must be at least 3 characters",
+          },
+        }}
       />
 
-      <FormField
+      <InputFormField
         type="password"
         label="Password"
         name="password"
@@ -35,7 +47,13 @@ const ContactDetails = ({register, errors}) => {
         register={register}
         errors={errors}
         isRequired
-        validation={{}}
+        validation={{
+          required: "Password is required",
+          minLength: {
+            value: 8,
+            message: "Password must be at least 8 characters",
+          },
+        }}
       />
     </Box>
   );

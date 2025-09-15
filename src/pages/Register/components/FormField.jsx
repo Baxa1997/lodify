@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Input, Text} from "@chakra-ui/react";
+import {Box, Input, Text, Select} from "@chakra-ui/react";
 import styles from "../MultiStepRegister.module.scss";
 
 const FormField = ({
@@ -12,6 +12,7 @@ const FormField = ({
   validation = {},
   isRequired = false,
   hasDropdown = false,
+  options = [],
   children,
   ...inputProps
 }) => {
@@ -21,7 +22,38 @@ const FormField = ({
         {label} <span>{isRequired && "*"}</span>
       </Text>
 
-      <Box className={hasDropdown ? styles.inputWithDropdown : ""}>
+      {hasDropdown ? (
+        <Select
+          id={name}
+          name={name}
+          placeholder={placeholder}
+          {...register(name, validation)}
+          isInvalid={!!errors[name]}
+          errorBorderColor="#e53e3e"
+          className={styles.formInput}
+          sx={{
+            width: "100%",
+            padding: "12px 16px",
+            border: "2px solid #e2e8f0",
+            borderRadius: "8px",
+            fontSize: "16px",
+            transition: "all 0.2s ease",
+            background: "white",
+            maxHeight: "200px",
+            _focus: {
+              outline: "none",
+              borderColor: "#3b82f6",
+              boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.1)",
+            },
+          }}
+          {...inputProps}>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+      ) : (
         <Input
           type={type}
           id={name}
@@ -32,8 +64,8 @@ const FormField = ({
           errorBorderColor="#e53e3e"
           className={styles.formInput}
           sx={{
-            width: "360px",
-            padding: hasDropdown ? "12px 40px 12px 16px" : "12px 16px",
+            width: "100%",
+            padding: "12px 16px",
             border: "2px solid #e2e8f0",
             borderRadius: "8px",
             fontSize: "16px",
@@ -47,8 +79,13 @@ const FormField = ({
           }}
           {...inputProps}
         />
-        {hasDropdown && <Text className={styles.dropdownIcon}>▼</Text>}
-      </Box>
+      )}
+
+      {errors[name] && (
+        <Text color="red.500" fontSize="sm" mt={1}>
+          {errors[name].message}
+        </Text>
+      )}
 
       {children}
     </Box>

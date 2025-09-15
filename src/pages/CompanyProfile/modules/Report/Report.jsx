@@ -1,20 +1,17 @@
 import { Box } from "@chakra-ui/react";
 import HFTextField from "../../../../components/HFTextField";
 import MainHeading from "../../../../components/MainHeading";
-import { CompanyActionBox } from "../../components/CompanyActionBox";
 import { FormCardSection } from "../../components/FormCardSection";
 import { FormSectionTitle } from "../../components/FormSectionTitle";
 import styles from "./style.module.scss";
 import { useReportProps } from "./useReportProps";
 
 export const Report = () => {
-  const { control, watch, setValue, handleSubmit, onSubmit } = useReportProps();
-
+  const { control } = useReportProps();
 
   return <div>
     <div className={styles.header}>
       <MainHeading size="18px">FMCSA Report</MainHeading>
-      <CompanyActionBox onSaveClick={handleSubmit(onSubmit)} />
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>USDOT information</FormSectionTitle>
@@ -35,7 +32,7 @@ export const Report = () => {
         >
           <HFTextField
             control={control}
-            name="usdot"
+            name="us_dot_number"
             label="USDOT"
             placeholder="None"
             required
@@ -51,7 +48,7 @@ export const Report = () => {
           />
           <HFTextField
             control={control}
-            name="state_carrier"
+            name="state_carrier_id"
             label="State Carrier ID number"
             placeholder="None"
             required
@@ -59,15 +56,16 @@ export const Report = () => {
           />
           <HFTextField
             control={control}
-            name="service_date"
+            name="out_of_service_date"
             label="Out of service date"
             placeholder="None"
             required
             disabled
           />
           <HFTextField
+            type="date"
             control={control}
-            name="mcs_150_date"
+            name="mcs_150_form_date"
             label="MCS-150 Form Date"
             placeholder="None"
             required
@@ -95,7 +93,7 @@ export const Report = () => {
         >
           <HFTextField
             control={control}
-            name="operating_authority_status"
+            name="operating_status"
             label="Operating Authority Status"
             placeholder="None"
             required
@@ -110,7 +108,7 @@ export const Report = () => {
         >
           <HFTextField
             control={control}
-            name="MC_MX_FF"
+            name="mc_number"
             label="MC/MX/FF Number(s)"
             placeholder="None"
             required
@@ -118,7 +116,7 @@ export const Report = () => {
           />
           <HFTextField
             control={control}
-            name="MC_MX_FF"
+            name="legal_name"
             label="Legal Name"
             placeholder="None"
             required
@@ -138,7 +136,7 @@ export const Report = () => {
         >
           <HFTextField
             control={control}
-            name="legal_name"
+            name="company_name"
             label="Legal Name"
             placeholder="None"
             required

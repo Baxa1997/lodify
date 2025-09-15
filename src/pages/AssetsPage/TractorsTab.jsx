@@ -13,6 +13,11 @@ import {useNavigate} from "react-router-dom";
 import CTableRow from "../../components/tableElements/CTableRow";
 import {useQuery} from "@tanstack/react-query";
 import assetsService from "../../services/assetsService";
+import AddAssetsModal from "./components/AddAssetsModal";
+import {
+  getVerificationStatusColor,
+  tableElements,
+} from "./components/mockElements";
 
 const TractorsTab = () => {
   const navigate = useNavigate();
@@ -23,7 +28,7 @@ const TractorsTab = () => {
     key: "name",
     direction: "asc",
   });
-  const [searchTerm, setSearchTerm] = useState("");
+  const [isAddAssetsModalOpen, setIsAddAssetsModalOpen] = useState(false);
 
   const {data: assets = [], isLoading} = useQuery({
     queryKey: ["GET_ASSETS_LIST"],
@@ -52,64 +57,12 @@ const TractorsTab = () => {
     });
   };
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
   const handleRowClick = (assetId, asset) => {
-    console.log("asset", asset);
     navigate(`/admin/assets/${assetId}`, {
       state: {
         asset,
       },
     });
-  };
-
-  const getVerificationStatusColor = (status) => {
-    if (Array.isArray(status)) {
-      const statusValue = status[0]?.toLowerCase();
-      switch (statusValue) {
-        case "verified":
-          return "green";
-        case "needs attention":
-        case "pending":
-        case "unverified":
-          return "red";
-        case "in review":
-        case "processing":
-          return "orange";
-        case "expired":
-          return "red";
-        case "approved":
-          return "green";
-        case "rejected":
-        case "denied":
-          return "red";
-        default:
-          return "gray";
-      }
-    }
-
-    switch (status?.toLowerCase()) {
-      case "verified":
-        return "green";
-      case "needs attention":
-      case "pending":
-      case "unverified":
-        return "red";
-      case "in review":
-      case "processing":
-        return "orange";
-      case "expired":
-        return "red";
-      case "approved":
-        return "green";
-      case "rejected":
-      case "denied":
-        return "red";
-      default:
-        return "gray";
-    }
   };
 
   if (isLoading) {
@@ -133,6 +86,7 @@ const TractorsTab = () => {
         filterButton={true}
         verifySelect={true}
         actionButton={true}
+        onActionButtonClick={() => setIsAddAssetsModalOpen(true)}
       />
 
       <Box mt={6}>
@@ -143,76 +97,17 @@ const TractorsTab = () => {
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}>
           <CTableHead>
-            <Box as="tr">
+            {tableElements.map((element) => (
               <CTableTh
-                sortable={true}
+                key={element.key}
+                sortable={element.sortable}
                 sortDirection={
-                  sortConfig.key === "unitNumber" ? sortConfig.direction : null
+                  sortConfig.key === element.key ? sortConfig.direction : null
                 }
-                onSort={() => handleSort("unitNumber")}>
-                Unit #
+                onSort={() => handleSort(element.key)}>
+                {element.label}
               </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "type" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("type")}>
-                Type
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "make" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("make")}>
-                Make
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "fuel" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("fuel")}>
-                Fuel
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "modelYear" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("modelYear")}>
-                Model year
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "licensePlate"
-                    ? sortConfig.direction
-                    : null
-                }
-                onSort={() => handleSort("licensePlate")}>
-                License plate
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "vin" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("vin")}>
-                VIN
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "verificationStatus"
-                    ? sortConfig.direction
-                    : null
-                }
-                onSort={() => handleSort("verificationStatus")}>
-                Verification status
-              </CTableTh>
-            </Box>
+            ))}
           </CTableHead>
 
           <CTableBody>
@@ -258,6 +153,11 @@ const TractorsTab = () => {
           </CTableBody>
         </CTable>
       </Box>
+
+      <AddAssetsModal
+        isOpen={isAddAssetsModalOpen}
+        onClose={() => setIsAddAssetsModalOpen(false)}
+      />
     </Box>
   );
 };

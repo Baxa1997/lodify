@@ -10,6 +10,7 @@ const FiltersComponent = ({
   addButton = false,
   verifySelect = false,
   onAddUserClick = () => {},
+  onActionButtonClick = () => {},
 }) => {
   return (
     <Flex
@@ -92,7 +93,8 @@ const FiltersComponent = ({
             bg={"#1570EF"}
             w={"80px"}
             h={"40px"}
-            gap={"8px"}>
+            gap={"8px"}
+            onClick={onActionButtonClick}>
             <Text fontSize={"14px"} fontWeight={"600"} color={"#fff"}>
               Action
             </Text>

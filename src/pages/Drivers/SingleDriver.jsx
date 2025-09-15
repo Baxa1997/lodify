@@ -42,6 +42,10 @@ const SingleDriver = () => {
       status: "",
       companies_id: "",
       guid: "",
+      emergency_first_name: "",
+      emergency_last_name: "",
+      emergency_phone: "",
+      relationship: "",
     },
   });
 
@@ -54,6 +58,7 @@ const SingleDriver = () => {
     refetchOnWindowFocus: false,
     staleTime: 0,
   });
+  console.log("driverDatadriverData", driverData);
 
   const updateDriverMutation = useMutation({
     mutationFn: (data) => driversService.updateDriver(id, {data}),
@@ -92,6 +97,12 @@ const SingleDriver = () => {
         guid: id || "",
         client_type_id: "8edba75a-eb27-4f41-9b28-59053aad29a4",
         role_id: "cbf5b7ba-492d-41b6-83b9-94b6d9811ce4",
+        emergency_first_name: driverData?.response?.emergency_first_name || "",
+        emergency_last_name: driverData?.response?.emergency_last_name || "",
+        emergency_phone: driverData?.response?.emergency_phone || "",
+        relationship: Array.isArray(driverData?.response?.relationship)
+          ? driverData?.response?.relationship[0] || ""
+          : driverData?.response?.relationship || "",
       };
       reset(formData);
     }
@@ -102,10 +113,10 @@ const SingleDriver = () => {
   };
 
   const onSubmit = (data) => {
-    // Convert status string to array if needed for API compatibility
     const submitData = {
       ...data,
       status: data.status ? [data.status] : [],
+      relationship: data.relationship ? [data.relationship] : [],
     };
     updateDriverMutation.mutate(submitData);
   };
@@ -185,31 +196,6 @@ const SingleDriver = () => {
                         borderColor={"#E2E8F0"}
                         _focus={{borderColor: "#3182CE"}}
                       />
-                      {/* <Controller
-                        name="hired_to"
-                        control={control}
-                        render={({field}) => (
-                          <Select
-                            placeholder="Select company"
-                            value={field.value || ""}
-                            options={[
-                              {
-                                value: "STRAIGHT CARGO LLC",
-                                label: "STRAIGHT CARGO LLC",
-                              },
-                              {
-                                value: "LOGISTICS PRO LLC",
-                                label: "LOGISTICS PRO LLC",
-                              },
-                              {
-                                value: "FREIGHT MASTERS INC",
-                                label: "FREIGHT MASTERS INC",
-                              },
-                            ]}
-                            onChange={(value) => field.onChange(value)}
-                            borderColor={"#E2E8F0"}
-                            focusBorderColor={"#3182CE"}
-                          /> */}
                     </Box>
                   </Flex>
                 </Box>
@@ -372,27 +358,27 @@ const SingleDriver = () => {
                               <CustomRadio
                                 value="United States"
                                 name="country"
-                                checked={field.value === "United States"}
+                                checked={field.value?.[0] === "United States"}
                                 onChange={(e) =>
-                                  field.onChange(e.target.value)
+                                  field.onChange([e.target.value])
                                 }>
                                 United States{" "}
                               </CustomRadio>
                               <CustomRadio
                                 value="Canada"
                                 name="country"
-                                checked={field.value === "Canada"}
+                                checked={field.value?.[0] === "Canada"}
                                 onChange={(e) =>
-                                  field.onChange(e.target.value)
+                                  field.onChange([e.target.value])
                                 }>
                                 Canada
                               </CustomRadio>
                               <CustomRadio
                                 value="Mexico"
                                 name="country"
-                                checked={field.value === "Mexico"}
+                                checked={field.value?.[0] === "Mexico"}
                                 onChange={(e) =>
-                                  field.onChange(e.target.value)
+                                  field.onChange([e.target.value])
                                 }>
                                 Mexico
                               </CustomRadio>
@@ -411,7 +397,7 @@ const SingleDriver = () => {
                         </Text>
                         <HFTextField
                           control={control}
-                          name="address"
+                          name="address_1"
                           borderColor={"#E2E8F0"}
                           _focus={{borderColor: "#3182CE"}}
                         />
@@ -460,24 +446,11 @@ const SingleDriver = () => {
                             mb={"8px"}>
                             State <span style={{color: "#1570EF"}}>*</span>
                           </Text>
-                          <Controller
-                            name="state"
+                          <HFTextField
                             control={control}
-                            render={({field}) => (
-                              <Select
-                                placeholder="Select state"
-                                value={field.value || ""}
-                                options={[
-                                  {value: "Ohio", label: "Ohio"},
-                                  {value: "California", label: "California"},
-                                  {value: "Texas", label: "Texas"},
-                                  {value: "New York", label: "New York"},
-                                ]}
-                                onChange={(value) => field.onChange(value)}
-                                borderColor={"#E2E8F0"}
-                                focusBorderColor={"#3182CE"}
-                              />
-                            )}
+                            name="state"
+                            borderColor={"#E2E8F0"}
+                            _focus={{borderColor: "#3182CE"}}
                           />
                         </Box>
                         <Box flex={1}>
@@ -574,25 +547,12 @@ const SingleDriver = () => {
                             mb={"8px"}>
                             Region
                           </Text>
-                          <Controller
-                            name="region"
+                          <HFTextField
                             control={control}
-                            render={({field}) => (
-                              <Select
-                                placeholder="Select region"
-                                value={field.value || ""}
-                                options={[
-                                  {value: "North", label: "North"},
-                                  {value: "South", label: "South"},
-                                  {value: "East", label: "East"},
-                                  {value: "West", label: "West"},
-                                  {value: "Central", label: "Central"},
-                                ]}
-                                onChange={(value) => field.onChange(value)}
-                                borderColor={"#E2E8F0"}
-                                focusBorderColor={"#3182CE"}
-                              />
-                            )}
+                            name="region"
+                            placeholder="Region"
+                            borderColor={"#E2E8F0"}
+                            _focus={{borderColor: "#3182CE"}}
                           />
                         </Box>
                       </Flex>
@@ -628,6 +588,107 @@ const SingleDriver = () => {
                   </Flex>
                 </Box>
 
+                <Box
+                  w={"100%"}
+                  borderBottom={"1px solid #E2E8F0"}
+                  pb={"24px"}
+                  mb={"24px"}>
+                  <Flex gap={"32px"}>
+                    <Text
+                      w={"26%"}
+                      fontWeight={"600"}
+                      fontSize={"16px"}
+                      color={"#181D27"}
+                      mb={"16px"}>
+                      Emergency Contact
+                    </Text>
+                    <Flex w={"48%"} flexDir={"column"} gap={"16px"}>
+                      <Flex w={"100%"} gap={"16px"}>
+                        <Box flex={1}>
+                          <Text
+                            fontWeight={"500"}
+                            fontSize={"14px"}
+                            color={"#181D27"}
+                            mb={"8px"}>
+                            First Name
+                          </Text>
+                          <HFTextField
+                            control={control}
+                            name="emergency_first_name"
+                            placeholder="Emergency First Name"
+                            borderColor={"#E2E8F0"}
+                            _focus={{borderColor: "#3182CE"}}
+                          />
+                        </Box>
+                        <Box flex={1}>
+                          <Text
+                            fontWeight={"500"}
+                            fontSize={"14px"}
+                            color={"#181D27"}
+                            mb={"8px"}>
+                            Last Name
+                          </Text>
+                          <HFTextField
+                            control={control}
+                            name="emergency_last_name"
+                            placeholder="Emergency Last Name"
+                            borderColor={"#E2E8F0"}
+                            _focus={{borderColor: "#3182CE"}}
+                          />
+                        </Box>
+                      </Flex>
+                      <Flex w={"100%"} gap={"16px"}>
+                        <Box flex={1}>
+                          <Text
+                            fontWeight={"500"}
+                            fontSize={"14px"}
+                            color={"#181D27"}
+                            mb={"8px"}>
+                            Relationship
+                          </Text>
+                          <Controller
+                            name="relationship"
+                            control={control}
+                            render={({field}) => (
+                              <Select
+                                placeholder="Select relationship"
+                                value={field.value || ""}
+                                options={[
+                                  {value: "Grandparent", label: "Grandparent"},
+                                  {value: "Parent", label: "Parent"},
+                                  {value: "Sibling", label: "Sibling"},
+                                  {value: "Spouse", label: "Spouse"},
+                                  {value: "Child", label: "Child"},
+                                  {value: "Other", label: "Other"},
+                                ]}
+                                onChange={(value) => field.onChange(value)}
+                                borderColor={"#E2E8F0"}
+                                focusBorderColor={"#3182CE"}
+                              />
+                            )}
+                          />
+                        </Box>
+                        <Box flex={1}>
+                          <Text
+                            fontWeight={"500"}
+                            fontSize={"14px"}
+                            color={"#181D27"}
+                            mb={"8px"}>
+                            Emergency Phone
+                          </Text>
+                          <HFTextField
+                            control={control}
+                            name="emergency_phone"
+                            placeholder="Emergency Phone Number"
+                            borderColor={"#E2E8F0"}
+                            _focus={{borderColor: "#3182CE"}}
+                          />
+                        </Box>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </Box>
+
                 <Box w={"100%"}>
                   <Flex justify={"space-between"}>
                     <Button
@@ -659,7 +720,6 @@ const SingleDriver = () => {
                         px={"16px"}
                         py={"8px"}
                         _hover={{bg: "#F7FAFC"}}
-                        isLoading={updateDriverMutation.isPending}
                         loadingText="Saving...">
                         Save & Exit
                       </Button>

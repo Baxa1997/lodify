@@ -4,6 +4,7 @@ const driversService = {
   getList: () => httpRequest.get(`v2/items/drivers`, {}),
   getDriverById: (id) =>
     httpRequest.get(`v1/object-slim/drivers/${id}?from-ofs=true`),
+  createDriver: (data) => httpRequest.post(`v2/items/drivers`, data),
   updateDriver: (id, data) => httpRequest.put(`v2/items/drivers`, data),
 };
 

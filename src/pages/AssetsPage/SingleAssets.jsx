@@ -10,6 +10,7 @@ import Select from "../../components/Select";
 import assetsService from "../../services/assetsService";
 import styles from "./SingleAssets.module.scss";
 import LocationTab from "./LocationTab";
+import {fieldTypesOptions} from "./components/mockElements";
 
 const SingleAssets = () => {
   const {id} = useParams();
@@ -29,7 +30,7 @@ const SingleAssets = () => {
       state: "",
       make: "",
       year: "",
-      fuel_type: "",
+      fuel_types: "",
       gross_weight: "",
       number_of_axles: "",
       vin_number: "",
@@ -66,33 +67,6 @@ const SingleAssets = () => {
     staleTime: 0,
   });
 
-  const fieldTypesOptions = [
-    {
-      value: "fce427c2-cf33-4003-a3c0-892b83d0fdc1",
-      label: "Bio Diesel",
-    },
-    {
-      value: "a3db67c3-ce9e-4ae0-95b0-4ee0b96f692f",
-      label: "RD/R99",
-    },
-    {
-      value: "6e155191-d3c4-4a62-a27b-78e8a33e938c",
-      label: "LNG",
-    },
-    {
-      value: "1d1723fc-b571-4059-a918-0aa4683741a6",
-      label: "CNG",
-    },
-    {
-      value: "6eb40059-59d8-49cd-b9fd-04612a2f0e56",
-      label: "Gasoline",
-    },
-    {
-      value: "6d5877bb-4d08-4488-8bf1-d6b13223e427",
-      label: "Diesel",
-    },
-  ];
-
   const updateAssetMutation = useMutation({
     mutationFn: (data) => assetsService.updateAsset(id, {data}),
     onSuccess: () => {
@@ -114,8 +88,8 @@ const SingleAssets = () => {
         make: assetData?.response?.make || "",
         year: assetData?.response?.year || null,
         fuel_type:
+          assetData?.response?.fuel_types ||
           assetData?.response?.fuel_types_id ||
-          assetData?.response?.fuel_type ||
           "",
         gross_weight: assetData?.response?.gross_weight || null,
         number_of_axles: assetData?.response?.number_of_axles || null,
@@ -165,9 +139,9 @@ const SingleAssets = () => {
   const onSubmit = (data) => {
     const submitData = {
       ...data,
-      fuel_types_id: data.fuel_type,
+      fuel_types: data.fuel_type,
     };
-    delete submitData.fuel_type;
+    delete submitData.fuel_types;
     updateAssetMutation.mutate(submitData);
   };
 
@@ -420,7 +394,7 @@ const SingleAssets = () => {
                           Fuel Type <span style={{color: "#1570EF"}}>*</span>
                         </Text>
                         <Controller
-                          name="fuel_type"
+                          name="fuel_types"
                           control={control}
                           render={({field}) => (
                             <Select

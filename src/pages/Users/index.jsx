@@ -10,16 +10,15 @@ import {
 } from "../../components/tableElements";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import {useTablePagination} from "../../hooks";
-import {USER_STATUS} from "../../constants";
 import CTableRow from "../../components/tableElements/CTableRow";
 import FiltersComponent from "../../components/FiltersComponent";
 import AddUserModal from "../../components/AddUserModal";
 import usersService from "../../services/usersService";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
+import {tableHeading, getStatusColor} from "./components/mockElements";
 
 const Users = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [sortConfig, setSortConfig] = useState({key: null, direction: "asc"});
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
@@ -36,7 +35,6 @@ const Users = () => {
     currentPage,
     pageSize,
     totalPages,
-    paginatedData: paginatedUsers,
     handlePageChange,
     handlePageSizeChange,
   } = useTablePagination(users, 10);
@@ -51,21 +49,6 @@ const Users = () => {
     },
     [sortConfig]
   );
-
-  const getStatusColor = useCallback((status) => {
-    switch (status) {
-      case USER_STATUS.ACTIVE:
-        return "green";
-      case USER_STATUS.INVITE_EXPIRED:
-        return "orange";
-      case USER_STATUS.PENDING:
-        return "yellow";
-      case USER_STATUS.INACTIVE:
-        return "red";
-      default:
-        return "gray";
-    }
-  }, []);
 
   const handleUserClick = useCallback(
     (user) => {
@@ -109,59 +92,24 @@ const Users = () => {
           onPageSizeChange={handlePageSizeChange}>
           <CTableHead>
             <Box as="tr">
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "full_Name" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("full_Name")}>
-                Full Name
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "email" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("email")}>
-                Email Address
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "phone" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("phone")}>
-                Phone Number
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "roles" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("roles")}>
-                Roles
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "domiciles" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("domiciles")}>
-                Domiciles
-              </CTableTh>
-              <CTableTh
-                sortable={true}
-                sortDirection={
-                  sortConfig.key === "status" ? sortConfig.direction : null
-                }
-                onSort={() => handleSort("status")}>
-                Status
-              </CTableTh>
+              {tableHeading?.map((heading) => (
+                <CTableTh
+                  key={heading.key}
+                  sortable={heading?.sortable}
+                  sortDirection={
+                    sortConfig.key === heading?.key
+                      ? sortConfig.direction
+                      : null
+                  }
+                  onSort={() => handleSort(heading?.key)}>
+                  {heading?.label}
+                </CTableTh>
+              ))}
             </Box>
           </CTableHead>
 
           <CTableBody>
-            {users?.map((user, index) => (
+            {users?.map((user) => (
               <CTableRow
                 key={user?.id}
                 onClick={() => handleUserClick(user)}
@@ -179,14 +127,14 @@ const Users = () => {
                 <CTableTd>{user?.domiciles}</CTableTd>
                 <CTableTd>
                   <Badge
-                    colorScheme={getStatusColor(user?.status)}
+                    colorScheme={getStatusColor(user?.status?.[0])}
                     variant="subtle"
                     px={3}
                     py={1}
                     borderRadius="full"
                     fontSize="12px"
                     fontWeight="500">
-                    {user?.status}
+                    {user?.status?.[0]}
                   </Badge>
                 </CTableTd>
               </CTableRow>

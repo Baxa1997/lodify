@@ -4,6 +4,7 @@ const assetsService = {
   getList: () => httpRequest.get(`v2/items/assets`, {}),
   getAssetById: (id) =>
     httpRequest.get(`v1/object-slim/assets/${id}?from-ofs=true`),
+  createAsset: (data) => httpRequest.post(`v2/items/assets`, data),
   updateAsset: (id, data) => httpRequest.put(`v2/items/assets/${id}`, data),
   mapInovke: (data) =>
     httpRequest.post(

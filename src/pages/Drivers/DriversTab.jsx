@@ -13,6 +13,8 @@ import {useNavigate} from "react-router-dom";
 import CTableRow from "../../components/tableElements/CTableRow";
 import {useQuery} from "@tanstack/react-query";
 import driversService from "../../services/driversService";
+import AddDriverModal from "./components/AddDriverModal";
+import {getLoadEligibilityColor} from "./components/mockElements";
 
 const DriversTab = () => {
   const navigate = useNavigate();
@@ -23,7 +25,8 @@ const DriversTab = () => {
     key: "name",
     direction: "asc",
   });
-  const [searchTerm, setSearchTerm] = useState("");
+  const [isAddDriverModalOpen, setIsAddDriverModalOpen] = useState(false);
+  // const [searchTerm, setSearchTerm] = useState("");
 
   const {data: drivers = [], isLoading} = useQuery({
     queryKey: ["GET_DRIVERS_LIST"],
@@ -50,10 +53,6 @@ const DriversTab = () => {
       key,
       direction: sortConfig.direction === "asc" ? "desc" : "asc",
     });
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
   };
 
   const handleRowClick = (driverId) => {
@@ -92,52 +91,6 @@ const DriversTab = () => {
     }
   };
 
-  const getLoadEligibilityColor = (eligibility) => {
-    // Handle array of strings
-    if (Array.isArray(eligibility)) {
-      const status = eligibility[0]?.toLowerCase();
-      switch (status) {
-        case "eligible":
-          return "green";
-        case "pending":
-          return "orange";
-        case "not eligible":
-        case "not-eligible":
-          return "red";
-        case "approved":
-          return "green";
-        case "rejected":
-        case "denied":
-          return "red";
-        case "under review":
-        case "processing":
-          return "orange";
-        default:
-          return "gray";
-      }
-    }
-
-    // Handle single string
-    switch (eligibility?.toLowerCase()) {
-      case "eligible":
-        return "green";
-      case "pending":
-        return "orange";
-      case "not eligible":
-      case "not-eligible":
-        return "red";
-      case "approved":
-        return "green";
-      case "rejected":
-      case "denied":
-        return "red";
-      case "under review":
-      case "processing":
-        return "orange";
-      default:
-        return "gray";
-    }
-  };
   if (isLoading) {
     return (
       <Box mt={"32px"}>
@@ -151,7 +104,11 @@ const DriversTab = () => {
 
   return (
     <Box mt={"32px"}>
-      <FiltersComponent filterButton={true} actionButton={true} />
+      <FiltersComponent
+        filterButton={true}
+        actionButton={true}
+        onActionButtonClick={() => setIsAddDriverModalOpen(true)}
+      />
 
       <Box mt={6}>
         <CTable
@@ -283,6 +240,11 @@ const DriversTab = () => {
           </CTableBody>
         </CTable>
       </Box>
+
+      <AddDriverModal
+        isOpen={isAddDriverModalOpen}
+        onClose={() => setIsAddDriverModalOpen(false)}
+      />
     </Box>
   );
 };

@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect, memo } from "react";
-import { Box, Text, VStack, HStack } from "@chakra-ui/react";
-import { LuChevronDown, LuCheck } from "react-icons/lu";
+import React, {useState, useRef, useEffect, memo} from "react";
+import {Box, Text, VStack, HStack} from "@chakra-ui/react";
+import {LuChevronDown, LuCheck} from "react-icons/lu";
 
 const Select = ({
   placeholder = "Select an option",
@@ -26,6 +26,7 @@ const Select = ({
   errorBorderColor = "red.400",
   label,
   name,
+  dropdownPosition = "bottom",
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,35 +70,34 @@ const Select = ({
 
   const getSizeStyles = () => {
     switch (size) {
-    case "sm":
-      return { height: "32px", py: "6px", px: "12px", fontSize: "14px" };
-    case "lg":
-      return { height: "48px", py: "12px", px: "20px", fontSize: "18px" };
-    default:
-      return { height: "40px", py: "8px", px: "16px", fontSize: "16px" };
+      case "sm":
+        return {height: "32px", py: "6px", px: "12px", fontSize: "14px"};
+      case "lg":
+        return {height: "48px", py: "12px", px: "20px", fontSize: "18px"};
+      default:
+        return {height: "40px", py: "8px", px: "16px", fontSize: "16px"};
     }
   };
 
   return (
     <Box>
-      {label && <Box
-        as="label"
-        color="#414651"
-        fontWeight={500}
-        mb="6px"
-        display="block"
-        htmlFor={name}
-      >
-        {label}
-        {isRequired && <Box
-          as="span"
-          color="blue.500"
-        >*</Box>}
-      </Box>}
-      <Box
-        position="relative"
-        ref={dropdownRef}
-        {...props}>
+      {label && (
+        <Box
+          as="label"
+          color="#414651"
+          fontWeight={500}
+          mb="6px"
+          display="block"
+          htmlFor={name}>
+          {label}
+          {isRequired && (
+            <Box as="span" color="blue.500">
+              *
+            </Box>
+          )}
+        </Box>
+      )}
+      <Box position="relative" ref={dropdownRef} {...props}>
         <Box
           ref={selectRef}
           onClick={handleToggle}
@@ -108,8 +108,8 @@ const Select = ({
             isInvalid
               ? errorBorderColor
               : isFocused || isOpen
-                ? focusBorderColor
-                : borderColor
+              ? focusBorderColor
+              : borderColor
           }
           color={color}
           borderRadius="lg"
@@ -155,7 +155,8 @@ const Select = ({
         {isOpen && !isDisabled && (
           <Box
             position="absolute"
-            top="100%"
+            top={dropdownPosition === "top" ? "auto" : "100%"}
+            bottom={dropdownPosition === "top" ? "100%" : "auto"}
             left="0"
             right="0"
             bg="white"
@@ -166,10 +167,9 @@ const Select = ({
             zIndex={1000}
             maxH="200px"
             overflowY="auto"
-            mt="2px">
-            <VStack
-              spacing={0}
-              align="stretch">
+            mt={dropdownPosition === "top" ? "0" : "2px"}
+            mb={dropdownPosition === "top" ? "2px" : "0"}>
+            <VStack spacing={0} align="stretch">
               {options.length > 0 ? (
                 options.map((option, index) => (
                   <Box
@@ -185,9 +185,7 @@ const Select = ({
                       bg: option.isDisabled ? "transparent" : "gray.50",
                     }}
                     transition="all 0.2s ease">
-                    <HStack
-                      justify="space-between"
-                      align="center">
+                    <HStack justify="space-between" align="center">
                       <Text fontSize="16px">{option.label}</Text>
                       {option.value === value && (
                         <LuCheck
@@ -199,11 +197,7 @@ const Select = ({
                   </Box>
                 ))
               ) : (
-                <Box
-                  px="16px"
-                  py="8px"
-                  color="gray.500"
-                  textAlign="center">
+                <Box px="16px" py="8px" color="gray.500" textAlign="center">
                   <Text fontSize="16px">No options</Text>
                 </Box>
               )}
@@ -211,7 +205,6 @@ const Select = ({
           </Box>
         )}
       </Box>
-
     </Box>
   );
 };

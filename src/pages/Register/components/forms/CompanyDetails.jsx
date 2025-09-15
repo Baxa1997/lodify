@@ -25,16 +25,16 @@ const CompanyDetails = ({register, errors}) => {
       <InputFormField
         label="FMCSA"
         name="us_dot"
-        placeholder="e.g., USDOT 1234567 or MC 654321"
+        placeholder="e.g., 1234567"
         register={register}
         errors={errors}
         isRequired
         validation={{
           required: "FMCSA is required",
           pattern: {
-            value: /^(USDOT|MC)\s*\d+$/i,
+            value: /^[1-9][0-9]{0,6}$/,
             message:
-              "Please enter a valid FMCSA number (e.g., USDOT 1234567 or MC 654321)",
+              "Please enter a valid FMCSA number (1-7 digits, starting with 1-9)",
           },
         }}
       />

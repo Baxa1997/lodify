@@ -18,29 +18,50 @@ import {
   getVerificationStatusColor,
   tableElements,
 } from "./components/mockElements";
+import useDebounce from "../../hooks/useDebounce";
 
 const TractorsTab = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [searchText, setSearchText] = useState("");
   const [sortConfig, setSortConfig] = useState({
     key: "name",
     direction: "asc",
   });
   const [isAddAssetsModalOpen, setIsAddAssetsModalOpen] = useState(false);
 
-  const {data: assets = [], isLoading} = useQuery({
-    queryKey: ["GET_ASSETS_LIST"],
+  const offset = (currentPage - 1) * pageSize;
+
+  const {data: assetsData, isLoading} = useQuery({
+    queryKey: [
+      "GET_ASSETS_LIST",
+      currentPage,
+      pageSize,
+      String(searchText || ""),
+    ],
     queryFn: () => {
-      return assetsService.getList();
+      const params = {
+        search: searchText,
+        limit: pageSize,
+        offset: searchText ? 0 : offset,
+        with_relations: false,
+      };
+      return assetsService.getList(params);
     },
     enabled: true,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     staleTime: 0,
-    select: (res) => res?.data?.response ?? [],
+    select: (res) => ({
+      assets: res?.data?.response ?? [],
+      total: res?.data?.total ?? 0,
+    }),
   });
+
+  const assets = assetsData?.assets || [];
+  const totalAssets = assetsData?.total || 0;
+  const totalPages = Math.ceil(totalAssets / pageSize);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -48,7 +69,14 @@ const TractorsTab = () => {
 
   const handlePageSizeChange = (size) => {
     setPageSize(size);
+    setCurrentPage(1);
   };
+
+  const debouncedSearch = useDebounce((val) => {
+    // Ensure we only set string values and handle any potential circular references
+    const searchValue = typeof val === "string" ? val : String(val || "");
+    setSearchText(searchValue);
+  }, 500);
 
   const handleSort = (key) => {
     setSortConfig({
@@ -87,10 +115,13 @@ const TractorsTab = () => {
         verifySelect={true}
         actionButton={true}
         onActionButtonClick={() => setIsAddAssetsModalOpen(true)}
+        onSearchChange={debouncedSearch}
       />
 
       <Box mt={6}>
         <CTable
+          height="calc(100vh - 300px)"
+          overflow="auto"
           currentPage={currentPage}
           totalPages={totalPages}
           pageSize={pageSize}

@@ -18,25 +18,9 @@ const AddressDetails = ({register, errors, watch}) => {
 
   const zipCodeValidation = {
     required: "Zip code is required",
-    validate: (value) => {
-      if (!selectedCountry) return true;
-
-      const pattern = ZIP_CODE_PATTERNS[selectedCountry];
-      if (!pattern) return true;
-
-      if (!pattern.test(value)) {
-        switch (selectedCountry) {
-          case "United States":
-            return "Please enter a valid US zip code (12345 or 12345-6789)";
-          case "Canada":
-            return "Please enter a valid Canadian postal code (A1A 1A1)";
-          case "Mexico":
-            return "Please enter a valid Mexican zip code (12345)";
-          default:
-            return "Please enter a valid zip code";
-        }
-      }
-      return true;
+    pattern: {
+      value: /^\d{5}(-\d{4})?$/,
+      message: "Please enter a valid zip code (12345 or 12345-6789)",
     },
   };
 

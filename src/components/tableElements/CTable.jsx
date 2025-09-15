@@ -9,6 +9,7 @@ const CTable = ({
   pageSize,
   onPageChange,
   onPageSizeChange,
+  height = "400px",
   ...props
 }) => {
   return (
@@ -17,12 +18,18 @@ const CTable = ({
       borderRadius="12px"
       border="1px solid"
       borderColor="gray.200"
-      overflow="visible"
-      position="relative"
+      display="flex"
+      flexDirection="column"
+      height={height}
       {...props}>
-      <Box as="table" width="100%" borderCollapse="collapse">
-        {children}
+      {/* Scrollable table body */}
+      <Box flex="1" overflow="auto" position="relative">
+        <Box as="table" width="100%" borderCollapse="collapse">
+          {children}
+        </Box>
       </Box>
+
+      {/* Fixed pagination at bottom */}
       <CTablePagination
         currentPage={currentPage}
         totalPages={totalPages}

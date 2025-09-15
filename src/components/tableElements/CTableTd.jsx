@@ -5,7 +5,7 @@ const CTableTd = ({children, ...props}) => {
   return (
     <Box
       as="td"
-      py={4}
+      py={"8px"}
       px={6}
       fontSize="14px"
       color="gray.700"

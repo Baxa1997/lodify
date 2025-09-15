@@ -9,35 +9,68 @@ import {
   CTableTd,
 } from "../../components/tableElements";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import {useTablePagination} from "../../hooks";
 import CTableRow from "../../components/tableElements/CTableRow";
 import FiltersComponent from "../../components/FiltersComponent";
 import AddUserModal from "../../components/AddUserModal";
 import usersService from "../../services/usersService";
 import {useQuery} from "@tanstack/react-query";
 import {tableHeading, getStatusColor} from "./components/mockElements";
+import useDebounce from "../../hooks/useDebounce";
 
 const Users = () => {
   const navigate = useNavigate();
   const [sortConfig, setSortConfig] = useState({key: null, direction: "asc"});
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchText, setSearchText] = useState("");
 
-  const {data: users = []} = useQuery({
-    queryKey: ["GET_USERS_LIST"],
+  const offset = (currentPage - 1) * pageSize;
+
+  const {data: usersData, isLoading} = useQuery({
+    queryKey: [
+      "GET_USERS_LIST",
+      currentPage,
+      pageSize,
+      String(searchText || ""),
+    ],
     queryFn: () => {
-      return usersService.getList();
+      const params = {
+        search: searchText,
+        limit: pageSize,
+        offset: searchText ? 0 : offset,
+        with_relations: false,
+      };
+      return usersService.getList(params);
     },
     enabled: true,
-    select: (res) => res?.data?.response ?? [],
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    select: (res) => ({
+      users: res?.data?.response ?? [],
+      total: res?.data?.total ?? 0,
+    }),
   });
 
-  const {
-    currentPage,
-    pageSize,
-    totalPages,
-    handlePageChange,
-    handlePageSizeChange,
-  } = useTablePagination(users, 10);
+  const users = usersData?.users || [];
+  const totalUsers = usersData?.total || 0;
+  const totalPages = Math.ceil(totalUsers / pageSize);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1);
+  };
+
+  const debouncedSearch = useDebounce((val) => {
+    // Ensure we only set string values and handle any potential circular references
+    const searchValue = typeof val === "string" ? val : String(val || "");
+    setSearchText(searchValue);
+  }, 500);
 
   const handleSort = useCallback(
     (key) => {
@@ -61,6 +94,36 @@ const Users = () => {
     setIsAddUserModalOpen(true);
   }, []);
 
+  if (isLoading) {
+    return (
+      <>
+        <Flex flexDir={"column"} gap={"20px"}>
+          <HeadBreadCrumb />
+          <Box mb={"20px"} h={"32px"}>
+            <Text
+              h={"32px"}
+              color={"#181D27"}
+              fontWeight={"600"}
+              fontSize={"24px"}>
+              Users
+            </Text>
+          </Box>
+        </Flex>
+
+        <FiltersComponent
+          filterByDomicile={true}
+          addButton={true}
+          verifySelect={true}
+          onAddUserClick={handleAddUserClick}
+        />
+
+        <Box mt={6} p={4} textAlign="center">
+          Loading users...
+        </Box>
+      </>
+    );
+  }
+
   return (
     <>
       <Flex flexDir={"column"} gap={"20px"}>
@@ -81,10 +144,12 @@ const Users = () => {
         addButton={true}
         verifySelect={true}
         onAddUserClick={handleAddUserClick}
+        onSearchChange={debouncedSearch}
       />
 
       <Box mt={6}>
         <CTable
+          height="calc(100vh - 235px)"
           currentPage={currentPage}
           totalPages={totalPages}
           pageSize={pageSize}

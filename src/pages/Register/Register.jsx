@@ -68,17 +68,9 @@ const Register = () => {
       (field) => data[field] && data[field].trim() !== ""
     );
 
-    if (data.country && data.zip_code) {
-      const zipCodePatterns = {
-        "United States": /^\d{5}(-\d{4})?$/,
-        Canada: /^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$/,
-        Mexico: /^\d{5}$/,
-      };
-
-      const pattern = zipCodePatterns[data.country];
-      if (pattern && !pattern.test(data.zip_code)) {
-        return false;
-      }
+    // Validate zip code format (US format: 12345 or 12345-6789)
+    if (data.zip_code && !/^\d{5}(-\d{4})?$/.test(data.zip_code)) {
+      return false;
     }
 
     return hasRequiredFields;

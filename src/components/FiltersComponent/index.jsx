@@ -9,6 +9,7 @@ const FiltersComponent = ({
   actionButton = false,
   addButton = false,
   verifySelect = false,
+  onSearchChange = () => {},
   onAddUserClick = () => {},
   onActionButtonClick = () => {},
 }) => {
@@ -29,6 +30,7 @@ const FiltersComponent = ({
             fontWeight: "400",
             color: "#717680",
           }}
+          onSearch={onSearchChange}
           bg={"#fff"}
           focusBorderColor={"#D5D7DA"}
           borderColor={"#D5D7DA"}

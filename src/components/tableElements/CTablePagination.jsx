@@ -17,11 +17,10 @@ const CTablePagination = ({
       alignItems="center"
       p={"12px 24px"}
       borderTop="1px solid"
-      border="none"
+      borderColor="gray.200"
       bg="gray.50"
-      position="relative"
-      zIndex={1}
-      overflow="visible"
+      width="100%"
+      flexShrink={0}
       {...props}>
       <Flex align="center" gap={2}>
         <Text fontSize="14px" color="gray.600">
@@ -29,8 +28,8 @@ const CTablePagination = ({
         </Text>
         <Select
           value={pageSize.toString()}
-          onChange={(e) =>
-            onPageSizeChange && onPageSizeChange(parseInt(e.target.value))
+          onChange={(value) =>
+            onPageSizeChange && onPageSizeChange(parseInt(value))
           }
           options={pageSizeOptions.map((size) => ({
             value: size.toString(),
@@ -41,9 +40,10 @@ const CTablePagination = ({
           fontSize="14px"
           padding="0"
           size="sm"
+          dropdownPosition="top"
         />
         <Text fontSize="14px" color="gray.600">
-          Page {currentPage} of {totalPages}
+          Page {currentPage} of {Math.max(totalPages, 1)}
         </Text>
       </Flex>
 
@@ -57,7 +57,7 @@ const CTablePagination = ({
           fontWeight={"600"}
           color={currentPage === 1 ? "#A4A7AE" : "#1E293B"}
           size="sm"
-          isDisabled={currentPage === 1}
+          isDisabled={currentPage === 1 || totalPages === 0}
           onClick={() => onPageChange && onPageChange(currentPage - 1)}>
           Previous
         </Button>
@@ -68,9 +68,13 @@ const CTablePagination = ({
           border={"1px solid #E9EAEB"}
           variant="outline"
           fontWeight={"600"}
-          color={currentPage === totalPages ? "#A4A7AE" : "#1E293B"}
+          color={
+            currentPage === Math.max(totalPages, 1) ? "#A4A7AE" : "#1E293B"
+          }
           size="sm"
-          isDisabled={currentPage === totalPages}
+          isDisabled={
+            currentPage === Math.max(totalPages, 1) || totalPages === 0
+          }
           onClick={() => onPageChange && onPageChange(currentPage + 1)}>
           Next
         </Button>

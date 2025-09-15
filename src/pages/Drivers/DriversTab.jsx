@@ -15,37 +15,64 @@ import {useQuery} from "@tanstack/react-query";
 import driversService from "../../services/driversService";
 import AddDriverModal from "./components/AddDriverModal";
 import {getLoadEligibilityColor} from "./components/mockElements";
+import useDebounce from "../../hooks/useDebounce";
 
 const DriversTab = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({
     key: "name",
     direction: "asc",
   });
+  const [searchText, setSearchText] = useState("");
   const [isAddDriverModalOpen, setIsAddDriverModalOpen] = useState(false);
-  // const [searchTerm, setSearchTerm] = useState("");
 
-  const {data: drivers = [], isLoading} = useQuery({
-    queryKey: ["GET_DRIVERS_LIST"],
+  const offset = (currentPage - 1) * pageSize;
+
+  const {data: driversData, isLoading} = useQuery({
+    queryKey: [
+      "GET_DRIVERS_LIST",
+      currentPage,
+      pageSize,
+      String(searchText || undefined),
+    ],
     queryFn: () => {
-      return driversService.getList();
+      const params = {
+        search: searchText,
+        limit: pageSize,
+        offset: searchText ? 0 : offset,
+        with_relations: false,
+      };
+      return driversService.getList(params);
     },
     enabled: true,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     staleTime: 0,
-    select: (res) => res?.data?.response ?? [],
+    select: (res) => ({
+      drivers: res?.data?.response ?? [],
+      total: res?.data?.total ?? 0,
+    }),
   });
-  console.log(drivers);
+
+  const debouncedSearch = useDebounce((val) => {
+    // Ensure we only set string values and handle any potential circular references
+    const searchValue = typeof val === "string" ? val : String(val || "");
+    setSearchText(searchValue);
+  }, 500);
+
+  const drivers = driversData?.drivers || [];
+  const totalDrivers = driversData?.total || 0;
+  const totalPages = Math.ceil(totalDrivers / pageSize);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const handlePageSizeChange = (size) => {
     setPageSize(size);
+    setCurrentPage(1);
   };
 
   const handleSort = (key) => {
@@ -107,11 +134,14 @@ const DriversTab = () => {
       <FiltersComponent
         filterButton={true}
         actionButton={true}
+        onSearchChange={debouncedSearch}
         onActionButtonClick={() => setIsAddDriverModalOpen(true)}
       />
 
       <Box mt={6}>
         <CTable
+          height="calc(100vh - 300px)"
+          overflow="auto"
           currentPage={currentPage}
           totalPages={totalPages}
           pageSize={pageSize}

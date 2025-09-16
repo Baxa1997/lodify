@@ -17,7 +17,7 @@ const SimplePagination = ({ limit, setLimit = () => {}, page = 1, setPage = () =
 
   return (
     <div className={styles.paginationContainer}>
-      <label>
+      <label className={styles.selectContainer}>
         <select
           className={styles.select}
           value={limit}
@@ -28,20 +28,22 @@ const SimplePagination = ({ limit, setLimit = () => {}, page = 1, setPage = () =
           <option value={20}>20</option>
           <option value={50}>50</option>
         </select>
-      </label>
-      <div className={styles.pagination}>
-        <button
-          onClick={handlePrev}
-          disabled={page === 1}>
-          ← Prev
-        </button>
-        <span>
+        <span className={styles.selectLabel}>
           Page {page} of {pageCount}
         </span>
+      </label>
+      <div className={styles.paginationActions}>
         <button
+          className={styles.actionBtn}
+          onClick={handlePrev}
+          disabled={page === 1}>
+          Prev
+        </button>
+        <button
+          className={styles.actionBtn}
           onClick={handleNext}
           disabled={page === pageCount}>
-          Next →
+          Next
         </button>
       </div>
     </div>

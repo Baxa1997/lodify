@@ -5,6 +5,7 @@ import { useCarrierProfileProps } from "./useCarrierProfileProps";
 import { MainSection } from "./components/MainSection";
 import { CompanyInformation } from "./components/CompanyInformation";
 import { ValidateCarrier } from "./components/ValidateCarrier";
+import { ValidateEquipment } from "./components/ValidateEquipment";
 
 export const CarrierProfile = () => {
 
@@ -23,6 +24,7 @@ export const CarrierProfile = () => {
       <MainSection />
       <CompanyInformation />
       <ValidateCarrier />
+      <ValidateEquipment />
     </Box>
   </Box>;
 };

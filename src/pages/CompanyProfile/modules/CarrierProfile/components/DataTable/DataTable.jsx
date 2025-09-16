@@ -2,10 +2,8 @@ import {
   Box,
   Table,
   TableCaption,
-  TableContainer,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tr,
@@ -67,7 +65,9 @@ export const DataTable = ({
                 fontSize={"14px"}
                 {...head.tdProps}
               >
-                {row[head.key]}
+                {
+                  head?.render ? head.render(row[head.key], row, head) : row[head.key]
+                }
               </Td>
             ))}
           </Tr>

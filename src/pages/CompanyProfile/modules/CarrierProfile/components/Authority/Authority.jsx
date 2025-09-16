@@ -1,33 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
-
-const StatusText = ({ title, data, status }) => {
-  const statusMap = {
-    "Active": "success.600",
-    "Yes": "success.600",
-    "No": "error.600",
-    "None": "error.600",
-  };
-
-  return <Box
-    display="flex"
-    gap="8px">
-    <Text
-      fontSize="14px"
-      fontWeight="600"
-      color="secondary.700"
-    >
-      {title}
-    </Text>
-    <Text
-      fontSize="14px"
-      fontWeight="400"
-      color={statusMap[status] || statusMap[data]}
-    >
-      {data}
-    </Text>
-  </Box>;
-};
+import { StatusText } from "../../../../components/StatusText";
+import { CardData } from "../../../../components/CardData";
 
 export const Authority = () => {
 
@@ -57,13 +31,9 @@ export const Authority = () => {
           flexDirection="column"
           gap="20px"
         >
-          <Box
+          <CardData
             display="flex"
             gap="20px"
-            border="1px solid"
-            borderColor="gray.border-main"
-            borderRadius="12px"
-            p="20px"
           >
             <Box
               flexGrow={1}
@@ -122,21 +92,17 @@ export const Authority = () => {
                 data="No"
               />
             </Box>
-          </Box>
+          </CardData>
           <Box
             display="grid"
             gridTemplateColumns="1fr 1fr 1fr"
             alignItems="flex-start"
             gap="20px"
           >
-            <Box
+            <CardData
               display="flex"
               flexDirection="column"
               gap="8px"
-              border="1px solid"
-              borderColor="gray.border-main"
-              borderRadius="12px"
-              p="20px"
             >
               <Text
                 fontSize="16px"
@@ -157,21 +123,17 @@ export const Authority = () => {
                 title="Household Goods::"
                 data="No"
               />
-            </Box>
-            <Box
+            </CardData>
+            <CardData
               display="flex"
               flexDirection="column"
               gap="8px"
-              border="1px solid"
-              borderColor="gray.border-main"
-              borderRadius="12px"
-              p="20px"
             >
               <StatusText
                 title="Authority Granted On:"
                 data="12/21/2017"
               />
-            </Box>
+            </CardData>
           </Box>
         </Box>
       </SectionCardBody>

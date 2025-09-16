@@ -7,6 +7,7 @@ import { CompanyInformation } from "./components/CompanyInformation";
 import { ValidateCarrier } from "./components/ValidateCarrier";
 import { ValidateEquipment } from "./components/ValidateEquipment";
 import { Authority } from "./components/Authority";
+import { Insurance } from "./components/Insurance";
 
 export const CarrierProfile = () => {
 
@@ -27,6 +28,7 @@ export const CarrierProfile = () => {
       <ValidateCarrier />
       <ValidateEquipment />
       <Authority />
+      <Insurance />
     </Box>
   </Box>;
 };

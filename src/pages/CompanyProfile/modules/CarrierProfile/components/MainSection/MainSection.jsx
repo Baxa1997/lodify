@@ -14,6 +14,7 @@ import Select from "@components/Select";
 import { useMainSectionProps } from "./useMainSectionProps";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
 import { DataTable } from "../DataTable";
+import { BoldLink } from "../../../../components/BoldLink";
 
 export const MainSection = () => {
 
@@ -189,17 +190,9 @@ export const MainSection = () => {
                 Not invited
                 </CustomBadge>
               </Box>
-              <Link
-                href="#"
-                color="blue.500"
-                fontWeight="600"
-                display="flex"
-                alignItems="center"
-                gap="6px"
-              >
-                <MdMailOutline size="18px" />
-                <span>Intellivite</span>
-              </Link>
+              <BoldLink icon={<MdMailOutline size="18px" />}>
+                Intellivite
+              </BoldLink>
             </Box>
             <Box
               display="flex"
@@ -258,19 +251,11 @@ export const MainSection = () => {
               mt="32px"
             >
               <MainHeading size="17px">
-            Incident Report
+                Incident Report
               </MainHeading>
-              <Link
-                href="#"
-                color="blue.500"
-                fontWeight="600"
-                display="flex"
-                alignItems="center"
-                gap="6px"
-              >
-                <HiOutlineFlag size="18px" />
-                <span>Create New Report</span>
-              </Link>
+              <BoldLink icon={<HiOutlineFlag size="18px" />}>
+                Create New Report
+              </BoldLink>
             </Box>
             <Box
               mt="12px"

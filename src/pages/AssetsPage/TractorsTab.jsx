@@ -76,6 +76,7 @@ const TractorsTab = () => {
     // Ensure we only set string values and handle any potential circular references
     const searchValue = typeof val === "string" ? val : String(val || "");
     setSearchText(searchValue);
+    setCurrentPage(1); // Reset to first page when searching
   }, 500);
 
   const handleSort = (key) => {

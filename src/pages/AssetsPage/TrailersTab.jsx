@@ -13,26 +13,49 @@ import {useNavigate} from "react-router-dom";
 import CTableRow from "../../components/tableElements/CTableRow";
 import {useQuery} from "@tanstack/react-query";
 import assetsService from "../../services/assetsService";
+import useDebounce from "../../hooks/useDebounce";
 
 const TrailersTab = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({
     key: "name",
     direction: "asc",
   });
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchText, setSearchText] = useState("");
 
-  const {data: assets = [], isLoading} = useQuery({
-    queryKey: ["GET_ASSETS_LIST"],
+  const offset = (currentPage - 1) * pageSize;
+
+  const {data: assetsData, isLoading} = useQuery({
+    queryKey: [
+      "GET_TRAILERS_LIST",
+      currentPage,
+      pageSize,
+      String(searchText || ""),
+    ],
     queryFn: () => {
-      return assetsService.getList();
+      const params = {
+        search: searchText,
+        limit: pageSize,
+        offset: searchText ? 0 : offset,
+        with_relations: false,
+      };
+      return assetsService.getList(params);
     },
     enabled: true,
-    select: (res) => res?.data?.response ?? [],
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    select: (res) => ({
+      assets: res?.data?.response ?? [],
+      total: res?.data?.total ?? 0,
+    }),
   });
+
+  const assets = assetsData?.assets || [];
+  const totalAssets = assetsData?.total || 0;
+  const totalPages = Math.ceil(totalAssets / pageSize);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -40,17 +63,21 @@ const TrailersTab = () => {
 
   const handlePageSizeChange = (size) => {
     setPageSize(size);
+    setCurrentPage(1);
   };
+
+  const debouncedSearch = useDebounce((val) => {
+    // Ensure we only set string values and handle any potential circular references
+    const searchValue = typeof val === "string" ? val : String(val || "");
+    setSearchText(searchValue);
+    setCurrentPage(1); // Reset to first page when searching
+  }, 500);
 
   const handleSort = (key) => {
     setSortConfig({
       key,
       direction: sortConfig.direction === "asc" ? "desc" : "asc",
     });
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
   };
 
   const handleRowClick = (assetId) => {
@@ -127,6 +154,7 @@ const TrailersTab = () => {
         filterButton={true}
         verifySelect={true}
         actionButton={true}
+        onSearchChange={debouncedSearch}
       />
 
       <Box mt={6}>

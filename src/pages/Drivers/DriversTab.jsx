@@ -35,7 +35,7 @@ const DriversTab = () => {
       "GET_DRIVERS_LIST",
       currentPage,
       pageSize,
-      String(searchText || undefined),
+      String(searchText || ""),
     ],
     queryFn: () => {
       const params = {
@@ -57,9 +57,9 @@ const DriversTab = () => {
   });
 
   const debouncedSearch = useDebounce((val) => {
-    // Ensure we only set string values and handle any potential circular references
     const searchValue = typeof val === "string" ? val : String(val || "");
     setSearchText(searchValue);
+    setCurrentPage(1);
   }, 500);
 
   const drivers = driversData?.drivers || [];

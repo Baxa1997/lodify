@@ -51,7 +51,7 @@ export const SectionCardHeader = ({ children, isAccordion, ...props }) => {
 export const SectionCardBody = ({ children, isAccordion, ...props }) => {
 
   if(isAccordion) {
-    return <AccordionPanel>
+    return <AccordionPanel {...props}>
       {children}
     </AccordionPanel>;
   }

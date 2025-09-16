@@ -1,9 +1,12 @@
-import React, {memo} from "react";
-import {Box} from "@chakra-ui/react";
+import React, { memo } from "react";
+import { Box } from "@chakra-ui/react";
 
-const CTableHead = ({children, ...props}) => {
+const CTableHead = ({ children, ...props }) => {
   return (
-    <Box as="thead" bg="gray.50" {...props}>
+    <Box
+      as="thead"
+      bg="gray.50"
+      {...props}>
       {children}
     </Box>
   );

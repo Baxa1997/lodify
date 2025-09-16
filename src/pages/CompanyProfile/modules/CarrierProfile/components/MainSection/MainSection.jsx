@@ -23,7 +23,6 @@ export const MainSection = () => {
     display="flex"
     columnGap="24px"
     alignItems="flex-start"
-    mt="20px"
   >
     <Box
       maxWidth="528px"
@@ -163,6 +162,10 @@ export const MainSection = () => {
             <DataTable
               headData={headData}
               data={bodyData}
+              borderRadius="12px"
+              overflow="hidden"
+              border="1px solid"
+              borderColor="gray.border-main"
             />
           </Box>
           <Box mt="32px">

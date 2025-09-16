@@ -4,6 +4,7 @@ import styles from "./style.module.scss";
 import { useCarrierProfileProps } from "./useCarrierProfileProps";
 import { MainSection } from "./components/MainSection";
 import { CompanyInformation } from "./components/CompanyInformation";
+import { ValidateCarrier } from "./components/ValidateCarrier";
 
 export const CarrierProfile = () => {
 
@@ -14,9 +15,14 @@ export const CarrierProfile = () => {
     <Box className={styles.header}>
       <MainHeading size="18px">Carrier Profile</MainHeading>
     </Box>
-    <Box>
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap="24px"
+    >
       <MainSection />
       <CompanyInformation />
+      <ValidateCarrier />
     </Box>
   </Box>;
 };

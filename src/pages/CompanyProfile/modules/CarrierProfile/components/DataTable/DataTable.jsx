@@ -1,4 +1,5 @@
 import { 
+  Box,
   Table,
   TableCaption,
   TableContainer,
@@ -9,25 +10,28 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import SimplePagination from "@components/SimplePagination";
 
 export const DataTable = ({
   headData = [],
   data = [],
-  footerData = [],
   caption,
+  limit,
+  setLimit = () => {},
+  page,
+  setPage = () => {},
+  pagination,
+  ...props
 }) => {
   
-  return <TableContainer
-    overflowX="unset"
-    overflowY="unset"
+  return <Box
     border="1px solid"
     borderColor="gray.200"
     borderRadius="12px"
-    overflow="hidden"
-  >
+    overflow={"auto"}
+    {...props}>
     <Table
       variant="simple"
-      // overflow="hidden"
     >
       {caption && <TableCaption>{caption}</TableCaption>}
       <Thead
@@ -69,7 +73,7 @@ export const DataTable = ({
           </Tr>
         ))}
       </Tbody>
-      {
+      {/* {
         footerData.length > 0 && <Tfoot>
           <Tr>
             {footerData.map((head, index) => (
@@ -83,7 +87,22 @@ export const DataTable = ({
             ))}
           </Tr>
         </Tfoot>
-      }
+      } */}
     </Table>
-  </TableContainer>;
+    {
+      pagination && <Box width="100%">
+        <Box
+          padding="12px 24px"
+          width="100%">
+          <SimplePagination
+            limit={limit}
+            setLimit={setLimit}
+            page={page}
+            setPage={setPage}
+            count={data.length} 
+          />
+        </Box>
+      </Box>
+    }
+  </Box>;
 };

@@ -46,7 +46,7 @@ const DataList = ({ list = [] }) => {
 export const CompanyInformation = () => {
   const { firstDataList, secondDataList } = useCompanyInformationProps();
 
-  return <Box mt="24px">
+  return <Box>
     <SectionCard
       isAccordion
       padding="0 !important"
@@ -61,8 +61,7 @@ export const CompanyInformation = () => {
         borderTopLeftRadius="12px"
         borderTopRightRadius="12px"
       >
-        <Box
-        >
+        <Box>
           <Text
             fontSize="18px"
             fontWeight="600"

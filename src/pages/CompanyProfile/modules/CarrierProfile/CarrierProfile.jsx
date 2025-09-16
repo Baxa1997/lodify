@@ -6,6 +6,7 @@ import { MainSection } from "./components/MainSection";
 import { CompanyInformation } from "./components/CompanyInformation";
 import { ValidateCarrier } from "./components/ValidateCarrier";
 import { ValidateEquipment } from "./components/ValidateEquipment";
+import { Authority } from "./components/Authority";
 
 export const CarrierProfile = () => {
 
@@ -25,6 +26,7 @@ export const CarrierProfile = () => {
       <CompanyInformation />
       <ValidateCarrier />
       <ValidateEquipment />
+      <Authority />
     </Box>
   </Box>;
 };

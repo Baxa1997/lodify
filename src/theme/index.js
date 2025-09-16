@@ -33,6 +33,9 @@ const theme = extendTheme({
     success: {
       600: "#079455",
     },
+    error: {
+      600: "#D92D20",
+    },
     secondary: {
       700: "#414651",
     },

@@ -9,7 +9,7 @@ export const menuItems = [
     id: "trips",
     label: "Trips",
     icon: "/img/route.svg",
-    path: "#",
+    path: "trips",
   },
   {
     id: "user",

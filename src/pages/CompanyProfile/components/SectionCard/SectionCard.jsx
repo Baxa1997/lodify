@@ -10,6 +10,7 @@ export const SectionCard = ({ children, isAccordion, variant = "default", ...pro
       allowMultiple
     >
       <AccordionItem
+        border="none"
         className={clsx(styles.sectionCard, styles[variant])}
         {...props}>
         {

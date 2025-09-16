@@ -14,7 +14,7 @@ const theme = extendTheme({
     gray: {
       50: "#FAFAFA",
       100: "#F5F7FA",
-      200: "#E9EAEB",
+      200: "#F5F5F5",
       300: "#D5D7DA",
       400: "#A4A7AE",
       500: "#6B7280",
@@ -29,6 +29,12 @@ const theme = extendTheme({
         disabled: "#717680",
       },
       "border-main": "#E9EAEB",
+    },
+    success: {
+      600: "#079455",
+    },
+    secondary: {
+      700: "#414651",
     },
   },
 });

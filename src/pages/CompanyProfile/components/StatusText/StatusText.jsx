@@ -1,11 +1,11 @@
 import { Box, Text } from "@chakra-ui/react";
 
-export const StatusText = ({ title, data, status }) => {
+export const StatusText = ({ title, data = "", status }) => {
   const statusMap = {
-    "Active": "success.600",
-    "Yes": "success.600",
-    "No": "error.600",
-    "None": "error.600",
+    "ACTIVE": "success.600",
+    "YES": "success.600",
+    "NO": "error.600",
+    "NONE": "error.600",
   };
 
   return <Box
@@ -21,7 +21,7 @@ export const StatusText = ({ title, data, status }) => {
     <Text
       fontSize="14px"
       fontWeight="400"
-      color={statusMap[status] || statusMap[data]}
+      color={statusMap[status] || statusMap[typeof data === "string" ? data?.toUpperCase() : data]}
     >
       {data}
     </Text>

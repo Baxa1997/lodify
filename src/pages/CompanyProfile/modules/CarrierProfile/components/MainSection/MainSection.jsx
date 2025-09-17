@@ -121,8 +121,9 @@ export const MainSection = ({ data }) => {
             </Box>
             <Box
               as="dl"
-              width="100%">
-              <Box
+              width="100%"
+            >
+              {/* <Box
                 display="flex"
                 justifyContent="space-between"
                 fontWeight={600}
@@ -157,7 +158,7 @@ export const MainSection = ({ data }) => {
               >
                 <Box as="dt">Trailers:</Box>
                 <Box as="dd">0</Box>
-              </Box>
+              </Box> */}
             </Box>
           </Box>
           <Box mt="32px">

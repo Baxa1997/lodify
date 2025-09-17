@@ -39,6 +39,9 @@ const theme = extendTheme({
     secondary: {
       700: "#414651",
     },
+    tertiary: {
+      600: "#535862",
+    },
   },
 });
 

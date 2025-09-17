@@ -9,6 +9,9 @@ import { ValidateEquipment } from "./components/ValidateEquipment";
 import { Authority } from "./components/Authority";
 import { Insurance } from "./components/Insurance";
 import { Safety } from "./components/Safety";
+import { CaliforniaAirResources } from "./components/CaliforniaAirResources";
+import { Operations } from "./components/Operations";
+import { LaneInsights } from "./components/LaneInsights";
 
 export const CarrierProfile = () => {
 
@@ -24,6 +27,7 @@ export const CarrierProfile = () => {
       gap="24px"
     >
       <MainSection data={generalInfo} />
+      <LaneInsights data={companySnapshot} />
       <CompanyInformation data={companySnapshot} />
       <ValidateCarrier />
       <ValidateEquipment />
@@ -33,6 +37,8 @@ export const CarrierProfile = () => {
         carrierDetails={carrierDetails}
       />
       <Safety data={companySnapshot} />
+      <CaliforniaAirResources />
+      <Operations data={companySnapshot} />
     </Box>
   </Box>;
 };

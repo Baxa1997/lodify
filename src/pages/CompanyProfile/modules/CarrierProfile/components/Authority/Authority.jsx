@@ -3,7 +3,22 @@ import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../com
 import { StatusText } from "../../../../components/StatusText";
 import { CardData } from "../../../../components/CardData";
 
-export const Authority = () => {
+export const Authority = ({ data }) => {
+
+  const {
+    common_stat,
+    common_app_pend,
+    common_rev_pend,
+    contract_stat,
+    contract_app_pend,
+    contract_rev_pend,
+    broker_stat,
+    broker_app_pend,
+    broker_rev_pend,
+    property_chk,
+    passenger_chk,
+    hhg_chk,
+  } = data;
 
   return <Box>
     <SectionCard
@@ -23,7 +38,9 @@ export const Authority = () => {
           fontSize="18px"
           fontWeight="600"
           color="primary.500"
-        >Authority</Text>
+        >
+          Authority
+        </Text>
       </SectionCardHeader>
       <SectionCardBody>
         <Box
@@ -43,15 +60,15 @@ export const Authority = () => {
             >
               <StatusText
                 title="Common Authority:"
-                data="Active"
+                data={common_stat}
               />
               <StatusText
                 title="Common Authority Application Pending:"
-                data="No"
+                data={common_app_pend}
               />
               <StatusText
                 title="Common Authority Pending Recovation:"
-                data="No"
+                data={common_rev_pend}
               />
             </Box>
             <Box
@@ -62,15 +79,15 @@ export const Authority = () => {
             >
               <StatusText
                 title="Contract Authority:"
-                data="None"
+                data={contract_stat}
               />
               <StatusText
                 title="Contract Authority Application Pending:"
-                data="No"
+                data={contract_app_pend}
               />
               <StatusText
                 title="Contract Authority Pending Revocation:"
-                data="No"
+                data={contract_rev_pend}
               />
             </Box>
             <Box
@@ -81,15 +98,15 @@ export const Authority = () => {
             >
               <StatusText
                 title="Broker Authority:"
-                data="None"
+                data={broker_stat}
               />
               <StatusText
                 title="Broker Authority Application Pending:"
-                data="No"
+                data={broker_app_pend}
               />
               <StatusText
                 title="Broker Authority Pending Revocation:"
-                data="No"
+                data={broker_rev_pend}
               />
             </Box>
           </CardData>
@@ -109,19 +126,19 @@ export const Authority = () => {
                 fontWeight="600"
                 color="secondary.700"
               >
-              Cargo Authorization
+                Cargo Authorization
               </Text>
               <StatusText
                 title="Freight:"
-                data="Yes"
+                data={property_chk}
               />
               <StatusText
                 title="Passenger:"
-                data="No"
+                data={passenger_chk}
               />
               <StatusText
-                title="Household Goods::"
-                data="No"
+                title="Household Goods:"
+                data={hhg_chk}
               />
             </CardData>
             <CardData
@@ -131,7 +148,7 @@ export const Authority = () => {
             >
               <StatusText
                 title="Authority Granted On:"
-                data="12/21/2017"
+                data="None"
               />
             </CardData>
           </Box>

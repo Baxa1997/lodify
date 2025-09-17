@@ -16,7 +16,7 @@ import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../com
 import { DataTable } from "../DataTable";
 import { BoldLink } from "../../../../components/BoldLink";
 
-export const MainSection = () => {
+export const MainSection = ({ data }) => {
 
   const { headData, bodyData, pieData, options, btnStyleProps } = useMainSectionProps();
 
@@ -42,14 +42,14 @@ export const MainSection = () => {
           padding="20px 24px">
           <StarRating value={4.99} />
           <p>Average: 4.99 stars based on 521 customers</p>
-          <MainHeading mt="8px">ZERO MAX INC</MainHeading>
+          <MainHeading mt="8px">{data?.legal_name}</MainHeading>
         </SectionCardHeader>
         <SectionCardBody padding="24px">
           <MainHeading size="16px">
-          DOT: 2979800
+          DOT: {data?.us_dot_number}
           </MainHeading>
           <MainHeading size="16px">
-          Docket: MC013650
+          Docket: {data?.docket_number}
           </MainHeading>
           <Box
             mt="4px"
@@ -60,17 +60,18 @@ export const MainSection = () => {
             <Link
               href="#"
               color="blue.500">
-            (630) 423-7227
+              {data?.phone}
+            </Link>
+            <Link
+              href="#"
+              color="blue.500"
+            >
+              {data?.mailing_address}
             </Link>
             <Link
               href="#"
               color="blue.500">
-            SAFETY@ZEROMAXINC.COM
-            </Link>
-            <Link
-              href="#"
-              color="blue.500">
-            1540 E DUNDEE RD STE 220, PALATINE, IL 60074
+              {data?.physical_address}
             </Link>
           </Box>
           <Box
@@ -88,7 +89,7 @@ export const MainSection = () => {
                 fontSize="16px"
               >
                 <Box as="dt">Common:</Box>
-                <Box as="dd">Y</Box>
+                <Box as="dd">{data?.common_stat}</Box>
               </Box>
               <Box
                 display="flex"
@@ -97,7 +98,7 @@ export const MainSection = () => {
                 fontSize="16px"
               >
                 <Box as="dt">Broker:</Box>
-                <Box as="dd">N</Box>
+                <Box as="dd">{data?.broker_stat}</Box>
               </Box>
               <Box
                 display="flex"
@@ -106,7 +107,7 @@ export const MainSection = () => {
                 fontSize="16px"
               >
                 <Box as="dt">Drivers:</Box>
-                <Box as="dd">320</Box>
+                <Box as="dd">{data?.drivers}</Box>
               </Box>
               <Box
                 display="flex"
@@ -115,7 +116,7 @@ export const MainSection = () => {
                 fontSize="16px"
               >
                 <Box as="dt">Trailers:</Box>
-                <Box as="dd">0</Box>
+                <Box as="dd">{data?.trailers}</Box>
               </Box>
             </Box>
             <Box
@@ -543,7 +544,6 @@ export const MainSection = () => {
           </SectionCard>
         </Box>
       </Box>
-
     </Box>
   </Box>;
 };

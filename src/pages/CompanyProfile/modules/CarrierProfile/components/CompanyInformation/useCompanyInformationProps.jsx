@@ -1,82 +1,95 @@
-export const useCompanyInformationProps = () => {
+export const useCompanyInformationProps = ({ data }) => {
+
+  const {
+    operating_status,
+    us_dot_status,
+    us_dot_number,
+    legal_name,
+    phone,
+    physical_address,
+    mailing_address,
+    entity_type,
+    docket_number,
+    dba_name,
+  } = data;
   
   const firstDataList = [
     {
       title: "Operating Status",
-      description: "AUTHORIZED FOR Property",
+      description: operating_status,
       color: "success.600",
     },
     {
       title: "DOT Status",
-      description: "Active",
+      description: us_dot_status,
       color: "success.600",
     },
     {
       title: "DOT Number",
-      description: "2979800",
+      description: us_dot_number,
     },
     {
       title: "Legal Name",
-      description: "ZERO MAX INC",
+      description: legal_name,
     },
     {
       title: "SCAC (Standard Carrier Alpha Code)",
-      description: "ZMXC",
+      description: "None",
     },
     {
       title: "Main Phone Number",
-      description: "(630) 423-7227",
+      description: phone,
     },
     {
       title: "Cell Phone Number",
-      description: "(630) 423-7227",
+      description: "None",
     },
     {
       title: "Fax Number",
-      description: "",
+      description: "None",
     },
     {
       title: "Address",
-      description: "1540 E DUNDEE RD STE 220 PALATINE, IL 60074                    (View on map)",
+      description: physical_address,
     },
   ];
 
   const secondDataList = [
     {
       title: "Entity Type",
-      description: "Carrier",
+      description: entity_type,
     },
     {
       title: "Active Since",
-      description: "02/28/2017",
+      description: "None",
     },
     {
       title: "Docket Number",
-      description: "MC013650",
+      description: docket_number,
     },
     {
       title: "DBA Name",
-      description: "",
+      description: dba_name,
     },
     {
       title: "Representative 1",
-      description: "NUR PARPIEV",
+      description: "None",
     },
     {
       title: "Representative 2",
-      description: "",
+      description: "None",
     },
     {
       title: "Emergency Number",
-      description: "(630) 423-7227",
+      description: "None",
     },
     {
       title: "Company Main Address",
-      description: "SAFETY @ZEROMAXNIC.COM",
+      description: "None",
     },
     {
       title: "Mailing Address",
-      description: "1540 E DUNDEE RD STE 220 PALATINE, IL 60074                    (View on map)",
+      description: mailing_address,
     },
   ];
 

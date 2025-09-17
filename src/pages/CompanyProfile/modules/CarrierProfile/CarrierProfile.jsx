@@ -8,11 +8,11 @@ import { ValidateCarrier } from "./components/ValidateCarrier";
 import { ValidateEquipment } from "./components/ValidateEquipment";
 import { Authority } from "./components/Authority";
 import { Insurance } from "./components/Insurance";
+import { Safety } from "./components/Safety";
 
 export const CarrierProfile = () => {
 
-  const { headData, bodyData, pieData, options } = useCarrierProfileProps();
-
+  const { generalInfo, companySnapshot, carrierDetails, insuranceHistory } = useCarrierProfileProps();
 
   return <Box>
     <Box className={styles.header}>
@@ -23,12 +23,16 @@ export const CarrierProfile = () => {
       flexDirection="column"
       gap="24px"
     >
-      <MainSection />
-      <CompanyInformation />
+      <MainSection data={generalInfo} />
+      <CompanyInformation data={companySnapshot} />
       <ValidateCarrier />
       <ValidateEquipment />
-      <Authority />
-      <Insurance />
+      <Authority data={carrierDetails} />
+      <Insurance
+        data={insuranceHistory}
+        carrierDetails={carrierDetails}
+      />
+      <Safety data={companySnapshot} />
     </Box>
   </Box>;
 };

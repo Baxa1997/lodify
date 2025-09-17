@@ -4,8 +4,17 @@ import { PiCertificateBold } from "react-icons/pi";
 import { BoldLink } from "../../../../components/BoldLink";
 import { StatusText } from "../../../../components/StatusText";
 import { CardData } from "../../../../components/CardData";
+import { format, isValid } from "date-fns";
 
-export const Insurance = () => {
+export const Insurance = ({ data, carrierDetails }) => {
+
+  const {
+    bipd_file,
+    bond_file,
+    bond_req,
+    cargo_file,
+    cargo_req,
+  } = carrierDetails;
 
   return <Box>
     <SectionCard
@@ -35,230 +44,66 @@ export const Insurance = () => {
           gridTemplateColumns={"repeat(2, 1fr)"}
           gap="20px"
         >
-          <CardData>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-            >
-              <Text
-                fontSize="16px"
-                fontWeight="600"
-                color="secondary.700"
-              >
-                General Liability
-              </Text>
-              <BoldLink icon={<PiCertificateBold />}>
-                View cert
-              </BoldLink>
-            </Box>
-            <Box
-              display="flex"
-              flexDirection="column"
-              gap="8px"
-              mt="8px"
-            >
-              <StatusText
-                title="Agent:"
-                data="Cottingham and Butler"
-              />
-              <StatusText
-                title="Underwriter:"
-                data="ARCH INSURANCE COMPANY"
-              />
-              <StatusText
-                title="A.M. Best Rating:"
-                data="A+"
-              />
-              <StatusText
-                title="Policy Number:"
-                data="ZAGLB618900"
-              />
-              <StatusText
-                title="Expiration Date:"
-                data="07/05/2026"
-              />
-              <StatusText
-                title="Cancellation Date:"
-                data=""
-              />
-              <StatusText
-                title="Covarage Limit:"
-                data="1,000,000"
-              />
-              <StatusText
-                title="Deductible:"
-                data=""
-              />
-            </Box>
-          </CardData>
-          <CardData>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-            >
-              <Text
-                fontSize="16px"
-                fontWeight="600"
-                color="secondary.700"
-              >
-                Auto Liability
-              </Text>
-              <BoldLink icon={<PiCertificateBold />}>
-                View cert
-              </BoldLink>
-            </Box>
-            <Box
-              display="flex"
-              flexDirection="column"
-              gap="8px"
-              mt="8px"
-            >
-              <StatusText
-                title="Agent:"
-                data="Cottingham and Butler"
-              />
-              <StatusText
-                title="Underwriter:"
-                data="ARCH INSURANCE COMPANY"
-              />
-              <StatusText
-                title="A.M. Best Rating:"
-                data="A+"
-              />
-              <StatusText
-                title="Policy Number:"
-                data="ZAGLB618900"
-              />
-              <StatusText
-                title="Expiration Date:"
-                data="07/05/2026"
-              />
-              <StatusText
-                title="Cancellation Date:"
-                data=""
-              />
-              <StatusText
-                title="Covarage Limit:"
-                data="1,000,000"
-              />
-              <StatusText
-                title="Deductible:"
-                data=""
-              />
-            </Box>
-          </CardData>
-          <CardData>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-            >
-              <Text
-                fontSize="16px"
-                fontWeight="600"
-                color="secondary.700"
-              >
-                Workers comp
-              </Text>
-              <BoldLink icon={<PiCertificateBold />}>
-                View cert
-              </BoldLink>
-            </Box>
-            <Box
-              display="flex"
-              flexDirection="column"
-              gap="8px"
-              mt="8px"
-            >
-              <StatusText
-                title="Agent:"
-                data="Cottingham and Butler"
-              />
-              <StatusText
-                title="Underwriter:"
-                data="ARCH INSURANCE COMPANY"
-              />
-              <StatusText
-                title="A.M. Best Rating:"
-                data="A+"
-              />
-              <StatusText
-                title="Policy Number:"
-                data="ZAGLB618900"
-              />
-              <StatusText
-                title="Expiration Date:"
-                data="07/05/2026"
-              />
-              <StatusText
-                title="Cancellation Date:"
-                data=""
-              />
-              <StatusText
-                title="Covarage Limit:"
-                data="1,000,000"
-              />
-              <StatusText
-                title="Deductible:"
-                data=""
-              />
-            </Box>
-          </CardData>
-          <CardData>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-            >
-              <Text
-                fontSize="16px"
-                fontWeight="600"
-                color="secondary.700"
-              >
-                Cargo Liability
-              </Text>
-              <BoldLink icon={<PiCertificateBold />}>
-                View cert
-              </BoldLink>
-            </Box>
-            <Box
-              display="flex"
-              flexDirection="column"
-              gap="8px"
-              mt="8px"
-            >
-              <StatusText
-                title="Agent:"
-                data="Cottingham and Butler"
-              />
-              <StatusText
-                title="Underwriter:"
-                data="ARCH INSURANCE COMPANY"
-              />
-              <StatusText
-                title="A.M. Best Rating:"
-                data="A+"
-              />
-              <StatusText
-                title="Policy Number:"
-                data="ZAGLB618900"
-              />
-              <StatusText
-                title="Expiration Date:"
-                data="07/05/2026"
-              />
-              <StatusText
-                title="Cancellation Date:"
-                data=""
-              />
-              <StatusText
-                title="Covarage Limit:"
-                data="1,000,000"
-              />
-              <StatusText
-                title="Deductible:"
-                data=""
-              />
-            </Box>
-          </CardData>
+          {
+            data?.map(item => (
+              <CardData key={item?.guid}>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                >
+                  <Text
+                    fontSize="16px"
+                    fontWeight="600"
+                    color="secondary.700"
+                  >
+                    {item?.mod_col_3}
+                  </Text>
+                  <BoldLink icon={<PiCertificateBold />}>
+                    View cert
+                  </BoldLink>
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap="8px"
+                  mt="8px"
+                >
+                  <StatusText
+                    title="Agent:"
+                    data="None"
+                  />
+                  <StatusText
+                    title="Underwriter:"
+                    data={item?.name_company}
+                  />
+                  <StatusText
+                    title="A.M. Best Rating:"
+                    data="None"
+                  />
+                  <StatusText
+                    title="Policy Number:"
+                    data={item?.policy_no}
+                  />
+                  <StatusText
+                    title="Expiration Date:"
+                    data="07/05/2026"
+                  />
+                  <StatusText
+                    title="Cancellation Date:"
+                    data={isValid(new Date(item?.cancl_effective_date)) ? format(new Date(item?.cancl_effective_date), "dd/MM/yyyy") : ""}
+                  />
+                  <StatusText
+                    title="Covarage Limit:"
+                    data={item?.min_cov_amount * 1000}
+                  />
+                  <StatusText
+                    title="Deductible:"
+                    data="None"
+                  />
+                </Box>
+              </CardData>
+            ))
+          }
         </Box>
         <Box mt="20px">
           <Button
@@ -294,7 +139,7 @@ export const Insurance = () => {
                   color="secondary.700"
                   mb="8px"
                 >
-                BIPD Insurance
+                  BIPD Insurance
                 </Text>
                 <Box
                   display="flex"
@@ -307,7 +152,7 @@ export const Insurance = () => {
                   />
                   <StatusText
                     title="BIPD On File:"
-                    data="$1,000,000"
+                    data={bipd_file}
                   />
                 </Box>
               </CardData>
@@ -327,11 +172,11 @@ export const Insurance = () => {
                 >
                   <StatusText
                     title="Cargo Required:"
-                    data="No"
+                    data={cargo_req}
                   />
                   <StatusText
                     title="Cargo On File:"
-                    data="No"
+                    data={cargo_file}
                   />
                 </Box>
               </CardData>
@@ -351,11 +196,11 @@ export const Insurance = () => {
                 >
                   <StatusText
                     title="Bond Surety Required:"
-                    data="No"
+                    data={bond_req}
                   />
                   <StatusText
                     title="Bond Surety On File:"
-                    data="No"
+                    data={bond_file}
                   />
                 </Box>
               </CardData>

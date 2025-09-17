@@ -43,8 +43,8 @@ const DataList = ({ list = [] }) => {
   </Box>;
 };
 
-export const CompanyInformation = () => {
-  const { firstDataList, secondDataList } = useCompanyInformationProps();
+export const CompanyInformation = ({ data }) => {
+  const { firstDataList, secondDataList } = useCompanyInformationProps({ data });
 
   return <Box>
     <SectionCard

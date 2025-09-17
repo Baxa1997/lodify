@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import HFTextField from "../../../../components/HFTextField";
 import MainHeading from "../../../../components/MainHeading";
-import { FormCardSection } from "../../components/FormCardSection";
+import { SectionCard } from "../../components/SectionCard";
 import { FormSectionTitle } from "../../components/FormSectionTitle";
 import styles from "./style.module.scss";
 import { useReportProps } from "./useReportProps";
@@ -15,7 +15,7 @@ export const Report = () => {
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>USDOT information</FormSectionTitle>
-      <FormCardSection maxWidth="720px">
+      <SectionCard maxWidth="720px">
         <HFTextField
           control={control}
           name="entity_type"
@@ -80,11 +80,11 @@ export const Report = () => {
             disabled
           />
         </Box>
-      </FormCardSection>
+      </SectionCard>
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>Operating authority information</FormSectionTitle>
-      <FormCardSection maxWidth="720px">
+      <SectionCard maxWidth="720px">
         <Box
           display="flex"
           flexDirection="column"
@@ -123,11 +123,11 @@ export const Report = () => {
             disabled
           />
         </Box>
-      </FormCardSection>
+      </SectionCard>
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>Company Information</FormSectionTitle>
-      <FormCardSection maxWidth="720px">
+      <SectionCard maxWidth="720px">
         <Box
           display="grid"
           gridTemplateColumns="1fr 1fr"
@@ -207,7 +207,7 @@ export const Report = () => {
             disabled
           />
         </Box>
-      </FormCardSection>
+      </SectionCard>
     </div>
   </div>;
 };

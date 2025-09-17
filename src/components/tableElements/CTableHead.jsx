@@ -3,7 +3,13 @@ import {Box} from "@chakra-ui/react";
 
 const CTableHead = ({children, ...props}) => {
   return (
-    <Box as="thead" bg="gray.50" {...props}>
+    <Box
+      as="thead"
+      bg="gray.50"
+      position="sticky"
+      top="0"
+      zIndex="10"
+      {...props}>
       {children}
     </Box>
   );

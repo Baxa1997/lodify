@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, Flex, Text} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import styles from "./style.module.scss";
+import styles from "../../styles/tabs.module.scss";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import UpcomingTab from "./UpcomingTab";
 import InTransitTab from "./inTransitTab";

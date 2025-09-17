@@ -11,6 +11,9 @@ const CTableTd = ({children, ...props}) => {
       color="gray.700"
       borderBottom="1px solid"
       borderColor="gray.200"
+      minWidth="80px"
+      width="auto"
+      whiteSpace="nowrap"
       {...props}>
       {children}
     </Box>

@@ -9,7 +9,7 @@ import HFTextField from "../../components/HFTextField";
 import CustomRadio from "../../components/CustomRadio";
 import Select from "../../components/Select";
 import driversService from "../../services/driversService";
-import styles from "./style.module.scss";
+import styles from "../../styles/tabs.module.scss";
 
 const SingleDriver = () => {
   const {id} = useParams();

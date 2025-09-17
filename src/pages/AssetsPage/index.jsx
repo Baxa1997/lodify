@@ -2,7 +2,7 @@ import React from "react";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import {Flex, Box, Text} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import styles from "./style.module.scss";
+import styles from "../../styles/tabs.module.scss";
 import TrailersTab from "./TrailersTab";
 import TractorsTab from "./TractorsTab";
 

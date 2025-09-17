@@ -4,7 +4,7 @@ import {Box, Flex, Text} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import DriversTab from "./DriversTab";
 import DocumentsTab from "./DocumentsTab";
-import styles from "./style.module.scss";
+import styles from "../../styles/tabs.module.scss";
 
 const Drivers = () => {
   return (

@@ -21,10 +21,31 @@ const CTable = ({
       display="flex"
       flexDirection="column"
       height={height}
+      overflow="hidden"
       {...props}>
-      {/* Scrollable table body */}
-      <Box flex="1" overflow="auto" position="relative">
-        <Box as="table" width="100%" borderCollapse="collapse">
+      {/* Scrollable table container with horizontal scroll */}
+      <Box
+        flex="1"
+        overflow="auto"
+        position="relative"
+        sx={{
+          "&::-webkit-scrollbar": {
+            height: "8px",
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#f1f1f1",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#c1c1c1",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "#a8a8a8",
+          },
+        }}>
+        <Box as="table" width="100%" borderCollapse="collapse" minWidth="800px">
           {children}
         </Box>
       </Box>

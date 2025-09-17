@@ -5,7 +5,7 @@ import {Box, Flex, Text, Button} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import styles from "./SingleUser.module.scss";
+import styles from "../../styles/tabs.module.scss";
 import AccountTab from "./components/AccountTab";
 import CommunicationTab from "./components/CommunicationTab";
 import UserRoleTab from "./components/UserRoleTab";

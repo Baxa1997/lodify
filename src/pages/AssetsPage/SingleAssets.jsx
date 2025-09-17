@@ -8,7 +8,7 @@ import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import HFTextField from "../../components/HFTextField";
 import Select from "../../components/Select";
 import assetsService from "../../services/assetsService";
-import styles from "./SingleAssets.module.scss";
+import styles from "../../styles/tabs.module.scss";
 import LocationTab from "./LocationTab";
 import {fieldTypesOptions} from "./components/mockElements";
 

@@ -150,7 +150,6 @@
   margin: 0;
 }
 
-// Responsive design
 @media (max-width: 768px) {
   .mapContainer {
     height: 400px;
@@ -178,7 +177,6 @@
   }
 }
 
-// Map type controls styling
 :global(.gm-style-cc) {
   display: none !important;
 }

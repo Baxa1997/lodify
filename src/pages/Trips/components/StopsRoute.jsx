@@ -1,14 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import {Box, Flex, Text, Button, Link} from "@chakra-ui/react";
 import {differenceInMinutes, format} from "date-fns";
 import {getShortFileName} from "./mockElements";
+import FileViewer from "../../../components/FileViewer";
 
 function StopsRoute({stop, index, initialStops}) {
-  console.log("initialStops", initialStops);
   const lastElement = index === initialStops?.length - 1;
   function formatTimeFromDate(dateObj) {
     return format(dateObj, "HH:mm");
   }
+  const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
 
   function getHoursMinutesDifference(dateTimeA, dateTimeB) {
     const d1 = new Date(dateTimeA);
@@ -27,7 +28,7 @@ function StopsRoute({stop, index, initialStops}) {
   return (
     <Box key={index} margin="0 20px 0">
       <Flex gap="12px">
-        <Box w={"60px"}>
+        <Box minW={"80px"}>
           <Text
             h="20px"
             textAlign="end"
@@ -132,13 +133,16 @@ function StopsRoute({stop, index, initialStops}) {
                   background: "#a8a8a8",
                 },
               }}>
-              {/* <Flex gap="6px" minW="max-content"> */}
               {stop?.images?.map((image) => (
                 <Box
                   width="40px"
                   height="60px"
                   borderRadius="8px"
-                  overflow="hidden">
+                  overflow="hidden"
+                  onClick={() => {
+                    console.log("clicked", isFileViewerOpen);
+                    setIsFileViewerOpen(true);
+                  }}>
                   <img
                     src={image}
                     alt="image"
@@ -203,6 +207,11 @@ function StopsRoute({stop, index, initialStops}) {
           )}
         </Box>
       </Flex>
+      <FileViewer
+        isOpen={isFileViewerOpen}
+        onClose={() => setIsFileViewerOpen(false)}
+        images={stop?.images}
+      />
     </Box>
   );
 }

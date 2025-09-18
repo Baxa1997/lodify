@@ -4,8 +4,9 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import styles from "../../styles/tabs.module.scss";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import UpcomingTab from "./UpcomingTab";
-import InTransitTab from "./inTransitTab";
+
 import HistoryTab from "./HistoryTab";
+import TransitTab from "./TransitTab";
 
 const Trips = () => {
   return (
@@ -33,7 +34,7 @@ const Trips = () => {
             <UpcomingTab />
           </TabPanel>
           <TabPanel>
-            <InTransitTab />
+            <TransitTab />
           </TabPanel>
           <TabPanel>
             <HistoryTab />

@@ -1,15 +1,27 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "../style.module.scss";
 import {Flex, Box, Text, Button, Badge} from "@chakra-ui/react";
 import {VStack} from "@chakra-ui/react";
 import {getShortFileName} from "./mockElements";
+import FilesReader from "../../../components/FileViewer/FilesReader";
 
 function RouteInfoComponent({tripData = {}}) {
+  const [isFilesReaderOpen, setIsFilesReaderOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const getStatusColor = (status) => {
     if (status === "Completed") return "green";
     if (status === "Arrival") return "yellow";
     if (status === "Pending") return "red";
     return "gray";
+  };
+
+  const handleFilesReaderOpen = (file) => {
+    setSelectedFile(file);
+    setIsFilesReaderOpen(true);
+  };
+
+  const handleFilesReaderClose = () => {
+    setIsFilesReaderOpen(false);
   };
 
   return (
@@ -242,11 +254,21 @@ function RouteInfoComponent({tripData = {}}) {
                   {getShortFileName(document, 10)}
                 </Text>
               </Box>
-              <button className={styles.documentAction}>View</button>
+              <button
+                className={styles.documentAction}
+                onClick={() => handleFilesReaderOpen(document)}>
+                View
+              </button>
             </Box>
           ))}
         </Box>
       </Box>
+
+      <FilesReader
+        isOpen={isFilesReaderOpen}
+        onClose={handleFilesReaderClose}
+        file={selectedFile}
+      />
     </>
   );
 }

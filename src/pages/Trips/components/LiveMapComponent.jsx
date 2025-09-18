@@ -3,134 +3,6 @@ import GoogleMapReact from "google-map-react";
 import {Box, Button, Flex, Text, Tooltip} from "@chakra-ui/react";
 import styles from "../style.module.scss";
 
-const initialStops = [
-  {
-    address: "asdf dsaf sdfa asdf ",
-    city: "qattadur",
-    country: "qatdur ",
-    date_time: "2025-09-01T03:45:00",
-    files: null,
-    images: [
-      "https://cdn.u-code.io/3cab0a2e-1d20-40a1-8b46-8b4d1a66f2f1/media/4989a90b-b7f4-4470-886d-a98b5b6f488e_Screenshotfrom2025-09-1707-53-58.png",
-    ],
-    location: null,
-    note: "asdfasdfda dfas dfasd ",
-    status: ["Arrival"],
-  },
-  {
-    address: "asdf",
-    city: "asdf",
-    country: "asdf",
-    date_time: "2025-09-02T02:50:00",
-    files: [
-      "https://cdn.u-code.io/3cab0a2e-1d20-40a1-8b46-8b4d1a66f2f1/media/112b6e70-1cc7-4ca8-8ddf-106f9e3b3ed2_Screenshotfrom2025-09-1516-12-20.png",
-    ],
-    images: null,
-    location: null,
-    note: "nma",
-    status: ["Stopped"],
-  },
-  {
-    address: null,
-    city: null,
-    country: null,
-    date_time: "2025-09-03T03:51:00",
-    files: null,
-    images: null,
-    location: null,
-    note: "asdfdf",
-    status: ["Departure"],
-  },
-  {
-    address: null,
-    city: null,
-    country: null,
-    date_time: "2025-09-04T04:32:00",
-    files: null,
-    images: null,
-    location: null,
-    note: "asdfasdfsadfsad dsfa dsf sdfa ",
-    status: ["Stopped"],
-  },
-  {
-    address: null,
-    city: null,
-    country: null,
-    date_time: "2025-09-05T04:34:00",
-    files: null,
-    images: null,
-    location: null,
-    note: null,
-    status: ["Arrival"],
-  },
-  {
-    address: null,
-    city: null,
-    country: null,
-    date_time: "2025-09-06T04:34:00",
-    files: null,
-    images: null,
-    location: null,
-    note: "nmadur note nmadur note 111",
-    status: null,
-  },
-  {
-    address: null,
-    city: null,
-    country: null,
-    date_time: "2025-09-07T04:35:00",
-    files: null,
-    images: null,
-    location: null,
-    note: "note note note 22",
-    status: null,
-  },
-  {
-    address: null,
-    city: null,
-    country: null,
-    date_time: "2025-09-08T04:35:00",
-    files: null,
-    images: null,
-    location: null,
-    note: "",
-    status: ["Departure"],
-  },
-  {
-    address: null,
-    city: null,
-    country: null,
-    date_time: "2025-09-09T04:35:00",
-    files: null,
-    images: null,
-    location: null,
-    note: "",
-    status: ["Stopped"],
-  },
-  {
-    address: null,
-    city: null,
-    country: null,
-    date_time: "2025-09-10T04:36:00",
-    files: null,
-    images: null,
-    location: null,
-    note: null,
-    status: ["Arrival"],
-  },
-  {
-    address: "dd",
-    city: "dddddd",
-    country: "ddd",
-    date_time: "2025-09-19T03:51:00",
-    files: null,
-    images: null,
-    location: null,
-    note: "kimdur",
-    status: ["Completed"],
-  },
-];
-
 const LocationMarker = ({lat, lng, onClick}) => (
   <div className={styles.marker} onClick={onClick}>
     <div className={styles.markerInner}>
@@ -139,57 +11,49 @@ const LocationMarker = ({lat, lng, onClick}) => (
   </div>
 );
 
-function LiveMapComponent() {
+function LiveMapComponent({tripData = {}}) {
   const [latitude, setLatitude] = useState(37.422);
   const [longitude, setLongitude] = useState(-122.0862);
 
-  const dateTimeMap = useMemo(() => {
-    return initialStops
-      ?.filter((item) => item.status?.[0])
-      .map((stop) => ({
-        [stop.status?.[0] ?? "Note"]: stop.date_time,
-      }));
-  }, [initialStops]);
-
   const timelineEvents = useMemo(() => {
-    const stopsWithStatus = initialStops.filter((s) => s.status?.[0]);
-    if (!stopsWithStatus.length) return [];
-    const count = stopsWithStatus.length;
+    const stopsWithStatus = tripData?.trips_logs?.filter((s) => s.status?.[0]);
+    if (!stopsWithStatus?.length) return [];
+    const count = stopsWithStatus?.length;
     return stopsWithStatus.map((s, idx) => {
-      const percent = (idx / (count - 1)) * 100; // equal spacing
+      const percent = (idx / (count - 1)) * 100;
       return {
         status: s.status[0],
         date_time: s.date_time,
         percent,
       };
     });
-  }, []);
+  }, [tripData?.trips_logs]);
 
   const stoppedSegments = useMemo(() => {
-    const stopsWithStatus = initialStops.filter((s) => s.status?.[0]);
-    if (stopsWithStatus.length < 2) return [];
+    const stopsWithStatus = tripData?.trips_logs?.filter(
+      (s) => s.order_status?.[0]
+    );
+    if (stopsWithStatus?.length < 2) return [];
 
-    const startTime = new Date(stopsWithStatus[0].date_time).getTime();
+    const startTime = new Date(stopsWithStatus?.[0]?.date_time).getTime();
     const endTime = new Date(
-      stopsWithStatus[stopsWithStatus.length - 1].date_time
+      stopsWithStatus?.[stopsWithStatus?.length - 1]?.date_time
     ).getTime();
     const totalTime = endTime - startTime;
 
     const segs = [];
-    for (let i = 1; i < stopsWithStatus.length; i++) {
+    for (let i = 1; i < stopsWithStatus?.length; i++) {
       const prevTime = new Date(stopsWithStatus[i - 1].date_time).getTime();
       const currTime = new Date(stopsWithStatus[i].date_time).getTime();
       if (stopsWithStatus[i].status?.[0] === "Stopped") {
-        // segment start/end percent relative to total time
         const left = ((prevTime - startTime) / totalTime) * 100;
         const width = ((currTime - prevTime) / totalTime) * 100;
         segs.push({left, width});
       }
     }
     return segs;
-  }, [initialStops]);
+  }, [tripData?.trips_logs]);
 
-  console.log("dateTimeMapdateTimeMap", dateTimeMap);
   return (
     <>
       <Box

@@ -4,8 +4,8 @@ const tripsService = {
   getList: (data) => {
     return httpRequest.post(`v2/invoke_function/lodify-trip-gateway`, {data});
   },
-  getTripById: (id) =>
-    httpRequest.get(`v1/object-slim/trips/${id}?from-ofs=true`),
+  getTripById: (data) =>
+    httpRequest.post(`v2/invoke_function/lodify-trip-gateway`, {data}),
   getTripDetails: (id) => {
     const dataParam = JSON.stringify({id});
     return httpRequest.get(

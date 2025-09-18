@@ -1,9 +1,11 @@
 import React from "react";
 import {Box, Flex, Text, Button, Link} from "@chakra-ui/react";
 import {differenceInMinutes, format} from "date-fns";
+import {getShortFileName} from "./mockElements";
 
 function StopsRoute({stop, index, initialStops}) {
-  const lastElement = index === initialStops.length - 1;
+  console.log("initialStops", initialStops);
+  const lastElement = index === initialStops?.length - 1;
   function formatTimeFromDate(dateObj) {
     return format(dateObj, "HH:mm");
   }
@@ -20,26 +22,6 @@ function StopsRoute({stop, index, initialStops}) {
     if (hours > 0 && minutes > 0) return `${hours}h ${minutes}m`;
     if (hours > 0) return `${hours}h`;
     return `${minutes}m`;
-  }
-
-  function getShortFileName(url, maxBaseLength = 5) {
-    let fullName;
-    try {
-      const u = new URL(url);
-      fullName = u.pathname.split("/").pop();
-    } catch {
-      fullName = url.split("/").pop();
-    }
-
-    const lastDot = fullName.lastIndexOf(".");
-    let base = lastDot !== -1 ? fullName.substring(0, lastDot) : fullName;
-    const ext = lastDot !== -1 ? fullName.substring(lastDot) : "";
-
-    if (base.length > maxBaseLength) {
-      base = base.substring(0, maxBaseLength) + "...";
-    }
-
-    return base + ext;
   }
 
   return (

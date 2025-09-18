@@ -24,28 +24,6 @@ function UpcomingTab() {
   const [searchTerm, setSearchTerm] = useState("");
   const envId = useSelector((state) => state.auth.environmentId);
 
-  const getStatusColor = (status) => {
-    if (!status?.[0]) return "gray";
-    const statusColors = {
-      Arrival: "green",
-      Completed: "yellow",
-      Departure: "blue",
-      Cancelled: "red",
-      Stopped: "orange",
-    };
-    return statusColors?.[status?.[0]?.trim()] || "gray";
-  };
-
-  const getLoadEligibilityColor = (equipment) => {
-    const equipmentColors = {
-      Available: "green",
-      Used: "red",
-      Maintenance: "yellow",
-      "Out of Service": "gray",
-    };
-    return equipmentColors[equipment?.trim()] || "gray";
-  };
-
   const getLoadTypeColor = (loadType) => {
     const loadTypeColors = {
       Preloaded: "orange",
@@ -96,8 +74,12 @@ function UpcomingTab() {
     });
   };
 
-  const handleRowClick = (id) => {
-    navigate(`/admin/trips/${id}`);
+  const handleRowClick = (id, trip) => {
+    navigate(`/admin/trips/${id}`, {
+      state: {
+        label: `${trip?.drivers?.first_name?.[0]}.${trip?.drivers?.last_name}`,
+      },
+    });
   };
 
   const handleSearch = (searchValue) => {
@@ -192,7 +174,7 @@ function UpcomingTab() {
                     backgroundColor: "white",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleRowClick(trip.id)}>
+                  onClick={() => handleRowClick(trip.guid, trip)}>
                   <CTableTd>{trip.id || ""}</CTableTd>
                   <CTableTd>
                     <Box>

@@ -1,42 +1,35 @@
-import {Badge, Box, Button, Flex, Text, VStack} from "@chakra-ui/react";
-import React, {useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {Box, Button, Flex, Text} from "@chakra-ui/react";
 import {useQuery} from "@tanstack/react-query";
+import React from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import FiltersComponent from "../../components/FiltersComponent";
 import tripsService from "../../services/tripsService";
-import styles from "./style.module.scss";
-import StopsComponent from "./components/StopsComponent";
-import RouteInfoComponent from "./components/RouteInfoComponent";
 import LiveMapComponent from "./components/LiveMapComponent";
+import RouteInfoComponent from "./components/RouteInfoComponent";
+import StopsComponent from "./components/StopsComponent";
+import {useSelector} from "react-redux";
 
-function GeneralTripsTab() {
+function GeneralTripsTab({}) {
   const navigate = useNavigate();
   const {id} = useParams();
-  const [showTripDetail, setShowTripDetail] = useState(true);
+  const envId = useSelector((state) => state.auth.environmentId);
 
-  const {
-    data: tripData,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["trip-details", id],
-    queryFn: () => tripsService.getTripDetails(id),
-    enabled: !!id,
-    select: (data) => data?.data?.response || data || {},
+  const {data: tripData = {}, isLoading} = useQuery({
+    queryKey: ["TRIPS_LIST", id],
+    queryFn: () =>
+      tripsService.getTripById({
+        app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
+        environment_id: envId,
+        method: "single",
+        object_data: {
+          trip_id: id,
+        },
+        table: "trips",
+      }),
+    select: (data) => data?.data?.response?.[0] || [],
     refetchOnWindowFocus: false,
+    staleTime: 30000,
   });
-
-  const handleNavigation = () => {
-    console.log("Navigation clicked for trip:", id);
-  };
-
-  const handleTimeline = () => {
-    console.log("Timeline clicked for trip:", id);
-  };
-
-  const handleFullScreen = () => {
-    console.log("Full screen clicked for trip:", id);
-  };
 
   return (
     <Box>
@@ -64,7 +57,7 @@ function GeneralTripsTab() {
         border={"1px solid #D5D7DA"}
         w={"100%"}>
         <Box borderRight={"1px solid #D5D7DA"} w="32%">
-          <RouteInfoComponent />
+          <RouteInfoComponent tripData={tripData} />
         </Box>
 
         <Box w="32%" borderRight={"1px solid #D5D7DA"}>
@@ -72,7 +65,7 @@ function GeneralTripsTab() {
         </Box>
 
         <Box w="36%" p="12px">
-          <LiveMapComponent />
+          <LiveMapComponent tripData={tripData} />
         </Box>
       </Flex>
     </Box>

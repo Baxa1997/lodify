@@ -2,34 +2,37 @@ import React from "react";
 import styles from "../style.module.scss";
 import {Flex, Box, Text, Button, Badge} from "@chakra-ui/react";
 import {VStack} from "@chakra-ui/react";
+import {getShortFileName} from "./mockElements";
 
-function RouteInfoComponent() {
+function RouteInfoComponent({tripData = {}}) {
+  const getStatusColor = (status) => {
+    if (status === "Completed") return "green";
+    if (status === "Arrival") return "yellow";
+    if (status === "Pending") return "red";
+    return "gray";
+  };
+
   return (
     <>
       <Flex w="100%" borderBottom={"1px solid #D5D7DA"} p={"20px"}>
-        <Box>
-          <Flex
-            w="100%"
-            h={"28px"}
-            alignItems={"center"}
-            gap={"10px"}
-            justifyContent={"space-between"}>
-            <Text color={"#181D27"} fontSize={"16px"} fontWeight={"600"}>
-              111T5NSZ1
-            </Text>
-            <Button
-              minW={"20px"}
-              h={"20px"}
-              p="0"
-              bg={"none"}
-              _hover={{bg: "none"}}>
-              <img src="/img/threeDots.svg" alt="arrowRight" />
-            </Button>
-          </Flex>
-          <Text w={"95%"} fontSize={"12px"} color={"#535862"}>
-            Manage your team members and their account permissions here.
+        <Flex
+          w="100%"
+          h={"28px"}
+          alignItems={"center"}
+          gap={"10px"}
+          justifyContent={"space-between"}>
+          <Text color={"#181D27"} fontSize={"16px"} fontWeight={"600"}>
+            {tripData?.id}
           </Text>
-        </Box>
+          <Button
+            minW={"20px"}
+            h={"20px"}
+            p="0"
+            bg={"none"}
+            _hover={{bg: "none"}}>
+            <img src="/img/threeDots.svg" alt="arrowRight" />
+          </Button>
+        </Flex>
       </Flex>
       <Flex
         alignItems={"center"}
@@ -45,11 +48,15 @@ function RouteInfoComponent() {
           p={"2px 10px"}
           fontSize={"12px"}
           fontWeight={"500"}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
           borderRadius={"8px"}
-          colorScheme="green">
-          Completed
+          colorScheme={getStatusColor(tripData?.order_status?.[0])}>
+          {tripData?.order_status?.[0]}
         </Badge>
       </Flex>
+
       {/* STATUS & ETA */}
       <Box
         borderRadius={"8px"}
@@ -123,6 +130,7 @@ function RouteInfoComponent() {
           </Text>
         </VStack>
       </Box>
+
       {/* TRIP STATUS & PDT */}
       <Box
         p="16px"
@@ -168,6 +176,7 @@ function RouteInfoComponent() {
           Trip completed
         </Text>
       </Box>
+
       {/* PROFILE INFO */}
       <Box
         p="16px"
@@ -185,18 +194,19 @@ function RouteInfoComponent() {
             justifyContent="center"
             bg="#F5F5F5"
             mr="8px">
-            B
+            {tripData?.drivers?.first_name?.[0]}
           </Flex>
           <Box>
             <Text fontSize="14px" color="#181D27" fontWeight={"600"}>
-              Oybek E Karimov
+              {`${tripData?.drivers?.first_name} ${tripData?.drivers?.last_name}`}
             </Text>
             <Text fontSize="12px" color="#535862" fontWeight={"400"}>
-              oybek@eagleyetrucking.com
+              {tripData?.drivers?.email}
             </Text>
           </Box>
         </Flex>
       </Box>
+
       {/* ACTION BUTTONS */}
       <Box className={styles.actionBtns} px="20px">
         <Button className={styles.actionBtn}>
@@ -212,6 +222,7 @@ function RouteInfoComponent() {
           <Text color="#175cd3">Fullscreen</Text>
         </Button>
       </Box>
+
       {/* DOCUMENT LIST & VIEW */}
       <Box className={styles.documentsContainer}>
         <Box className={styles.documentHeader}>
@@ -221,119 +232,19 @@ function RouteInfoComponent() {
         </Box>
 
         <Box>
-          <Box className={styles.documentItem}>
-            <Box className={styles.documentIcon}>
-              <img
-                src="/img/pdfFiles.svg"
-                alt="PDF"
-                width="32px"
-                height="40px"
-              />
+          {tripData?.documents?.map((document) => (
+            <Box className={styles.documentItem}>
+              <Box className={styles.documentIcon}>
+                <img src={document} alt="PDF" width="32px" height="40px" />
+              </Box>
+              <Box className={styles.documentInfo}>
+                <Text className={styles.documentName}>
+                  {getShortFileName(document, 10)}
+                </Text>
+              </Box>
+              <button className={styles.documentAction}>View</button>
             </Box>
-            <Box className={styles.documentInfo}>
-              <Text className={styles.documentName}>Rate Confirmation.pdf</Text>
-              <Text className={styles.documentDescription}>
-                Rate Canfirmation
-              </Text>
-            </Box>
-            <button className={styles.documentAction}>View</button>
-          </Box>
-
-          <Box className={styles.documentItem}>
-            <Box className={styles.documentIcon}>
-              <img
-                src="/img/pdfFiles.svg"
-                alt="PDF"
-                width="32px"
-                height="40px"
-              />
-            </Box>
-            <Box className={styles.documentInfo}>
-              <Text className={styles.documentName}>photo_2025-08-10.jpg</Text>
-              <Text className={styles.documentDescription}>BOL/POD</Text>
-            </Box>
-            <button className={styles.documentAction}>View</button>
-          </Box>
-
-          <Box className={styles.documentItem}>
-            <Box className={styles.documentIcon}>
-              <img
-                src="/img/pdfFiles.svg"
-                alt="PDF"
-                width="32px"
-                height="40px"
-              />
-            </Box>
-            <Box className={styles.documentInfo}>
-              <Text className={styles.documentName}>photo_2025-08-10.jpg</Text>
-              <Text className={styles.documentDescription}>Other files</Text>
-            </Box>
-            <button className={styles.documentAction}>View</button>
-          </Box>
-
-          <Box className={styles.documentItem}>
-            <Box className={styles.documentIcon}>
-              <img
-                src="/img/filePhoto.svg"
-                alt="Image"
-                width="32px"
-                height="40px"
-              />
-            </Box>
-            <Box className={styles.documentInfo}>
-              <Text className={styles.documentName}>photo_2025-08-10.jpg</Text>
-              <Text className={styles.documentDescription}>Other files</Text>
-            </Box>
-            <button className={styles.documentAction}>View</button>
-          </Box>
-
-          <Box className={styles.documentItem}>
-            <Box className={styles.documentIcon}>
-              <img
-                src="/img/filePhoto.svg"
-                alt="Image"
-                width="32px"
-                height="40px"
-              />
-            </Box>
-            <Box className={styles.documentInfo}>
-              <Text className={styles.documentName}>photo_2025-08-10.jpg</Text>
-              <Text className={styles.documentDescription}>Other files</Text>
-            </Box>
-            <button className={styles.documentAction}>View</button>
-          </Box>
-
-          <Box className={styles.documentItem}>
-            <Box className={styles.documentIcon}>
-              <img
-                src="/img/filePhoto.svg"
-                alt="Image"
-                width="32px"
-                height="40px"
-              />
-            </Box>
-            <Box className={styles.documentInfo}>
-              <Text className={styles.documentName}>photo_2025-08-10.jpg</Text>
-              <Text className={styles.documentDescription}>Other files</Text>
-            </Box>
-            <button className={styles.documentAction}>View</button>
-          </Box>
-
-          <Box className={styles.documentItem}>
-            <Box className={styles.documentIcon}>
-              <img
-                src="/img/pdfFiles.svg"
-                alt="PDF"
-                width="32px"
-                height="40px"
-              />
-            </Box>
-            <Box className={styles.documentInfo}>
-              <Text className={styles.documentName}>invoice_000192</Text>
-              <Text className={styles.documentDescription}>Invoice</Text>
-            </Box>
-            <button className={styles.documentAction}>Invoice</button>
-          </Box>
+          ))}
         </Box>
       </Box>
     </>

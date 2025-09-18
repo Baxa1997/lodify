@@ -49,7 +49,7 @@ const Users = () => {
     staleTime: 0,
     select: (res) => ({
       users: res?.data?.response ?? [],
-      total: res?.data?.total ?? 0,
+      total: res?.data?.count ?? 0,
     }),
   });
 

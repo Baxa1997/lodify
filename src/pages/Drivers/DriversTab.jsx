@@ -52,7 +52,7 @@ const DriversTab = () => {
     staleTime: 0,
     select: (res) => ({
       drivers: res?.data?.response ?? [],
-      total: res?.data?.total ?? 0,
+      total: res?.data?.count ?? 0,
     }),
   });
 

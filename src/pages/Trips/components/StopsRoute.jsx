@@ -132,18 +132,24 @@ function StopsRoute({stop, index, initialStops}) {
                   background: "#a8a8a8",
                 },
               }}>
-              <Flex gap="6px" minW="max-content">
-                {stop?.images?.map((image) => (
-                  <Box
+              {/* <Flex gap="6px" minW="max-content"> */}
+              {stop?.images?.map((image) => (
+                <Box
+                  width="40px"
+                  height="60px"
+                  borderRadius="8px"
+                  overflow="hidden">
+                  <img
+                    src={image}
+                    alt="image"
                     width="40px"
                     height="60px"
-                    borderRadius="8px"
-                    overflow="hidden"
-                    flexShrink={0}>
-                    <img src={image} alt="image" width="40" height="60" />
-                  </Box>
-                ))}
-              </Flex>
+                    style={{objectFit: "cover", height: "60px"}}
+                    objectFit="cover"
+                  />
+                </Box>
+              ))}
+              {/* </Flex> */}
             </Box>
           )}
 

@@ -53,10 +53,13 @@ const TractorsTab = () => {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     staleTime: 0,
-    select: (res) => ({
-      assets: res?.data?.response ?? [],
-      total: res?.data?.total ?? 0,
-    }),
+    select: (res) => (
+      console.log("res", res),
+      {
+        assets: res?.data?.response ?? [],
+        total: res?.data?.count ?? 0,
+      }
+    ),
   });
 
   const assets = assetsData?.assets || [];

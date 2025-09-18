@@ -97,7 +97,6 @@ function UpcomingTab() {
   };
 
   const handleRowClick = (id) => {
-    console.log("Trip clicked:", id);
     navigate(`/admin/trips/${id}`);
   };
 
@@ -132,7 +131,8 @@ function UpcomingTab() {
 
       <Box mt={6}>
         <CTable
-          height="calc(100vh - 330px)"
+          w="fit-content"
+          height="calc(100vh - 320px)"
           overflow="auto"
           currentPage={currentPage}
           totalPages={totalPages}

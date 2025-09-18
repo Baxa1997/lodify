@@ -10,10 +10,12 @@ const CTable = ({
   onPageChange,
   onPageSizeChange,
   height = "400px",
+  w = "",
   ...props
 }) => {
   return (
     <Box
+      w={w}
       bg="white"
       borderRadius="12px"
       border="1px solid"
@@ -23,7 +25,6 @@ const CTable = ({
       height={height}
       overflow="hidden"
       {...props}>
-      {/* Scrollable table container with horizontal scroll */}
       <Box
         flex="1"
         overflow="auto"
@@ -50,7 +51,6 @@ const CTable = ({
         </Box>
       </Box>
 
-      {/* Fixed pagination at bottom */}
       <CTablePagination
         currentPage={currentPage}
         totalPages={totalPages}

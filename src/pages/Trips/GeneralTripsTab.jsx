@@ -1,6 +1,6 @@
 import {Badge, Box, Button, Flex, Text, VStack} from "@chakra-ui/react";
 import React, {useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import FiltersComponent from "../../components/FiltersComponent";
 import tripsService from "../../services/tripsService";
@@ -10,6 +10,7 @@ import RouteInfoComponent from "./components/RouteInfoComponent";
 import LiveMapComponent from "./components/LiveMapComponent";
 
 function GeneralTripsTab() {
+  const navigate = useNavigate();
   const {id} = useParams();
   const [showTripDetail, setShowTripDetail] = useState(true);
 
@@ -40,6 +41,7 @@ function GeneralTripsTab() {
   return (
     <Box>
       <Button
+        onClick={() => navigate("/admin/trips")}
         display={"flex"}
         alignItems={"center"}
         gap={"10px"}

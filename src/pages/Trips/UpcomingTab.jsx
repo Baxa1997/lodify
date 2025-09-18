@@ -131,7 +131,7 @@ function UpcomingTab() {
 
       <Box mt={6}>
         <CTable
-          w="fit-content"
+          width="100%"
           height="calc(100vh - 320px)"
           overflow="auto"
           currentPage={currentPage}

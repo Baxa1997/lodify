@@ -10,7 +10,7 @@ const CTable = ({
   onPageChange,
   onPageSizeChange,
   height = "400px",
-  w = "",
+  w = "100%",
   ...props
 }) => {
   return (
@@ -27,12 +27,13 @@ const CTable = ({
       {...props}>
       <Box
         flex="1"
-        overflow="auto"
+        overflowX="auto"
+        overflowY="auto"
         position="relative"
         sx={{
           "&::-webkit-scrollbar": {
-            height: "8px",
-            width: "8px",
+            height: "3px",
+            width: "0px",
           },
           "&::-webkit-scrollbar-track": {
             background: "#f1f1f1",
@@ -46,7 +47,7 @@ const CTable = ({
             background: "#a8a8a8",
           },
         }}>
-        <Box as="table" width="100%" borderCollapse="collapse" minWidth="800px">
+        <Box as="table" borderCollapse="collapse" w="100%" tableLayout="fixed">
           {children}
         </Box>
       </Box>

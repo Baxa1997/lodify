@@ -1,6 +1,7 @@
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import MainHeading from "../../components/MainHeading";
 import MainTabs from "../../components/MainTabs";
+import { CarrierProfile } from "./modules/CarrierProfile";
 import { CompanyInfo } from "./modules/CompanyInfo";
 import { Report } from "./modules/Report";
 
@@ -21,6 +22,7 @@ const CompanyProfile = () => {
           "Certifications",
           "Business Ownership Information",
           "FMCSA Report",
+          "Carrier Profile",
         ]}
         tabPanels={[
           <CompanyInfo key={"Company Info"} />,
@@ -29,6 +31,7 @@ const CompanyProfile = () => {
           <></>,
           <></>,
           <Report key={"FMCSA Report"} />,
+          <CarrierProfile key={"Carrier Profile"} />,
         ]} 
       />
     </div>

@@ -1,10 +1,21 @@
-import {defineConfig} from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 8888,
+  },
+  resolve: {
+    alias: {
+      "@": "/src",
+      "@assets": "/src/assets",
+      "@components": "/src/components",
+      "@hooks": "/src/hooks",
+      "@pages": "/src/pages",
+      "@store": "/src/store",
+      "@utils": "/src/utils",
+    },
   },
   build: {
     rollupOptions: {

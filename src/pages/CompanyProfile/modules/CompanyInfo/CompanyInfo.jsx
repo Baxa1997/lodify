@@ -3,7 +3,7 @@ import MainHeading from "../../../../components/MainHeading";
 import { useCompanyInfoProps } from "./useCompanyInfoProps";
 import { Box, Button } from "@chakra-ui/react";
 import { FormSectionTitle } from "../../components/FormSectionTitle";
-import { FormCardSection } from "../../components/FormCardSection";
+import { SectionCard } from "../../components/SectionCard";
 import HFTextField from "../../../../components/HFTextField";
 import { PhoneInput } from "react-international-phone";
 import Select from "../../../../components/Select";
@@ -25,7 +25,7 @@ export const CompanyInfo = () => {
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>Authority details</FormSectionTitle>
-      <FormCardSection
+      <SectionCard
         variant="card"
         maxWidth="720px">
         <Box
@@ -61,11 +61,11 @@ export const CompanyInfo = () => {
             leftAddon="MC"
           />
         </Box>
-      </FormCardSection>
+      </SectionCard>
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>Email and Phone number</FormSectionTitle>
-      <FormCardSection
+      <SectionCard
         variant="card"
         maxWidth="720px">
         <Box
@@ -171,11 +171,11 @@ export const CompanyInfo = () => {
             required
           />
         </Box>
-      </FormCardSection>
+      </SectionCard>
     </div>
     <div className={styles.formSection}>
       <FormSectionTitle>Address</FormSectionTitle>
-      <FormCardSection
+      <SectionCard
         variant="card"
         maxWidth="720px">
         <Box
@@ -262,7 +262,7 @@ export const CompanyInfo = () => {
             isDisabled
           /> */}
         </Box>
-      </FormCardSection>
+      </SectionCard>
     </div>
   </div>;
 };

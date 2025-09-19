@@ -1,15 +1,16 @@
-import React from "react";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import {Box, Flex, Text} from "@chakra-ui/react";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import DriversTab from "./DriversTab";
-import DocumentsTab from "./DocumentsTab";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import styles from "../../styles/tabs.module.scss";
+import { DriversTab } from "./modules/DriversTab";
+import { DocumentsTab } from "./modules/DocumentsTab";
 
 const Drivers = () => {
   return (
     <>
-      <Flex flexDir={"column"} gap={"20px"}>
+      <Flex
+        flexDir={"column"}
+        gap={"20px"}>
         <HeadBreadCrumb />
         <Box h={"32px"}>
           <Text

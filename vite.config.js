@@ -15,6 +15,7 @@ export default defineConfig({
       "@pages": "/src/pages",
       "@store": "/src/store",
       "@utils": "/src/utils",
+      "@services": "/src/services",
     },
   },
   build: {

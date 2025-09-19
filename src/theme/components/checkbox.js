@@ -17,7 +17,6 @@ const baseStyle = definePartsStyle({
   },
   icon: {
     color: "#fff",
-    borderRadius: "3px",
   },
 });
 

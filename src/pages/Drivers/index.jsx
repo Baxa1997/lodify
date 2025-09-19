@@ -1,10 +1,9 @@
-import React from "react";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import DocumentsTab from "./DocumentsTab";
 import styles from "../../styles/tabs.module.scss";
 import { DriversTab } from "./modules/DriversTab";
+import { DocumentsTab } from "./modules/DocumentsTab";
 
 const Drivers = () => {
   return (

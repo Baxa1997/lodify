@@ -1,5 +1,6 @@
 import { Box, Button, Link, Text } from "@chakra-ui/react";
-import MainHeading from "../../components/MainHeading";
+import MainHeading from "../../../../components/MainHeading";
+import { useDocumentsTabProps } from "./useDocumentsTabProps";
 
 const FolderCard = ({ disabled }) => {
 
@@ -76,7 +77,10 @@ const FolderCard = ({ disabled }) => {
   </Box>;
 };
 
-const DocumentsTab = () => {
+export const DocumentsTab = () => {
+  const { data } = useDocumentsTabProps();
+
+
   return <Box mt="32px">
     <Box
       padding="20px 24px"
@@ -226,5 +230,3 @@ const DocumentsTab = () => {
     </Box>
   </Box>;
 };
-
-export default DocumentsTab;

@@ -2,9 +2,13 @@ import { Badge, Box } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import driversService from "../../../../services/driversService";
-import useDebounce from "../../../../hooks/useDebounce";
-import FiltersComponent from "../../../../components/FiltersComponent";
+import driversService from "@services/driversService";
+import useDebounce from "@hooks/useDebounce";
+import FiltersComponent from "@components/FiltersComponent";
+import { CTable, CTableBody, CTableHead, CTableTd, CTableTh } from "@components/tableElements";
+import CTableRow from "@components/tableElements/CTableRow";
+import { getLoadEligibilityColor } from "../../components/mockElements";
+import AddDriverModal from "../../components/AddDriverModal";
 
 export const DriversTab = () => {
   const navigate = useNavigate();

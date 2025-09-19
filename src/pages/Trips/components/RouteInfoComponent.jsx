@@ -6,12 +6,13 @@ import {getShortFileName} from "./mockElements";
 import FilesReader from "../../../components/FileViewer/FilesReader";
 import {getHoursMinutesDifference} from "../../../utils/getHoursDifference";
 import {format} from "date-fns";
+import {isValid} from "date-fns";
 
 function RouteInfoComponent({tripData = {}}) {
   const [isFilesReaderOpen, setIsFilesReaderOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const {last_statuses, end_trip_point} = tripData;
-  console.log("last_statuses", last_statuses);
+
   const getStatusColor = (status) => {
     if (status === "Completed") return "green";
     if (status === "Arrival") return "yellow";
@@ -124,12 +125,20 @@ function RouteInfoComponent({tripData = {}}) {
           </Flex>
 
           <Text fontSize="14px" color="#414651">
-            Completed {format(last_statuses?.[1]?.date_time, "MMM d HH:mm")} PDT
+            Completed{" "}
+            {isValid(last_statuses?.[1]?.date_time)
+              ? format(last_statuses?.[1]?.date_time, "MMM d HH:mm")
+              : "Invalid Date"}{" "}
+            PDT
           </Text>
 
           <Flex h="20px" align="center" gap={2}>
             <Text fontSize="14px" fontWeight={"400"} color="#535862">
-              ETA {tripData?.eta && format(tripData?.eta, "MMM d HH:mm")} PDT
+              ETA{" "}
+              {tripData?.eta && isValid(tripData?.eta)
+                ? format(tripData?.eta, "MMM d HH:mm")
+                : "Invalid Date"}{" "}
+              PDT
             </Text>
           </Flex>
 

@@ -1,8 +1,18 @@
-import {differenceInMinutes} from "date-fns";
+import {differenceInMinutes, isValid} from "date-fns";
 
 export function getHoursMinutesDifference(dateTimeA, dateTimeB) {
+  // Validate input dates
+  if (!dateTimeA || !dateTimeB) {
+    return "Invalid dates";
+  }
+
   const d1 = new Date(dateTimeA);
   const d2 = new Date(dateTimeB);
+
+  // Check if dates are valid
+  if (!isValid(d1) || !isValid(d2)) {
+    return "Invalid dates";
+  }
 
   const totalMinutes = Math.abs(differenceInMinutes(d1, d2));
 

@@ -8,12 +8,12 @@ import FilesReader from "../../../components/FileViewer/FilesReader";
 
 function StopsRoute({stop, index, initialStops}) {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [isFileReaderOpen, setIsFileReaderOpen] = useState(false); // for files reader
+  const [isFileReaderOpen, setIsFileReaderOpen] = useState(false);
   const lastElement = index === initialStops?.length - 1;
   function formatTimeFromDate(dateObj) {
     return format(dateObj, "HH:mm");
   }
-  const [isFileViewerOpen, setIsFileViewerOpen] = useState(false); // for images viewer
+  const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
 
   return (
     <Box key={index} margin="0 20px 0">

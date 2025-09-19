@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Text, Button} from "@chakra-ui/react";
+import { Box, Text, Button } from "@chakra-ui/react";
 import StepRenderer from "./StepRenderer";
 import FormNavigation from "./navigation/FormNavigation";
 import styles from "../MultiStepRegister.module.scss";
@@ -17,6 +17,7 @@ const RegisterForm = ({
   isLoading,
   getStepValidation,
   onSubmit = () => {},
+  reset,
 }) => {
   return (
     <Box className={styles.mainContent}>
@@ -31,13 +32,19 @@ const RegisterForm = ({
               margin="0 0 8px 0">
               Create an account
             </Text>
-            <Text color="#64748b" fontSize="16px" margin="0 0 30px 0">
+            <Text
+              color="#64748b"
+              fontSize="16px"
+              margin="0 0 30px 0">
               Please enter your details.
             </Text>
           </>
         )}
 
-        <Box width="100%" as="form" onSubmit={handleSubmit}>
+        <Box
+          width="100%"
+          as="form"
+          onSubmit={handleSubmit}>
           <StepRenderer
             currentStep={currentStep}
             register={register}
@@ -45,10 +52,14 @@ const RegisterForm = ({
             watch={watch}
             setValue={setValue}
             onSubmit={onSubmit}
+            reset={reset}
           />
 
           {currentStep < 4 && (
-            <Box display="flex" justifyContent="center" width="100%">
+            <Box
+              display="flex"
+              justifyContent="center"
+              width="100%">
               <Button
                 type="button"
                 className={styles.continueBtn}

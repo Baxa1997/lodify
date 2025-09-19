@@ -1,15 +1,32 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "../style.module.scss";
 import {Flex, Box, Text, Button, Badge} from "@chakra-ui/react";
 import {VStack} from "@chakra-ui/react";
 import {getShortFileName} from "./mockElements";
+import FilesReader from "../../../components/FileViewer/FilesReader";
+import {getHoursMinutesDifference} from "../../../utils/getHoursDifference";
+import {format} from "date-fns";
+import {isValid} from "date-fns";
 
 function RouteInfoComponent({tripData = {}}) {
+  const [isFilesReaderOpen, setIsFilesReaderOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const {last_statuses, end_trip_point} = tripData;
+
   const getStatusColor = (status) => {
     if (status === "Completed") return "green";
     if (status === "Arrival") return "yellow";
     if (status === "Pending") return "red";
     return "gray";
+  };
+
+  const handleFilesReaderOpen = (file) => {
+    setSelectedFile(file);
+    setIsFilesReaderOpen(true);
+  };
+
+  const handleFilesReaderClose = () => {
+    setIsFilesReaderOpen(false);
   };
 
   return (
@@ -76,10 +93,10 @@ function RouteInfoComponent({tripData = {}}) {
               display="flex"
               alignItems="center"
               justifyContent="center">
-              2
+              {last_statuses?.[0]?.index}
             </Box>
             <Text fontSize="14px" color="#181D27">
-              SAZ2{" "}
+              {last_statuses?.[0]?.address}
               <span
                 style={{
                   fontSize: "18px",
@@ -99,44 +116,48 @@ function RouteInfoComponent({tripData = {}}) {
               display="flex"
               alignItems="center"
               justifyContent="center">
-              3
+              {last_statuses?.[1]?.index}
             </Box>
 
             <Text fontSize="14px" color="#181D27">
-              DCA2
+              {last_statuses?.[1]?.address}
             </Text>
           </Flex>
 
           <Text fontSize="14px" color="#414651">
-            Completed Jun 24 21:49 PDT
+            Completed{" "}
+            {isValid(last_statuses?.[1]?.date_time)
+              ? format(last_statuses?.[1]?.date_time, "MMM d HH:mm")
+              : "Invalid Date"}{" "}
+            PDT
           </Text>
 
           <Flex h="20px" align="center" gap={2}>
             <Text fontSize="14px" fontWeight={"400"} color="#535862">
-              ETA Jun 21:52 PDT
-            </Text>
-            <Text
-              fontSize="14px"
-              color="#079455"
-              px={2}
-              py={1}
-              borderRadius="4px">
-              1h 10m early
+              ETA{" "}
+              {tripData?.eta && isValid(tripData?.eta)
+                ? format(tripData?.eta, "MMM d HH:mm")
+                : "Invalid Date"}{" "}
+              PDT
             </Text>
           </Flex>
 
           <Text fontSize="12px" color="#414651">
-            39d 2h 31m - 15 miles
+            {getHoursMinutesDifference(
+              last_statuses?.[0]?.date_time,
+              last_statuses?.[1]?.date_time
+            )}
           </Text>
         </VStack>
       </Box>
 
       {/* TRIP STATUS & PDT */}
       <Box
-        p="16px"
+        p="14px 10px"
         borderRadius={"8px"}
         m="20px"
-        h={"144px"}
+        minH={"144px"}
+        maxH={"160px"}
         border={"1px solid #D5D7DA"}
         bg={"#fff"}>
         <Flex
@@ -157,15 +178,15 @@ function RouteInfoComponent({tripData = {}}) {
           fontSize="14px"
           color="#194185"
           fontWeight={"500"}>
-          DCA2
+          {end_trip_point?.[0]?.address}
         </Text>
         <Text
           h="20px"
-          fontSize="14px"
+          fontSize="13px"
           color="#181D27"
           fontWeight={"400"}
           mt="8px">
-          33.99277, -117.55142
+          {end_trip_point?.[0]?.location ?? "-"}
         </Text>
         <Text
           h="20px"
@@ -198,10 +219,12 @@ function RouteInfoComponent({tripData = {}}) {
           </Flex>
           <Box>
             <Text fontSize="14px" color="#181D27" fontWeight={"600"}>
-              {`${tripData?.drivers?.first_name} ${tripData?.drivers?.last_name}`}
+              {`${tripData?.drivers?.first_name ?? ""} ${
+                tripData?.drivers?.last_name ?? ""
+              }`}
             </Text>
             <Text fontSize="12px" color="#535862" fontWeight={"400"}>
-              {tripData?.drivers?.email}
+              {tripData?.drivers?.email ?? ""}
             </Text>
           </Box>
         </Flex>
@@ -242,11 +265,21 @@ function RouteInfoComponent({tripData = {}}) {
                   {getShortFileName(document, 10)}
                 </Text>
               </Box>
-              <button className={styles.documentAction}>View</button>
+              <button
+                className={styles.documentAction}
+                onClick={() => handleFilesReaderOpen(document)}>
+                View
+              </button>
             </Box>
           ))}
         </Box>
       </Box>
+
+      <FilesReader
+        isOpen={isFilesReaderOpen}
+        onClose={handleFilesReaderClose}
+        file={selectedFile}
+      />
     </>
   );
 }

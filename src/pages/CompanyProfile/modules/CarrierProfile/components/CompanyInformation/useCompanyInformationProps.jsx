@@ -1,4 +1,4 @@
-export const useCompanyInformationProps = ({ data }) => {
+export const useCompanyInformationProps = ({ data = {} }) => {
 
   const {
     operating_status,

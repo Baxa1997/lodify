@@ -1,11 +1,11 @@
-import { Box, Button, Text } from "@chakra-ui/react";
-import { useValidateEquipmentProps } from "./useValidateEquipmentProps";
+import { Box, Text } from "@chakra-ui/react";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
 import { DataTable } from "@components/DataTable";
+import { useCrashIndicatorProps } from "./useCrashIndicatorProps";
 
-export const ValidateEquipment = () => {
+export const CrashIndicator = () => {
 
-  const { headData, bodyData } = useValidateEquipmentProps();
+  const { headData, bodyData, onAccordionChange } = useCrashIndicatorProps();
 
   return <Box>
     <SectionCard
@@ -13,6 +13,7 @@ export const ValidateEquipment = () => {
       padding="0 !important"
       variant="card"
       overflow="hidden"
+      onChange={onAccordionChange}
     >
       <SectionCardHeader
         bgColor="gray.200"
@@ -32,19 +33,8 @@ export const ValidateEquipment = () => {
             fontWeight="600"
             color="primary.500"
           >
-          Validate Equipment
+            Crash Indicator
           </Text>
-          <Button
-            variant="solid"
-            colorScheme="blue"
-            fontSize="14px"
-            mr="16px"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            Validate VIN
-          </Button>
         </Box>
       </SectionCardHeader>
       <SectionCardBody padding="0">

@@ -3,7 +3,7 @@ import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../com
 import { CardData } from "../../../../components/CardData";
 import { StatusText } from "../../../../components/StatusText";
 
-export const Operations = ({ data }) => {
+export const Operations = ({ data = {} }) => {
 
   const {
     entity_type,

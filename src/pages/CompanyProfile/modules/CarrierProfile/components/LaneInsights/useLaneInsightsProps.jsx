@@ -1,4 +1,4 @@
-export const useLaneInsightsProps = ({ data }) => {
+export const useLaneInsightsProps = ({ data = {} }) => {
 
   const {
     us_vehicle_inspections,

@@ -1,6 +1,6 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
-import { DataTable } from "../DataTable";
+import { DataTable } from "@components/DataTable";
 import { useValidateCarrierProps } from "./useValidateCarrierProps";
 
 export const ValidateCarrier = () => {

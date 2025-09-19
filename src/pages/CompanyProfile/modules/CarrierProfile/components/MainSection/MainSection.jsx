@@ -13,7 +13,7 @@ import Chart from "react-google-charts";
 import Select from "@components/Select";
 import { useMainSectionProps } from "./useMainSectionProps";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
-import { DataTable } from "../DataTable";
+import { DataTable } from "@components/DataTable";
 import { BoldLink } from "../../../../components/BoldLink";
 
 export const MainSection = ({ data }) => {

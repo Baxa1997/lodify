@@ -4,7 +4,6 @@ import {Box, Text, Button, Flex} from "@chakra-ui/react";
 import StopsRoute from "./StopsRoute";
 
 function StopsComponent({tripData = {}}) {
-  console.log("tripData", tripData);
   return (
     <>
       <Flex w="100%" borderBottom={"1px solid #D5D7DA"} p={"20px"}>

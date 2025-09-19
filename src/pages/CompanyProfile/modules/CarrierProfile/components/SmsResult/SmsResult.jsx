@@ -2,10 +2,18 @@ import { Box, Text } from "@chakra-ui/react";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
 import { DataTable } from "@components/DataTable";
 import { useSmsResultProps } from "./useSmsResultProps";
+import Select from "@components/Select";
 
 export const SmsResult = () => {
 
-  const { headData, bodyData, onAccordionChange } = useSmsResultProps();
+  const {
+    headData,
+    bodyData,
+    onAccordionChange,
+    filterOptions,
+    handleFilter, 
+    filter,
+  } = useSmsResultProps();
 
   return <Box>
     <SectionCard
@@ -38,6 +46,16 @@ export const SmsResult = () => {
         </Box>
       </SectionCardHeader>
       <SectionCardBody padding="0">
+        <Box p="12px">
+          <Select
+            onChange={handleFilter}
+            options={filterOptions}
+            maxWidth="350px"
+            backgroundColor="#fff"
+            value={filter}
+            isClearable
+          />
+        </Box>
         <DataTable
           headData={headData}
           data={bodyData}

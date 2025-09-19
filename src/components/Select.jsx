@@ -1,6 +1,7 @@
-import React, {useState, useRef, useEffect, memo} from "react";
-import {Box, Text, VStack, HStack} from "@chakra-ui/react";
-import {LuChevronDown, LuCheck} from "react-icons/lu";
+import React, { useState, useRef, useEffect, memo } from "react";
+import { Box, Text, VStack, HStack, IconButton } from "@chakra-ui/react";
+import { LuChevronDown, LuCheck } from "react-icons/lu";
+import { MdOutlineClear } from "react-icons/md";
 
 const Select = ({
   placeholder = "Select an option",
@@ -27,6 +28,7 @@ const Select = ({
   label,
   name,
   dropdownPosition = "bottom",
+  isClearable = false,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,8 +36,8 @@ const Select = ({
   const selectRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  const selectedOption = options.find((option) => option.value === value);
-
+  const selectedOption = options.find((option) => value && option.value === value);
+  console.log({ value });
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -62,7 +64,7 @@ const Select = ({
 
   const handleSelect = (option) => {
     if (onChange) {
-      onChange(option.value);
+      onChange(option ? option.value : option);
     }
     setIsOpen(false);
     setIsFocused(false);
@@ -70,12 +72,12 @@ const Select = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case "sm":
-        return {height: "32px", py: "6px", px: "12px", fontSize: "14px"};
-      case "lg":
-        return {height: "48px", py: "12px", px: "20px", fontSize: "18px"};
-      default:
-        return {height: "40px", py: "8px", px: "16px", fontSize: "16px"};
+    case "sm":
+      return { height: "32px", py: "6px", px: "12px", fontSize: "14px" };
+    case "lg":
+      return { height: "48px", py: "12px", px: "20px", fontSize: "18px" };
+    default:
+      return { height: "40px", py: "8px", px: "16px", fontSize: "16px" };
     }
   };
 
@@ -91,14 +93,20 @@ const Select = ({
           htmlFor={name}>
           {label}
           {isRequired && (
-            <Box as="span" color="blue.500">
+            <Box
+              as="span"
+              color="blue.500">
               *
             </Box>
           )}
         </Box>
       )}
-      <Box position="relative" ref={dropdownRef} {...props}>
+      <Box
+        position="relative"
+        ref={dropdownRef}
+        {...props}>
         <Box
+          position="relative"
           ref={selectRef}
           onClick={handleToggle}
           onFocus={() => setIsFocused(true)}
@@ -108,8 +116,8 @@ const Select = ({
             isInvalid
               ? errorBorderColor
               : isFocused || isOpen
-              ? focusBorderColor
-              : borderColor
+                ? focusBorderColor
+                : borderColor
           }
           color={color}
           borderRadius="lg"
@@ -120,6 +128,7 @@ const Select = ({
           transition="all 0.2s ease"
           display="flex"
           alignItems="center"
+          justifyContent="space-between"
           _hover={{
             borderColor: isDisabled ? borderColor : focusBorderColor,
           }}
@@ -136,6 +145,18 @@ const Select = ({
             fontSize={selectedOption ? "inherit" : placeholderStyle.fontSize}>
             {selectedOption ? selectedOption.label : placeholder}
           </Text>
+          {
+            isClearable && selectedOption && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSelect("");
+                }}
+                style={{ padding: "6px", marginRight: "24px" }}>
+                <MdOutlineClear />
+              </button>
+            )
+          }
 
           {showIcon && (
             <Box
@@ -169,7 +190,9 @@ const Select = ({
             overflowY="auto"
             mt={dropdownPosition === "top" ? "0" : "2px"}
             mb={dropdownPosition === "top" ? "2px" : "0"}>
-            <VStack spacing={0} align="stretch">
+            <VStack
+              spacing={0}
+              align="stretch">
               {options.length > 0 ? (
                 options.map((option, index) => (
                   <Box
@@ -185,7 +208,9 @@ const Select = ({
                       bg: option.isDisabled ? "transparent" : "gray.50",
                     }}
                     transition="all 0.2s ease">
-                    <HStack justify="space-between" align="center">
+                    <HStack
+                      justify="space-between"
+                      align="center">
                       <Text fontSize="16px">{option.label}</Text>
                       {option.value === value && (
                         <LuCheck
@@ -197,7 +222,11 @@ const Select = ({
                   </Box>
                 ))
               ) : (
-                <Box px="16px" py="8px" color="gray.500" textAlign="center">
+                <Box
+                  px="16px"
+                  py="8px"
+                  color="gray.500"
+                  textAlign="center">
                   <Text fontSize="16px">No options</Text>
                 </Box>
               )}

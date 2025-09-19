@@ -1,23 +1,12 @@
-import React from "react";
-import FiltersComponent from "../../components/FiltersComponent";
-import {Badge, Box} from "@chakra-ui/react";
-import {
-  CTable,
-  CTableBody,
-  CTableHead,
-  CTableTh,
-  CTableTd,
-} from "../../components/tableElements";
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import CTableRow from "../../components/tableElements/CTableRow";
-import {useQuery} from "@tanstack/react-query";
-import driversService from "../../services/driversService";
-import AddDriverModal from "./components/AddDriverModal";
-import {getLoadEligibilityColor} from "./components/mockElements";
-import useDebounce from "../../hooks/useDebounce";
+import { Badge, Box } from "@chakra-ui/react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import driversService from "../../../../services/driversService";
+import useDebounce from "../../../../hooks/useDebounce";
+import FiltersComponent from "../../../../components/FiltersComponent";
 
-const DriversTab = () => {
+export const DriversTab = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -30,7 +19,7 @@ const DriversTab = () => {
 
   const offset = (currentPage - 1) * pageSize;
 
-  const {data: driversData, isLoading} = useQuery({
+  const { data: driversData, isLoading } = useQuery({
     queryKey: [
       "GET_DRIVERS_LIST",
       currentPage,
@@ -88,41 +77,46 @@ const DriversTab = () => {
 
   const getStatusColor = (status) => {
     switch (status?.[0]?.toLowerCase()) {
-      case "active":
-      case "available":
-      case "ready":
-        return "green";
-      case "inactive":
-      case "unavailable":
-      case "offline":
-        return "red";
-      case "pending":
-      case "pending approval":
-      case "under review":
-        return "orange";
-      case "on duty":
-      case "on trip":
-      case "driving":
-        return "blue";
-      case "maintenance":
-      case "repair":
-        return "purple";
-      case "suspended":
-      case "terminated":
-        return "red";
-      case "part-time":
-      case "limited":
-        return "yellow";
-      default:
-        return "gray";
+    case "active":
+    case "available":
+    case "ready":
+      return "green";
+    case "inactive":
+    case "unavailable":
+    case "offline":
+      return "red";
+    case "pending":
+    case "pending approval":
+    case "under review":
+      return "orange";
+    case "on duty":
+    case "on trip":
+    case "driving":
+      return "blue";
+    case "maintenance":
+    case "repair":
+      return "purple";
+    case "suspended":
+    case "terminated":
+      return "red";
+    case "part-time":
+    case "limited":
+      return "yellow";
+    default:
+      return "gray";
     }
   };
 
   if (isLoading) {
     return (
       <Box mt={"32px"}>
-        <FiltersComponent filterButton={true} actionButton={true} />
-        <Box mt={6} p={4} textAlign="center">
+        <FiltersComponent
+          filterButton={true}
+          actionButton={true} />
+        <Box
+          mt={6}
+          p={4}
+          textAlign="center">
           Loading drivers...
         </Box>
       </Box>
@@ -244,7 +238,7 @@ const DriversTab = () => {
                 <CTableTd>
                   <Badge
                     colorScheme={getLoadEligibilityColor(
-                      driver.load_eligibility || driver.loadEligibility
+                      driver.load_eligibility || driver.loadEligibility,
                     )}
                     variant="subtle"
                     px={3}
@@ -253,7 +247,7 @@ const DriversTab = () => {
                     fontSize="12px"
                     fontWeight="500">
                     {Array.isArray(
-                      driver.load_eligibility || driver.loadEligibility
+                      driver.load_eligibility || driver.loadEligibility,
                     )
                       ? (driver.load_eligibility ||
                           driver.loadEligibility)[0] || "N/A"
@@ -278,5 +272,3 @@ const DriversTab = () => {
     </Box>
   );
 };
-
-export default DriversTab;

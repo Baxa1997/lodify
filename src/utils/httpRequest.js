@@ -87,7 +87,7 @@ httpRequest.interceptors.request.use(
 );
 
 httpRequest.interceptors.response.use(
-  (response) => response.data.data,
+  (response) => response.data.data || response.data,
   errorHandler,
 );
 

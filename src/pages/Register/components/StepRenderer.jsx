@@ -19,7 +19,9 @@ const StepRenderer = ({
 
   const { data, isSuccess } = useQuery({
     queryKey: ["GET_FMCSA_DATA", fmcsa],
-    queryFn: () => httpRequest.get(`https://lodify-usa.u-code.io/data/fmcsa/${fmcsa}/extra?page=1&limit=1`),
+    queryFn: async () => httpRequest.get(
+      `https://lodify-usa.u-code.io/data/fmcsa/${fmcsa}/extra?page=1&limit=1`,
+    ),
     enabled: Boolean(fmcsa && currentStep === 2),
   });
 

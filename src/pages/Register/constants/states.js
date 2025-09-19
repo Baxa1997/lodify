@@ -55,6 +55,7 @@ export const US_STATES = [
 export const COUNTRIES = [
   { value: "United States", label: "United States" },
   { value: "us", label: "United States" },
+  { value: "US", label: "United States" },
   { value: "Canada", label: "Canada" },
   { value: "Mexico", label: "Mexico" },
 ];

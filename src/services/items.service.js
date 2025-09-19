@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import httpRequest from "../../../utils/httpRequest";
+import httpRequest from "@utils/httpRequest";
 
 const itemService = {
   getTable: (slug, params) => httpRequest.get(`v2/items/${slug}`, { params }),

@@ -1,11 +1,11 @@
 import { Box, Text } from "@chakra-ui/react";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
 import { DataTable } from "@components/DataTable";
-import { useSmsResultProps } from "./useSmsResultProps";
+import { useActiveAndPendingInsuranceProps } from "./useActiveAndPendingInsuranceProps";
 
-export const SmsResult = () => {
+export const ActiveAndPendingInsurance = () => {
 
-  const { headData, bodyData, onAccordionChange } = useSmsResultProps();
+  const { headData, bodyData, onAccordionChange } = useActiveAndPendingInsuranceProps();
 
   return <Box>
     <SectionCard
@@ -33,7 +33,7 @@ export const SmsResult = () => {
             fontWeight="600"
             color="primary.500"
           >
-            SMS Result
+            Active and Pending Insurance
           </Text>
         </Box>
       </SectionCardHeader>

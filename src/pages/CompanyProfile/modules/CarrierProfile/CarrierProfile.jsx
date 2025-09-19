@@ -14,6 +14,7 @@ import { Operations } from "./components/Operations";
 import { LaneInsights } from "./components/LaneInsights";
 import { SmsResult } from "./components/SmsResult";
 import { CrashIndicator } from "./components/CrashIndicator";
+import { ActiveAndPendingInsurance } from "./components/ActiveAndPendingInsurance";
 
 export const CarrierProfile = () => {
 
@@ -33,6 +34,7 @@ export const CarrierProfile = () => {
       <CompanyInformation data={companySnapshot} />
       <SmsResult />
       <CrashIndicator />
+      <ActiveAndPendingInsurance />
       <ValidateCarrier />
       <ValidateEquipment />
       <Authority data={carrierDetails} />

@@ -3,27 +3,17 @@ import {Box, Flex, Text, Button, Link} from "@chakra-ui/react";
 import {differenceInMinutes, format} from "date-fns";
 import {getShortFileName} from "./mockElements";
 import FileViewer from "../../../components/FileViewer";
+import {getHoursMinutesDifference} from "../../../utils/getHoursDifference";
+import FilesReader from "../../../components/FileViewer/FilesReader";
 
 function StopsRoute({stop, index, initialStops}) {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isFileReaderOpen, setIsFileReaderOpen] = useState(false); // for files reader
   const lastElement = index === initialStops?.length - 1;
   function formatTimeFromDate(dateObj) {
     return format(dateObj, "HH:mm");
   }
-  const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
-
-  function getHoursMinutesDifference(dateTimeA, dateTimeB) {
-    const d1 = new Date(dateTimeA);
-    const d2 = new Date(dateTimeB);
-
-    const totalMinutes = Math.abs(differenceInMinutes(d1, d2));
-
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    if (hours > 0 && minutes > 0) return `${hours}h ${minutes}m`;
-    if (hours > 0) return `${hours}h`;
-    return `${minutes}m`;
-  }
+  const [isFileViewerOpen, setIsFileViewerOpen] = useState(false); // for images viewer
 
   return (
     <Box key={index} margin="0 20px 0">
@@ -140,7 +130,6 @@ function StopsRoute({stop, index, initialStops}) {
                   borderRadius="8px"
                   overflow="hidden"
                   onClick={() => {
-                    console.log("clicked", isFileViewerOpen);
                     setIsFileViewerOpen(true);
                   }}>
                   <img
@@ -186,9 +175,10 @@ function StopsRoute({stop, index, initialStops}) {
               }}>
               {stop?.files?.map((file) => (
                 <Button
-                  as={Link}
-                  href={file}
-                  target="_blank"
+                  onClick={() => {
+                    setSelectedFile(file);
+                    setIsFileReaderOpen(true);
+                  }}
                   borderRadius="9999px"
                   minW="101px"
                   w="max-content"
@@ -207,6 +197,13 @@ function StopsRoute({stop, index, initialStops}) {
           )}
         </Box>
       </Flex>
+      {Boolean(selectedFile) && (
+        <FilesReader
+          isOpen={isFileReaderOpen}
+          onClose={() => setIsFileReaderOpen(false)}
+          file={selectedFile}
+        />
+      )}
       <FileViewer
         isOpen={isFileViewerOpen}
         onClose={() => setIsFileViewerOpen(false)}

@@ -30,9 +30,7 @@ function LiveMapComponent({tripData = {}}) {
   }, [tripData?.trips_logs]);
 
   const stoppedSegments = useMemo(() => {
-    const stopsWithStatus = tripData?.trips_logs?.filter(
-      (s) => s.order_status?.[0]
-    );
+    const stopsWithStatus = tripData?.trips_logs?.filter((s) => s.status?.[0]);
     if (stopsWithStatus?.length < 2) return [];
 
     const startTime = new Date(stopsWithStatus?.[0]?.date_time).getTime();
@@ -45,7 +43,7 @@ function LiveMapComponent({tripData = {}}) {
     for (let i = 1; i < stopsWithStatus?.length; i++) {
       const prevTime = new Date(stopsWithStatus[i - 1].date_time).getTime();
       const currTime = new Date(stopsWithStatus[i].date_time).getTime();
-      if (stopsWithStatus[i].status?.[0] === "Stopped") {
+      if (stopsWithStatus[i].status?.[0] === "STOPPED") {
         const left = ((prevTime - startTime) / totalTime) * 100;
         const width = ((currTime - prevTime) / totalTime) * 100;
         segs.push({left, width});
@@ -54,6 +52,25 @@ function LiveMapComponent({tripData = {}}) {
     return segs;
   }, [tripData?.trips_logs]);
 
+  const stoppedSegmentsLogs = useMemo(() => {
+    if (!timelineEvents?.length) return [];
+
+    const segs = [];
+    for (let i = 0; i < timelineEvents.length; i++) {
+      const ev = timelineEvents[i];
+      const next = timelineEvents[i + 1];
+
+      if (ev.status?.toUpperCase() === "STOPPED" && next) {
+        segs.push({
+          left: ev.percent,
+          width: next.percent - ev.percent,
+        });
+      }
+    }
+    return segs;
+  }, [timelineEvents]);
+
+  console.log("timelineEvents", timelineEvents, stoppedSegments);
   return (
     <>
       <Box
@@ -144,7 +161,7 @@ function LiveMapComponent({tripData = {}}) {
           borderRadius="4px"
         />
 
-        {stoppedSegments.map((seg, idx) => (
+        {stoppedSegmentsLogs.map((seg, idx) => (
           <Box
             key={idx}
             position="absolute"

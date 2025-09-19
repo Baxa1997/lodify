@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from "react";
-import {useNavigate, useLocation} from "react-router-dom";
-import {useForm} from "react-hook-form";
-import {Flex, useToast} from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Flex, useToast } from "@chakra-ui/react";
 import RegisterSidebar from "./components/RegisterSidebar";
 import RegisterForm from "./components/RegisterForm";
 import authService from "../../services/auth/authService";
@@ -19,13 +19,13 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
     watch,
     setValue,
     trigger,
+    reset,
   } = useForm({
     defaultValues: {
-      type: role,
       company_name: "",
       us_dot: "",
       identifier: "",
@@ -52,7 +52,7 @@ const Register = () => {
   const validateStep1 = (data) => {
     const requiredFields = ["company_name", "us_dot", "identifier"];
     return requiredFields.every(
-      (field) => data[field] && data[field].trim() !== ""
+      (field) => data[field] && data[field].trim() !== "",
     );
   };
 
@@ -65,7 +65,7 @@ const Register = () => {
       "country",
     ];
     const hasRequiredFields = requiredFields.every(
-      (field) => data[field] && data[field].trim() !== ""
+      (field) => data[field] && data[field].trim() !== "",
     );
 
     // Validate zip code format (US format: 12345 or 12345-6789)
@@ -79,7 +79,7 @@ const Register = () => {
   const validateStep3 = (data) => {
     const requiredFields = ["email", "login", "password"];
     return requiredFields.every(
-      (field) => data[field] && data[field].trim() !== ""
+      (field) => data[field] && data[field].trim() !== "",
     );
   };
 
@@ -91,16 +91,16 @@ const Register = () => {
     const data = watch();
     const isValid = (() => {
       switch (step) {
-        case 1:
-          return validateStep1(data);
-        case 2:
-          return validateStep2(data);
-        case 3:
-          return validateStep3(data);
-        case 4:
-          return validateStep4(data);
-        default:
-          return false;
+      case 1:
+        return validateStep1(data);
+      case 2:
+        return validateStep2(data);
+      case 3:
+        return validateStep3(data);
+      case 4:
+        return validateStep4(data);
+      default:
+        return false;
       }
     })();
 
@@ -235,7 +235,9 @@ const Register = () => {
   }
 
   return (
-    <Flex className={styles.multiStepContainer} minHeight="100vh">
+    <Flex
+      className={styles.multiStepContainer}
+      minHeight="100vh">
       <RegisterSidebar
         steps={steps}
         currentStep={currentStep}
@@ -249,6 +251,7 @@ const Register = () => {
         errors={errors}
         watch={watch}
         setValue={setValue}
+        reset={reset}
         handleSubmit={handleSubmit(onSubmit)}
         onNext={handleNext}
         onBack={handleBack}

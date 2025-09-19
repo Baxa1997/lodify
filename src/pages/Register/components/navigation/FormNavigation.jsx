@@ -1,9 +1,9 @@
 import React from "react";
-import {Box, Flex, Text} from "@chakra-ui/react";
-import {Link} from "react-router-dom";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import styles from "../../MultiStepRegister.module.scss";
 
-const FormNavigation = ({steps, currentStep, onBack, isLoading}) => {
+const FormNavigation = ({ steps, currentStep, onBack, isLoading }) => {
   return (
     <>
       <Flex
@@ -26,7 +26,9 @@ const FormNavigation = ({steps, currentStep, onBack, isLoading}) => {
         ))}
       </Flex>
 
-      <Box className={styles.backLink} textAlign="center">
+      <Box
+        className={styles.backLink}
+        textAlign="center">
         <Link
           to={currentStep === 1 ? "/login" : "#"}
           onClick={currentStep > 1 ? onBack : undefined}

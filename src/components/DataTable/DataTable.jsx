@@ -39,7 +39,7 @@ export const DataTable = ({
         borderColor="gray.200"
       >
         <Tr>
-          {headData.map((head, index) => (
+          {headData?.map((head, index) => (
             <Th
               key={index}
               isNumeric={head.isNumeric}
@@ -75,9 +75,9 @@ export const DataTable = ({
         </Tr>
       </Thead>
       <Tbody>
-        {data.map((row, rowIndex) => (
+        {data?.map((row, rowIndex) => (
           <Tr key={rowIndex}>
-            {headData.map((head, colIndex) => (
+            {headData?.map((head, colIndex) => (
               <Td
                 key={colIndex}
                 isNumeric={head.isNumeric}
@@ -120,7 +120,7 @@ export const DataTable = ({
             setLimit={setLimit}
             page={page}
             setPage={setPage}
-            count={data.length} 
+            count={data?.length} 
           />
         </Box>
       </Box>

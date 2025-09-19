@@ -1,5 +1,18 @@
+import { useGetCompanyId } from "@hooks/useGetCompanyId";
+import { useGetTable } from "@services/items.service";
+import { useState } from "react";
+
 export const useActiveAndPendingInsuranceProps = () => {
 
+  const companies_id = useGetCompanyId();
+
+  const [enabled, setEnabled] = useState(false);
+
+  const { data } = useGetTable("pending_insurance", { enabled }, { data: JSON.stringify({ companies_id }) });
+
+  const onAccordionChange = () => {
+    setEnabled(true);
+  };
 
   const headData = [
     {
@@ -25,10 +38,12 @@ export const useActiveAndPendingInsuranceProps = () => {
     {
       label: "Coverage From",
       key: "underl_lim_amount",
+      render: (data) => Number(data) * 1000,
     },
     {
       label: "Coverage To",
       key: "max_cov_amount",
+      render: (data) => Number(data) * 1000,
     },
     {
       label: "Effective Date",
@@ -43,5 +58,7 @@ export const useActiveAndPendingInsuranceProps = () => {
 
   return {
     headData,
+    onAccordionChange,
+    bodyData: data?.response,
   };
 };

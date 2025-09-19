@@ -34,7 +34,6 @@ export const CarrierProfile = () => {
       <CompanyInformation data={companySnapshot} />
       <SmsResult />
       <CrashIndicator />
-      <ActiveAndPendingInsurance />
       <ValidateCarrier />
       <ValidateEquipment />
       <Authority data={carrierDetails} />
@@ -42,6 +41,7 @@ export const CarrierProfile = () => {
         data={insuranceHistory}
         carrierDetails={carrierDetails}
       />
+      <ActiveAndPendingInsurance />
       <Safety data={companySnapshot} />
       <CaliforniaAirResources />
       <Operations data={companySnapshot} />

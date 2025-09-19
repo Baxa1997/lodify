@@ -2,7 +2,7 @@ import { Box, Button, Link, Text } from "@chakra-ui/react";
 import MainHeading from "../../../../components/MainHeading";
 import { useDocumentsTabProps } from "./useDocumentsTabProps";
 
-const FolderCard = ({ disabled }) => {
+const FolderCard = ({ name, expiration_date, file, disabled }) => {
 
   return <Box
     padding="16px"
@@ -31,8 +31,8 @@ const FolderCard = ({ disabled }) => {
           display="flex"
           flexDirection="column"
         >
-          <Box fontWeight="500">CDL (Front)</Box>
-          <Box color="tertiary.600">Exp: 07/13/2030 <Box as="span">Valid</Box></Box>
+          <Box fontWeight="500">{name}</Box>
+          <Box color="tertiary.600">Exp: {expiration_date} <Box as="span">Valid</Box></Box>
         </Box>
       </Box>
       <Button
@@ -43,6 +43,9 @@ const FolderCard = ({ disabled }) => {
         isDisabled={disabled}
         _disabled={{
           color: "gray.400",
+        }}
+        onClick={()=> {
+          window.open(file, "_blank", "noopener,noreferrer");
         }}
       >
         View
@@ -78,7 +81,7 @@ const FolderCard = ({ disabled }) => {
 };
 
 export const DocumentsTab = () => {
-  const { data } = useDocumentsTabProps();
+  const { data, handleDownloadFiles } = useDocumentsTabProps();
 
 
   return <Box mt="32px">
@@ -104,10 +107,12 @@ export const DocumentsTab = () => {
             }
           }
         >
-          <Box
+          <Button
+            variant="transparent"
             display="flex"
             alignItems="center"
             gap="6px"
+            onClick={handleDownloadFiles}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +125,7 @@ export const DocumentsTab = () => {
                 strokeWidth="1.667"
                 d="M6.667 14.167 10 17.5m0 0 3.333-3.333M10 17.5V10m6.666 3.952a4.583 4.583 0 0 0-2.917-8.12.516.516 0 0 1-.444-.25 6.25 6.25 0 1 0-9.816 7.58"/></svg>
             <span>Download all files</span>
-          </Box>
+          </Button>
         </Link>
       </Box>
       <Box
@@ -129,13 +134,20 @@ export const DocumentsTab = () => {
         gap="24px"
         mt="36px"
       >
+        {
+          data?.map(item => (
+            <FolderCard
+              {...item}
+              key={item?.guid} />
+          ))
+        }
+        {/* <FolderCard />
         <FolderCard />
         <FolderCard />
         <FolderCard />
-        <FolderCard />
-        <FolderCard disabled />
+        <FolderCard disabled /> */}
       </Box>
-      <Box
+      {/* <Box
         display="flex"
         alignItems="center"
         justifyContent="space-between"
@@ -226,7 +238,7 @@ export const DocumentsTab = () => {
         <FolderCard disabled />
         <FolderCard disabled />
         <FolderCard disabled />
-      </Box>
+      </Box> */}
     </Box>
   </Box>;
 };

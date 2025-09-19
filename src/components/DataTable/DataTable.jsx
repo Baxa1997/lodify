@@ -6,6 +6,7 @@ import {
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
 } from "@chakra-ui/react";
 import SimplePagination from "@components/SimplePagination";
@@ -48,7 +49,27 @@ export const DataTable = ({
               fontSize={"12px"}
               {...head.thProps}
             >
-              {head.label}
+              <Box
+                display="flex"
+                alignItems="center"
+                gap="6px"
+              >
+                {head.label}
+                {
+                  head?.infoText && <Tooltip
+                    placement="top"
+                    flexShrink="0"
+                    label={head.infoText}
+                  >
+                    <img
+                      src="/img/info.svg"
+                      width="14"
+                      height="14"
+                      alt="Info"
+                    />
+                  </Tooltip>
+                }
+              </Box>
             </Th>
           ))}
         </Tr>

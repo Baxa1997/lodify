@@ -3,7 +3,7 @@ import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../com
 import { StatusText } from "../../../../components/StatusText";
 import { CardData } from "../../../../components/CardData";
 
-export const Authority = ({ data }) => {
+export const Authority = ({ data = {} }) => {
 
   const {
     common_stat,

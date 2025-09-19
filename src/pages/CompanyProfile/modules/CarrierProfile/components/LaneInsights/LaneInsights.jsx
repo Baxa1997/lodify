@@ -25,6 +25,7 @@ export const LaneInsights = ({ data }) => {
       padding="0 !important"
       variant="card"
       overflow="hidden"
+      defaultIndex={[0]}
     >
       <SectionCardHeader
         bgColor="gray.200"

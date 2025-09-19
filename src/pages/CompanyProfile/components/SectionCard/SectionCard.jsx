@@ -3,12 +3,13 @@ import styles from "./style.module.scss";
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from "@chakra-ui/react";
 import React from "react";
 
-export const SectionCard = ({ children, isAccordion, variant = "default", onChange = () => {}, ...props }) => {
+export const SectionCard = ({ children, isAccordion, variant = "default", onChange = () => {}, defaultIndex, ...props }) => {
 
   if(isAccordion) {
     return <Accordion
       allowMultiple
       onChange={onChange}
+      defaultIndex={defaultIndex}
     >
       <AccordionItem
         border="none"

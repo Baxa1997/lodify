@@ -257,7 +257,7 @@ export const Operations = ({ data = {} }) => {
             </Text>
           </CardData>
         </Box>
-        <Box mt="40px">
+        {/* <Box mt="40px">
           <CardData>
             <Text
               fontSize="16px"
@@ -418,7 +418,7 @@ export const Operations = ({ data = {} }) => {
               </Box>
             </Box>
           </CardData>
-        </Box>
+        </Box> */}
       </SectionCardBody>
     </SectionCard>
   </Box>;

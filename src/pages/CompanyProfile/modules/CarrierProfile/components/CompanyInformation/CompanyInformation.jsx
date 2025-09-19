@@ -48,7 +48,7 @@ export const CompanyInformation = ({ data }) => {
 
   return <Box>
     <SectionCard
-      isAccordion
+      // isAccordion
       padding="0 !important"
       variant="card"
       overflow="hidden"
@@ -71,7 +71,7 @@ export const CompanyInformation = ({ data }) => {
           </Text>
         </Box>
       </SectionCardHeader>
-      <SectionCardBody>
+      <SectionCardBody padding="20px 24px">
         <Box>
           <Box
             display="flex"

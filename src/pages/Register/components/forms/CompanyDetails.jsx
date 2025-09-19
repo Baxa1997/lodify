@@ -1,9 +1,9 @@
 import React from "react";
-import {Box, Flex} from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import InputFormField from "../InputFormField";
 import styles from "../../MultiStepRegister.module.scss";
 
-const CompanyDetails = ({register, errors}) => {
+const CompanyDetails = ({ register, errors }) => {
   return (
     <Box className={styles.stepContent}>
       <InputFormField

@@ -12,6 +12,8 @@ import { Safety } from "./components/Safety";
 import { CaliforniaAirResources } from "./components/CaliforniaAirResources";
 import { Operations } from "./components/Operations";
 import { LaneInsights } from "./components/LaneInsights";
+import { SmsResult } from "./components/SmsResult";
+import { CrashIndicator } from "./components/CrashIndicator";
 
 export const CarrierProfile = () => {
 
@@ -29,6 +31,8 @@ export const CarrierProfile = () => {
       <MainSection data={generalInfo} />
       <LaneInsights data={companySnapshot} />
       <CompanyInformation data={companySnapshot} />
+      <SmsResult />
+      <CrashIndicator />
       <ValidateCarrier />
       <ValidateEquipment />
       <Authority data={carrierDetails} />

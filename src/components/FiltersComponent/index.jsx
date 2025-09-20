@@ -10,6 +10,7 @@ const FiltersComponent = ({
   addButton = false,
   verifySelect = false,
   onSearchChange = () => {},
+  actionButtonText = "Action",
   onAddUserClick = () => {},
   onActionButtonClick = () => {},
 }) => {
@@ -96,9 +97,12 @@ const FiltersComponent = ({
             w={"80px"}
             h={"40px"}
             gap={"8px"}
+            _hover={{
+              background: "#1570ef",
+            }}
             onClick={onActionButtonClick}>
             <Text fontSize={"14px"} fontWeight={"600"} color={"#fff"}>
-              Action
+              {actionButtonText || "Action"}
             </Text>
           </Button>
         )}

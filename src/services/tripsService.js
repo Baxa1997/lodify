@@ -14,6 +14,7 @@ const tripsService = {
   },
   createTrip: (data) => httpRequest.post(`v2/items/trips`, data),
   updateTrip: (id, data) => httpRequest.put(`v2/items/trips`, data),
+  getSelectOptions: (table_slug) => httpRequest.get(`v2/items/${table_slug}`),
 };
 
 export default tripsService;

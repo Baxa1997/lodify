@@ -107,6 +107,8 @@ function UpcomingTab() {
       <FiltersComponent
         filterButton={true}
         actionButton={true}
+        actionButtonText="Add Trip"
+        onActionButtonClick={() => navigate("/admin/trips/add-trip")}
         onSearch={handleSearch}
         searchValue={searchTerm}
       />

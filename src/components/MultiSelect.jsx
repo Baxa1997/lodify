@@ -1,13 +1,14 @@
 import React, {useState, useRef, useEffect, memo} from "react";
 import {Box, Text, VStack, HStack} from "@chakra-ui/react";
-import {LuChevronDown, LuCheck} from "react-icons/lu";
+import {LuChevronDown, LuCheck, LuX} from "react-icons/lu";
 
-const Select = ({
-  placeholder = "Select an option",
+const MultiSelect = ({
+  placeholder = "Select options",
   options = [],
-  value,
+  value = [],
   onChange = () => {},
   size = "md",
+  customSize,
   variant = "outline",
   bg = "white",
   borderColor = "gray.300",
@@ -35,8 +36,6 @@ const Select = ({
   const selectRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  const selectedOption = options.find((option) => option.value === value);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -62,23 +61,42 @@ const Select = ({
   };
 
   const handleSelect = (option) => {
-    if (onChange) {
-      onChange(option.value);
+    if (option.isDisabled) return;
+
+    let newValue;
+    if (value.includes(option.value)) {
+      newValue = value.filter((v) => v !== option.value);
+    } else {
+      newValue = [...value, option.value];
     }
-    setIsOpen(false);
-    setIsFocused(false);
+
+    onChange(newValue);
+  };
+
+  const handleRemove = (val) => {
+    onChange(value.filter((v) => v !== val));
   };
 
   const getSizeStyles = () => {
+    if (customSize) return customSize;
+
     switch (size) {
+      case "xs":
+        return {height: "28px", py: "4px", px: "8px", fontSize: "12px"};
       case "sm":
         return {height: "32px", py: "6px", px: "12px", fontSize: "14px"};
+      case "md":
+        return {height: "40px", py: "8px", px: "16px", fontSize: "16px"};
       case "lg":
         return {height: "48px", py: "12px", px: "20px", fontSize: "18px"};
+      case "xl":
+        return {height: "56px", py: "14px", px: "24px", fontSize: "20px"};
       default:
         return {height: "40px", py: "8px", px: "16px", fontSize: "16px"};
     }
   };
+
+  const selectedOptions = options.filter((opt) => value.includes(opt.value));
 
   return (
     <Box w={width}>
@@ -121,6 +139,9 @@ const Select = ({
           transition="all 0.2s ease"
           display="flex"
           alignItems="center"
+          flexWrap="wrap"
+          gap="4px"
+          minH={getSizeStyles().height}
           _hover={{
             borderColor: isDisabled ? borderColor : focusBorderColor,
           }}
@@ -130,13 +151,36 @@ const Select = ({
             boxShadow: `0 0 0 1px var(--chakra-colors-${
               isInvalid ? "red" : "blue"
             }-400)`,
-          }}
-          {...getSizeStyles()}>
-          <Text
-            color={selectedOption ? color : placeholderStyle.color}
-            fontSize={selectedOption ? "inherit" : placeholderStyle.fontSize}>
-            {selectedOption ? selectedOption.label : placeholder}
-          </Text>
+          }}>
+          {selectedOptions.length > 0 ? (
+            selectedOptions.map((opt) => (
+              <HStack
+                key={opt.value}
+                spacing="4px"
+                bg="gray.100"
+                borderRadius="md"
+                px="8px"
+                py="2px">
+                <Text fontSize="14px">{opt.label}</Text>
+                <Box
+                  as="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemove(opt.value);
+                  }}
+                  display="flex"
+                  alignItems="center">
+                  <LuX size={14} />
+                </Box>
+              </HStack>
+            ))
+          ) : (
+            <Text
+              color={placeholderStyle.color}
+              fontSize={placeholderStyle.fontSize}>
+              {placeholder}
+            </Text>
+          )}
 
           {showIcon && (
             <Box
@@ -179,7 +223,9 @@ const Select = ({
                     px="16px"
                     py="8px"
                     cursor={option.isDisabled ? "not-allowed" : "pointer"}
-                    bg={option.value === value ? "blue.50" : "transparent"}
+                    bg={
+                      value.includes(option.value) ? "blue.50" : "transparent"
+                    }
                     color={option.isDisabled ? "gray.400" : color}
                     opacity={option.isDisabled ? 0.6 : 1}
                     _hover={{
@@ -188,7 +234,7 @@ const Select = ({
                     transition="all 0.2s ease">
                     <HStack justify="space-between" align="center">
                       <Text fontSize="16px">{option.label}</Text>
-                      {option.value === value && (
+                      {value.includes(option.value) && (
                         <LuCheck
                           size={16}
                           color="var(--chakra-colors-blue-500)"
@@ -210,4 +256,4 @@ const Select = ({
   );
 };
 
-export default memo(Select);
+export default memo(MultiSelect);

@@ -252,3 +252,11 @@ select {
     font-size: 1.25rem;
   }
 }
+
+#tripRadio {
+  .chakra-radio__control {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #d5d7da;
+  }
+}

@@ -13,10 +13,11 @@ import Chart from "react-google-charts";
 import Select from "@components/Select";
 import { useMainSectionProps } from "./useMainSectionProps";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
-import { DataTable } from "../DataTable";
+import { DataTable } from "@components/DataTable";
 import { BoldLink } from "../../../../components/BoldLink";
+import { CompanyInformation } from "../CompanyInformation";
 
-export const MainSection = ({ data }) => {
+export const MainSection = ({ data, companySnapshot }) => {
 
   const { headData, bodyData, pieData, options, btnStyleProps } = useMainSectionProps();
 
@@ -40,8 +41,8 @@ export const MainSection = ({ data }) => {
           borderBottom="1px solid"
           borderColor="gray.border-main"              
           padding="20px 24px">
-          <StarRating value={4.99} />
-          <p>Average: 4.99 stars based on 521 customers</p>
+          {/* <StarRating value={4.99} />
+          <p>Average: 4.99 stars based on 521 customers</p> */}
           <MainHeading mt="8px">{data?.legal_name}</MainHeading>
         </SectionCardHeader>
         <SectionCardBody padding="24px">
@@ -161,7 +162,7 @@ export const MainSection = ({ data }) => {
               </Box> */}
             </Box>
           </Box>
-          <Box mt="32px">
+          {/* <Box mt="32px">
             <DataTable
               headData={headData}
               data={bodyData}
@@ -272,10 +273,10 @@ export const MainSection = ({ data }) => {
                 description="The carrier has submitted an MCS-150 Form update within the past 60 days. Click here to review the changes"
               />
             </Box>
-          </Box>
+          </Box> */}
         </SectionCardBody>
       </SectionCard>
-      <SectionCard
+      {/* <SectionCard
         variant="card"
         padding="0 !important"
       >
@@ -338,9 +339,10 @@ export const MainSection = ({ data }) => {
             </Box>
           </Box>
         </SectionCardBody>
-      </SectionCard>
+      </SectionCard> */}
     </Box>
-    <Box width="100%">
+    <CompanyInformation data={companySnapshot} />
+    {/* <Box width="100%">
       <Text
         fontSize="18px"
         fontWeight={600}
@@ -545,6 +547,6 @@ export const MainSection = ({ data }) => {
           </SectionCard>
         </Box>
       </Box>
-    </Box>
+    </Box> */}
   </Box>;
 };

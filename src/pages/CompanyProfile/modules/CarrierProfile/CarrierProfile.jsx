@@ -14,6 +14,9 @@ import { Operations } from "./components/Operations";
 import { LaneInsights } from "./components/LaneInsights";
 import { SmsResult } from "./components/SmsResult";
 import { CrashIndicator } from "./components/CrashIndicator";
+import { ActiveAndPendingInsurance } from "./components/ActiveAndPendingInsurance";
+import { Revocation } from "./components/Revocation";
+import { RejectedInsurance } from "./components/RejectedInsurance";
 
 export const CarrierProfile = () => {
 
@@ -28,20 +31,26 @@ export const CarrierProfile = () => {
       flexDirection="column"
       gap="24px"
     >
-      <MainSection data={generalInfo} />
+      <MainSection
+        data={generalInfo}
+        companySnapshot={companySnapshot}
+      />
       <LaneInsights data={companySnapshot} />
-      <CompanyInformation data={companySnapshot} />
+      {/* <CompanyInformation data={companySnapshot} /> */}
       <SmsResult />
       <CrashIndicator />
-      <ValidateCarrier />
-      <ValidateEquipment />
+      {/* <ValidateCarrier />
+      <ValidateEquipment /> */}
       <Authority data={carrierDetails} />
       <Insurance
         data={insuranceHistory}
         carrierDetails={carrierDetails}
       />
+      <ActiveAndPendingInsurance />
+      <RejectedInsurance />
+      <Revocation />
       <Safety data={companySnapshot} />
-      <CaliforniaAirResources />
+      {/* <CaliforniaAirResources /> */}
       <Operations data={companySnapshot} />
     </Box>
   </Box>;

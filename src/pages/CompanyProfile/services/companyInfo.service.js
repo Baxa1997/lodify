@@ -10,8 +10,9 @@ const itemService = {
   getInsuranceHistory: (companyId)  => httpRequest.get("v2/items/insurance_history", { params: {
     data: JSON.stringify({ companies_id: companyId }),
   } }),
-  getSmsResult: () => httpRequest.get("v2/items/sms_results"),
+  getSmsResult: (filter) => httpRequest.get("v2/items/sms_results", { params: { data: JSON.stringify({ basic_desc: filter }) } }),
   getCrashIndicator: () => httpRequest.get("v2/items/crash_indicator"),
+  getTable: (slug, params) => httpRequest.get(`v2/items/${slug}`, { params }),
 };
 
 export const useGetCompanySingle = (params = {}, id) => {
@@ -24,10 +25,10 @@ export const useGetCompanySingle = (params = {}, id) => {
   });
 };
 
-export const useGetSmsResult = (params = {}) => {
+export const useGetSmsResult = (params = {}, filter) => {
   return useQuery({
-    queryKey: ["GET_SMS_RESULT"],
-    queryFn: () => itemService.getSmsResult(),
+    queryKey: ["GET_SMS_RESULT", filter],
+    queryFn: () => itemService.getSmsResult(filter),
     select: (res) => res.data,
     ...params,
   });
@@ -58,6 +59,15 @@ export const useGetInsuranceHistory = (params = {}, id) => {
     queryFn: () => itemService.getInsuranceHistory(id),
     select: (res) => res.data,
     enabled: !!id,
+    ...params,
+  });
+};
+
+export const useGetTable = (slug, params = {}, props) => {
+  return useQuery({
+    queryKey: ["GET_TABLE", props, slug],
+    queryFn: () => itemService.getTable(slug),
+    select: (res) => res.data,
     ...params,
   });
 };

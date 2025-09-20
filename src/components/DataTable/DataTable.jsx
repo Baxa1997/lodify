@@ -6,6 +6,7 @@ import {
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
 } from "@chakra-ui/react";
 import SimplePagination from "@components/SimplePagination";
@@ -38,7 +39,7 @@ export const DataTable = ({
         borderColor="gray.200"
       >
         <Tr>
-          {headData.map((head, index) => (
+          {headData?.map((head, index) => (
             <Th
               key={index}
               isNumeric={head.isNumeric}
@@ -48,15 +49,35 @@ export const DataTable = ({
               fontSize={"12px"}
               {...head.thProps}
             >
-              {head.label}
+              <Box
+                display="flex"
+                alignItems="center"
+                gap="6px"
+              >
+                {head.label}
+                {
+                  head?.infoText && <Tooltip
+                    placement="top"
+                    flexShrink="0"
+                    label={head.infoText}
+                  >
+                    <img
+                      src="/img/info.svg"
+                      width="14"
+                      height="14"
+                      alt="Info"
+                    />
+                  </Tooltip>
+                }
+              </Box>
             </Th>
           ))}
         </Tr>
       </Thead>
       <Tbody>
-        {data.map((row, rowIndex) => (
+        {data?.map((row, rowIndex) => (
           <Tr key={rowIndex}>
-            {headData.map((head, colIndex) => (
+            {headData?.map((head, colIndex) => (
               <Td
                 key={colIndex}
                 isNumeric={head.isNumeric}
@@ -99,7 +120,7 @@ export const DataTable = ({
             setLimit={setLimit}
             page={page}
             setPage={setPage}
-            count={data.length} 
+            count={data?.length} 
           />
         </Box>
       </Box>

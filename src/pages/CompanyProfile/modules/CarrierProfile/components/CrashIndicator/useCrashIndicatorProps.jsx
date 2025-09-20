@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGetCrashIndicator } from "../../../../services/companyInfo.service";
+import CustomBadge from "@components/CustomBadge";
 
 export const useCrashIndicatorProps = () => {
   const [enabled, setEnabled] = useState(false);
@@ -12,10 +13,29 @@ export const useCrashIndicatorProps = () => {
     setEnabled(true);
   };
 
+  const responseStatuses = (data) => {
+    if(data === "true") {
+      return {
+        variant: "success",
+        label: "Yes",
+      };
+    } else if (data === null) {
+      return {
+        variant: "error",
+        label: "NA",
+      };
+    } else {
+      return {
+        variant: "error",
+        label: "No",
+      };
+    };
+  };
+
   const headData = [
     {
-      label: "Inspection Date",
-      key: "insp_date",
+      label: "Report Date",
+      key: "report_date",
     },
     {
       label: "Report Number",
@@ -26,20 +46,44 @@ export const useCrashIndicatorProps = () => {
       key: "report_state",
     },
     {
-      label: "Violation",
-      key: "section_desc",
+      label: "Vehicle License Number",
+      key: "vehicle_license_number",
     },
     {
-      label: "Vehicle Plate Number",
-      key: "unit_license",
+      label: "Vehicle License State",
+      key: "vehicle_license_state",
     },
     {
-      label: "Vehicle Plate State",
-      key: "unit_license_state",
+      label: "Fatalities",
+      key: "fatalities",
     },
     {
-      label: "Vehicle Type",
-      key: "unit_type_desc",
+      label: "Injuries",
+      key: "injuries",
+    },
+    {
+      label: "Tow Away",
+      key: "tow_away",
+      render: (data) => {
+        return <CustomBadge
+          withBgColor
+          variant={responseStatuses(data).variant}
+        >
+          {responseStatuses(data).label}
+        </CustomBadge>;
+      },
+    },
+    {
+      label: "Hazmat Released",
+      key: "hazmat_released",
+      render: (data) => {
+        return <CustomBadge
+          withBgColor
+          variant={responseStatuses(data).variant}
+        >
+          {responseStatuses(data).label}
+        </CustomBadge>;
+      },
     },
     {
       label: "Severity Weight",

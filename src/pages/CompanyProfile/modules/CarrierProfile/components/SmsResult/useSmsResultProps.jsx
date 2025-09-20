@@ -3,14 +3,44 @@ import { useGetSmsResult } from "../../../../services/companyInfo.service";
 
 export const useSmsResultProps = () => {
   const [enabled, setEnabled] = useState(false);
+  const [filter, setFilter] = useState("");
+
+  const filterOptions = [
+    {
+      label: "Unsafe Driving",
+      value: "Unsafe Driving",
+    },
+    {
+      label: "Hours-of-Service Compliance",
+      value: "Hours-of-Service Compliance",
+    },
+    {
+      label: "Vehicle Maintenance",
+      value: "Vehicle Maintenance",
+    },
+    {
+      label: "Controlled Substances & Alcohol",
+      value: "Controlled Substances/&#8203;Alcohol",
+    },
+    {
+      label: "Hazardous Materials Compliance",
+      value: "Hazardous Materials Compliance",
+    },
+    {
+      label: "Driver Fitness",
+      value: "Driver Fitness",
+    },
+  ];
 
   const { data } = useGetSmsResult({
-    enabled, 
-  });
+    enabled,
+  }, filter);
 
   const onAccordionChange = () => {
     setEnabled(true);
   };
+
+  const handleFilter = (value) => setFilter(value);
 
   const headData = [
     {
@@ -52,8 +82,12 @@ export const useSmsResultProps = () => {
   ];
 
   return {
+    enabled,
     headData,
     bodyData: data?.response,
     onAccordionChange,
+    filterOptions,
+    handleFilter,
+    filter,
   };
 };

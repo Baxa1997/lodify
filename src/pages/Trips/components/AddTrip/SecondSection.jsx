@@ -83,16 +83,14 @@ function SecondSection({control}) {
             color={"#414651"}>
             Representative <span>*</span>
           </Text>
-          <HFMultiSelect
+          <HFSelect
             size="md"
             width={"100%"}
             control={control}
+            view_field="full_name"
             name="representative"
-            options={[
-              {label: "Company", value: "company"},
-              {label: "Driver", value: "driver"},
-              {label: "Customer", value: "customer"},
-            ]}
+            table_slug="representative"
+            options={[]}
           />
         </Box>
         <Box w={"100%"}>
@@ -108,11 +106,7 @@ function SecondSection({control}) {
             width={"100%"}
             control={control}
             name="payable_method"
-            options={[
-              {label: "Company", value: "company"},
-              {label: "Driver", value: "driver"},
-              {label: "Customer", value: "customer"},
-            ]}
+            options={[{label: "Card", value: "Card"}]}
           />
         </Box>
         <Box w={"100%"}>
@@ -124,6 +118,8 @@ function SecondSection({control}) {
             Booked By <span>*</span>
           </Text>
           <HFSelect
+            view_field="full_name"
+            table_slug="users"
             size="md"
             width={"100%"}
             control={control}

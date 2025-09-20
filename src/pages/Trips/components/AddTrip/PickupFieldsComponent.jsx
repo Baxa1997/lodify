@@ -17,7 +17,7 @@ function PickupFieldsComponent({control, field}) {
             backgroundColor="#fff"
             border="1px solid #D5D7DA"
             control={control}
-            name="pickupName"
+            name="appointment"
           />
         </Box>
         <Box w={field?.type === "pickup" ? "100%" : "30%"}>
@@ -28,7 +28,7 @@ function PickupFieldsComponent({control, field}) {
             backgroundColor="#fff"
             border="1px solid #D5D7DA"
             control={control}
-            name="pickupName"
+            name="bol"
           />
         </Box>
         {field?.type === "pickup" && (
@@ -42,7 +42,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="pickupName"
+                name="commodity"
               />
             </Box>
             <Box w="100%">
@@ -53,7 +53,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="pickupName"
+                name="load_value"
               />
             </Box>
           </>
@@ -71,25 +71,25 @@ function PickupFieldsComponent({control, field}) {
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="pickupName"
+              name="shipper"
             />
           </Box>
 
           <Box mt="12px" gap="16px">
             <Flex id="tripRadio" gap="12px">
-              <HFRadio control={control} name="pickupName" />
+              <HFRadio control={control} value="US" name="city_select" />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 United States
               </Text>
             </Flex>
             <Flex id="tripRadio" gap="12px">
-              <HFRadio control={control} name="pickupName" />
+              <HFRadio control={control} value="CA" name="city_select" />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Canada
               </Text>
             </Flex>
             <Flex id="tripRadio" gap="12px">
-              <HFRadio control={control} name="pickupName" />
+              <HFRadio control={control} value="MX" name="city_select" />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Mexico
               </Text>
@@ -106,7 +106,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="pickupName"
+                name="address"
               />
             </Box>
 
@@ -134,7 +134,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="pickupName"
+                name="city"
               />
             </Box>
 
@@ -147,7 +147,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="pickupName"
+                name="state"
               />
             </Box>
 
@@ -160,7 +160,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="address_2"
+                name="zip_code"
               />
             </Box>
           </Flex>
@@ -175,7 +175,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="pickupName"
+                name="phone"
               />
             </Box>
 
@@ -188,7 +188,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="pickupName"
+                name="app_date"
               />
             </Box>
 
@@ -201,13 +201,13 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="address_2"
+                name="app_time"
               />
             </Box>
           </Flex>
 
           <Flex mt={"12px"} gap="16px">
-            <HFSwitch control={control} name="dataRange" />
+            <HFSwitch control={control} name="data_time_range" />
             <Text fontSize="14px" fontWeight="500" color="#414651">
               Data/Time Range
             </Text>
@@ -219,25 +219,38 @@ function PickupFieldsComponent({control, field}) {
             <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
               Load Type <span style={{color: "#414651"}}>*</span>
             </Text>
-            <HFTextField
+            <HFSelect
               width="100%"
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="pickupName"
+              name="load_type"
+              options={[
+                {label: "Dry", value: "Dry"},
+                {label: "Refrigerated", value: "Refrigerated"},
+                {
+                  label: "Temperature Controlled",
+                  value: "Temperature Controlled",
+                },
+                {label: "Other", value: "Other"},
+              ]}
             />
           </Box>
 
           <Box mt="16px">
             <Flex gap="12px" id="tripRadio">
-              <HFRadio control={control} name="pickupName" />
+              <HFRadio
+                control={control}
+                value="Drop & Hook"
+                name="load_method"
+              />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Drop & Hook
               </Text>
             </Flex>
 
             <Flex mt="12px" gap="12px" id="tripRadio">
-              <HFRadio control={control} name="pickupName" />
+              <HFRadio control={control} value="Live" name="load_method" />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Live
               </Text>
@@ -246,27 +259,39 @@ function PickupFieldsComponent({control, field}) {
 
           <Box width="100%" mt="16px">
             <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
-              Load Type <span style={{color: "#414651"}}>*</span>
+              Equipment Type <span style={{color: "#414651"}}>*</span>
             </Text>
-            <HFTextField
+            <HFSelect
               width="100%"
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="pickupName"
+              name="equipment_type"
+              options={[
+                {label: "Dry Van 53", value: "Dry Van 53"},
+                {label: "Dry Van 48", value: "Dry Van 48"},
+              ]}
             />
           </Box>
 
           <Box mt="16px">
             <Flex gap="12px" id="tripRadio">
-              <HFRadio control={control} name="pickupName" />
+              <HFRadio
+                control={control}
+                value="Provided"
+                name="equipment_availability"
+              />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Provided
               </Text>
             </Flex>
 
             <Flex mt="12px" gap="12px" id="tripRadio">
-              <HFRadio control={control} name="pickupName" />
+              <HFRadio
+                control={control}
+                value="Required"
+                name="equipment_availability"
+              />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Required
               </Text>
@@ -282,8 +307,14 @@ function PickupFieldsComponent({control, field}) {
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="pickupName"
-              options={[]}
+              name="equipment"
+              options={[
+                {label: "Reefer", value: "Reefer"},
+                {label: "Flatbed", value: "Flatbed"},
+                {label: "Stepdeck", value: "Stepdeck"},
+                {label: "Lowboy", value: "Lowboy"},
+                {label: "Other", value: "Other"},
+              ]}
             />
           </Box>
 
@@ -292,11 +323,12 @@ function PickupFieldsComponent({control, field}) {
               Weight <span style={{color: "#414651"}}>*</span>
             </Text>
             <HFTextField
+              type="number"
               width="100%"
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="pickupName"
+              name="weight"
             />
           </Box>
           <Box width="80%" mt="16px">
@@ -304,16 +336,17 @@ function PickupFieldsComponent({control, field}) {
               Quantity <span style={{color: "#414651"}}>*</span>
             </Text>
             <HFTextField
+              type="number"
               width="100%"
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="pickupName"
+              name="quantity"
             />
           </Box>
 
           <Flex mt={"12px"} gap="16px">
-            <HFSwitch control={control} name="dataRange" />
+            <HFSwitch control={control} name="tarps_required" />
             <Text fontSize="14px" fontWeight="500" color="#414651">
               Tarps Required
             </Text>
@@ -331,7 +364,7 @@ function PickupFieldsComponent({control, field}) {
               height="150px"
               border="1px solid #D5D7DA"
               control={control}
-              name="pickupName"
+              name="load_dimension"
             />
           </Box>
         </Box>

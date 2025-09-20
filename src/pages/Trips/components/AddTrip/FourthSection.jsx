@@ -14,13 +14,24 @@ function FourthSection({control}) {
           gap={"16px"}
           w="300px">
           <Flex id="tripRadio" gap={"12px"}>
-            <HFRadio control={control} name="oneWay" />
+            <HFRadio
+              control={control}
+              name="trip_type"
+              value="One Way"
+              transformValue={(val) => [val]}
+            />
             <Text fontSize={"16px"} fontWeight={"500"} color={"#414651"}>
               One Way
             </Text>
           </Flex>
+
           <Flex mt="16px" id="tripRadio" gap={"12px"}>
-            <HFRadio control={control} name="roundTrip" />
+            <HFRadio
+              control={control}
+              name="trip_type"
+              value="Round Trip"
+              transformValue={(val) => [val]}
+            />
             <Text fontSize={"16px"} fontWeight={"500"} color={"#414651"}>
               Round Trip
             </Text>
@@ -34,13 +45,24 @@ function FourthSection({control}) {
           flexDirection="column"
           gap={"16px"}>
           <Flex id="tripRadio" gap={"12px"}>
-            <HFRadio control={control} name="solo" />
+            <HFRadio
+              control={control}
+              name="driver_type"
+              value="Solo"
+              transformValue={(val) => [val]}
+            />
             <Text fontSize={"16px"} fontWeight={"500"} color={"#414651"}>
               Solo
             </Text>
           </Flex>
+
           <Flex mt="16px" id="tripRadio" gap={"12px"}>
-            <HFRadio control={control} name="team" />
+            <HFRadio
+              control={control}
+              name="driver_type"
+              value="Team"
+              transformValue={(val) => [val]}
+            />
             <Text fontSize={"16px"} fontWeight={"500"} color={"#414651"}>
               Team
             </Text>
@@ -49,7 +71,7 @@ function FourthSection({control}) {
 
         <Box w="344px" flexDirection="column" gap={"16px"}>
           <Flex id="tripRadio" gap={"12px"} alignItems="center">
-            <HFSwitch control={control} name="lostBlack" />
+            <HFSwitch control={control} name="lot_back" />
             <Text fontSize={"16px"} fontWeight={"500"} color={"#414651"}>
               Lost Black
             </Text>

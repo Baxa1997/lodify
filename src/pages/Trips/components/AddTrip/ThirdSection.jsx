@@ -110,10 +110,7 @@ function ThirdSection({control}) {
               width={"100%"}
               control={control}
               name="accessorials"
-              options={[
-                {label: "Accessorial-0000001", value: "Accessorial-0000001"},
-                {label: "Accessorial-0000002", value: "Accessorial-0000002"},
-              ]}
+              options={[]}
             />
           </Box>
           <Box w={"100%"}>

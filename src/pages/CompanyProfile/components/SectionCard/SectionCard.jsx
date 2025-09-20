@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 
-<<<<<<< HEAD
 export const SectionCard = ({
   children,
   isAccordion,
@@ -20,7 +19,7 @@ export const SectionCard = ({
 }) => {
   if (isAccordion) {
     return (
-      <Accordion allowMultiple allowToggle onChange={onChange}>
+      <Accordion allowMultiple onChange={onChange}>
         <AccordionItem
           border="none"
           className={clsx(styles.sectionCard, styles[variant])}
@@ -28,24 +27,6 @@ export const SectionCard = ({
           {React.Children.map(children, (child) =>
             React.isValidElement(child)
               ? React.cloneElement(child, {isAccordion})
-=======
-export const SectionCard = ({ children, isAccordion, variant = "default", onChange = () => {}, defaultIndex, ...props }) => {
-
-  if(isAccordion) {
-    return <Accordion
-      allowMultiple
-      onChange={onChange}
-      defaultIndex={defaultIndex}
-    >
-      <AccordionItem
-        border="none"
-        className={clsx(styles.sectionCard, styles[variant])}
-        {...props}>
-        {
-          React.Children.map(children, (child) => (
-            React.isValidElement(child) 
-              ? React.cloneElement(child, { isAccordion })
->>>>>>> 466409f9cf3d4b984c210d6f7a72c62c47ecddd1
               : child
           )}
         </AccordionItem>

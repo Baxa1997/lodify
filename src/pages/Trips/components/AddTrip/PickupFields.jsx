@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import styles from "./style.module.scss";
 import PickupFieldsComponent from "./PickupFieldsComponent";
-import DeliveryComponent from "./DeliveryComponent";
 
 function PickupFields({control, index, removePickup, field}) {
   return (

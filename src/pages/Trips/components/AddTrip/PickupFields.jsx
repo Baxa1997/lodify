@@ -23,7 +23,7 @@ function PickupFields({control, index, removePickup, field}) {
       <AccordionItem borderTopRadius="12px">
         <AccordionButton
           className={
-            field.type === "pickup"
+            field.type?.[0] === "pickup"
               ? styles.pickupAccordionButton
               : styles.deliveryAccordionButton
           }
@@ -37,7 +37,7 @@ function PickupFields({control, index, removePickup, field}) {
             borderTopRadius="12px"
             textAlign="left">
             <Text fontWeight="600" fontSize="18px" color="#181D27">
-              {field.type === "pickup" ? "Pickup" : "Delivery"}
+              {field.type?.[0] === "pickup" ? "Pickup" : "Delivery"}
             </Text>
             <Flex
               width="24px"

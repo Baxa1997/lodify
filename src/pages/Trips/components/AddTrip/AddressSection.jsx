@@ -39,7 +39,7 @@ function AddressSection({control}) {
             p="10px 16px"
             onClick={() =>
               append({
-                type: "pickup",
+                type: ["pickup"],
                 name: "",
                 address: "",
                 city: "",
@@ -69,7 +69,7 @@ function AddressSection({control}) {
             p="10px 16px"
             onClick={() =>
               append({
-                type: "delivery",
+                type: ["delivery"],
                 name: "",
                 address: "",
                 city: "",
@@ -91,6 +91,7 @@ function AddressSection({control}) {
 
         <Box>
           <Button
+            type="button"
             w="80px"
             border="1px solid #E9EAEB"
             borderRadius="8px"
@@ -101,7 +102,7 @@ function AddressSection({control}) {
               Cancel
             </Text>
           </Button>
-          <Button _hover={{bg: "#1570EF"}} w="65px" bg="#1570EF">
+          <Button type="submit" _hover={{bg: "#1570EF"}} w="65px" bg="#1570EF">
             <Text ml="6px" fontSize="14px" fontWeight="600" color="#fff">
               Save
             </Text>

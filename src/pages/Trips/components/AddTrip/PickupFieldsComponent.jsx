@@ -9,7 +9,7 @@ function PickupFieldsComponent({control, field}) {
   return (
     <>
       <Flex p="20px" borderRadius="12px" gap="12px" bg={"#FAFAFA"}>
-        <Box w={field?.type === "pickup" ? "100%" : "30%"}>
+        <Box w={field?.type?.[0] === "pickup" ? "100%" : "30%"}>
           <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
             Appointment # <span style={{color: "#414651"}}>*</span>
           </Text>
@@ -20,7 +20,7 @@ function PickupFieldsComponent({control, field}) {
             name="appointment"
           />
         </Box>
-        <Box w={field?.type === "pickup" ? "100%" : "30%"}>
+        <Box w={field?.type?.[0] === "pickup" ? "100%" : "30%"}>
           <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
             BOL # <span style={{color: "#414651"}}>*</span>
           </Text>
@@ -31,7 +31,7 @@ function PickupFieldsComponent({control, field}) {
             name="bol"
           />
         </Box>
-        {field?.type === "pickup" && (
+        {field?.type?.[0] === "pickup" && (
           <>
             {" "}
             <Box w="100%">

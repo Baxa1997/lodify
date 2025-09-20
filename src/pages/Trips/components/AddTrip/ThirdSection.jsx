@@ -4,6 +4,7 @@ import {Box} from "@chakra-ui/react";
 import {Text} from "@chakra-ui/react";
 import HFTextField from "../../../../components/HFTextField";
 import HFMultiSelect from "../../../../components/HFMultiSelect";
+import HFFilesField from "../../../../components/HFFilesField";
 
 function ThirdSection({control}) {
   return (
@@ -165,7 +166,7 @@ function ThirdSection({control}) {
               color={"#414651"}>
               BOL/POD <span>*</span>
             </Text>
-            <HFTextField
+            <HFFilesField
               size="md"
               border={"1px solid #D5D7DA"}
               control={control}
@@ -181,7 +182,7 @@ function ThirdSection({control}) {
               color={"#414651"}>
               Other Files <span>*</span>
             </Text>
-            <HFTextField
+            <HFFilesField
               size="md"
               border={"1px solid #D5D7DA"}
               control={control}

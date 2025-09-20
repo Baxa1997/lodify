@@ -11,8 +11,8 @@ function HFRadio({control, name, ...props}) {
         <Radio
           {...field}
           {...props}
-          isChecked={field.value === props.value}
-          onChange={(e) => field.onChange(e.target.value)}
+          isChecked={field.value?.[0] === props.value}
+          onChange={(e) => field.onChange([e.target.value])}
         />
       )}
     />

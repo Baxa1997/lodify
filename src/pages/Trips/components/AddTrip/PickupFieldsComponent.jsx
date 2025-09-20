@@ -4,12 +4,13 @@ import HFTextField from "../../../../components/HFTextField";
 import HFRadio from "../../../../components/HFRadio";
 import HFSwitch from "../../../../components/HFSwitch";
 import HFSelect from "../../../../components/HFSelect";
+import HFMultiSelect from "@components/HFMultiSelect";
 
 function PickupFieldsComponent({control, field, index}) {
   return (
     <>
       <Flex p="20px" borderRadius="12px" gap="12px" bg={"#FAFAFA"}>
-        <Box w={field?.type?.[0] === "pickup" ? "100%" : "30%"}>
+        <Box w={field?.type?.[0] === "Pickup" ? "100%" : "30%"}>
           <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
             Appointment # <span style={{color: "#414651"}}>*</span>
           </Text>
@@ -20,7 +21,7 @@ function PickupFieldsComponent({control, field, index}) {
             name={`driver_order_items.${index}.appointment`}
           />
         </Box>
-        <Box w={field?.type?.[0] === "pickup" ? "100%" : "30%"}>
+        <Box w={field?.type?.[0] === "Pickup" ? "100%" : "30%"}>
           <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
             BOL # <span style={{color: "#414651"}}>*</span>
           </Text>
@@ -31,7 +32,7 @@ function PickupFieldsComponent({control, field, index}) {
             name={`driver_order_items.${index}.bol`}
           />
         </Box>
-        {field?.type?.[0] === "pickup" && (
+        {field?.type?.[0] === "Pickup" && (
           <>
             {" "}
             <Box w="100%">
@@ -234,7 +235,7 @@ function PickupFieldsComponent({control, field, index}) {
             <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
               Load Type <span style={{color: "#414651"}}>*</span>
             </Text>
-            <HFSelect
+            <HFMultiSelect
               width="100%"
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
@@ -321,7 +322,7 @@ function PickupFieldsComponent({control, field, index}) {
             <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
               Equipment <span style={{color: "#414651"}}>*</span>
             </Text>
-            <HFSelect
+            <HFMultiSelect
               width="100%"
               backgroundColor="#fff"
               border="1px solid #D5D7DA"

@@ -39,7 +39,7 @@ function AddressSection({control, isLoading = false, onCancel}) {
             p="10px 16px"
             onClick={() =>
               append({
-                type: ["pickup"],
+                type: ["Pickup"],
                 name: "",
                 address: "",
                 city: "",
@@ -69,7 +69,7 @@ function AddressSection({control, isLoading = false, onCancel}) {
             p="10px 16px"
             onClick={() =>
               append({
-                type: ["delivery"],
+                type: ["Delivery"],
                 name: "",
                 address: "",
                 city: "",

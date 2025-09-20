@@ -58,12 +58,14 @@ function AddTrip() {
         method: "create",
         object_data: {
           ...data,
+          driver_type: [data?.driver_type],
+          trip_type: [data?.trip_type],
         },
         table: "trips",
       },
     };
-
-    createTripMutation.mutate(dataToSend);
+    console.log("datadatadatadata", data);
+    // createTripMutation.mutate(dataToSend);
   };
 
   const handleCancel = () => {

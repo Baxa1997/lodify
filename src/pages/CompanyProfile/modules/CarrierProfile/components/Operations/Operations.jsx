@@ -2,8 +2,12 @@ import { Box, Text } from "@chakra-ui/react";
 import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
 import { CardData } from "../../../../components/CardData";
 import { StatusText } from "../../../../components/StatusText";
+import { useOperationsProps } from "./useOperationsProps";
+import { responseStatuses } from "@utils/getResponseStatuses";
 
 export const Operations = ({ data = {} }) => {
+
+  const { extraData } = useOperationsProps();
 
   const {
     entity_type,
@@ -37,7 +41,7 @@ export const Operations = ({ data = {} }) => {
       <SectionCardBody padding="20px">
         <Box
           display="grid"
-          gridTemplateColumns="1fr 3fr"
+          gridTemplateColumns="1fr 1fr"
           gap="20px"
           alignItems="flex-start"
         >
@@ -76,10 +80,10 @@ export const Operations = ({ data = {} }) => {
             />
             <StatusText
               title="Out Of Service Date:"
-              data={"None"}
+              data={out_of_service_date}
             />
           </CardData>
-          <CardData
+          {/* <CardData
             display="flex"
             flexDirection="column"
             flexGrow={1}
@@ -104,7 +108,7 @@ export const Operations = ({ data = {} }) => {
               title="Hazmat Indicator:"
               data={"No"}
             />
-          </CardData>
+          </CardData> */}
           <CardData
             display="flex"
             flexDirection="column"
@@ -124,63 +128,55 @@ export const Operations = ({ data = {} }) => {
               <Box flexGrow={1}>
                 <StatusText
                   title="(A) Authorized for  Hire:"
-                  data={"Interstate"}
+                  data={responseStatuses(extraData?.authorized_for_hire).label}
                 />
                 <StatusText
                   title="(B) Exempt for  Hire:"
-                  data={"None"}
+                  data={responseStatuses(extraData?.exempt_for_hire).label}
                 />
                 <StatusText
                   title="(C) Private(Property):"
-                  data={"No"}
+                  data={responseStatuses(extraData?.private_property).label}
                 />
                 <StatusText
                   title="(D) Private Pass (Business):"
-                  data={"No"}
+                  data={responseStatuses(extraData?.private_passenger_business).label}
                 />
                 <StatusText
                   title="(E) Private Pass  (Non-Business):"
-                  data={"No"}
+                  data={responseStatuses(extraData?.private_passenger_nonbusiness).label}
                 />
                 <StatusText
                   title="(F) Migrant:"
-                  data={"No"}
-                />
-                <StatusText
-                  title="Other Description:"
-                  data={"No"}
+                  data={responseStatuses(extraData?.migrant).label}
                 />
               </Box>
               <Box flexGrow={1}>
                 <StatusText
                   title="(G) U.S. Mail:"
-                  data={"No"}
+                  data={responseStatuses(extraData?.us_mail).label}
                 />
                 <StatusText
                   title="(H) Federal Government:"
-                  data={"No"}
+                  data={responseStatuses(extraData?.federal_government).label}
                 />
                 <StatusText
                   title="(I) State Government:"
-                  data={"No"}
+                  data={responseStatuses(extraData?.state_government).label}
                 />
                 <StatusText
                   title="(J) Local Government:"
-                  data={"No"}
+                  data={responseStatuses(extraData?.local_government).label}
                 />
                 <StatusText
                   title="(K) Indian Tribe:"
-                  data={"No"}
-                />
-                <StatusText
-                  title="(Other) See Description:"
-                  data={"No"}
+                  data={responseStatuses(extraData?.indian_tribe).label}
                 />
               </Box>
             </Box>
           </CardData>
         </Box>
-        <Box mt="40px">
+        {/* <Box mt="40px">
           <CardData>
             <Text
               fontSize="16px"
@@ -256,7 +252,7 @@ export const Operations = ({ data = {} }) => {
               Other Cargo:
             </Text>
           </CardData>
-        </Box>
+        </Box> */}
         {/* <Box mt="40px">
           <CardData>
             <Text

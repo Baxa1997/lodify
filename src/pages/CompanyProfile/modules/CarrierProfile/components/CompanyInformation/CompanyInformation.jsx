@@ -46,7 +46,7 @@ const DataList = ({ list = [] }) => {
 export const CompanyInformation = ({ data }) => {
   const { firstDataList, secondDataList } = useCompanyInformationProps({ data });
 
-  return <Box>
+  return <Box flexGrow={1}>
     <SectionCard
       // isAccordion
       padding="0 !important"

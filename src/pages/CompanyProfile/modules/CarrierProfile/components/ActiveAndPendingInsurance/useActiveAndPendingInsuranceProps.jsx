@@ -34,6 +34,9 @@ export const useActiveAndPendingInsuranceProps = () => {
     {
       label: "Posted Date",
       key: "trans_date",
+      tdProps: {
+        width: "200px",
+      },
     },
     {
       label: "Coverage From",

@@ -36,6 +36,7 @@ const AddressDetails = ({ register, errors, watch }) => {
         validation={{
           required: "Address Line 1 is required",
         }}
+        disabled
       />
 
       <InputFormField
@@ -54,6 +55,7 @@ const AddressDetails = ({ register, errors, watch }) => {
           register={register}
           errors={errors}
           isRequired
+          disabled
           validation={{
             required: "City is required",
             minLength: {
@@ -72,6 +74,7 @@ const AddressDetails = ({ register, errors, watch }) => {
           isRequired
           options={US_STATES}
           validation={stateValidation}
+          disabled
         />
       </Flex>
 
@@ -86,6 +89,7 @@ const AddressDetails = ({ register, errors, watch }) => {
           errors={errors}
           isRequired
           validation={zipCodeValidation}
+          disabled
         />
 
         <SelectFormField
@@ -96,6 +100,7 @@ const AddressDetails = ({ register, errors, watch }) => {
           errors={errors}
           options={COUNTRIES}
           validation={countryValidation}
+          disabled
         />
       </Flex>
     </Box>

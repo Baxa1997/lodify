@@ -24,6 +24,7 @@ const Register = () => {
     setValue,
     trigger,
     reset,
+    getValues,
   } = useForm({
     defaultValues: {
       company_name: "",
@@ -252,6 +253,7 @@ const Register = () => {
         watch={watch}
         setValue={setValue}
         reset={reset}
+        getValues={getValues}
         handleSubmit={handleSubmit(onSubmit)}
         onNext={handleNext}
         onBack={handleBack}

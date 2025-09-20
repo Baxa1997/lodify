@@ -23,7 +23,7 @@ const StepRenderer = ({
 
   useEffect(() => {
     if(isSuccess) {
-      const responseData = data[0];
+      const responseData = data?.data[0];
       reset({
         ...getValues(),
         physical_address1: responseData?.phy_street,

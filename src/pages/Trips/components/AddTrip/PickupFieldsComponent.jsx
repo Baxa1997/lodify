@@ -5,7 +5,7 @@ import HFRadio from "../../../../components/HFRadio";
 import HFSwitch from "../../../../components/HFSwitch";
 import HFSelect from "../../../../components/HFSelect";
 
-function PickupFieldsComponent({control, field}) {
+function PickupFieldsComponent({control, field, index}) {
   return (
     <>
       <Flex p="20px" borderRadius="12px" gap="12px" bg={"#FAFAFA"}>
@@ -17,7 +17,7 @@ function PickupFieldsComponent({control, field}) {
             backgroundColor="#fff"
             border="1px solid #D5D7DA"
             control={control}
-            name="appointment"
+            name={`driver_order_items.${index}.appointment`}
           />
         </Box>
         <Box w={field?.type?.[0] === "pickup" ? "100%" : "30%"}>
@@ -28,7 +28,7 @@ function PickupFieldsComponent({control, field}) {
             backgroundColor="#fff"
             border="1px solid #D5D7DA"
             control={control}
-            name="bol"
+            name={`driver_order_items.${index}.bol`}
           />
         </Box>
         {field?.type?.[0] === "pickup" && (
@@ -42,7 +42,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="commodity"
+                name={`driver_order_items.${index}.commodity`}
               />
             </Box>
             <Box w="100%">
@@ -53,7 +53,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="load_value"
+                name={`driver_order_items.${index}.load_value`}
               />
             </Box>
           </>
@@ -71,25 +71,37 @@ function PickupFieldsComponent({control, field}) {
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="shipper"
+              name={`driver_order_items.${index}.shipper`}
             />
           </Box>
 
           <Box mt="12px" gap="16px">
             <Flex id="tripRadio" gap="12px">
-              <HFRadio control={control} value="US" name="city_select" />
+              <HFRadio
+                control={control}
+                value="US"
+                name={`driver_order_items.${index}.city_select`}
+              />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 United States
               </Text>
             </Flex>
             <Flex id="tripRadio" gap="12px">
-              <HFRadio control={control} value="CA" name="city_select" />
+              <HFRadio
+                control={control}
+                value="CA"
+                name={`driver_order_items.${index}.city_select`}
+              />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Canada
               </Text>
             </Flex>
             <Flex id="tripRadio" gap="12px">
-              <HFRadio control={control} value="MX" name="city_select" />
+              <HFRadio
+                control={control}
+                value="MX"
+                name={`driver_order_items.${index}.city_select`}
+              />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Mexico
               </Text>
@@ -106,7 +118,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="address"
+                name={`driver_order_items.${index}.address`}
               />
             </Box>
 
@@ -119,7 +131,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="address_2"
+                name={`driver_order_items.${index}.address_2`}
               />
             </Box>
           </Flex>
@@ -134,7 +146,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="city"
+                name={`driver_order_items.${index}.city`}
               />
             </Box>
 
@@ -147,7 +159,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="state"
+                name={`driver_order_items.${index}.state`}
               />
             </Box>
 
@@ -160,7 +172,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="zip_code"
+                name={`driver_order_items.${index}.zip_code`}
               />
             </Box>
           </Flex>
@@ -175,7 +187,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="phone"
+                name={`driver_order_items.${index}.phone`}
               />
             </Box>
 
@@ -188,7 +200,7 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="app_date"
+                name={`driver_order_items.${index}.app_date`}
               />
             </Box>
 
@@ -201,13 +213,16 @@ function PickupFieldsComponent({control, field}) {
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
-                name="app_time"
+                name={`driver_order_items.${index}.app_time`}
               />
             </Box>
           </Flex>
 
           <Flex mt={"12px"} gap="16px">
-            <HFSwitch control={control} name="data_time_range" />
+            <HFSwitch
+              control={control}
+              name={`driver_order_items.${index}.data_time_range`}
+            />
             <Text fontSize="14px" fontWeight="500" color="#414651">
               Data/Time Range
             </Text>
@@ -224,7 +239,7 @@ function PickupFieldsComponent({control, field}) {
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="load_type"
+              name={`driver_order_items.${index}.load_type`}
               options={[
                 {label: "Dry", value: "Dry"},
                 {label: "Refrigerated", value: "Refrigerated"},
@@ -242,7 +257,7 @@ function PickupFieldsComponent({control, field}) {
               <HFRadio
                 control={control}
                 value="Drop & Hook"
-                name="load_method"
+                name={`driver_order_items.${index}.load_method`}
               />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Drop & Hook
@@ -250,7 +265,11 @@ function PickupFieldsComponent({control, field}) {
             </Flex>
 
             <Flex mt="12px" gap="12px" id="tripRadio">
-              <HFRadio control={control} value="Live" name="load_method" />
+              <HFRadio
+                control={control}
+                value="Live"
+                name={`driver_order_items.${index}.load_method`}
+              />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Live
               </Text>
@@ -266,7 +285,7 @@ function PickupFieldsComponent({control, field}) {
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="equipment_type"
+              name={`driver_order_items.${index}.equipment_type`}
               options={[
                 {label: "Dry Van 53", value: "Dry Van 53"},
                 {label: "Dry Van 48", value: "Dry Van 48"},
@@ -279,7 +298,7 @@ function PickupFieldsComponent({control, field}) {
               <HFRadio
                 control={control}
                 value="Provided"
-                name="equipment_availability"
+                name={`driver_order_items.${index}.equipment_availability`}
               />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Provided
@@ -290,7 +309,7 @@ function PickupFieldsComponent({control, field}) {
               <HFRadio
                 control={control}
                 value="Required"
-                name="equipment_availability"
+                name={`driver_order_items.${index}.equipment_availability`}
               />
               <Text fontSize="16px" fontWeight="500" color="#414651">
                 Required
@@ -307,7 +326,7 @@ function PickupFieldsComponent({control, field}) {
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="equipment"
+              name={`driver_order_items.${index}.equipment`}
               options={[
                 {label: "Reefer", value: "Reefer"},
                 {label: "Flatbed", value: "Flatbed"},
@@ -328,7 +347,7 @@ function PickupFieldsComponent({control, field}) {
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="weight"
+              name={`driver_order_items.${index}.weight`}
             />
           </Box>
           <Box width="80%" mt="16px">
@@ -341,12 +360,15 @@ function PickupFieldsComponent({control, field}) {
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
-              name="quantity"
+              name={`driver_order_items.${index}.quantity`}
             />
           </Box>
 
           <Flex mt={"12px"} gap="16px">
-            <HFSwitch control={control} name="tarps_required" />
+            <HFSwitch
+              control={control}
+              name={`driver_order_items.${index}.tarps_required`}
+            />
             <Text fontSize="14px" fontWeight="500" color="#414651">
               Tarps Required
             </Text>
@@ -356,15 +378,16 @@ function PickupFieldsComponent({control, field}) {
             <Text mb="6px" fontWeight="600" fontSize="18px" color="#181D27">
               Load Dimensions
             </Text>
-            <Textarea
+            <HFTextField
               placeholder="Special Instructions For Drivers"
               backgroundColor="#FAFAFA"
-              resize="none"
               width="100%"
               height="150px"
               border="1px solid #D5D7DA"
               control={control}
-              name="load_dimension"
+              name={`driver_order_items.${index}.load_dimension`}
+              as="textarea"
+              resize="none"
             />
           </Box>
         </Box>

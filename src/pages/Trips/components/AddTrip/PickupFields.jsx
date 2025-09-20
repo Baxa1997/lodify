@@ -67,7 +67,11 @@ function PickupFields({control, index, removePickup, field}) {
           </Button>
         </AccordionButton>
         <AccordionPanel p="24px">
-          <PickupFieldsComponent field={field} control={control} />
+          <PickupFieldsComponent
+            field={field}
+            control={control}
+            index={index}
+          />
         </AccordionPanel>
       </AccordionItem>
     </Accordion>

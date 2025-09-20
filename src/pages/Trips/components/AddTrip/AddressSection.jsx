@@ -3,7 +3,7 @@ import {useFieldArray} from "react-hook-form";
 import {Box, Button, Flex, Text} from "@chakra-ui/react";
 import PickupFields from "./PickupFields";
 
-function AddressSection({control}) {
+function AddressSection({control, isLoading = false, onCancel}) {
   const {fields, append, remove} = useFieldArray({
     control,
     name: "driver_order_items",
@@ -97,14 +97,22 @@ function AddressSection({control}) {
             borderRadius="8px"
             bg="transparent"
             mr="12px"
-            _hover={{bg: "transparent"}}>
+            _hover={{bg: "transparent"}}
+            onClick={onCancel}
+            isDisabled={isLoading}>
             <Text ml="6px" fontSize="14px" fontWeight="600" color="#A4A7AE">
               Cancel
             </Text>
           </Button>
-          <Button type="submit" _hover={{bg: "#1570EF"}} w="65px" bg="#1570EF">
+          <Button
+            w="80px"
+            type="submit"
+            _hover={{bg: "#1570EF"}}
+            bg="#1570EF"
+            loadingText="Saving..."
+            isDisabled={isLoading}>
             <Text ml="6px" fontSize="14px" fontWeight="600" color="#fff">
-              Save
+              {isLoading ? "Saving..." : "Save"}
             </Text>
           </Button>
         </Box>

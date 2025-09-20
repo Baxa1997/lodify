@@ -1,22 +1,73 @@
-import React from "react";
+import React, {useState} from "react";
 import HeadBreadCrumb from "../../../../components/HeadBreadCrumb";
-import {Box, Flex, Text} from "@chakra-ui/react";
+import {Box, Flex, Text, useToast} from "@chakra-ui/react";
 import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
+import {useMutation} from "@tanstack/react-query";
 import FirstSection from "./FirstSection";
 import SecondSection from "./SecondSection";
 import ThirdSection from "./ThirdSection";
 import FourthSection from "./FourthSection";
 import AddressSection from "./AddressSection";
+import tripsService from "../../../../services/tripsService";
+import {useSelector} from "react-redux";
 
 function AddTrip() {
+  const navigate = useNavigate();
+  const toast = useToast();
+  const envId = useSelector((state) => state.auth.environmentId);
+
   const {
     control,
     handleSubmit,
     formState: {errors},
     watch,
   } = useForm();
+
+  const createTripMutation = useMutation({
+    mutationFn: (data) => tripsService.createTrip(data),
+    onSuccess: (response) => {
+      toast({
+        title: "Trip Created Successfully",
+        description: "The trip has been created successfully.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+
+      navigate("/admin/trips");
+    },
+    onError: (error) => {
+      toast({
+        title: "Error Creating Trip",
+        description:
+          error?.response?.data?.message ||
+          "Failed to create trip. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+  });
+
   const onSubmit = (data) => {
-    console.log(data);
+    const dataToSend = {
+      data: {
+        app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
+        environment_id: envId,
+        method: "create",
+        object_data: {
+          ...data,
+        },
+        table: "trips",
+      },
+    };
+
+    createTripMutation.mutate(dataToSend);
+  };
+
+  const handleCancel = () => {
+    navigate("/admin/trips");
   };
 
   return (
@@ -38,7 +89,11 @@ function AddTrip() {
         <SecondSection control={control} />
         <ThirdSection control={control} />
         <FourthSection control={control} />
-        <AddressSection control={control} />
+        <AddressSection
+          control={control}
+          isLoading={createTripMutation.isPending}
+          onCancel={handleCancel}
+        />
       </form>
     </>
   );

@@ -15,19 +15,24 @@ export const SectionCard = ({
   isAccordion,
   variant = "default",
   onChange = () => {},
+  defaultIndex,
   ...props
 }) => {
   if (isAccordion) {
     return (
-      <Accordion allowMultiple onChange={onChange}>
+      <Accordion
+        allowMultiple
+        onChange={onChange}
+        defaultIndex={defaultIndex}
+      >
         <AccordionItem
           border="none"
           className={clsx(styles.sectionCard, styles[variant])}
           {...props}>
           {React.Children.map(children, (child) =>
             React.isValidElement(child)
-              ? React.cloneElement(child, {isAccordion})
-              : child
+              ? React.cloneElement(child, { isAccordion })
+              : child,
           )}
         </AccordionItem>
       </Accordion>
@@ -35,17 +40,21 @@ export const SectionCard = ({
   }
 
   return (
-    <Box className={clsx(styles.sectionCard, styles[variant])} {...props}>
+    <Box
+      className={clsx(styles.sectionCard, styles[variant])}
+      {...props}>
       {children}
     </Box>
   );
 };
 
-export const SectionCardHeader = ({children, isAccordion, ...props}) => {
+export const SectionCardHeader = ({ children, isAccordion, ...props }) => {
   if (isAccordion) {
     return (
       <AccordionButton {...props}>
-        <Box width="100%" textAlign="left">
+        <Box
+          width="100%"
+          textAlign="left">
           {children}
         </Box>
         <AccordionIcon />
@@ -56,7 +65,7 @@ export const SectionCardHeader = ({children, isAccordion, ...props}) => {
   return <Box {...props}>{children}</Box>;
 };
 
-export const SectionCardBody = ({children, isAccordion, ...props}) => {
+export const SectionCardBody = ({ children, isAccordion, ...props }) => {
   if (isAccordion) {
     return <AccordionPanel {...props}>{children}</AccordionPanel>;
   }

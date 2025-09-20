@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGetCrashIndicator } from "../../../../services/companyInfo.service";
 import CustomBadge from "@components/CustomBadge";
+import { responseStatuses } from "@utils/getResponseStatuses";
 
 export const useCrashIndicatorProps = () => {
   const [enabled, setEnabled] = useState(false);
@@ -11,25 +12,6 @@ export const useCrashIndicatorProps = () => {
 
   const onAccordionChange = () => {
     setEnabled(true);
-  };
-
-  const responseStatuses = (data) => {
-    if(data === "true") {
-      return {
-        variant: "success",
-        label: "Yes",
-      };
-    } else if (data === null) {
-      return {
-        variant: "error",
-        label: "NA",
-      };
-    } else {
-      return {
-        variant: "error",
-        label: "No",
-      };
-    };
   };
 
   const headData = [

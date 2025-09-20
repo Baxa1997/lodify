@@ -13,6 +13,7 @@ const ContactDetails = ({ register, errors }) => {
         placeholder="Enter email address"
         register={register}
         errors={errors}
+        disabled
         isRequired
         validation={{
           required: "Email is required",

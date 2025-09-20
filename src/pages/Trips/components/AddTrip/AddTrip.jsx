@@ -64,8 +64,7 @@ function AddTrip() {
         table: "trips",
       },
     };
-    console.log("datadatadatadata", data);
-    // createTripMutation.mutate(dataToSend);
+    createTripMutation.mutate(dataToSend);
   };
 
   const handleCancel = () => {

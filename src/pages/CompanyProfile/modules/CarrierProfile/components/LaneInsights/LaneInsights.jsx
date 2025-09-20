@@ -76,8 +76,8 @@ export const LaneInsights = ({ data }) => {
                   >
                   U.S. Inspection Results
                   </Text>
-                  <Text color="tertiary.600">Total Inspections: 914</Text>
-                  <Text color="tertiary.600">Total IEP Inspections: 914</Text>
+                  {/* <Text color="tertiary.600">Total Inspections: 914</Text>
+                  <Text color="tertiary.600">Total IEP Inspections: 914</Text> */}
                 </Box>
               </Box>
             </SectionCardHeader>
@@ -140,7 +140,7 @@ export const LaneInsights = ({ data }) => {
                   >
                     Canadian Inspection Results
                   </Text>
-                  <Text color="tertiary.600">Total Inspections: 914</Text>
+                  {/* <Text color="tertiary.600">Total Inspections: 914</Text> */}
                 </Box>
               </Box>
             </SectionCardHeader>

@@ -11,6 +11,11 @@ export const useCompanyInformationProps = ({ data = {} }) => {
     entity_type,
     docket_number,
     dba_name,
+
+    common_stat,
+    broker_stat,
+    drivers,
+    trailers,
   } = data;
   
   const firstDataList = [
@@ -47,6 +52,14 @@ export const useCompanyInformationProps = ({ data = {} }) => {
     {
       title: "Fax Number",
       description: "None",
+    },
+    {
+      title: "Common",
+      description: common_stat,
+    },
+    {
+      title: "Broker",
+      description: broker_stat,
     },
     {
       title: "Address",
@@ -86,6 +99,14 @@ export const useCompanyInformationProps = ({ data = {} }) => {
     {
       title: "Company Main Address",
       description: "None",
+    },
+    {
+      title: "Drivers",
+      description: drivers,
+    },
+    {
+      title: "Trailers",
+      description: trailers,
     },
     {
       title: "Mailing Address",

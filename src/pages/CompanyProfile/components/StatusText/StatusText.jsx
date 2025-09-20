@@ -6,6 +6,9 @@ export const StatusText = ({ title, data = "", status }) => {
     "YES": "success.600",
     "NO": "error.600",
     "NONE": "error.600",
+    "ERROR": "error.600",
+    "SUCCESS": "success.600",
+    "NA": "error.600",
   };
 
   return <Box

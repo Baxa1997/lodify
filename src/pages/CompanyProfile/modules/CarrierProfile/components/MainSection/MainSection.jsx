@@ -23,10 +23,10 @@ export const MainSection = ({ data, companySnapshot }) => {
 
   return <Box
     display="flex"
-    columnGap="24px"
-    alignItems="flex-start"
+    // columnGap="24px"
+    // alignItems="flex-start"
   >
-    <Box
+    {/* <Box
       maxWidth="528px"
       width="100%"
       display="flex"
@@ -41,8 +41,8 @@ export const MainSection = ({ data, companySnapshot }) => {
           borderBottom="1px solid"
           borderColor="gray.border-main"              
           padding="20px 24px">
-          {/* <StarRating value={4.99} />
-          <p>Average: 4.99 stars based on 521 customers</p> */}
+          <StarRating value={4.99} />
+          <p>Average: 4.99 stars based on 521 customers</p>
           <MainHeading mt="8px">{data?.legal_name}</MainHeading>
         </SectionCardHeader>
         <SectionCardBody padding="24px">
@@ -124,7 +124,7 @@ export const MainSection = ({ data, companySnapshot }) => {
               as="dl"
               width="100%"
             >
-              {/* <Box
+              <Box
                 display="flex"
                 justifyContent="space-between"
                 fontWeight={600}
@@ -159,10 +159,10 @@ export const MainSection = ({ data, companySnapshot }) => {
               >
                 <Box as="dt">Trailers:</Box>
                 <Box as="dd">0</Box>
-              </Box> */}
+              </Box>
             </Box>
           </Box>
-          {/* <Box mt="32px">
+          <Box mt="32px">
             <DataTable
               headData={headData}
               data={bodyData}
@@ -273,10 +273,10 @@ export const MainSection = ({ data, companySnapshot }) => {
                 description="The carrier has submitted an MCS-150 Form update within the past 60 days. Click here to review the changes"
               />
             </Box>
-          </Box> */}
+          </Box>
         </SectionCardBody>
       </SectionCard>
-      {/* <SectionCard
+      <SectionCard
         variant="card"
         padding="0 !important"
       >
@@ -339,9 +339,9 @@ export const MainSection = ({ data, companySnapshot }) => {
             </Box>
           </Box>
         </SectionCardBody>
-      </SectionCard> */}
-    </Box>
-    <CompanyInformation data={companySnapshot} />
+      </SectionCard>
+    </Box> */}
+    <CompanyInformation data={data} />
     {/* <Box width="100%">
       <Text
         fontSize="18px"

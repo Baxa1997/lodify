@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import CompanyDetails from "./forms/CompanyDetails";
 import AddressDetails from "./forms/AddressDetails";
 import ContactDetails from "./forms/ContactDetails";
 import VerificationStep from "./forms/VerificationStep";
-import { useQuery } from "@tanstack/react-query";
-import httpRequest from "@utils/httpRequest";
+import { useGetLodify } from "@services/lodify-user.service";
 
 const StepRenderer = ({
   currentStep,
@@ -14,14 +13,11 @@ const StepRenderer = ({
   setValue,
   onSubmit,
   reset = () => {},
+  getValues = () => {},
 }) => {
   const fmcsa = watch("us_dot");
 
-  const { data, isSuccess } = useQuery({
-    queryKey: ["GET_FMCSA_DATA", fmcsa],
-    queryFn: async () => httpRequest.get(
-      `https://lodify-usa.u-code.io/data/fmcsa/${fmcsa}/extra?page=1&limit=1`,
-    ),
+  const { data, isSuccess } = useGetLodify(fmcsa, {
     enabled: Boolean(fmcsa && currentStep === 2),
   });
 
@@ -29,12 +25,16 @@ const StepRenderer = ({
     if(isSuccess) {
       const responseData = data[0];
       reset({
+        ...getValues(),
         physical_address1: responseData?.phy_street,
         city: responseData?.phy_city,
         state: responseData?.phy_state,
         zip_code: responseData?.phy_zip,
         country: responseData?.phy_country,
         email: responseData?.email_address,
+        phone: responseData?.telephone,
+        client_type_id: "706337d3-80dc-4aca-80b3-67fad16cd0d6",
+        role_id: "abc236d0-8a9a-4b10-9f44-6b51fcb35e9f",
       });
     }
   }, [data]);

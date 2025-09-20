@@ -17,6 +17,7 @@ const RegisterForm = ({
   isLoading,
   getStepValidation,
   onSubmit = () => {},
+  getValues = () => {},
   reset,
 }) => {
   return (
@@ -52,6 +53,7 @@ const RegisterForm = ({
             watch={watch}
             setValue={setValue}
             onSubmit={onSubmit}
+            getValues={getValues}
             reset={reset}
           />
 

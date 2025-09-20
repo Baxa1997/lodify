@@ -24,7 +24,7 @@ export const CarrierProfile = () => {
 
   return <Box>
     <Box className={styles.header}>
-      <MainHeading size="18px">Carrier Profile</MainHeading>
+      {/* <MainHeading size="18px">Carrier Profile</MainHeading> */}
     </Box>
     <Box
       display="flex"

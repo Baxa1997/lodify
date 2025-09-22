@@ -1,25 +1,13 @@
-import {
-  Box,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  InputLeftElement,
-  InputRightAddon,
-  InputRightElement,
-} from "@chakra-ui/react";
+import {Box, Input, InputGroup, InputLeftAddon} from "@chakra-ui/react";
 import {Controller} from "react-hook-form";
 
-const HFTextField = ({
+const HFMeasureInput = ({
   control,
   name,
   label,
   placeholder,
   type = "text",
   required,
-  leftAddon,
-  rightAddon,
-  leftElement,
-  rightElement,
   ...props
 }) => {
   return (
@@ -45,10 +33,7 @@ const HFTextField = ({
             </Box>
           )}
           <InputGroup>
-            {leftAddon && (
-              <InputLeftAddon bgColor="transparent">{leftAddon}</InputLeftAddon>
-            )}
-            {leftElement && <InputLeftElement>{leftElement}</InputLeftElement>}
+            <InputLeftAddon bgColor="transparent">{field.value}</InputLeftAddon>
             <Input
               type={type}
               {...field}
@@ -64,10 +49,6 @@ const HFTextField = ({
               }}
               {...props}
             />
-            {rightAddon && <InputRightAddon>{rightAddon}</InputRightAddon>}
-            {rightElement && (
-              <InputRightElement>{rightElement}</InputRightElement>
-            )}
           </InputGroup>
         </Box>
       )}
@@ -75,4 +56,4 @@ const HFTextField = ({
   );
 };
 
-export default HFTextField;
+export default HFMeasureInput;

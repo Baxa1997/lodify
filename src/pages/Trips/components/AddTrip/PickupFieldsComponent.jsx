@@ -5,6 +5,9 @@ import HFRadio from "../../../../components/HFRadio";
 import HFSwitch from "../../../../components/HFSwitch";
 import HFSelect from "../../../../components/HFSelect";
 import HFMultiSelect from "@components/HFMultiSelect";
+import HFPhoneInput from "@components/HFPhoneInput";
+import HFMeasureInput from "@components/HFMeasureInput";
+import HFDatePicker from "@components/HFDatePicker";
 
 function PickupFieldsComponent({control, field, index}) {
   return (
@@ -15,6 +18,7 @@ function PickupFieldsComponent({control, field, index}) {
             Appointment # <span style={{color: "#414651"}}>*</span>
           </Text>
           <HFTextField
+            placeholder={"N/A"}
             backgroundColor="#fff"
             border="1px solid #D5D7DA"
             control={control}
@@ -26,6 +30,7 @@ function PickupFieldsComponent({control, field, index}) {
             BOL # <span style={{color: "#414651"}}>*</span>
           </Text>
           <HFTextField
+            placeholder={"Enter Number"}
             backgroundColor="#fff"
             border="1px solid #D5D7DA"
             control={control}
@@ -40,6 +45,7 @@ function PickupFieldsComponent({control, field, index}) {
                 Commodity <span style={{color: "#414651"}}>*</span>
               </Text>
               <HFTextField
+                placeholder={"Enter Commodity Name"}
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
@@ -51,6 +57,7 @@ function PickupFieldsComponent({control, field, index}) {
                 Load Value <span style={{color: "#414651"}}>*</span>
               </Text>
               <HFTextField
+                placeholder={"$ 0.00"}
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
                 control={control}
@@ -68,6 +75,7 @@ function PickupFieldsComponent({control, field, index}) {
               Shipper <span style={{color: "#414651"}}>*</span>
             </Text>
             <HFTextField
+              placeholder={"Enter Shipper Name"}
               width="100%"
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
@@ -115,6 +123,7 @@ function PickupFieldsComponent({control, field, index}) {
                 Address <span style={{color: "#414651"}}>*</span>
               </Text>
               <HFTextField
+                placeholder={"Enter Address"}
                 width="100%"
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
@@ -128,6 +137,7 @@ function PickupFieldsComponent({control, field, index}) {
                 Address 2 <span style={{color: "#414651"}}>*</span>
               </Text>
               <HFTextField
+                placeholder={"Enter Address 2"}
                 width="100%"
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
@@ -143,6 +153,7 @@ function PickupFieldsComponent({control, field, index}) {
                 City <span style={{color: "#414651"}}>*</span>
               </Text>
               <HFTextField
+                placeholder={"Enter City"}
                 width="100%"
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
@@ -156,6 +167,7 @@ function PickupFieldsComponent({control, field, index}) {
                 State <span style={{color: "#414651"}}>*</span>
               </Text>
               <HFTextField
+                placeholder={"Enter State"}
                 width="100%"
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
@@ -169,6 +181,7 @@ function PickupFieldsComponent({control, field, index}) {
                 ZIP Code <span style={{color: "#414651"}}>*</span>
               </Text>
               <HFTextField
+                placeholder={"ZIP Code"}
                 width="100%"
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
@@ -183,7 +196,8 @@ function PickupFieldsComponent({control, field, index}) {
               <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
                 Phone <span style={{color: "#414651"}}>*</span>
               </Text>
-              <HFTextField
+              <HFPhoneInput
+                placeholder={"Phone Number"}
                 width="100%"
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
@@ -196,7 +210,7 @@ function PickupFieldsComponent({control, field, index}) {
               <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
                 Appt Date <span style={{color: "#414651"}}>*</span>
               </Text>
-              <HFTextField
+              <HFDatePicker
                 width="100%"
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
@@ -210,6 +224,7 @@ function PickupFieldsComponent({control, field, index}) {
                 Appt Time <span style={{color: "#414651"}}>*</span>
               </Text>
               <HFTextField
+                placeholder={"19:00"}
                 width="100%"
                 backgroundColor="#fff"
                 border="1px solid #D5D7DA"
@@ -345,6 +360,7 @@ function PickupFieldsComponent({control, field, index}) {
             <HFTextField
               type="number"
               width="100%"
+              placeholder={"Measure"}
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}
@@ -358,6 +374,7 @@ function PickupFieldsComponent({control, field, index}) {
             <HFTextField
               type="number"
               width="100%"
+              placeholder={"Measure"}
               backgroundColor="#fff"
               border="1px solid #D5D7DA"
               control={control}

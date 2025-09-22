@@ -131,7 +131,7 @@ const MultiSelect = ({
               : borderColor
           }
           color={color}
-          borderRadius="lg"
+          borderRadius="8px"
           pr={showIcon ? "40px" : "20px"}
           pl="16px"
           cursor={isDisabled ? "not-allowed" : "pointer"}
@@ -155,13 +155,16 @@ const MultiSelect = ({
           {selectedOptions.length > 0 ? (
             selectedOptions.map((opt) => (
               <HStack
+                border="1px solid #D5D7DA"
                 key={opt.value}
                 spacing="4px"
-                bg="gray.100"
-                borderRadius="md"
+                bg="#fff"
+                borderRadius="8px"
                 px="8px"
                 py="2px">
-                <Text fontSize="14px">{opt.label}</Text>
+                <Text color="#414651" fontWeight={500} fontSize="14px">
+                  {opt.label}
+                </Text>
                 <Box
                   as="button"
                   onClick={(e) => {

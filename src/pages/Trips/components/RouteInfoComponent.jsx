@@ -81,13 +81,13 @@ function RouteInfoComponent({tripData = {}}) {
         h={"136px"}
         border={"1px solid #D5D7DA"}
         bg={"#FAFAFA"}
-        p={"16px"}>
+        p={"16px 14px"}>
         <VStack align="start" spacing={1} h="full">
-          <Flex align="center" gap={2}>
+          <Flex align="center" gap={1}>
             <Box
               fontSize="12px"
               w="24px"
-              h="24px"
+              h="20px"
               bg="#E3F2FD"
               borderRadius="full"
               display="flex"

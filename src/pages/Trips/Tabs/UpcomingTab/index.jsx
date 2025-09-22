@@ -1,20 +1,20 @@
 import {Box, Badge, Text} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useQuery} from "@tanstack/react-query";
-import FiltersComponent from "../../components/FiltersComponent";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {format, isValid} from "date-fns";
+import tripsService from "@services/tripsService";
+import FiltersComponent from "@components/FiltersComponent";
+import tableElements from "../../components/mockElements";
 import {
   CTable,
   CTableHead,
   CTableTh,
   CTableBody,
   CTableTd,
-} from "../../components/tableElements";
-import {tableElements} from "./components/mockElements";
-import CTableRow from "../../components/tableElements/CTableRow";
-import tripsService from "../../services/tripsService";
-import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {format, isValid} from "date-fns";
+} from "@components/tableElements";
+import CTableRow from "@components/tableElements/CTableRow";
 
 function UpcomingTab() {
   const navigate = useNavigate();

@@ -1,14 +1,10 @@
-import {Box, Badge, Text} from "@chakra-ui/react";
-import React, {useState} from "react";
-import {useQuery} from "@tanstack/react-query";
-import FiltersComponent from "../../components/FiltersComponent";
-import tripsService from "../../services/tripsService";
-import {useSelector} from "react-redux";
-import {useNavigate, useParams} from "react-router-dom";
-import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import styles from "../../styles/tabs.module.scss";
+import {Box, Text} from "@chakra-ui/react";
+import {useNavigate} from "react-router-dom";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import GeneralTripsTab from "./GeneralTripsTab";
+import styles from "../../styles/tabs.module.scss";
+import HistoryTripsTab from "./Tabs/HistoryTripsTab";
+import HeadBreadCrumb from "@components/HeadBreadCrumb";
+import GeneralTripsTab from "./Tabs/GeneralsTripTab";
 
 function UpcomingTabSinglePage() {
   const navigate = useNavigate();
@@ -31,6 +27,10 @@ function UpcomingTabSinglePage() {
 
         <TabPanel>
           <GeneralTripsTab />
+        </TabPanel>
+
+        <TabPanel>
+          <HistoryTripsTab />
         </TabPanel>
       </Tabs>
     </Box>

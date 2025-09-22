@@ -2,12 +2,12 @@ import {Box, Button, Flex, Text} from "@chakra-ui/react";
 import {useQuery} from "@tanstack/react-query";
 import React from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import FiltersComponent from "../../components/FiltersComponent";
-import tripsService from "../../services/tripsService";
-import LiveMapComponent from "./components/LiveMapComponent";
-import RouteInfoComponent from "./components/RouteInfoComponent";
-import StopsComponent from "./components/StopsComponent";
 import {useSelector} from "react-redux";
+import tripsService from "@services/tripsService";
+import FiltersComponent from "@components/FiltersComponent";
+import RouteInfoComponent from "../../components/RouteInfoComponent";
+import StopsComponent from "../../components/StopsComponent";
+import LiveMapComponent from "../../components/LiveMapComponent";
 
 function GeneralTripsTab({}) {
   const navigate = useNavigate();

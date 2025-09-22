@@ -3,10 +3,9 @@ import {Box, Flex, Text} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import styles from "../../styles/tabs.module.scss";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import UpcomingTab from "./UpcomingTab";
-
-import HistoryTab from "./HistoryTab";
-import TransitTab from "./TransitTab";
+import HistoryTab from "./Tabs/HistoryTab";
+import TransitTab from "./Tabs/TransitTab.jsx";
+import UpcomingTab from "./Tabs/UpcomingTab";
 
 const Trips = () => {
   return (

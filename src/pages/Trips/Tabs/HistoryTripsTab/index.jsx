@@ -1,12 +1,44 @@
-import {Box, Button, Flex, Text} from "@chakra-ui/react";
-import React from "react";
+import {Box, Flex, Text} from "@chakra-ui/react";
+import GoogleMapReact from "google-map-react";
+import Activities from "./Activities";
 import DispatchNotes from "./DispatchNotes";
 import Documents from "./Documents";
-import Quotes from "./Quotes";
 import DoubleTable from "./DoubleTable";
-import Activities from "./Activities";
+import Quotes from "./Quotes";
+import tripsService from "@services/tripsService";
+import {useQuery} from "@tanstack/react-query";
+import {useForm} from "react-hook-form";
+import {useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
+import {useEffect} from "react";
 
 function HistoryTripsTab() {
+  const {id} = useParams();
+
+  const envId = useSelector((state) => state.auth.environmentId);
+  const {control, handleSubmit, reset, watch} = useForm({
+    defaultValues: {},
+  });
+  const {data: tripDetails} = useQuery({
+    queryKey: ["TRIP_DETAILS", id],
+    queryFn: () =>
+      tripsService.getTripDetailsByTripId({
+        app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
+        environment_id: envId,
+        method: "single_2",
+        object_data: {
+          trip_id: id,
+        },
+        table: "trips",
+      }),
+    enabled: Boolean(id),
+    select: (res) => res?.data?.response?.[0] || {},
+  });
+  console.log("watchchchcchc", watch());
+  useEffect(() => {
+    reset(tripDetails);
+  }, [tripDetails, reset]);
+
   return (
     <>
       {" "}
@@ -45,24 +77,28 @@ function HistoryTripsTab() {
         <Flex p="0px 16px" borderBottom="1px solid #E9EAEB">
           <Box w="100%" p="16px 8px 16px 8px">
             <Text fontWeight={"500"} fontSize={"14px"} color={"#181D27"}>
-              Corporate Traffic
+              {tripDetails?.booked_from?.legal_name}
             </Text>
           </Box>
 
           <Box w="100%" p="16px 8px 16px 8px">
             <Text fontWeight={"500"} fontSize={"14px"} color={"#181D27"}>
-              Ref #{" "}
-              <span style={{fontWeight: "400", color: "#414651"}}>115</span>
+              Ref #
+              <span style={{fontWeight: "400", color: "#414651"}}>
+                {tripDetails?.reference_ref}
+              </span>
             </Text>
             <Text fontWeight={"500"} fontSize={"14px"} color={"#181D27"}>
               PO#{" "}
               <span style={{fontWeight: "400", color: "#414651"}}>
-                11591857
+                {tripDetails?.reference_po}
               </span>
             </Text>
             <Text fontWeight={"500"} fontSize={"14px"} color={"#181D27"}>
               Other #{" "}
-              <span style={{fontWeight: "400", color: "#414651"}}>910725</span>
+              <span style={{fontWeight: "400", color: "#414651"}}>
+                {tripDetails?.reference_other}
+              </span>
             </Text>
           </Box>
 
@@ -74,7 +110,7 @@ function HistoryTripsTab() {
 
           <Box w="100%" p="16px 8px 16px 8px">
             <Text fontWeight={"500"} fontSize={"14px"} color={"#181D27"}>
-              N/A
+              {tripDetails?.remit_payment_to?.[0]}
             </Text>
           </Box>
 
@@ -86,13 +122,22 @@ function HistoryTripsTab() {
 
           <Box w="100%" p="16px 8px 16px 8px">
             <Text fontWeight={"500"} fontSize={"14px"} color={"#181D27"}>
-              John Said
+              {tripDetails?.shipment_type?.[0]}
             </Text>
           </Box>
         </Flex>
 
         <Flex borderBottom="1px solid #E9EAEB">
-          <Box borderRight="1px solid #E9EAEB" w="25%" p="12px"></Box>
+          <Box borderRight="1px solid #E9EAEB" w="25%" p="12px">
+            <Box borderRadius="8px" w="100%" h="100%" overflow="hidden">
+              <GoogleMapReact
+                bootstrapURLKeys={{
+                  key: "AIzaSyCMunNEPgmmEcQ1wvtwmuHNqcosmmBNFeU",
+                }}
+                defaultCenter={{lat: 40.7128, lng: -74.006}}
+                defaultZoom={15}></GoogleMapReact>
+            </Box>
+          </Box>
 
           <Box borderRight="1px solid #E9EAEB" w="25%">
             <Text
@@ -103,7 +148,7 @@ function HistoryTripsTab() {
               borderBottom="1px solid #E9EAEB">
               Quotes (Rates)
             </Text>
-            <Quotes />
+            <Quotes tripDetails={tripDetails} />
           </Box>
 
           <Box w="25%" borderRight="1px solid #E9EAEB">
@@ -122,7 +167,9 @@ function HistoryTripsTab() {
               scrollbarWidth={"none"}
               scrollbarColor={"none"}
               overflowY={"scroll"}>
-              <Documents />
+              {tripDetails?.documents?.map((item) => (
+                <Documents tripDetails={tripDetails} item={item} />
+              ))}
             </Box>
           </Box>
 
@@ -137,13 +184,15 @@ function HistoryTripsTab() {
               Dispatch Notes
             </Text>
 
-            <DispatchNotes />
+            {tripDetails?.dispatch_notes?.map((el) => (
+              <DispatchNotes item={el} />
+            ))}
           </Box>
         </Flex>
 
-        <DoubleTable />
+        <DoubleTable tripDetails={tripDetails} />
       </Box>
-      <Activities />
+      <Activities tripDetails={tripDetails} />
     </>
   );
 }

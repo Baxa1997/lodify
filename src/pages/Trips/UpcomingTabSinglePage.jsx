@@ -26,11 +26,11 @@ function UpcomingTabSinglePage() {
         </TabList>
 
         <TabPanel>
-          <GeneralTripsTab />
+          <HistoryTripsTab />
         </TabPanel>
 
         <TabPanel>
-          <HistoryTripsTab />
+          <GeneralTripsTab />
         </TabPanel>
       </Tabs>
     </Box>

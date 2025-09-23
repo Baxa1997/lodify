@@ -15,7 +15,7 @@ const tableHeadings = [
 
 const gridTemplate = "35px 1.3fr 35px 1.3fr 1fr 1fr 1fr 1fr 1.2fr";
 
-function DoubleTable() {
+function DoubleTable({tripDetails = {}}) {
   const detailedStopsHeadings = [
     {label: "", key: "counts"},
     {label: "Address", key: "address"},
@@ -31,7 +31,7 @@ function DoubleTable() {
   ];
 
   const detailedGridTemplate =
-    "35px 1.3fr 35px 1.3fr 0.8fr 0.8fr 1.2fr 0.6fr 0.6fr 0.8fr 1.2fr";
+    "35px 1.3fr 35px 1fr 0.8fr 1.1fr 1.2fr 0.6fr 0.6fr 0.8fr 1.2fr";
 
   return (
     <Box
@@ -85,9 +85,9 @@ function DoubleTable() {
         </Box>
 
         <VStack align="start" spacing={0}>
-          <Text fontWeight="600">Denver, CO US</Text>
+          <Text fontWeight="600">{tripDetails?.origin?.[0]?.address}</Text>
           <Text fontSize="12px" color="gray.600">
-            Aug 8, 2025, 07:00 MDT
+            {tripDetails?.origin?.[0]?.date}, {tripDetails?.origin?.[0]?.time}
           </Text>
         </VStack>
 
@@ -96,38 +96,37 @@ function DoubleTable() {
         </Box>
 
         <VStack align="start" spacing={0}>
-          <Text fontWeight="600">Ontario, CA US</Text>
+          <Text fontWeight="600">{tripDetails?.stops?.[0]?.address}</Text>
           <Text fontSize="12px" color="gray.600">
-            Aug 24, 2025 06:30 PDT
+            {tripDetails?.stops?.[0]?.date}, {tripDetails?.stops?.[0]?.time}
           </Text>
         </VStack>
 
         <Text>15.00 mi</Text>
 
         <VStack align="start" spacing={0}>
-          <Text>987.31 mi</Text>
+          <Text>{tripDetails?.destination_mi || 0} mi</Text>
           <Text fontSize="12px" color="gray.600">
             10h 1m
+            {/* SVOY */}
           </Text>
         </VStack>
 
         <VStack align="start" spacing={0}>
-          <Text fontWeight="600">$1,000.00</Text>
+          <Text fontWeight="600">${tripDetails?.[`o.rate`] || 0}</Text>
           <Text fontSize="12px" color="gray.600">
             $1.00/mi
           </Text>
         </VStack>
 
-        <Text>$0.00</Text>
-        <Text>AMRIDDIN KAMARIDDINOV</Text>
+        <Text>{tripDetails?.accessorials || 0}</Text>
+        <Text>{tripDetails?.assigness?.full_name || 0}</Text>
       </Box>
-
-      {/* Second Data Row - Company Info + Inputs */}
 
       <Box m="16px" borderRadius="12px" border="1px solid #E9EAEB">
         <Box
           display="grid"
-          gridTemplateColumns={gridTemplate}
+          gridTemplateColumns={detailedGridTemplate}
           borderBottom="1px solid #E9EAEB"
           px="12px"
           py="14px"
@@ -150,10 +149,12 @@ function DoubleTable() {
           </Box>
 
           <VStack align="start" spacing={0}>
-            <Text fontWeight="600">BIMBO BAKERIES</Text>
-            <Text fontSize="12px" color="gray.600">
-              APT # BBAB20816
+            <Text fontWeight="600">
+              {tripDetails?.last_location_1?.[0]?.address || ""}
             </Text>
+            {/* <Text fontSize="12px" color="gray.600">
+              APT # BBAB20816
+            </Text> */}
           </VStack>
 
           <Box display="flex" alignItems="center" justifyContent="center">
@@ -161,10 +162,12 @@ function DoubleTable() {
           </Box>
 
           <VStack align="start" spacing={0}>
-            <Text fontWeight="600">ASPIRE BAKERRY</Text>
-            <Text fontSize="12px" color="gray.600">
-              APT # BBAB20816
+            <Text fontWeight="600">
+              {tripDetails?.last_location_2?.[0]?.address || "No Address"}
             </Text>
+            {/* <Text fontSize="12px" color="gray.600">
+              APT # BBAB20816
+            </Text> */}
           </VStack>
 
           <Input
@@ -190,9 +193,11 @@ function DoubleTable() {
             fontSize="13px"
             borderColor="#E9EAEB"
           />
-
           <Text color="gray.400">-</Text>
-          <Text>AMRIDDIN KAMARIDDINOV</Text>
+
+          <Text>-</Text>
+          <Text>-</Text>
+          <Text>{tripDetails?.assigness?.full_name || ""}</Text>
         </Box>
 
         <Box
@@ -214,108 +219,114 @@ function DoubleTable() {
           ))}
         </Box>
 
-        <Box
-          display="grid"
-          gridTemplateColumns={detailedGridTemplate}
-          borderBottom="1px solid #E9EAEB"
-          px="12px"
-          py="14px"
-          alignItems="center"
-          fontSize="14px">
-          <HStack align="start">
-            <Box
-              w="20px"
-              h="20px"
-              bg="#22C55E"
-              borderRadius="50%"
-              color="white"
-              fontSize="12px"
-              fontWeight="600"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              mr={2}>
-              1
-            </Box>
-          </HStack>
+        {tripDetails?.trips?.map((stop) => (
+          <Box
+            display="grid"
+            gridTemplateColumns={detailedGridTemplate}
+            borderBottom="1px solid #E9EAEB"
+            px="12px"
+            py="14px"
+            alignItems="center"
+            fontSize="14px">
+            <HStack align="start">
+              <Box
+                w="20px"
+                h="20px"
+                bg="#22C55E"
+                borderRadius="50%"
+                color="white"
+                fontSize="12px"
+                fontWeight="600"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                mr={2}>
+                1
+              </Box>
+            </HStack>
 
-          <HStack align="start">
+            <HStack align="start">
+              <VStack align="start" spacing={0}>
+                <Text>{stop?.address}</Text>
+                <Text fontSize="12px" color="gray.600">
+                  {`${stop?.city ?? ""}, ${stop?.state ?? ""}, ${
+                    stop?.zip_code ?? ""
+                  }`}{" "}
+                </Text>
+              </VStack>
+            </HStack>
+
+            <HStack align="start">
+              <Box
+                w="20px"
+                h="20px"
+                bg="#22C55E"
+                borderRadius="50%"
+                color="white"
+                fontSize="12px"
+                fontWeight="600"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                mr={2}>
+                2
+              </Box>
+            </HStack>
+
+            <HStack align="start">
+              <Text>
+                {stop?.date}, {stop?.time}
+              </Text>
+            </HStack>
+
+            <Text color="gray.400">{stop?.bol}</Text>
+            <Text color="gray.400">{stop?.phone}</Text>
+
             <VStack align="start" spacing={0}>
-              <Text>4545 East 51st Avenue</Text>
+              <Text>{stop?.load_type?.[0]}</Text>
               <Text fontSize="12px" color="gray.600">
-                Denver, CO 80216 US
+                {stop?.equipment_type?.[0]}
               </Text>
             </VStack>
-          </HStack>
 
-          <HStack align="start">
-            <Box
-              w="20px"
-              h="20px"
-              bg="#22C55E"
-              borderRadius="50%"
-              color="white"
-              fontSize="12px"
-              fontWeight="600"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              mr={2}>
-              2
-            </Box>
-          </HStack>
+            <Text>{stop?.weight}</Text>
 
-          <HStack align="start">
-            <Text>Aug 14, 2025, 07:00 MDT</Text>
-          </HStack>
+            <VStack align="start" spacing={0}>
+              <Text>{stop?.quantity}</Text>
+              <Text fontSize="12px" color="gray.600">
+                Tarps: No
+              </Text>
+            </VStack>
 
-          <Text color="gray.400">-</Text>
-          <Text color="gray.400">-</Text>
-
-          <VStack align="start" spacing={0}>
-            <Text>Dry Load/Hook & Drop</Text>
-            <Text fontSize="12px" color="gray.600">
-              53' Dry Van/Required
-            </Text>
-          </VStack>
-
-          <Text>0</Text>
-
-          <VStack align="start" spacing={0}>
-            <Text>0</Text>
-            <Text fontSize="12px" color="gray.600">
-              Tarps: No
-            </Text>
-          </VStack>
-
-          <Text color="gray.400">-</Text>
-          <Text color="gray.400">-</Text>
-        </Box>
+            <Text color="gray.400">{stop?.load_size}</Text>
+            <Text color="gray.400">{stop?.instruction_for_driver}</Text>
+          </Box>
+        ))}
 
         <Box bg="#FAFAFA" p={4}>
           <HStack justify="space-between" align="center" spacing={8}>
             <Text fontSize="13px" color="gray.700">
               Remit payment to{" "}
               <Link color="blue.500" fontSize="13px" fontWeight="500">
-                RTS
+                {tripDetails?.remit_payment_to || ""}
               </Link>
             </Text>
             <Text fontSize="13px" color="gray.700">
               Created on{" "}
               <Link color="blue.500" fontSize="13px" fontWeight="500">
-                Aug 13, 2025, 17:48 EDT
+                {tripDetails?.created_at || ""}
               </Link>
             </Text>
             <Text fontSize="13px" color="gray.700">
               Booked by{" "}
               <Link color="blue.500" fontSize="13px" fontWeight="500">
-                John Said
+                {tripDetails?.booked_by?.full_name || ""}
               </Link>
             </Text>
             <Text fontSize="13px" color="gray.700">
               Last Updated{" "}
               <Link color="blue.500" fontSize="13px" fontWeight="500">
-                Aug 13, 2025, 17:48 EDT
+                {tripDetails?.updated_at || ""}
               </Link>
             </Text>
           </HStack>

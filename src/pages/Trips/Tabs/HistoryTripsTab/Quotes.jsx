@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, Flex, Text} from "@chakra-ui/react";
 
-function Quotes() {
+function Quotes({tripDetails = {}}) {
   return (
     <>
       <Box p="16px">
@@ -10,7 +10,7 @@ function Quotes() {
             Hauling Rate
           </Text>
           <Text fontWeight={"500"} color={"#000"} fontSize="14px">
-            $1,000.00
+            $ {tripDetails?.hauling_rate || "0.00"}
           </Text>
         </Flex>
 
@@ -19,7 +19,7 @@ function Quotes() {
             Trip Service Fee
           </Text>
           <Text fontWeight={"500"} color={"#DC6803"} fontSize="14px">
-            $0.00
+            {`$ ${tripDetails?.service_fee || "0.00"}`}
           </Text>
         </Flex>
 
@@ -28,7 +28,7 @@ function Quotes() {
             Accs Service Fee
           </Text>
           <Text fontWeight={"500"} color={"#DC6803"} fontSize="14px">
-            $0.00
+            {`$ ${tripDetails?.accs_service_fee || "0.00"}`}
           </Text>
         </Flex>
       </Box>
@@ -46,7 +46,7 @@ function Quotes() {
 
         <Flex mt={"8px"} justifyContent={"space-between"}>
           <Text fontWeight={"500"} color={"#181D27"} fontSize="12px">
-            $1,000.00
+            {`$ ${tripDetails?.invoicing_rate || "0.00"}`}
           </Text>
           <Text fontWeight={"500"} color={"#717680"} fontSize="12px">
             Invoicing Rate
@@ -55,7 +55,7 @@ function Quotes() {
 
         <Flex mt={"8px"} justifyContent={"space-between"}>
           <Text fontWeight={"500"} color={"#181D27"} fontSize="12px">
-            $0.00
+            {`$ ${tripDetails?.assignment_rates || "0.00"}`}
           </Text>
           <Text fontWeight={"500"} color={"#717680"} fontSize="12px">
             Assignment Rate (Quote)
@@ -64,7 +64,7 @@ function Quotes() {
 
         <Flex mt={"8px"} justifyContent={"space-between"}>
           <Text fontWeight={"500"} color={"#181D27"} fontSize="12px">
-            $0.00
+            {`$ ${tripDetails?.drivers_accessorial || "0.00"}`}
           </Text>
           <Text fontWeight={"500"} color={"#717680"} fontSize="12px">
             Drivers’ Accessorial

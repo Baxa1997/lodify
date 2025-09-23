@@ -16,8 +16,8 @@ export function getShortFileName(url, maxBaseLength = 5) {
   }
 
   return {
-    shortName: base + ext, // truncated version with extension
-    extension: ext, // file extension (.pdf, .png, etc.)
-    fullName, // original filename if needed
+    shortName: base + ext,
+    extension: ext,
+    fullName,
   };
 }

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {
   Modal,
   ModalOverlay,
@@ -27,6 +27,8 @@ const AddRepresentModal = ({
   isOpen,
   onClose,
   text = "Create Representative",
+  selectedRepresentative = null,
+  isEditMode = false,
 }) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
@@ -40,29 +42,49 @@ const AddRepresentModal = ({
     enabled: isOpen,
   });
 
-  const handleAddRepresentative = useCallback(
+  const handleRepresentativeSubmit = useCallback(
     async (representativeData) => {
       try {
-        const apiData = {
-          data: {
-            full_name: representativeData.full_name,
-            email: representativeData.email,
-            phone: representativeData.phone,
-            title: representativeData.title,
-            shippers_id: representativeData.shippers_id,
-          },
-        };
+        let apiData;
 
-        await clientsService.createRepresentative(apiData);
+        if (isEditMode && selectedRepresentative) {
+          // Update existing representative
+          apiData = {
+            data: {
+              guid: selectedRepresentative.id || selectedRepresentative.guid,
+              full_name: representativeData.full_name,
+              email: representativeData.email,
+              phone: representativeData.phone,
+              title: representativeData.title,
+              shippers_id: representativeData.shippers_id,
+            },
+          };
+          await clientsService.updateRepresentative(apiData);
+        } else {
+          // Create new representative
+          apiData = {
+            data: {
+              full_name: representativeData.full_name,
+              email: representativeData.email,
+              phone: representativeData.phone,
+              title: representativeData.title,
+              shippers_id: representativeData.shippers_id,
+            },
+          };
+          await clientsService.createRepresentative(apiData);
+        }
 
         queryClient.invalidateQueries({queryKey: ["REPRESENTATIVES_LIST"]});
         handleClose();
         setLoading(false);
 
         toast({
-          title: "Representative Added Successfully!",
-          description:
-            "The representative has been created and added to the system",
+          title: isEditMode
+            ? "Representative Updated Successfully!"
+            : "Representative Added Successfully!",
+          description: isEditMode
+            ? "The representative has been updated successfully"
+            : "The representative has been created and added to the system",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -70,13 +92,22 @@ const AddRepresentModal = ({
         });
       } catch (error) {
         setLoading(false);
-        console.error("Error adding representative:", error);
+        console.error(
+          isEditMode
+            ? "Error updating representative:"
+            : "Error adding representative:",
+          error
+        );
 
         toast({
-          title: "Error Adding Representative",
+          title: isEditMode
+            ? "Error Updating Representative"
+            : "Error Adding Representative",
           description:
             error?.response?.data?.message ||
-            "Failed to add representative. Please try again.",
+            `Failed to ${
+              isEditMode ? "update" : "add"
+            } representative. Please try again.`,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -84,7 +115,7 @@ const AddRepresentModal = ({
         });
       }
     },
-    [queryClient, userInfo]
+    [queryClient, userInfo, isEditMode, selectedRepresentative]
   );
 
   const {
@@ -105,13 +136,33 @@ const AddRepresentModal = ({
 
   const onSubmit = (data) => {
     setLoading(true);
-    handleAddRepresentative(data);
+    handleRepresentativeSubmit(data);
   };
 
   const handleClose = () => {
     reset();
     onClose();
   };
+
+  useEffect(() => {
+    if (selectedRepresentative && isEditMode) {
+      reset({
+        full_name: selectedRepresentative.full_name || "",
+        email: selectedRepresentative.email || "",
+        phone: selectedRepresentative.phone || "",
+        title: selectedRepresentative.title || "",
+        shippers_id: selectedRepresentative.shippers_id || "",
+      });
+    } else {
+      reset({
+        full_name: "",
+        email: "",
+        phone: "",
+        title: "",
+        shippers_id: "",
+      });
+    }
+  }, [selectedRepresentative, isEditMode, reset]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="lg" isCentered>
@@ -122,7 +173,7 @@ const AddRepresentModal = ({
         boxShadow="0px 4px 20px rgba(0, 0, 0, 0.1)">
         <ModalHeader borderBottom="1px solid #E9EAEB" pb={4} pt={6} px={6}>
           <Text fontSize="18px" fontWeight="600" color="gray.800">
-            Add Representative
+            {isEditMode ? "Edit Representative" : "Add Representative"}
           </Text>
         </ModalHeader>
 
@@ -285,8 +336,8 @@ const AddRepresentModal = ({
                 }}
                 isDisabled={!isValid || loading}
                 isLoading={loading}
-                loadingText="Creating...">
-                {text}
+                loadingText={isEditMode ? "Updating..." : "Creating..."}>
+                {isEditMode ? "Update Representative" : text}
               </Button>
             </HStack>
           </form>

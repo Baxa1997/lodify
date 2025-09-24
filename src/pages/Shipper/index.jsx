@@ -23,6 +23,8 @@ function Shipper() {
   const [search, setSearch] = useState("");
   const [assets, setAssets] = useState([]);
   const [isAddShipperModalOpen, setIsAddShipperModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedShipper, setSelectedShipper] = useState(null);
   const {data: clients} = useQuery({
     queryKey: ["CLIENTS_LIST"],
     enabled: true,
@@ -48,11 +50,22 @@ function Shipper() {
     });
   };
 
-  const handleRowClick = (id, asset) => {
-    console.log(id, asset);
-  };
-  const handleAddShipper = () => {
+  const handleRowClick = (id, shipper) => {
+    setSelectedShipper(shipper);
+    setIsEditMode(true);
     setIsAddShipperModalOpen(true);
+  };
+
+  const handleAddShipper = () => {
+    setSelectedShipper(null);
+    setIsEditMode(false);
+    setIsAddShipperModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAddShipperModalOpen(false);
+    setSelectedShipper(null);
+    setIsEditMode(false);
   };
 
   return (
@@ -103,8 +116,8 @@ function Shipper() {
                   cursor: "pointer",
                 }}
                 onClick={() => handleRowClick(asset.id || asset.guid, asset)}>
-                <CTableTd>{asset.name || asset.title || ""}</CTableTd>
-                <CTableTd>
+                <CTableTd w="50%">{asset.name || asset.title || ""}</CTableTd>
+                <CTableTd w="30%">
                   <Flex
                     alignItems={"center"}
                     justifyContent={"center"}
@@ -119,7 +132,7 @@ function Shipper() {
                     />
                   </Flex>
                 </CTableTd>
-                <CTableTd>
+                <CTableTd w="20%">
                   <Box w="100%" textAlign="end">
                     <Button w="20px" h="20px" bg="none" _hover={{bg: "none"}}>
                       <img src="/img/threeDots.svg" alt="" />
@@ -134,7 +147,9 @@ function Shipper() {
       <AddShipperModal
         text="Create Shipper"
         isOpen={isAddShipperModalOpen}
-        onClose={() => setIsAddShipperModalOpen(false)}
+        onClose={handleCloseModal}
+        selectedShipper={selectedShipper}
+        isEditMode={isEditMode}
       />
     </Flex>
   );

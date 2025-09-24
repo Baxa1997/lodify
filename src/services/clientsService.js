@@ -15,6 +15,22 @@ const clientsService = {
   createRepresentative: (data) => {
     return httpRequest.post(`v2/items/representative`, data);
   },
+
+  getSingleRepresentative: (id) => {
+    return httpRequest.get(`v1/object-slim/representative/${id}`);
+  },
+
+  updateRepresentative: (data) => {
+    return httpRequest.put(`v2/items/representative`, data);
+  },
+
+  getSingleShipper: (id) => {
+    return httpRequest.get(`v1/object-slim/shippers/${id}`);
+  },
+
+  updateShipper: (data) => {
+    return httpRequest.put(`v2/items/shippers`, data);
+  },
 };
 
 export default clientsService;

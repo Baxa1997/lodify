@@ -24,6 +24,8 @@ function Representative() {
   const [assets, setAssets] = useState([]);
   const [isAddRepresentativeModalOpen, setIsAddRepresentativeModalOpen] =
     useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedRepresentative, setSelectedRepresentative] = useState(null);
   const {data: representatives} = useQuery({
     queryKey: ["REPRESENTATIVES_LIST"],
     enabled: true,
@@ -49,11 +51,22 @@ function Representative() {
     });
   };
 
-  const handleRowClick = (id, asset) => {
-    console.log(id, asset);
-  };
-  const handleAddRepresentative = () => {
+  const handleRowClick = (id, representative) => {
+    setSelectedRepresentative(representative);
+    setIsEditMode(true);
     setIsAddRepresentativeModalOpen(true);
+  };
+
+  const handleAddRepresentative = () => {
+    setSelectedRepresentative(null);
+    setIsEditMode(false);
+    setIsAddRepresentativeModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAddRepresentativeModalOpen(false);
+    setSelectedRepresentative(null);
+    setIsEditMode(false);
   };
 
   return (
@@ -68,7 +81,7 @@ function Representative() {
       <FiltersComponent
         filterButton={true}
         actionButton={true}
-        actionButtonText="Add Representative"
+        actionButtonText="Add"
         onActionButtonClick={handleAddRepresentative}
       />
 
@@ -123,8 +136,10 @@ function Representative() {
       </Box>
       <AddRepresentModal
         isOpen={isAddRepresentativeModalOpen}
-        onClose={() => setIsAddRepresentativeModalOpen(false)}
+        onClose={handleCloseModal}
         text="Create Representative"
+        selectedRepresentative={selectedRepresentative}
+        isEditMode={isEditMode}
       />
     </Flex>
   );

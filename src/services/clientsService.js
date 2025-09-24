@@ -31,6 +31,22 @@ const clientsService = {
   updateShipper: (data) => {
     return httpRequest.put(`v2/items/shippers`, data);
   },
+
+  deleteShipper: (id) => {
+    return httpRequest.delete(`v2/items/shippers/${id}`, {
+      data: {
+        data: {},
+      },
+    });
+  },
+
+  deleteRepresentative: (id) => {
+    return httpRequest.delete(`v2/items/representative/${id}`, {
+      data: {
+        data: {},
+      },
+    });
+  },
 };
 
 export default clientsService;

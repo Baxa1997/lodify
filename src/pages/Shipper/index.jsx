@@ -1,5 +1,15 @@
 import React, {useState} from "react";
-import {Box, Flex, Text, Button} from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useToast,
+} from "@chakra-ui/react";
 import HeadBreadcrumb from "../../components/HeadBreadCrumb";
 import FiltersComponent from "../../components/FiltersComponent";
 import {CTable} from "@components/tableElements";
@@ -12,8 +22,9 @@ import {
 import {tableElements} from "./components/mockElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import clientsService from "../../services/clientsService";
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import AddShipperModal from "./components/AddShipperModal";
+import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 
 function Shipper() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +36,11 @@ function Shipper() {
   const [isAddShipperModalOpen, setIsAddShipperModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedShipper, setSelectedShipper] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [shipperToDelete, setShipperToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const queryClient = useQueryClient();
+  const toast = useToast();
   const {data: clients} = useQuery({
     queryKey: ["CLIENTS_LIST"],
     enabled: true,
@@ -66,6 +82,56 @@ function Shipper() {
     setIsAddShipperModalOpen(false);
     setSelectedShipper(null);
     setIsEditMode(false);
+  };
+
+  const handleDeleteClick = (e, shipper) => {
+    e.stopPropagation(); // Prevent row click
+    setShipperToDelete(shipper);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!shipperToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await clientsService.deleteShipper(
+        shipperToDelete.id || shipperToDelete.guid
+      );
+
+      queryClient.invalidateQueries({queryKey: ["CLIENTS_LIST"]});
+      setIsDeleteModalOpen(false);
+      setShipperToDelete(null);
+      setIsDeleting(false);
+
+      toast({
+        title: "Shipper Deleted Successfully!",
+        description: "The shipper has been removed from the system",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    } catch (error) {
+      setIsDeleting(false);
+      console.error("Error deleting shipper:", error);
+
+      toast({
+        title: "Error Deleting Shipper",
+        description:
+          error?.response?.data?.message ||
+          "Failed to delete shipper. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false);
+    setShipperToDelete(null);
   };
 
   return (
@@ -115,7 +181,10 @@ function Shipper() {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                onClick={() => handleRowClick(asset.id || asset.guid, asset)}>
+                onClick={() => {
+                  e.stopPropagation();
+                  handleRowClick(asset.id || asset.guid, asset);
+                }}>
                 <CTableTd w="50%">{asset.name || asset.title || ""}</CTableTd>
                 <CTableTd w="30%">
                   <Flex
@@ -134,9 +203,29 @@ function Shipper() {
                 </CTableTd>
                 <CTableTd w="20%">
                   <Box w="100%" textAlign="end">
-                    <Button w="20px" h="20px" bg="none" _hover={{bg: "none"}}>
-                      <img src="/img/threeDots.svg" alt="" />
-                    </Button>
+                    <Menu>
+                      <MenuButton
+                        as={Button}
+                        w="20px"
+                        h="20px"
+                        bg="none"
+                        _hover={{bg: "none"}}
+                        _active={{bg: "none"}}
+                        _focus={{boxShadow: "none"}}>
+                        <img src="/img/threeDots.svg" alt="" />
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(e, asset);
+                          }}
+                          color="red.500"
+                          _hover={{bg: "red.50"}}>
+                          Delete
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
                   </Box>
                 </CTableTd>
               </CTableRow>
@@ -150,6 +239,15 @@ function Shipper() {
         onClose={handleCloseModal}
         selectedShipper={selectedShipper}
         isEditMode={isEditMode}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        message="Are you sure you want to delete?"
+        itemName={shipperToDelete?.name || shipperToDelete?.title || ""}
+        isLoading={isDeleting}
       />
     </Flex>
   );

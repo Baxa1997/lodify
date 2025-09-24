@@ -13,6 +13,7 @@ import {tableElements} from "./components/mockElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import clientsService from "../../services/clientsService";
 import {useQuery} from "@tanstack/react-query";
+import AddShipperModal from "./components/AddShipperModal";
 
 function Shipper() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,7 @@ function Shipper() {
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [search, setSearch] = useState("");
   const [assets, setAssets] = useState([]);
-
+  const [isAddShipperModalOpen, setIsAddShipperModalOpen] = useState(false);
   const {data: clients} = useQuery({
     queryKey: ["CLIENTS_LIST"],
     enabled: true,
@@ -50,6 +51,9 @@ function Shipper() {
   const handleRowClick = (id, asset) => {
     console.log(id, asset);
   };
+  const handleAddShipper = () => {
+    setIsAddShipperModalOpen(true);
+  };
 
   return (
     <Flex flexDir={"column"} gap={"20px"}>
@@ -60,7 +64,12 @@ function Shipper() {
         </Text>
       </Box>
 
-      <FiltersComponent filterButton={true} actionButton={true} />
+      <FiltersComponent
+        filterButton={true}
+        actionButton={true}
+        actionButtonText="Add Shipper"
+        onActionButtonClick={handleAddShipper}
+      />
 
       <Box mt={6}>
         <CTable
@@ -122,6 +131,11 @@ function Shipper() {
           </CTableBody>
         </CTable>
       </Box>
+      <AddShipperModal
+        text="Create Shipper"
+        isOpen={isAddShipperModalOpen}
+        onClose={() => setIsAddShipperModalOpen(false)}
+      />
     </Flex>
   );
 }

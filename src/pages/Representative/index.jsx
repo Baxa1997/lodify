@@ -13,6 +13,7 @@ import {tableElements} from "./components/mockElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import clientsService from "../../services/clientsService";
 import {useQuery} from "@tanstack/react-query";
+import AddRepresentModal from "./components/AddRepresentModal";
 
 function Representative() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,8 @@ function Representative() {
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [search, setSearch] = useState("");
   const [assets, setAssets] = useState([]);
-
+  const [isAddRepresentativeModalOpen, setIsAddRepresentativeModalOpen] =
+    useState(false);
   const {data: representatives} = useQuery({
     queryKey: ["REPRESENTATIVES_LIST"],
     enabled: true,
@@ -50,6 +52,9 @@ function Representative() {
   const handleRowClick = (id, asset) => {
     console.log(id, asset);
   };
+  const handleAddRepresentative = () => {
+    setIsAddRepresentativeModalOpen(true);
+  };
 
   return (
     <Flex flexDir={"column"} gap={"20px"}>
@@ -60,7 +65,12 @@ function Representative() {
         </Text>
       </Box>
 
-      <FiltersComponent filterButton={true} actionButton={true} />
+      <FiltersComponent
+        filterButton={true}
+        actionButton={true}
+        actionButtonText="Add Representative"
+        onActionButtonClick={handleAddRepresentative}
+      />
 
       <Box mt={6}>
         <CTable
@@ -111,6 +121,11 @@ function Representative() {
           </CTableBody>
         </CTable>
       </Box>
+      <AddRepresentModal
+        isOpen={isAddRepresentativeModalOpen}
+        onClose={() => setIsAddRepresentativeModalOpen(false)}
+        text="Create Representative"
+      />
     </Flex>
   );
 }

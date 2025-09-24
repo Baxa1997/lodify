@@ -48,7 +48,7 @@ const CTableTh = ({
       _hover={sortable ? {bg: "gray.100"} : {}}
       transition="all 0.2s ease"
       {...props}>
-      <Flex align="center" justify="space-between" width="100%">
+      <Flex align="center" gap="8px" width="100%">
         <Text fontSize="14px" fontWeight="600" color="#1E293B" noOfLines={1}>
           {children}
         </Text>

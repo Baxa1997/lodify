@@ -10,6 +10,8 @@ import SingleAssets from "../pages/AssetsPage/SingleAssets";
 import CompanyProfile from "../pages/CompanyProfile";
 import UpcomingTabSinglePage from "../pages/Trips/UpcomingTabSinglePage";
 import AddTrip from "../pages/Trips/components/AddTrip/AddTrip";
+import Shipper from "../pages/Shipper";
+import Representative from "../pages/Representative";
 
 const Login = lazy(() => import("../pages/Login/Login"));
 const RoleSelection = lazy(() =>
@@ -115,6 +117,8 @@ const Router = () => {
         <Route path="trips" element={<Trips />} />
         <Route path="trips/:id" element={<UpcomingTabSinglePage />} />
         <Route path="trips/add-trip" element={<AddTrip />} />
+        <Route path="shipper" element={<Shipper />} />
+        <Route path="representative" element={<Representative />} />
       </Route>
 
       <Route

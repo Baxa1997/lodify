@@ -50,12 +50,12 @@ export const menuItems = [
       {
         id: "shippers",
         label: "Shippers",
-        path: "#",
+        path: "shipper",
       },
       {
         id: "representative",
         label: "Representative",
-        path: "#",
+        path: "representative",
       },
     ],
   },

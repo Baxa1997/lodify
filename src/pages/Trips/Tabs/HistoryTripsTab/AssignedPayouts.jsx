@@ -11,7 +11,6 @@ function AssignedPayouts({tripDetails = {}}) {
       border="1px solid #E9EAEB"
       bg="white"
       shadow="sm">
-      {/* Header Section */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -49,7 +48,6 @@ function AssignedPayouts({tripDetails = {}}) {
         </HStack>
       </Box>
 
-      {/* Driver and Action Section */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -93,14 +91,12 @@ function AssignedPayouts({tripDetails = {}}) {
         </HStack>
       </Box>
 
-      {/* Payout Details Section */}
       <Box p={4}>
         <Box
           display="grid"
           gridTemplateColumns="1fr 1fr 1fr"
           gap={6}
           alignItems="start">
-          {/* Rate (Quote) Section */}
           <Box>
             <Text fontSize="14px" fontWeight="700" color="gray.800" mb={3}>
               Rate (Quote)
@@ -136,7 +132,6 @@ function AssignedPayouts({tripDetails = {}}) {
             </VStack>
           </Box>
 
-          {/* Contract Section */}
           <Box>
             <Text fontSize="14px" fontWeight="700" color="gray.800" mb={3}>
               Contract
@@ -155,7 +150,6 @@ function AssignedPayouts({tripDetails = {}}) {
             </VStack>
           </Box>
 
-          {/* Estimated Payout Section */}
           <Box>
             <Text fontSize="14px" fontWeight="700" color="gray.800" mb={3}>
               Estimated Payout

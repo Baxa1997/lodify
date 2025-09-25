@@ -80,12 +80,17 @@ export const usePermissionsProps = () => {
       label: "Field",
       key: "field",
       infoText: "Field info",
-      render: () => (
+      render: (data, row, head, rowIndex) => (
         <Box display="flex" gap="8px">
           <IconButton
             variant="transparent"
             icon={<FiTable color="#A4A7AE" size={16} />}
             size="sm"
+            onClick={() => onFieldModalOpen?.(row.tableData?.slug)}
+            isDisabled={!row.tableData?.slug}
+            _hover={{
+              bg: "gray.100",
+            }}
           />
         </Box>
       ),
@@ -238,7 +243,12 @@ export const usePermissionsProps = () => {
   };
 };
 
-export const usePermissionsPropsWithForm = (register, setValue, watch) => {
+export const usePermissionsPropsWithForm = (
+  register,
+  setValue,
+  watch,
+  onFieldModalOpen
+) => {
   const headData = [
     {
       label: "Objects",
@@ -326,12 +336,17 @@ export const usePermissionsPropsWithForm = (register, setValue, watch) => {
       label: "Field",
       key: "field",
       infoText: "Field info",
-      render: () => (
+      render: (data, row, head, rowIndex) => (
         <Box display="flex" gap="8px">
           <IconButton
             variant="transparent"
             icon={<FiTable color="#A4A7AE" size={16} />}
             size="sm"
+            onClick={() => onFieldModalOpen?.(row.tableData?.slug)}
+            isDisabled={!row.tableData?.slug}
+            _hover={{
+              bg: "gray.100",
+            }}
           />
         </Box>
       ),

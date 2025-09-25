@@ -25,6 +25,7 @@ import {
   usePermissionsProps,
   usePermissionsPropsWithForm,
 } from "./usePermissionsProps";
+import {FieldPermissionsModal} from "@components/FieldPermissionsModal";
 import {AddIcon} from "@chakra-ui/icons";
 import authService from "@services/auth/authService";
 import {useSelector} from "react-redux";
@@ -35,6 +36,9 @@ export const Permissions = () => {
   const [activeRole, setActiveRole] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [initialRoleData, setInitialRoleData] = useState(null);
+  const [isFieldModalOpen, setIsFieldModalOpen] = useState(false);
+  const [selectedTableSlug, setSelectedTableSlug] = useState(null);
+  const [fieldPermissions, setFieldPermissions] = useState([]);
 
   const clientTypeId = useSelector((state) => state.auth.clientType?.id);
   const projectId = useSelector((state) => state.auth.projectId);
@@ -141,7 +145,22 @@ export const Permissions = () => {
       });
   };
 
-  const {headData} = usePermissionsPropsWithForm(register, setValue, watch);
+  const handleFieldModalOpen = (tableSlug) => {
+    setSelectedTableSlug(tableSlug);
+    setIsFieldModalOpen(true);
+  };
+
+  const handleFieldModalClose = () => {
+    setIsFieldModalOpen(false);
+    setSelectedTableSlug(null);
+  };
+
+  const {headData} = usePermissionsPropsWithForm(
+    register,
+    setValue,
+    watch,
+    handleFieldModalOpen
+  );
 
   const currentFormData = watch() || {};
   const bodyData =
@@ -173,6 +192,19 @@ export const Permissions = () => {
     );
 
     filteredTables.forEach((table) => {
+      const fieldPermissionsForm = {};
+      if (table.field_permissions) {
+        table.field_permissions.forEach((field, fieldIndex) => {
+          fieldPermissionsForm[fieldIndex] = {
+            field_id: field.field_id,
+            label: field.label,
+            view_permission: field.view_permission,
+            edit_permission: field.edit_permission,
+            table_slug: field.table_slug,
+          };
+        });
+      }
+
       formPermissions[index] = {
         objects: table.label,
         read: table.record_permissions?.read === "Yes",
@@ -181,6 +213,7 @@ export const Permissions = () => {
         delete: table.record_permissions?.delete === "Yes",
         public: table.record_permissions?.is_public === true,
         field: table.field_permissions?.length > 0,
+        field_permissions: fieldPermissionsForm,
         tableData: {
           id: table.id,
           slug: table.slug,
@@ -218,6 +251,19 @@ export const Permissions = () => {
         );
 
         if (tableIndex !== -1) {
+          const fieldPermissionsAPI = [];
+          if (permission.field_permissions) {
+            Object.values(permission.field_permissions).forEach((field) => {
+              fieldPermissionsAPI.push({
+                field_id: field.field_id,
+                view_permission: field.view_permission,
+                edit_permission: field.edit_permission,
+                label: field.label,
+                table_slug: field.table_slug,
+              });
+            });
+          }
+
           updatedRoleData.tables[tableIndex] = {
             ...updatedRoleData.tables[tableIndex],
             record_permissions: {
@@ -227,6 +273,7 @@ export const Permissions = () => {
               delete: permission.delete ? "Yes" : "No",
               is_public: permission.public,
             },
+            field_permissions: fieldPermissionsAPI,
           };
         }
       }
@@ -237,6 +284,7 @@ export const Permissions = () => {
 
   const onSubmit = (data) => {
     const apiData = transformFormDataToAPI(data);
+    console.log("API data with field permissions:", apiData);
     authService
       .updatePermissions(apiData, {
         "project-id": projectId,
@@ -427,6 +475,45 @@ export const Permissions = () => {
           </form>
         </ModalContent>
       </Modal>
+      <FieldPermissionsModal
+        key={selectedTableSlug} // Force re-render when table changes
+        isOpen={isFieldModalOpen}
+        onClose={handleFieldModalClose}
+        fieldPermissions={(() => {
+          if (!selectedTableSlug) return [];
+          const currentFormData = watch();
+          const tableIndex = Object.keys(currentFormData).find((key) => {
+            const permission = currentFormData[key];
+            return permission?.tableData?.slug === selectedTableSlug;
+          });
+
+          if (
+            tableIndex !== undefined &&
+            currentFormData[tableIndex]?.field_permissions
+          ) {
+            return Object.values(currentFormData[tableIndex].field_permissions);
+          }
+
+          return (
+            initialRoleData?.tables?.find(
+              (table) => table.slug === selectedTableSlug
+            )?.field_permissions || []
+          );
+        })()}
+        tableSlug={selectedTableSlug}
+        tableIndex={(() => {
+          if (!selectedTableSlug) return null;
+          const currentFormData = watch();
+          return Object.keys(currentFormData).find((key) => {
+            const permission = currentFormData[key];
+            return permission?.tableData?.slug === selectedTableSlug;
+          });
+        })()}
+        register={register}
+        setValue={setValue}
+        watch={watch}
+        isLoading={isLoadingRole}
+      />
     </>
   );
 };

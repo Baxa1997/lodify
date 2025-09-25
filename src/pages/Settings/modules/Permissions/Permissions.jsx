@@ -33,7 +33,7 @@ import {useQuery} from "@tanstack/react-query";
 
 export const Permissions = () => {
   const toast = useToast();
-  const [activeRole, setActiveRole] = useState("");
+  const [activeRole, setActiveRole] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const clientTypeId = useSelector((state) => state.auth.clientType?.id);
@@ -56,13 +56,26 @@ export const Permissions = () => {
     select: (data) => data.data?.response,
   });
 
-  // Set default active role when roles are loaded
+  const {data: singleRoleData, isLoading: isLoadingRole} = useQuery({
+    queryKey: ["SINGLE_ROLE", activeRole?.guid],
+    enabled: Boolean(activeRole?.guid),
+    queryFn: () => {
+      if (activeRole?.guid) {
+        return authService.getRoleById(projectId, activeRole.guid, {
+          "project-id": projectId,
+        });
+      }
+      return null;
+    },
+    select: (data) => data?.data,
+  });
+
   useEffect(() => {
     if (roles && roles.length > 0 && !activeRole) {
       const firstRole = roles[0];
-      setActiveRole(firstRole.name);
+      setActiveRole(firstRole);
     }
-  }, [roles, activeRole]);
+  }, [roles, activeRole?.guid]);
 
   const createDefaultValues = (roleName) => {
     return bodyData.reduce((acc, row, index) => {
@@ -118,10 +131,6 @@ export const Permissions = () => {
       )
       .then((res) => {
         refetch();
-        setActiveRole(newRole);
-        reset({
-          permissions: createDefaultValues(newRole),
-        });
         setIsOpen(false);
         roleForm.reset();
         toast({
@@ -151,37 +160,32 @@ export const Permissions = () => {
     handleSubmit,
     reset,
     formState: {errors, isDirty},
-  } = useForm({
-    defaultValues: {
-      permissions: createDefaultValues(activeRole),
-    },
-  });
+  } = useForm();
 
   const {headData} = usePermissionsPropsWithForm(register);
+
+  useEffect(() => {
+    reset(singleRoleData);
+  }, [singleRoleData, activeRole, reset]);
 
   const onSubmit = (data) => {
     console.log("Form submitted:", data);
   };
 
-  const handleRoleChange = (roleName) => {
-    setActiveRole(roleName);
-    reset({
-      permissions: createDefaultValues(roleName),
-    });
-  };
-
-  const handleReset = () => {
-    reset({
-      permissions: createDefaultValues(activeRole),
-    });
-    toast({
-      title: "Permissions Reset",
-      description: `All permissions for ${activeRole} have been reset to default values.`,
-      status: "info",
-      duration: 3000,
-      isClosable: true,
-    });
-  };
+  // const handleReset = () => {
+  //   reset({
+  //     permissions: createDefaultValues(activeRole?.name || ""),
+  //   });
+  //   toast({
+  //     title: "Permissions Reset",
+  //     description: `All permissions for ${
+  //       activeRole?.name || "selected role"
+  //     } have been reset to default values.`,
+  //     status: "info",
+  //     duration: 3000,
+  //     isClosable: true,
+  //   });
+  // };
 
   const handleSave = () => {
     handleSubmit(onSubmit)();
@@ -190,7 +194,7 @@ export const Permissions = () => {
   return (
     <>
       {" "}
-      <Box pt="32px">
+      <Box pt="24px">
         <Box
           display="flex"
           justifyContent="space-between"
@@ -211,16 +215,16 @@ export const Permissions = () => {
               <Button
                 minW="fit-content"
                 key={role.id || role.name || role.guid}
-                variant={activeRole === role.name ? "solid" : "ghost"}
-                colorScheme={activeRole === role.name ? "gray" : "gray"}
+                variant={activeRole?.guid === role.guid ? "solid" : "ghost"}
+                colorScheme={activeRole?.guid === role.guid ? "gray" : "gray"}
                 size="sm"
                 borderRadius="6px"
-                fontWeight={activeRole === role.name ? 500 : 400}
-                bg={activeRole === role.name ? "gray.100" : "transparent"}
-                color={activeRole === role.name ? "gray.900" : "gray.600"}
-                onClick={() => handleRoleChange(role.name)}
+                fontWeight={activeRole?.guid === role.guid ? 500 : 400}
+                bg={activeRole?.guid === role.guid ? "gray.100" : "transparent"}
+                color={activeRole?.guid === role.guid ? "gray.900" : "gray.600"}
+                onClick={() => setActiveRole(role)}
                 _hover={{
-                  bg: activeRole === role.name ? "gray.100" : "gray.50",
+                  bg: activeRole?.guid === role.guid ? "gray.100" : "gray.50",
                 }}>
                 {role.name}
               </Button>
@@ -255,7 +259,12 @@ export const Permissions = () => {
         </Box>
         <Box mt="20px">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <DataTable headData={headData} data={bodyData} pagination />
+            <DataTable
+              headData={headData}
+              data={bodyData}
+              pagination
+              isLoading={isLoadingRole}
+            />
           </form>
         </Box>
       </Box>

@@ -246,7 +246,7 @@ export const usePermissionsPropsWithForm = (register) => {
       render: (data, row, head, rowIndex) => {
         return (
           <Box as="label" display="flex" alignItems="center" gap="6px">
-            <Checkbox {...register(`permissions.${rowIndex}.objects`)} />
+            {/* <Checkbox {...register(`permissions.${rowIndex}.objects`)} /> */}
             {data}
           </Box>
         );

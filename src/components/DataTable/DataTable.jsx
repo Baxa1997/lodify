@@ -9,6 +9,8 @@ import {
   Tooltip,
   Tr,
   Button,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import {useState} from "react";
 import SimplePagination from "@components/SimplePagination";
@@ -23,6 +25,7 @@ export const DataTable = ({
   page,
   setPage = () => {},
   pagination,
+  isLoading = false,
   ...props
 }) => {
   const [expandedRows, setExpandedRows] = useState(new Set());
@@ -81,64 +84,56 @@ export const DataTable = ({
           </Tr>
         </Thead>
         <Tbody>
-          {data?.map((row, rowIndex) => (
-            <>
-              <Tr>
-                {headData?.map((head, colIndex) => {
-                  if (colIndex === 0) {
+          {isLoading ? (
+            <Tr>
+              <Td colSpan={headData.length}>
+                <Center py={8}>
+                  <Spinner size="lg" color="blue.500" />
+                </Center>
+              </Td>
+            </Tr>
+          ) : (
+            data?.map((row, rowIndex) => (
+              <>
+                <Tr>
+                  {headData?.map((head, colIndex) => {
+                    if (colIndex === 0) {
+                      return (
+                        <Td
+                          key={colIndex}
+                          padding="8px 6px"
+                          width={"180px"}
+                          fontWeight={"400"}
+                          fontSize={"14px"}>
+                          <Box display="flex" alignItems="center" gap="6px">
+                            {head?.render
+                              ? head.render(row[head.key], row, head, rowIndex)
+                              : row[head.key]}
+                            {row.children && (
+                              <Box
+                                as="button"
+                                onClick={() => toggleRow(rowIndex)}
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                width="20px"
+                                height="20px">
+                                {expandedRows.has(rowIndex) ? (
+                                  <ChevronDownIcon width="20px" height="20px" />
+                                ) : (
+                                  <ChevronRightIcon
+                                    width="20px"
+                                    height="20px"
+                                  />
+                                )}
+                              </Box>
+                            )}
+                          </Box>
+                        </Td>
+                      );
+                    }
+
                     return (
-                      <Td
-                        key={colIndex}
-                        padding="8px 6px"
-                        width={"180px"}
-                        fontWeight={"400"}
-                        fontSize={"14px"}>
-                        <Box display="flex" alignItems="center" gap="6px">
-                          {head?.render
-                            ? head.render(row[head.key], row, head, rowIndex)
-                            : row[head.key]}
-                          {row.children && (
-                            <Box
-                              as="button"
-                              onClick={() => toggleRow(rowIndex)}
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              width="20px"
-                              height="20px">
-                              {expandedRows.has(rowIndex) ? (
-                                <ChevronDownIcon width="20px" height="20px" />
-                              ) : (
-                                <ChevronRightIcon width="20px" height="20px" />
-                              )}
-                            </Box>
-                          )}
-                        </Box>
-                      </Td>
-                    );
-                  }
-
-                  return (
-                    <Td
-                      padding="8px 6px"
-                      key={colIndex}
-                      isNumeric={head.isNumeric}
-                      width={"180px"}
-                      fontWeight={"400"}
-                      fontSize={"14px"}
-                      {...head.tdProps}>
-                      {head?.render
-                        ? head.render(row[head.key], row, head, rowIndex)
-                        : row[head.key]}
-                    </Td>
-                  );
-                })}
-              </Tr>
-
-              {expandedRows.has(rowIndex) &&
-                row.children?.map((child, childIndex) => (
-                  <Tr key={`${rowIndex}-child-${childIndex}`}>
-                    {headData?.map((head, colIndex) => (
                       <Td
                         padding="8px 6px"
                         key={colIndex}
@@ -147,25 +142,46 @@ export const DataTable = ({
                         fontWeight={"400"}
                         fontSize={"14px"}
                         {...head.tdProps}>
-                        <Box
-                          paddingLeft={colIndex === 0 ? "32px" : "0"}
-                          display="flex"
-                          alignItems="center">
-                          {head?.render
-                            ? head.render(
-                                child[head.key],
-                                child,
-                                head,
-                                `${rowIndex}-child-${childIndex}`
-                              )
-                            : child[head.key]}
-                        </Box>
+                        {head?.render
+                          ? head.render(row[head.key], row, head, rowIndex)
+                          : row[head.key]}
                       </Td>
-                    ))}
-                  </Tr>
-                ))}
-            </>
-          ))}
+                    );
+                  })}
+                </Tr>
+
+                {expandedRows.has(rowIndex) &&
+                  row.children?.map((child, childIndex) => (
+                    <Tr key={`${rowIndex}-child-${childIndex}`}>
+                      {headData?.map((head, colIndex) => (
+                        <Td
+                          padding="8px 6px"
+                          key={colIndex}
+                          isNumeric={head.isNumeric}
+                          width={"180px"}
+                          fontWeight={"400"}
+                          fontSize={"14px"}
+                          {...head.tdProps}>
+                          <Box
+                            paddingLeft={colIndex === 0 ? "32px" : "0"}
+                            display="flex"
+                            alignItems="center">
+                            {head?.render
+                              ? head.render(
+                                  child[head.key],
+                                  child,
+                                  head,
+                                  `${rowIndex}-child-${childIndex}`
+                                )
+                              : child[head.key]}
+                          </Box>
+                        </Td>
+                      ))}
+                    </Tr>
+                  ))}
+              </>
+            ))
+          )}
         </Tbody>
       </Table>
       {pagination && (

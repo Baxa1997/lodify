@@ -36,8 +36,10 @@ const authService = {
   sendCode: (data, params) => requestAuth.post(`v2/send-code`, data, {params}),
 
   getRoles: (params) => requestAuth.get(`v2/role`, {params}),
-  getRoleById: (projectId, roleId) =>
-    requestAuth.get(`v2/role-permission/detailed/${projectId}/${roleId}`),
+  getRoleById: (projectId, roleId, params) =>
+    requestAuth.get(`v2/role-permission/detailed/${projectId}/${roleId}`, {
+      params,
+    }),
   roleCreate: (data, params) => requestAuth.post(`v2/role`, data, {params}),
 };
 

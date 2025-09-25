@@ -1,4 +1,4 @@
-import { 
+import {
   Box,
   Table,
   TableCaption,
@@ -8,8 +8,11 @@ import {
   Thead,
   Tooltip,
   Tr,
+  Button,
 } from "@chakra-ui/react";
+import {useState} from "react";
 import SimplePagination from "@components/SimplePagination";
+import {ChevronRightIcon, ChevronDownIcon} from "@chakra-ui/icons";
 
 export const DataTable = ({
   headData = [],
@@ -22,108 +25,157 @@ export const DataTable = ({
   pagination,
   ...props
 }) => {
-  
-  return <Box
-    border="1px solid"
-    borderColor="gray.200"
-    borderRadius="12px"
-    overflow={"auto"}
-    {...props}>
-    <Table
-      variant="simple"
-    >
-      {caption && <TableCaption>{caption}</TableCaption>}
-      <Thead
-        bgColor="gray.50"
-        borderBottom="1px solid"
-        borderColor="gray.200"
-      >
-        <Tr>
-          {headData?.map((head, index) => (
-            <Th
-              key={index}
-              isNumeric={head.isNumeric}
-              width={"160px"}
-              color="gray.900"
-              fontWeight={"600"}
-              fontSize={"12px"}
-              {...head.thProps}
-            >
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="6px"
-              >
-                {head.label}
-                {
-                  head?.infoText && <Tooltip
-                    placement="top"
-                    flexShrink="0"
-                    label={head.infoText}
-                  >
-                    <img
-                      src="/img/info.svg"
-                      width="14"
-                      height="14"
-                      alt="Info"
-                    />
-                  </Tooltip>
-                }
-              </Box>
-            </Th>
-          ))}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {data?.map((row, rowIndex) => (
-          <Tr key={rowIndex}>
-            {headData?.map((head, colIndex) => (
-              <Td
-                key={colIndex}
-                isNumeric={head.isNumeric}
-                width={"160px"}
-                fontWeight={"400"}
-                fontSize={"14px"}
-                {...head.tdProps}
-              >
-                {
-                  head?.render ? head.render(row[head.key], row, head) : row[head.key]
-                }
-              </Td>
-            ))}
-          </Tr>
-        ))}
-      </Tbody>
-      {/* {
-        footerData.length > 0 && <Tfoot>
+  const [expandedRows, setExpandedRows] = useState(new Set());
+
+  const toggleRow = (rowIndex) => {
+    const newExpandedRows = new Set(expandedRows);
+    if (newExpandedRows.has(rowIndex)) {
+      newExpandedRows.delete(rowIndex);
+    } else {
+      newExpandedRows.add(rowIndex);
+    }
+    setExpandedRows(newExpandedRows);
+  };
+
+  return (
+    <Box
+      border="1px solid"
+      borderColor="gray.200"
+      borderRadius="12px"
+      overflow={"auto"}
+      {...props}>
+      <Table variant="simple">
+        {caption && <TableCaption>{caption}</TableCaption>}
+        <Thead
+          bgColor="gray.50"
+          borderBottom="1px solid"
+          borderColor="gray.200">
           <Tr>
-            {footerData.map((head, index) => (
+            {headData?.map((head, index) => (
               <Th
                 key={index}
                 isNumeric={head.isNumeric}
-                {...head.thProps}
-              >
-                {head.label}
+                width={"160px"}
+                color="gray.900"
+                fontWeight={"600"}
+                fontSize={"12px"}
+                {...head.thProps}>
+                <Box display="flex" alignItems="center" gap="6px">
+                  {head.label}
+                  {head?.infoText && (
+                    <Tooltip
+                      placement="top"
+                      flexShrink="0"
+                      label={head.infoText}>
+                      <img
+                        src="/img/info.svg"
+                        width="14"
+                        height="14"
+                        alt="Info"
+                      />
+                    </Tooltip>
+                  )}
+                </Box>
               </Th>
             ))}
           </Tr>
-        </Tfoot>
-      } */}
-    </Table>
-    {
-      pagination && <Box width="100%">
-        <Box
-          padding="12px 24px"
-          width="100%">
-          <SimplePagination
-            limit={limit}
-            setLimit={setLimit}
-            page={page}
-            setPage={setPage}
-            count={data?.length} 
-          />
+        </Thead>
+        <Tbody>
+          {data?.map((row, rowIndex) => (
+            <>
+              <Tr>
+                {headData?.map((head, colIndex) => {
+                  if (colIndex === 0) {
+                    return (
+                      <Td
+                        key={colIndex}
+                        padding="8px 6px"
+                        width={"180px"}
+                        fontWeight={"400"}
+                        fontSize={"14px"}>
+                        <Box display="flex" alignItems="center" gap="6px">
+                          {head?.render
+                            ? head.render(row[head.key], row, head)
+                            : row[head.key]}
+                          {row.children && (
+                            <Box
+                              as="button"
+                              onClick={() => toggleRow(rowIndex)}
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              width="20px"
+                              height="20px">
+                              {expandedRows.has(rowIndex) ? (
+                                <ChevronDownIcon />
+                              ) : (
+                                <ChevronRightIcon />
+                              )}
+                            </Box>
+                          )}
+                        </Box>
+                      </Td>
+                    );
+                  }
+
+                  return (
+                    <Td
+                      padding="8px 6px"
+                      key={colIndex}
+                      isNumeric={head.isNumeric}
+                      width={"180px"}
+                      fontWeight={"400"}
+                      fontSize={"14px"}
+                      {...head.tdProps}>
+                      {head?.render
+                        ? head.render(row[head.key], row, head)
+                        : row[head.key]}
+                    </Td>
+                  );
+                })}
+              </Tr>
+
+              {expandedRows.has(rowIndex) &&
+                row.children?.map((child, childIndex) => (
+                  <Tr key={`${rowIndex}-child-${childIndex}`}>
+                    {headData?.map((head, colIndex) => (
+                      <Td
+                        padding="8px 6px"
+                        key={colIndex}
+                        isNumeric={head.isNumeric}
+                        width={"180px"}
+                        fontWeight={"400"}
+                        fontSize={"14px"}
+                        {...head.tdProps}>
+                        <Box
+                          paddingLeft={colIndex === 0 ? "32px" : "0"}
+                          display="flex"
+                          alignItems="center">
+                          {head?.render
+                            ? head.render(child[head.key], child, head)
+                            : child[head.key]}
+                        </Box>
+                      </Td>
+                    ))}
+                  </Tr>
+                ))}
+            </>
+          ))}
+        </Tbody>
+      </Table>
+      {pagination && (
+        <Box width="100%">
+          <Box padding="12px 24px" width="100%">
+            <SimplePagination
+              limit={limit}
+              setLimit={setLimit}
+              page={page}
+              setPage={setPage}
+              count={data?.length}
+            />
+          </Box>
         </Box>
-      </Box>
-    }
-  </Box>;
+      )}
+    </Box>
+  );
 };

@@ -35,11 +35,13 @@ const authService = {
   sendAccessToken: (data) => requestAuth.post(`v2/auth/logout`, data),
   sendCode: (data, params) => requestAuth.post(`v2/send-code`, data, {params}),
 
-  getRoles: (params) => requestAuth.get(`v2/role`, {params}),
+  getRoles: (params, headers) => requestAuth.get(`v2/role`, {params, headers}),
   getRoleById: (projectId, roleId, params) =>
     requestAuth.get(`v2/role-permission/detailed/${projectId}/${roleId}`, {
       params,
     }),
+  updatePermissions: (data, params) =>
+    requestAuth.put(`v2/role-permission/detailed`, {data}, {params}),
   roleCreate: (data, params) => requestAuth.post(`v2/role`, data, {params}),
 };
 

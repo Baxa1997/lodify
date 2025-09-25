@@ -20,7 +20,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import {useForm} from "react-hook-form";
-import MainHeading from "@components/MainHeading";
 import {DataTable} from "@components/DataTable";
 import {
   usePermissionsProps,
@@ -35,30 +34,50 @@ export const Permissions = () => {
   const toast = useToast();
   const [activeRole, setActiveRole] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [initialRoleData, setInitialRoleData] = useState(null);
 
   const clientTypeId = useSelector((state) => state.auth.clientType?.id);
   const projectId = useSelector((state) => state.auth.projectId);
+  const token = useSelector((state) => state.auth.token);
+  const {
+    control,
+    register,
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: {errors, isDirty},
+  } = useForm();
 
-  const {bodyData} = usePermissionsProps();
+  const {bodyData: staticBodyData} = usePermissionsProps();
 
   const {data: roles = [], refetch} = useQuery({
     queryKey: ["ROLES"],
-    enabled: !!clientTypeId && !!projectId,
+    enabled: true,
 
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     queryFn: () =>
-      authService.getRoles({
-        client_type_id: clientTypeId,
-        "project-id": projectId,
-      }),
+      authService.getRoles(
+        {
+          "client-type-id": clientTypeId,
+          "project-id": projectId,
+        },
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      ),
     select: (data) => data.data?.response,
   });
 
-  const {data: singleRoleData, isLoading: isLoadingRole} = useQuery({
+  const {
+    data: singleRoleData,
+    isLoading: isLoadingRole,
+    refetch: refetchSingleRole,
+  } = useQuery({
     queryKey: ["SINGLE_ROLE", activeRole?.guid],
-    enabled: Boolean(activeRole?.guid),
+    enabled: true,
     queryFn: () => {
       if (activeRole?.guid) {
         return authService.getRoleById(projectId, activeRole.guid, {
@@ -76,36 +95,6 @@ export const Permissions = () => {
       setActiveRole(firstRole);
     }
   }, [roles, activeRole?.guid]);
-
-  const createDefaultValues = (roleName) => {
-    return bodyData.reduce((acc, row, index) => {
-      acc[index] = {
-        objects: row.objects,
-        read: roleName === "DEFAULT ADMIN" ? true : false,
-        write: roleName === "DEFAULT ADMIN" ? true : false,
-        update: roleName === "DEFAULT ADMIN" ? true : false,
-        delete: roleName === "DEFAULT ADMIN" ? true : false,
-        public: roleName === "DEFAULT ADMIN" ? true : false,
-        field: roleName === "DEFAULT ADMIN" ? true : false,
-      };
-
-      if (row.children) {
-        row.children.forEach((child, childIndex) => {
-          acc[`${index}-child-${childIndex}`] = {
-            objects: child.objects,
-            read: roleName === "DEFAULT ADMIN" ? true : false,
-            write: roleName === "DEFAULT ADMIN" ? true : false,
-            update: roleName === "DEFAULT ADMIN" ? true : false,
-            delete: roleName === "DEFAULT ADMIN" ? true : false,
-            public: roleName === "DEFAULT ADMIN" ? true : false,
-            field: roleName === "DEFAULT ADMIN" ? true : false,
-          };
-        });
-      }
-
-      return acc;
-    }, {});
-  };
 
   const roleForm = useForm({
     defaultValues: {
@@ -152,40 +141,126 @@ export const Permissions = () => {
       });
   };
 
-  const {
-    control,
-    register,
-    watch,
-    setValue,
-    handleSubmit,
-    reset,
-    formState: {errors, isDirty},
-  } = useForm();
+  const {headData} = usePermissionsPropsWithForm(register, setValue, watch);
 
-  const {headData} = usePermissionsPropsWithForm(register);
+  const currentFormData = watch() || {};
+  const bodyData =
+    Object.values(currentFormData).length > 0
+      ? Object.values(currentFormData)
+      : staticBodyData;
 
-  useEffect(() => {
-    reset(singleRoleData);
-  }, [singleRoleData, activeRole, reset]);
+  const allowedSlugs = [
+    "trips",
+    "user",
+    "drivers",
+    "assets",
+    "contracts",
+    "shippers",
+    "representative",
+    "payments",
+  ];
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+  const transformRoleDataToForm = (roleData) => {
+    if (!roleData || !roleData.tables) return {};
+
+    setInitialRoleData(roleData);
+
+    const formPermissions = {};
+    let index = 0;
+
+    const filteredTables = roleData.tables.filter((table) =>
+      allowedSlugs.includes(table.slug?.toLowerCase())
+    );
+
+    filteredTables.forEach((table) => {
+      formPermissions[index] = {
+        objects: table.label,
+        read: table.record_permissions?.read === "Yes",
+        write: table.record_permissions?.write === "Yes",
+        update: table.record_permissions?.update === "Yes",
+        delete: table.record_permissions?.delete === "Yes",
+        public: table.record_permissions?.is_public === true,
+        field: table.field_permissions?.length > 0,
+        tableData: {
+          id: table.id,
+          slug: table.slug,
+          field_permissions: table.field_permissions,
+          view_permissions: table.view_permissions,
+          table_view_permissions: table.table_view_permissions,
+          custom_permission: table.custom_permission,
+        },
+      };
+      index++;
+    });
+
+    return formPermissions;
   };
 
-  // const handleReset = () => {
-  //   reset({
-  //     permissions: createDefaultValues(activeRole?.name || ""),
-  //   });
-  //   toast({
-  //     title: "Permissions Reset",
-  //     description: `All permissions for ${
-  //       activeRole?.name || "selected role"
-  //     } have been reset to default values.`,
-  //     status: "info",
-  //     duration: 3000,
-  //     isClosable: true,
-  //   });
-  // };
+  useEffect(() => {
+    if (singleRoleData) {
+      const formData = transformRoleDataToForm(singleRoleData);
+      reset(formData);
+    }
+  }, [singleRoleData, reset]);
+
+  const transformFormDataToAPI = (formData) => {
+    if (!formData || !initialRoleData) return null;
+
+    const updatedRoleData = {
+      ...initialRoleData,
+      tables: [...initialRoleData.tables],
+    };
+
+    Object.values(formData).forEach((permission) => {
+      if (permission.tableData?.id) {
+        const tableIndex = updatedRoleData.tables.findIndex(
+          (table) => table.id === permission.tableData.id
+        );
+
+        if (tableIndex !== -1) {
+          updatedRoleData.tables[tableIndex] = {
+            ...updatedRoleData.tables[tableIndex],
+            record_permissions: {
+              read: permission.read ? "Yes" : "No",
+              write: permission.write ? "Yes" : "No",
+              update: permission.update ? "Yes" : "No",
+              delete: permission.delete ? "Yes" : "No",
+              is_public: permission.public,
+            },
+          };
+        }
+      }
+    });
+
+    return updatedRoleData;
+  };
+
+  const onSubmit = (data) => {
+    const apiData = transformFormDataToAPI(data);
+    authService
+      .updatePermissions(apiData, {
+        "project-id": projectId,
+      })
+      .then((res) => {
+        refetchSingleRole();
+        toast({
+          title: "Permissions Updated",
+          description: "Permissions have been updated successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((error) => {
+        toast({
+          title: "Error",
+          description: "Failed to update permissions. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+  };
 
   const handleSave = () => {
     handleSubmit(onSubmit)();
@@ -289,7 +364,7 @@ export const Permissions = () => {
                     Role Name
                   </FormLabel>
                   <Input
-                    {...roleForm.register("roleName", {
+                    {...roleForm.register("name", {
                       required: "Role name is required",
                       minLength: {
                         value: 2,

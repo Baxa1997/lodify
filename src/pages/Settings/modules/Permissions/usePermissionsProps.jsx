@@ -238,7 +238,7 @@ export const usePermissionsProps = () => {
   };
 };
 
-export const usePermissionsPropsWithForm = (register) => {
+export const usePermissionsPropsWithForm = (register, setValue, watch) => {
   const headData = [
     {
       label: "Objects",
@@ -259,7 +259,9 @@ export const usePermissionsPropsWithForm = (register) => {
         <Flex pl="20px">
           <Checkbox
             borderColor="#D5D7DA"
-            {...register(`permissions.${rowIndex}.read`)}
+            isChecked={data || false}
+            onChange={(e) => setValue(`${rowIndex}.read`, e.target.checked)}
+            {...register(`${rowIndex}.read`)}
           />
         </Flex>
       ),
@@ -271,7 +273,9 @@ export const usePermissionsPropsWithForm = (register) => {
         <Flex pl="20px">
           <Checkbox
             borderColor="#D5D7DA"
-            {...register(`permissions.${rowIndex}.write`)}
+            isChecked={data || false}
+            onChange={(e) => setValue(`${rowIndex}.write`, e.target.checked)}
+            {...register(`${rowIndex}.write`)}
           />
         </Flex>
       ),
@@ -283,7 +287,9 @@ export const usePermissionsPropsWithForm = (register) => {
         <Flex pl="20px">
           <Checkbox
             borderColor="#D5D7DA"
-            {...register(`permissions.${rowIndex}.update`)}
+            isChecked={data || false}
+            onChange={(e) => setValue(`${rowIndex}.update`, e.target.checked)}
+            {...register(`${rowIndex}.update`)}
           />
         </Flex>
       ),
@@ -295,7 +301,9 @@ export const usePermissionsPropsWithForm = (register) => {
         <Flex pl="20px">
           <Checkbox
             borderColor="#D5D7DA"
-            {...register(`permissions.${rowIndex}.delete`)}
+            isChecked={data || false}
+            onChange={(e) => setValue(`${rowIndex}.delete`, e.target.checked)}
+            {...register(`${rowIndex}.delete`)}
           />
         </Flex>
       ),
@@ -307,7 +315,9 @@ export const usePermissionsPropsWithForm = (register) => {
         <Flex pl="20px">
           <Checkbox
             borderColor="#D5D7DA"
-            {...register(`permissions.${rowIndex}.public`)}
+            isChecked={data || false}
+            onChange={(e) => setValue(`${rowIndex}.public`, e.target.checked)}
+            {...register(`${rowIndex}.public`)}
           />
         </Flex>
       ),

@@ -95,7 +95,7 @@ export const DataTable = ({
                         fontSize={"14px"}>
                         <Box display="flex" alignItems="center" gap="6px">
                           {head?.render
-                            ? head.render(row[head.key], row, head)
+                            ? head.render(row[head.key], row, head, rowIndex)
                             : row[head.key]}
                           {row.children && (
                             <Box
@@ -107,9 +107,9 @@ export const DataTable = ({
                               width="20px"
                               height="20px">
                               {expandedRows.has(rowIndex) ? (
-                                <ChevronDownIcon />
+                                <ChevronDownIcon width="20px" height="20px" />
                               ) : (
-                                <ChevronRightIcon />
+                                <ChevronRightIcon width="20px" height="20px" />
                               )}
                             </Box>
                           )}
@@ -128,7 +128,7 @@ export const DataTable = ({
                       fontSize={"14px"}
                       {...head.tdProps}>
                       {head?.render
-                        ? head.render(row[head.key], row, head)
+                        ? head.render(row[head.key], row, head, rowIndex)
                         : row[head.key]}
                     </Td>
                   );
@@ -152,7 +152,12 @@ export const DataTable = ({
                           display="flex"
                           alignItems="center">
                           {head?.render
-                            ? head.render(child[head.key], child, head)
+                            ? head.render(
+                                child[head.key],
+                                child,
+                                head,
+                                `${rowIndex}-child-${childIndex}`
+                              )
                             : child[head.key]}
                         </Box>
                       </Td>

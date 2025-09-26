@@ -1,5 +1,4 @@
 import {Box, Flex, Text} from "@chakra-ui/react";
-import GoogleMapReact from "google-map-react";
 import Activities from "./Activities";
 import DispatchNotes from "./DispatchNotes";
 import Documents from "./Documents";
@@ -11,7 +10,7 @@ import {useForm} from "react-hook-form";
 import {useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {useEffect} from "react";
-import {coordinates} from "../../components/mapCoordinates";
+import GoogleMap from "./GoogleMap";
 
 function HistoryTripsTab() {
   const {id} = useParams();
@@ -131,13 +130,7 @@ function HistoryTripsTab() {
         <Flex borderBottom="1px solid #E9EAEB">
           <Box borderRight="1px solid #E9EAEB" w="25%" p="12px">
             <Box borderRadius="8px" w="100%" h="100%" overflow="hidden">
-              <GoogleMapReact
-                bootstrapURLKeys={{
-                  key: "AIzaSyAdBRYyeH13KXV-VtXpQuG36A7vbBjibMU",
-                }}
-                coordinates={coordinates}
-                defaultCenter={{lat: 40.7128, lng: -74.006}}
-                defaultZoom={15}></GoogleMapReact>
+              <GoogleMap />
             </Box>
           </Box>
 

@@ -1,15 +1,6 @@
 import React, {useMemo, useState} from "react";
-import GoogleMapReact from "google-map-react";
 import {Box, Button, Flex, Text, Tooltip} from "@chakra-ui/react";
-import styles from "../style.module.scss";
-
-const LocationMarker = ({lat, lng, onClick}) => (
-  <div className={styles.marker} onClick={onClick}>
-    <div className={styles.markerInner}>
-      <div className={styles.markerDot}></div>
-    </div>
-  </div>
-);
+import GoogleLiveComponent from "./GoogleLiveComponent";
 
 function LiveMapComponent({tripData = {}}) {
   const [latitude, setLatitude] = useState(37.422);
@@ -70,7 +61,6 @@ function LiveMapComponent({tripData = {}}) {
     return segs;
   }, [timelineEvents]);
 
-  console.log("timelineEvents", timelineEvents, stoppedSegments);
   return (
     <>
       <Box
@@ -79,28 +69,7 @@ function LiveMapComponent({tripData = {}}) {
         height="410px"
         borderRadius="12px"
         border="1px solid #E2E8F0">
-        <GoogleMapReact
-          bootstrapURLKeys={{
-            key: "AIzaSyAdBRYyeH13KXV-VtXpQuG36A7vbBjibMU",
-          }}
-          defaultCenter={{
-            lat: latitude ?? 37.422,
-            lng: longitude ?? -122.0862,
-          }}
-          defaultZoom={11}
-          options={{
-            mapTypeControl: true,
-            streetViewControl: true,
-            fullscreenControl: true,
-            zoomControl: true,
-            mapTypeId: "roadmap",
-          }}>
-          <LocationMarker
-            lat={latitude ?? 37.422}
-            lng={longitude ?? -122.0862}
-            onClick={() => {}}
-          />
-        </GoogleMapReact>
+        <GoogleLiveComponent latitude={latitude} longitude={longitude} />
       </Box>
 
       <Flex justifyContent="space-between" alignItems="center" mt="12px">

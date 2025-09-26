@@ -15,7 +15,7 @@ function GeneralTripsTab({}) {
   const envId = useSelector((state) => state.auth.environmentId);
 
   const {data: tripData = {}, isLoading} = useQuery({
-    queryKey: ["TRIPS_LIST", id],
+    queryKey: ["TRIP_BY_ID", id],
     queryFn: () =>
       tripsService.getTripById({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
@@ -26,9 +26,8 @@ function GeneralTripsTab({}) {
         },
         table: "trips",
       }),
+    enabled: !!id,
     select: (data) => data?.data?.response?.[0] || [],
-    refetchOnWindowFocus: false,
-    staleTime: 30000,
   });
 
   return (

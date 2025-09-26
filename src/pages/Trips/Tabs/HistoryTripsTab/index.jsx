@@ -31,6 +31,9 @@ function HistoryTripsTab() {
         },
         table: "trips",
       }),
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
     enabled: Boolean(id),
     select: (res) => res?.data?.response?.[0] || {},
   });

@@ -20,7 +20,7 @@ function GoogleLiveComponent({
   const {id} = useParams();
 
   const {data: mapData = {}, isLoading} = useQuery({
-    queryKey: ["TRIPS_LIST", id],
+    queryKey: ["TRIP_BY_MAP", id],
     queryFn: () =>
       tripsService.createTrip({
         data: {

@@ -318,20 +318,7 @@ export const usePermissionsPropsWithForm = (
         </Flex>
       ),
     },
-    {
-      label: "Public",
-      key: "public",
-      render: (data, row, head, rowIndex) => (
-        <Flex pl="20px">
-          <Checkbox
-            borderColor="#D5D7DA"
-            isChecked={data || false}
-            onChange={(e) => setValue(`${rowIndex}.public`, e.target.checked)}
-            {...register(`${rowIndex}.public`)}
-          />
-        </Flex>
-      ),
-    },
+
     {
       label: "Field",
       key: "field",
@@ -347,31 +334,6 @@ export const usePermissionsPropsWithForm = (
             _hover={{
               bg: "gray.100",
             }}
-          />
-        </Box>
-      ),
-    },
-
-    {
-      label: "Action",
-      key: "action",
-      infoText: "Action info",
-      render: () => (
-        <Box display="flex" gap="8px">
-          <FiGitMerge color="#A4A7AE" size={16} />
-        </Box>
-      ),
-    },
-    {
-      label: "Relation",
-      key: "relation",
-      infoText: "Relation info",
-      render: () => (
-        <Box display="flex" gap="8px">
-          <IconButton
-            variant="transparent"
-            icon={<VscLink color="#A4A7AE" size={16} />}
-            size="sm"
           />
         </Box>
       ),

@@ -38,7 +38,6 @@ export const Permissions = () => {
   const [initialRoleData, setInitialRoleData] = useState(null);
   const [isFieldModalOpen, setIsFieldModalOpen] = useState(false);
   const [selectedTableSlug, setSelectedTableSlug] = useState(null);
-  const [fieldPermissions, setFieldPermissions] = useState([]);
 
   const clientTypeId = useSelector((state) => state.auth.clientType?.id);
   const projectId = useSelector((state) => state.auth.projectId);

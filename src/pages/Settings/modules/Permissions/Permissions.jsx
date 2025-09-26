@@ -166,6 +166,7 @@ export const Permissions = () => {
     Object.values(currentFormData).length > 0
       ? Object.values(currentFormData)
       : staticBodyData;
+  console.log("bodyData", bodyData);
 
   const allowedSlugs = [
     "trips",

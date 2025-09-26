@@ -91,73 +91,84 @@ export const FieldPermissionsModal = ({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="xl" isCentered>
       <ModalOverlay />
-      <ModalContent maxW="800px">
+      <ModalContent maxW="800px" maxH="80vh">
         <ModalHeader>
           <Text fontSize="lg" fontWeight="semibold" color="gray.900">
             Field Permissions
           </Text>
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody pb={6}>
-          <VStack spacing={4} align="stretch">
-            <Table variant="simple" size="sm">
-              <Thead>
-                <Tr>
-                  <Th width="60px" textAlign="center">
-                    No
-                  </Th>
-                  <Th>Field name</Th>
-                  <Th textAlign="center" width="150px">
-                    <HStack justify="center" spacing={2}>
-                      <Text fontSize="sm">View permission</Text>
-                      <Checkbox
-                        isChecked={selectAllView}
-                        onChange={(e) => handleSelectAllView(e.target.checked)}
-                        size="sm"
-                      />
-                    </HStack>
-                  </Th>
-                  <Th textAlign="center" width="150px">
-                    <HStack justify="center" spacing={2}>
-                      <Text fontSize="sm">Edit permission</Text>
-                      <Checkbox
-                        isChecked={selectAllEdit}
-                        onChange={(e) => handleSelectAllEdit(e.target.checked)}
-                        size="sm"
-                      />
-                    </HStack>
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {filteredFields.map((field, index) => (
-                  <Tr key={field.field_id}>
-                    <Td textAlign="center" fontWeight="medium">
-                      {index + 1}
-                    </Td>
-                    <Td fontWeight="medium">{field.label}</Td>
-                    <Td textAlign="center">
-                      <Checkbox
-                        {...register(
-                          `${tableIndex}.field_permissions.${index}.view_permission`
-                        )}
-                        size="sm"
-                        borderColor="#D5D7DA"
-                      />
-                    </Td>
-                    <Td textAlign="center">
-                      <Checkbox
-                        {...register(
-                          `${tableIndex}.field_permissions.${index}.edit_permission`
-                        )}
-                        size="sm"
-                        borderColor="#D5D7DA"
-                      />
-                    </Td>
+        <ModalBody pb={6} overflow="hidden">
+          <VStack spacing={4} align="stretch" height="100%">
+            <Box
+              overflowY="auto"
+              maxH="400px"
+              border="1px solid"
+              borderColor="gray.200"
+              borderRadius="8px">
+              <Table variant="simple" size="sm">
+                <Thead position="sticky" top="0" bg="white" zIndex={1}>
+                  <Tr>
+                    <Th width="60px" textAlign="center" bg="gray.50">
+                      No
+                    </Th>
+                    <Th bg="gray.50">Field name</Th>
+                    <Th textAlign="center" width="150px" bg="gray.50">
+                      <HStack justify="center" spacing={2}>
+                        <Text fontSize="sm">View permission</Text>
+                        <Checkbox
+                          isChecked={selectAllView}
+                          onChange={(e) =>
+                            handleSelectAllView(e.target.checked)
+                          }
+                          size="sm"
+                        />
+                      </HStack>
+                    </Th>
+                    <Th textAlign="center" width="150px" bg="gray.50">
+                      <HStack justify="center" spacing={2}>
+                        <Text fontSize="sm">Edit permission</Text>
+                        <Checkbox
+                          isChecked={selectAllEdit}
+                          onChange={(e) =>
+                            handleSelectAllEdit(e.target.checked)
+                          }
+                          size="sm"
+                        />
+                      </HStack>
+                    </Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {filteredFields.map((field, index) => (
+                    <Tr key={field.field_id}>
+                      <Td textAlign="center" fontWeight="medium">
+                        {index + 1}
+                      </Td>
+                      <Td fontWeight="medium">{field.label}</Td>
+                      <Td textAlign="center">
+                        <Checkbox
+                          {...register(
+                            `${tableIndex}.field_permissions.${index}.view_permission`
+                          )}
+                          size="sm"
+                          borderColor="#D5D7DA"
+                        />
+                      </Td>
+                      <Td textAlign="center">
+                        <Checkbox
+                          {...register(
+                            `${tableIndex}.field_permissions.${index}.edit_permission`
+                          )}
+                          size="sm"
+                          borderColor="#D5D7DA"
+                        />
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
             <Box>
               <Text fontSize="sm" color="gray.600">
                 Count: {filteredFields.length}

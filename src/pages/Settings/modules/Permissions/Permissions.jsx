@@ -284,7 +284,7 @@ export const Permissions = () => {
 
   const onSubmit = (data) => {
     const apiData = transformFormDataToAPI(data);
-    console.log("API data with field permissions:", apiData);
+
     authService
       .updatePermissions(apiData, {
         "project-id": projectId,
@@ -476,7 +476,7 @@ export const Permissions = () => {
         </ModalContent>
       </Modal>
       <FieldPermissionsModal
-        key={selectedTableSlug} // Force re-render when table changes
+        key={selectedTableSlug}
         isOpen={isFieldModalOpen}
         onClose={handleFieldModalClose}
         fieldPermissions={(() => {

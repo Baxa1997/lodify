@@ -58,7 +58,7 @@ export const DataTable = ({
               <Th
                 key={index}
                 isNumeric={head.isNumeric}
-                width={"160px"}
+                width={"230px"}
                 color="gray.900"
                 fontWeight={"600"}
                 fontSize={"12px"}

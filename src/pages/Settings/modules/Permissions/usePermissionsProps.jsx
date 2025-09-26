@@ -1,4 +1,4 @@
-import {Box, Checkbox, Flex, IconButton} from "@chakra-ui/react";
+import {Box, Checkbox, Flex, IconButton, Image} from "@chakra-ui/react";
 import {FiTable} from "react-icons/fi";
 
 export const usePermissionsPropsWithForm = (
@@ -7,14 +7,43 @@ export const usePermissionsPropsWithForm = (
   watch,
   onFieldModalOpen
 ) => {
+  const getObjectIcon = (objectName) => {
+    const iconMap = {
+      Dashboard: "/img/dashboard.svg",
+      Trips: "/img/route.svg",
+      User: "/img/user.svg",
+      "Managing Resources": "/img/resources.svg",
+      Drivers: "/img/truck.svg",
+      Assets: "",
+      Contracts: "/img/contacts.svg",
+      Clients: "/img/clients.svg",
+      Shippers: "/img/truck.svg",
+      Representatives: "/img/user.svg",
+      Payments: "/img/payments.svg",
+      "Company Profile": "/img/profile.svg",
+    };
+    return iconMap[objectName] || "/img/info.svg";
+  };
   const headData = [
     {
       label: "Objects",
       key: "objects",
       render: (data, row, head, rowIndex) => {
         return (
-          <Box as="label" display="flex" alignItems="center" gap="6px">
-            {/* <Checkbox {...register(`permissions.${rowIndex}.objects`)} /> */}
+          <Box
+            pl="10px"
+            w={"250px"}
+            as="label"
+            display="flex"
+            alignItems="center"
+            gap="8px">
+            <Image
+              src={getObjectIcon(data)}
+              alt={`${data} icon`}
+              width="20px"
+              height="20px"
+              objectFit="contain"
+            />
             {data}
           </Box>
         );
@@ -155,10 +184,10 @@ export const usePermissionsPropsWithForm = (
       key: "field",
       infoText: "Field info",
       render: (data, row, head, rowIndex) => (
-        <Box display="flex" gap="8px">
+        <Box pl="20px" display="flex" gap="8px">
           <IconButton
             variant="transparent"
-            icon={<FiTable color="#A4A7AE" size={16} />}
+            icon={<FiTable color="#A4A7AE" size={22} />}
             size="sm"
             onClick={() => onFieldModalOpen?.(row.tableData?.slug)}
             isDisabled={!row.tableData?.slug}

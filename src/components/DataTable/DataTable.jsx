@@ -111,7 +111,6 @@ export const DataTable = ({
                               : row[head.key]}
                             {row.children && (
                               <Box
-                                as="button"
                                 onClick={() => toggleRow(rowIndex)}
                                 display="flex"
                                 alignItems="center"
@@ -143,7 +142,14 @@ export const DataTable = ({
                         fontSize={"14px"}
                         {...head.tdProps}>
                         {head?.render
-                          ? head.render(row[head.key], row, head, rowIndex)
+                          ? head.render(
+                              row[head.key],
+                              row,
+                              head,
+                              rowIndex,
+                              false,
+                              null
+                            )
                           : row[head.key]}
                       </Td>
                     );
@@ -171,7 +177,9 @@ export const DataTable = ({
                                   child[head.key],
                                   child,
                                   head,
-                                  `${rowIndex}-child-${childIndex}`
+                                  childIndex,
+                                  true, // isChild
+                                  rowIndex // parentIndex
                                 )
                               : child[head.key]}
                           </Box>

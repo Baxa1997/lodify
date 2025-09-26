@@ -21,10 +21,7 @@ import {
 } from "@chakra-ui/react";
 import {useForm} from "react-hook-form";
 import {DataTable} from "@components/DataTable";
-import {
-  usePermissionsProps,
-  usePermissionsPropsWithForm,
-} from "./usePermissionsProps";
+import {usePermissionsPropsWithForm} from "./usePermissionsProps";
 import {FieldPermissionsModal} from "@components/FieldPermissionsModal";
 import {AddIcon} from "@chakra-ui/icons";
 import authService from "@services/auth/authService";
@@ -52,7 +49,7 @@ export const Permissions = () => {
     formState: {errors, isDirty},
   } = useForm();
 
-  const {bodyData: staticBodyData} = usePermissionsProps();
+  const {bodyData: staticBodyData} = usePermissionsPropsWithForm();
 
   const {data: roles = [], refetch} = useQuery({
     queryKey: ["ROLES"],
@@ -161,22 +158,22 @@ export const Permissions = () => {
     handleFieldModalOpen
   );
 
-  const currentFormData = watch() || {};
-  const bodyData =
-    Object.values(currentFormData).length > 0
-      ? Object.values(currentFormData)
-      : staticBodyData;
-  console.log("bodyData", bodyData);
+  const bodyData = staticBodyData;
 
   const allowedSlugs = [
+    "dashboard",
     "trips",
-    "user",
+    "users",
     "drivers",
     "assets",
     "contracts",
     "shippers",
     "representative",
     "payments",
+    "company_profile",
+    "contracts",
+    "clients",
+    "managing_resource",
   ];
 
   const transformRoleDataToForm = (roleData) => {
@@ -184,54 +181,148 @@ export const Permissions = () => {
 
     setInitialRoleData(roleData);
 
-    const formPermissions = {};
-    let index = 0;
+    const formData = {};
+
+    staticBodyData.forEach((item, index) => {
+      formData[index] = {
+        ...item,
+        field_permissions: {},
+        tableData: null,
+      };
+
+      if (item.children) {
+        formData[index].children = item.children.map((child, childIndex) => ({
+          ...child,
+          field_permissions: {},
+          tableData: null,
+        }));
+      }
+    });
 
     const filteredTables = roleData.tables.filter((table) =>
-      allowedSlugs.includes(table.slug?.toLowerCase())
+      allowedSlugs.includes(table?.slug?.toLowerCase())
     );
 
     filteredTables.forEach((table) => {
-      const fieldPermissionsForm = {};
-      if (table.field_permissions) {
-        table.field_permissions.forEach((field, fieldIndex) => {
-          fieldPermissionsForm[fieldIndex] = {
-            field_id: field.field_id,
-            label: field.label,
-            view_permission: field.view_permission,
-            edit_permission: field.edit_permission,
-            table_slug: field.table_slug,
-          };
-        });
-      }
-
-      formPermissions[index] = {
-        objects: table.label,
-        read: table.record_permissions?.read === "Yes",
-        write: table.record_permissions?.write === "Yes",
-        update: table.record_permissions?.update === "Yes",
-        delete: table.record_permissions?.delete === "Yes",
-        public: table.record_permissions?.is_public === true,
-        field: table.field_permissions?.length > 0,
-        field_permissions: fieldPermissionsForm,
-        tableData: {
-          id: table.id,
-          slug: table.slug,
-          field_permissions: table.field_permissions,
-          view_permissions: table.view_permissions,
-          table_view_permissions: table.table_view_permissions,
-          custom_permission: table.custom_permission,
-        },
+      const labelMapping = {
+        users: "user",
+        "managing resource": "managing resources",
+        "company profile": "company profile",
+        clients: "clients",
       };
-      index++;
+
+      const normalizedApiLabel = table.label.toLowerCase();
+      const mappedLabel =
+        labelMapping[normalizedApiLabel] || normalizedApiLabel;
+
+      const staticIndex = staticBodyData.findIndex((item) => {
+        const staticLabel = item.objects.toLowerCase();
+        return (
+          staticLabel === normalizedApiLabel || staticLabel === mappedLabel
+        );
+      });
+
+      if (staticIndex !== -1) {
+        const fieldPermissionsForm = {};
+        if (table.field_permissions) {
+          table.field_permissions.forEach((field, fieldIndex) => {
+            fieldPermissionsForm[fieldIndex] = {
+              field_id: field.field_id,
+              label: field.label,
+              view_permission: field.view_permission,
+              edit_permission: field.edit_permission,
+              table_slug: field.table_slug,
+            };
+          });
+        }
+
+        formData[staticIndex] = {
+          ...formData[staticIndex],
+          read: table.record_permissions?.read === "Yes",
+          write: table.record_permissions?.write === "Yes",
+          update: table.record_permissions?.update === "Yes",
+          delete: table.record_permissions?.delete === "Yes",
+          public: table.record_permissions?.is_public === true,
+          field: table.field_permissions?.length > 0,
+          field_permissions: fieldPermissionsForm,
+          tableData: {
+            id: table.id,
+            slug: table.slug,
+            field_permissions: table.field_permissions,
+            view_permissions: table.view_permissions,
+            table_view_permissions: table.table_view_permissions,
+            custom_permission: table.custom_permission,
+          },
+        };
+      }
     });
 
-    return formPermissions;
+    staticBodyData.forEach((item, index) => {
+      if (item.children) {
+        item.children.forEach((child, childIndex) => {
+          const labelMapping = {
+            users: "user",
+            user: "users",
+            representatives: "representative",
+            managing_resource: "managing resources",
+            clients: "clients",
+          };
+
+          const normalizedChildLabel = child.objects.toLowerCase();
+          const mappedChildLabel =
+            labelMapping[normalizedChildLabel] || normalizedChildLabel;
+
+          const matchingTable = filteredTables.find((table) => {
+            const apiLabel = table.label.toLowerCase();
+            return (
+              apiLabel === normalizedChildLabel || apiLabel === mappedChildLabel
+            );
+          });
+
+          if (matchingTable) {
+            const fieldPermissionsForm = {};
+            if (matchingTable.field_permissions) {
+              matchingTable.field_permissions.forEach((field, fieldIndex) => {
+                fieldPermissionsForm[fieldIndex] = {
+                  field_id: field.field_id,
+                  label: field.label,
+                  view_permission: field.view_permission,
+                  edit_permission: field.edit_permission,
+                  table_slug: field.table_slug,
+                };
+              });
+            }
+
+            formData[index].children[childIndex] = {
+              ...formData[index].children[childIndex],
+              read: matchingTable.record_permissions?.read === "Yes",
+              write: matchingTable.record_permissions?.write === "Yes",
+              update: matchingTable.record_permissions?.update === "Yes",
+              delete: matchingTable.record_permissions?.delete === "Yes",
+              public: matchingTable.record_permissions?.is_public === true,
+              field: matchingTable.field_permissions?.length > 0,
+              field_permissions: fieldPermissionsForm,
+              tableData: {
+                id: matchingTable.id,
+                slug: matchingTable.slug,
+                field_permissions: matchingTable.field_permissions,
+                view_permissions: matchingTable.view_permissions,
+                table_view_permissions: matchingTable.table_view_permissions,
+                custom_permission: matchingTable.custom_permission,
+              },
+            };
+          }
+        });
+      }
+    });
+
+    return formData;
   };
 
   useEffect(() => {
     if (singleRoleData) {
       const formData = transformRoleDataToForm(singleRoleData);
+
       reset(formData);
     }
   }, [singleRoleData, reset]);
@@ -276,6 +367,43 @@ export const Permissions = () => {
             field_permissions: fieldPermissionsAPI,
           };
         }
+      }
+
+      if (permission.children) {
+        permission.children.forEach((child) => {
+          if (child.tableData?.id) {
+            const tableIndex = updatedRoleData.tables.findIndex(
+              (table) => table.id === child.tableData.id
+            );
+
+            if (tableIndex !== -1) {
+              const fieldPermissionsAPI = [];
+              if (child.field_permissions) {
+                Object.values(child.field_permissions).forEach((field) => {
+                  fieldPermissionsAPI.push({
+                    field_id: field.field_id,
+                    view_permission: field.view_permission,
+                    edit_permission: field.edit_permission,
+                    label: field.label,
+                    table_slug: field.table_slug,
+                  });
+                });
+              }
+
+              updatedRoleData.tables[tableIndex] = {
+                ...updatedRoleData.tables[tableIndex],
+                record_permissions: {
+                  read: child.read ? "Yes" : "No",
+                  write: child.write ? "Yes" : "No",
+                  update: child.update ? "Yes" : "No",
+                  delete: child.delete ? "Yes" : "No",
+                  is_public: child.public,
+                },
+                field_permissions: fieldPermissionsAPI,
+              };
+            }
+          }
+        });
       }
     });
 

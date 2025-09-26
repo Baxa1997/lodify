@@ -517,7 +517,30 @@ export const Permissions = () => {
             </Button>
           </Box>
         </Box>
-        <Box mt="20px">
+        <Box
+          mt="20px"
+          maxH="calc(100vh - 280px)"
+          minH="300px"
+          overflowY="auto"
+          border="1px solid"
+          borderColor="gray.200"
+          borderRadius="8px"
+          sx={{
+            "&::-webkit-scrollbar": {
+              width: "8px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1",
+              borderRadius: "4px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#c1c1c1",
+              borderRadius: "4px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              background: "#a8a8a8",
+            },
+          }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <DataTable
               headData={headData}

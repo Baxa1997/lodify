@@ -41,18 +41,16 @@ export const DataTable = ({
   };
 
   return (
-    <Box
-      border="1px solid"
-      borderColor="gray.200"
-      borderRadius="12px"
-      overflow={"auto"}
-      {...props}>
+    <Box overflow={"auto"} {...props}>
       <Table variant="simple">
         {caption && <TableCaption>{caption}</TableCaption>}
         <Thead
           bgColor="gray.50"
           borderBottom="1px solid"
-          borderColor="gray.200">
+          borderColor="gray.200"
+          position="sticky"
+          top="0"
+          zIndex="1">
           <Tr>
             {headData?.map((head, index) => (
               <Th

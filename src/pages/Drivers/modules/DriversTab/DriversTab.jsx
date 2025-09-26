@@ -1,14 +1,21 @@
-import { Badge, Box } from "@chakra-ui/react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import {Badge, Box} from "@chakra-ui/react";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useQuery} from "@tanstack/react-query";
 import driversService from "@services/driversService";
 import useDebounce from "@hooks/useDebounce";
 import FiltersComponent from "@components/FiltersComponent";
-import { CTable, CTableBody, CTableHead, CTableTd, CTableTh } from "@components/tableElements";
+import {
+  CTable,
+  CTableBody,
+  CTableHead,
+  CTableTd,
+  CTableTh,
+} from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
-import { getLoadEligibilityColor } from "../../components/mockElements";
+import {getLoadEligibilityColor} from "../../components/mockElements";
 import AddDriverModal from "../../components/AddDriverModal";
+import AddDriverCode from "../../components/AddDriverCode";
 
 export const DriversTab = () => {
   const navigate = useNavigate();
@@ -20,10 +27,11 @@ export const DriversTab = () => {
   });
   const [searchText, setSearchText] = useState("");
   const [isAddDriverModalOpen, setIsAddDriverModalOpen] = useState(false);
-
+  const [isAddDriverCodeModalOpen, setIsAddDriverCodeModalOpen] =
+    useState(false);
   const offset = (currentPage - 1) * pageSize;
 
-  const { data: driversData, isLoading } = useQuery({
+  const {data: driversData, isLoading} = useQuery({
     queryKey: [
       "GET_DRIVERS_LIST",
       currentPage,
@@ -81,46 +89,41 @@ export const DriversTab = () => {
 
   const getStatusColor = (status) => {
     switch (status?.[0]?.toLowerCase()) {
-    case "active":
-    case "available":
-    case "ready":
-      return "green";
-    case "inactive":
-    case "unavailable":
-    case "offline":
-      return "red";
-    case "pending":
-    case "pending approval":
-    case "under review":
-      return "orange";
-    case "on duty":
-    case "on trip":
-    case "driving":
-      return "blue";
-    case "maintenance":
-    case "repair":
-      return "purple";
-    case "suspended":
-    case "terminated":
-      return "red";
-    case "part-time":
-    case "limited":
-      return "yellow";
-    default:
-      return "gray";
+      case "active":
+      case "available":
+      case "ready":
+        return "green";
+      case "inactive":
+      case "unavailable":
+      case "offline":
+        return "red";
+      case "pending":
+      case "pending approval":
+      case "under review":
+        return "orange";
+      case "on duty":
+      case "on trip":
+      case "driving":
+        return "blue";
+      case "maintenance":
+      case "repair":
+        return "purple";
+      case "suspended":
+      case "terminated":
+        return "red";
+      case "part-time":
+      case "limited":
+        return "yellow";
+      default:
+        return "gray";
     }
   };
 
   if (isLoading) {
     return (
       <Box mt={"32px"}>
-        <FiltersComponent
-          filterButton={true}
-          actionButton={true} />
-        <Box
-          mt={6}
-          p={4}
-          textAlign="center">
+        <FiltersComponent filterButton={true} actionButton={true} />
+        <Box mt={6} p={4} textAlign="center">
           Loading drivers...
         </Box>
       </Box>
@@ -130,10 +133,12 @@ export const DriversTab = () => {
   return (
     <Box mt={"32px"}>
       <FiltersComponent
-        filterButton={true}
         actionButton={true}
+        filterButton={true}
+        lastAddButton={true}
         onSearchChange={debouncedSearch}
         onActionButtonClick={() => setIsAddDriverModalOpen(true)}
+        onLastAddButtonClick={() => setIsAddDriverCodeModalOpen(true)}
       />
 
       <Box mt={6}>
@@ -242,7 +247,7 @@ export const DriversTab = () => {
                 <CTableTd>
                   <Badge
                     colorScheme={getLoadEligibilityColor(
-                      driver.load_eligibility || driver.loadEligibility,
+                      driver.load_eligibility || driver.loadEligibility
                     )}
                     variant="subtle"
                     px={3}
@@ -251,7 +256,7 @@ export const DriversTab = () => {
                     fontSize="12px"
                     fontWeight="500">
                     {Array.isArray(
-                      driver.load_eligibility || driver.loadEligibility,
+                      driver.load_eligibility || driver.loadEligibility
                     )
                       ? (driver.load_eligibility ||
                           driver.loadEligibility)[0] || "N/A"
@@ -268,6 +273,10 @@ export const DriversTab = () => {
           </CTableBody>
         </CTable>
       </Box>
+      <AddDriverCode
+        isOpen={isAddDriverCodeModalOpen}
+        onClose={() => setIsAddDriverCodeModalOpen(false)}
+      />
 
       <AddDriverModal
         isOpen={isAddDriverModalOpen}

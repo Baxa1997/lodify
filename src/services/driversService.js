@@ -4,9 +4,11 @@ const driversService = {
   getList: (params = {}) => {
     const dataParam = JSON.stringify(params);
     return httpRequest.get(
-      `v2/items/drivers?data=${encodeURIComponent(dataParam)}`,
+      `v2/items/drivers?data=${encodeURIComponent(dataParam)}`
     );
   },
+  addDrivercode: (data) =>
+    httpRequest.post("v2/invoke_function/lodify-trip-gateway", data),
   getDriverById: (id) =>
     httpRequest.get(`v1/object-slim/drivers/${id}?from-ofs=true`),
   createDriver: (data) => httpRequest.post("v2/items/drivers", data),

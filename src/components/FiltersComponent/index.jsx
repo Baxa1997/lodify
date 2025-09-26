@@ -7,12 +7,14 @@ const FiltersComponent = ({
   filterButton = false,
   filterByDomicile = false,
   actionButton = false,
+  lastAddButton = false,
   addButton = false,
   verifySelect = false,
   onSearchChange = () => {},
   actionButtonText = "Action",
   onAddUserClick = () => {},
   onActionButtonClick = () => {},
+  onLastAddButtonClick = () => {},
 }) => {
   return (
     <Flex
@@ -85,7 +87,7 @@ const FiltersComponent = ({
             onClick={onAddUserClick}>
             <img src="/img/addIcon.svg" alt="" />
             <Text fontSize={"14px"} fontWeight={"600"} color={"#fff"}>
-              Add User
+              Add
             </Text>
           </Button>
         )}
@@ -103,6 +105,24 @@ const FiltersComponent = ({
             onClick={onActionButtonClick}>
             <Text fontSize={"14px"} fontWeight={"600"} color={"#fff"}>
               {actionButtonText || "Action"}
+            </Text>
+          </Button>
+        )}
+
+        {lastAddButton && (
+          <Button
+            _hover={{
+              background: "#1570EF",
+            }}
+            borderRadius={"8px"}
+            bg={"#1570EF"}
+            w={"90px"}
+            h={"40px"}
+            gap={"8px"}
+            onClick={onLastAddButtonClick}>
+            <img src="/img/addIcon.svg" alt="" />
+            <Text fontSize={"14px"} fontWeight={"600"} color={"#fff"}>
+              Add
             </Text>
           </Button>
         )}

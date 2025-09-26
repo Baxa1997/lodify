@@ -11,6 +11,7 @@ import {useForm} from "react-hook-form";
 import {useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {useEffect} from "react";
+import {coordinates} from "../../components/mapCoordinates";
 
 function HistoryTripsTab() {
   const {id} = useParams();
@@ -34,7 +35,7 @@ function HistoryTripsTab() {
     enabled: Boolean(id),
     select: (res) => res?.data?.response?.[0] || {},
   });
-  console.log("watchchchcchc", watch());
+
   useEffect(() => {
     reset(tripDetails);
   }, [tripDetails, reset]);
@@ -132,8 +133,9 @@ function HistoryTripsTab() {
             <Box borderRadius="8px" w="100%" h="100%" overflow="hidden">
               <GoogleMapReact
                 bootstrapURLKeys={{
-                  key: "AIzaSyCMunNEPgmmEcQ1wvtwmuHNqcosmmBNFeU",
+                  key: "AIzaSyAdBRYyeH13KXV-VtXpQuG36A7vbBjibMU",
                 }}
+                coordinates={coordinates}
                 defaultCenter={{lat: 40.7128, lng: -74.006}}
                 defaultZoom={15}></GoogleMapReact>
             </Box>

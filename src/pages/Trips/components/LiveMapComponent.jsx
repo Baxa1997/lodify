@@ -81,7 +81,7 @@ function LiveMapComponent({tripData = {}}) {
         border="1px solid #E2E8F0">
         <GoogleMapReact
           bootstrapURLKeys={{
-            key: "AIzaSyCMunNEPgmmEcQ1wvtwmuHNqcosmmBNFeU",
+            key: "AIzaSyAdBRYyeH13KXV-VtXpQuG36A7vbBjibMU",
           }}
           defaultCenter={{
             lat: latitude ?? 37.422,

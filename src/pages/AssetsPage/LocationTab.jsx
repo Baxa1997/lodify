@@ -143,7 +143,7 @@ const LocationTab = () => {
     <Box className={styles.mapContainer}>
       <GoogleMapReact
         bootstrapURLKeys={{
-          key: "AIzaSyCMunNEPgmmEcQ1wvtwmuHNqcosmmBNFeU",
+          key: "AIzaSyAdBRYyeH13KXV-VtXpQuG36A7vbBjibMU",
         }}
         defaultCenter={{
           lat: latitude,

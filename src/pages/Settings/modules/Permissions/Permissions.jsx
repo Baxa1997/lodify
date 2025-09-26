@@ -40,6 +40,8 @@ export const Permissions = () => {
   const clientTypeId = useSelector((state) => state.auth.clientType?.id);
   const projectId = useSelector((state) => state.auth.projectId);
   const token = useSelector((state) => state.auth.token);
+  const permissions = useSelector((state) => state?.auth);
+
   const {
     control,
     register,

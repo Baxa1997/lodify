@@ -87,7 +87,7 @@ export const DataTable = ({
           {isLoading ? (
             <Tr>
               <Td colSpan={headData.length}>
-                <Center py={8}>
+                <Center h="calc(100vh - 420px)" py={8}>
                   <Spinner size="lg" color="blue.500" />
                 </Center>
               </Td>

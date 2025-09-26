@@ -35,6 +35,7 @@ export const Permissions = () => {
   const [initialRoleData, setInitialRoleData] = useState(null);
   const [isFieldModalOpen, setIsFieldModalOpen] = useState(false);
   const [selectedTableSlug, setSelectedTableSlug] = useState(null);
+  const [roleChangeCounter, setRoleChangeCounter] = useState(0);
 
   const clientTypeId = useSelector((state) => state.auth.clientType?.id);
   const projectId = useSelector((state) => state.auth.projectId);
@@ -51,13 +52,13 @@ export const Permissions = () => {
 
   const {bodyData: staticBodyData} = usePermissionsPropsWithForm();
 
-  const {data: roles = [], refetch} = useQuery({
-    queryKey: ["ROLES"],
-    enabled: true,
-
+  const {data: roles = [], refetch: refetchRoles} = useQuery({
+    queryKey: ["ROLES", clientTypeId, projectId],
+    enabled: !!clientTypeId && !!projectId && !!token,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    staleTime: 5 * 60 * 1000,
     queryFn: () =>
       authService.getRoles(
         {
@@ -76,15 +77,16 @@ export const Permissions = () => {
     isLoading: isLoadingRole,
     refetch: refetchSingleRole,
   } = useQuery({
-    queryKey: ["SINGLE_ROLE", activeRole?.guid],
-    enabled: true,
+    queryKey: ["SINGLE_ROLE", activeRole?.guid, projectId, roleChangeCounter],
+    enabled: !!activeRole?.guid && !!projectId,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: 0,
     queryFn: () => {
-      if (activeRole?.guid) {
-        return authService.getRoleById(projectId, activeRole.guid, {
-          "project-id": projectId,
-        });
-      }
-      return null;
+      return authService.getRoleById(projectId, activeRole.guid, {
+        "project-id": projectId,
+      });
     },
     select: (data) => data?.data,
   });
@@ -149,6 +151,13 @@ export const Permissions = () => {
   const handleFieldModalClose = () => {
     setIsFieldModalOpen(false);
     setSelectedTableSlug(null);
+  };
+
+  const handleRoleChange = (role) => {
+    setActiveRole(role);
+    setRoleChangeCounter((prev) => prev + 1);
+
+    reset();
   };
 
   const {headData} = usePermissionsPropsWithForm(
@@ -473,7 +482,7 @@ export const Permissions = () => {
                 fontWeight={activeRole?.guid === role.guid ? 500 : 400}
                 bg={activeRole?.guid === role.guid ? "gray.100" : "transparent"}
                 color={activeRole?.guid === role.guid ? "gray.900" : "gray.600"}
-                onClick={() => setActiveRole(role)}
+                onClick={() => handleRoleChange(role)}
                 _hover={{
                   bg: activeRole?.guid === role.guid ? "gray.100" : "gray.50",
                 }}>

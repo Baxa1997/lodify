@@ -1,25 +1,53 @@
-import React, {useMemo} from "react";
+import React, { useMemo } from "react";
 import GoogleMapReact from "google-map-react";
 import tripsService from "@services/tripsService";
-import {useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {useQuery} from "@tanstack/react-query";
-import {Box, Spinner, Text} from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { Box, Spinner, Text } from "@chakra-ui/react";
+import ReactDOMServer from "react-dom/server";
+
+const StopPoint = ({ index }) => {
+  return  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16">
+    <circle
+      cx="8"
+      cy="8"
+      r="7"
+      fill="#1570EF"
+      stroke="#FFFFFF"
+      strokeWidth="2"
+    />
+    <text
+      x="8"
+      y="11"
+      textAnchor="middle"
+      fontSize="9"
+      fontWeight="bold"
+      fontFamily="Arial, sans-serif"
+      fill="#fff"
+    >
+      {index}
+    </text>
+  </svg>;
+};
 
 function GoogleLiveComponent({
   latitude,
   longitude,
   showMarkers = true,
   showAllStops = false,
-  lineColor = "blue",
-  startIcon = "/img/startIcon.svg",
-  endIcon = "/img/finish.svg",
-  stopIcon = "/img/pause.svg",
+  lineColor = "#007BFF",
+  startIcon = "/img/map-point.svg",
+  endIcon = "/img/map-point-red.svg",
+  stopIcon = "/img/point.svg",
 }) {
   const envId = useSelector((state) => state.auth.environmentId);
-  const {id} = useParams();
+  const { id } = useParams();
 
-  const {data: mapData = {}, isLoading} = useQuery({
+  const { data: mapData = {}, isLoading } = useQuery({
     queryKey: ["TRIP_BY_MAP", id],
     queryFn: () =>
       tripsService.createTrip({
@@ -38,7 +66,7 @@ function GoogleLiveComponent({
 
   const mapCenter = useMemo(() => {
     if (latitude && longitude) {
-      return {lat: latitude, lng: longitude};
+      return { lat: latitude, lng: longitude };
     }
 
     if (mapData?.geometry?.coordinates?.length > 0) {
@@ -52,10 +80,48 @@ function GoogleLiveComponent({
       };
     }
 
-    return {lat: 40.7128, lng: -74.006};
+    return { lat: 40.7128, lng: -74.006 };
   }, [latitude, longitude, mapData]);
 
-  const handleApiLoaded = ({map, maps}) => {
+  const getMarkerType = ({ lineIndex, maps, stops, stopIndex }) => {
+    const stopLength = stops.length;
+
+    const svgString = ReactDOMServer.renderToStaticMarkup(<StopPoint index={stopIndex} />);
+    const svgUrl = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svgString);
+
+    const markerTypes = {
+      start: {
+        title: `START - Line ${lineIndex + 1}`,
+        icon: {
+          url: startIcon,
+          scaledSize: new maps.Size(32, 32),
+          anchor: new maps.Point(16, 16),
+        },
+      },
+      stop: {
+        title: `STOP - Line ${lineIndex + 1}`,
+        icon: {
+          url: svgUrl,
+          scaledSize: new maps.Size(20, 20),
+          anchor: new maps.Point(16, 16),
+        },
+      },
+      finish: {
+        title: `FINISH - Line ${lineIndex + 1}`,
+        icon: {
+          url: endIcon,
+          scaledSize: new maps.Size(32, 32),
+          anchor: new maps.Point(16, 16),
+        },
+      },
+    };
+
+    if(stopIndex === 0) return markerTypes.start;
+    if(stopIndex === stopLength - 1) return markerTypes.finish;
+    return markerTypes.stop;
+  };
+
+  const handleApiLoaded = ({ map, maps }) => {
     if (!mapData?.geometry?.coordinates?.length) return;
 
     if (map.markers) {
@@ -69,6 +135,7 @@ function GoogleLiveComponent({
     existingPolylines.forEach((polyline) => polyline.remove());
 
     const coordinates = mapData.geometry.coordinates;
+    const stops = mapData.stops;
     const allCoords = [];
 
     coordinates.forEach((line, lineIndex) => {
@@ -76,7 +143,7 @@ function GoogleLiveComponent({
 
       const path = line.map(([lng, lat]) => {
         allCoords.push([lng, lat]);
-        return {lat, lng};
+        return { lat, lng };
       });
 
       const polyline = new maps.Polyline({
@@ -88,43 +155,38 @@ function GoogleLiveComponent({
         className: "coordinate-polyline",
       });
       polyline.setMap(map);
-
+      
       if (showMarkers) {
-        const startMarker = new maps.Marker({
-          position: {lat: line[0][1], lng: line[0][0]},
-          map: map,
-          title: `START - Line ${lineIndex + 1}`,
-          icon: {
-            url: startIcon,
-            scaledSize: new maps.Size(32, 32),
-            anchor: new maps.Point(16, 16),
-          },
-        });
-        map.markers.push(startMarker);
 
-        if (line.length > 1) {
-          const finishMarker = new maps.Marker({
-            position: {
-              lat: line[line.length - 1][1],
-              lng: line[line.length - 1][0],
-            },
+        stops.forEach((stop, stopIndex) => {
+
+          const latLong = stop?.location?.split(",");
+
+          const lat = Number(latLong[1]);
+          const lng = Number(latLong[0]);
+
+          console.log({ lat,
+            lng, stop });
+
+
+          const marketType = getMarkerType({ lineIndex, maps, stopIndex, stops });
+
+          const newMarker = new maps.Marker({
+            position: { lat, lng },
             map: map,
-            title: `FINISH - Line ${lineIndex + 1}`,
-            icon: {
-              url: endIcon,
-              scaledSize: new maps.Size(32, 32),
-              anchor: new maps.Point(16, 16),
-            },
+            title: marketType.title,
+            icon: { ...marketType.icon },
           });
-          map.markers.push(finishMarker);
-        }
+
+          map.markers.push(newMarker);
+        });
 
         if (showAllStops && line.length > 2) {
           line.forEach((coord, index) => {
             if (index === 0 || index === line.length - 1) return;
 
             const stopMarker = new maps.Marker({
-              position: {lat: coord[1], lng: coord[0]},
+              position: { lat: coord[1], lng: coord[0] },
               map: map,
               title: `STOP ${index} - Line ${lineIndex + 1}`,
               icon: {
@@ -156,7 +218,9 @@ function GoogleLiveComponent({
         display="flex"
         justifyContent="center"
         alignItems="center">
-        <Spinner size="lg" color="blue.500" />
+        <Spinner
+          size="lg"
+          color="blue.500" />
       </Box>
     );
   }
@@ -176,7 +240,7 @@ function GoogleLiveComponent({
 
   return (
     <GoogleMapReact
-      bootstrapURLKeys={{key: "AIzaSyAdBRYyeH13KXV-VtXpQuG36A7vbBjibMU"}}
+      bootstrapURLKeys={{ key: "AIzaSyAdBRYyeH13KXV-VtXpQuG36A7vbBjibMU" }}
       center={mapCenter}
       defaultZoom={13}
       options={{
@@ -189,7 +253,7 @@ function GoogleLiveComponent({
           {
             featureType: "poi",
             elementType: "labels",
-            stylers: [{visibility: "off"}],
+            stylers: [{ visibility: "off" }],
           },
         ],
       }}

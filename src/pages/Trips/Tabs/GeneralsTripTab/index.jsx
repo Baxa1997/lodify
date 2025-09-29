@@ -9,7 +9,7 @@ import RouteInfoComponent from "../../components/RouteInfoComponent";
 import StopsComponent from "../../components/StopsComponent";
 import LiveMapComponent from "../../components/LiveMapComponent";
 
-function GeneralTripsTab({}) {
+function GeneralTripsTab() {
   const navigate = useNavigate();
   const { id } = useParams();
   const envId = useSelector((state) => state.auth.environmentId);

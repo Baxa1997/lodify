@@ -102,7 +102,7 @@ function GoogleLiveComponent({
         title: `STOP - Line ${lineIndex + 1}`,
         icon: {
           url: svgUrl,
-          scaledSize: new maps.Size(20, 20),
+          scaledSize: new maps.Size(24, 24),
           anchor: new maps.Point(16, 16),
         },
       },

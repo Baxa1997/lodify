@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -10,22 +10,24 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import styles from "../style.module.scss";
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import HFTextField from "../../../components/HFTextField";
 import driversService from "@services/driversService";
-import {useSelector} from "react-redux";
-import {useQueryClient} from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
+import { useGetCompanyId } from "@hooks/useGetCompanyId";
 
-const AddDriverCode = ({isOpen, onClose}) => {
+const AddDriverCode = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const environmentId = useSelector((state) => state?.auth?.environmentId);
-  const companyId = useSelector((state) => state?.auth?.userInfo?.company_id);
   const queryClient = useQueryClient();
+
+  const companyId = useGetCompanyId();
 
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
@@ -52,7 +54,10 @@ const AddDriverCode = ({isOpen, onClose}) => {
       });
   };
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader
@@ -73,7 +78,10 @@ const AddDriverCode = ({isOpen, onClose}) => {
               />
             </FormControl>
 
-            <HStack spacing={2} justify="flex-end" mt={3}>
+            <HStack
+              spacing={2}
+              justify="flex-end"
+              mt={3}>
               <Button
                 fontWeight={400}
                 onClick={onClose}

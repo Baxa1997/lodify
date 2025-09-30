@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import httpRequest from "@utils/httpRequest";
 
 const itemService = {
   getTable: (slug, params) => httpRequest.get(`v2/items/${slug}`, { params }),
+  createItem: (slug, data) => httpRequest.post(`v2/items/${slug}`, data),
 };
 
 export const useGetTable = (slug, params = {}, props) => {
@@ -13,3 +14,8 @@ export const useGetTable = (slug, params = {}, props) => {
     ...params,
   });
 };
+
+export const useCreateItemMutation = (params) => useMutation({
+  mutationFn: ({ slug, data }) => itemService.createItem(slug, data),
+  ...params,
+});

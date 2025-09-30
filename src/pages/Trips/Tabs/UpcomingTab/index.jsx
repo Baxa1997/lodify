@@ -1,11 +1,10 @@
-import {Box, Badge, Text} from "@chakra-ui/react";
+import {Box, Badge, Text, Flex} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {format, isValid} from "date-fns";
 import tripsService from "@services/tripsService";
-import FiltersComponent from "@components/FiltersComponent";
 import tableElements from "../../components/mockElements";
 import {
   CTable,
@@ -15,6 +14,7 @@ import {
   CTableTd,
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
+import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
 
 function UpcomingTab() {
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ function UpcomingTab() {
 
   return (
     <Box mt={"26px"}>
-      <FiltersComponent
+      <TripsFiltersComponent
         filterButton={true}
         actionButton={true}
         actionButtonText="Add Trip"
@@ -177,59 +177,73 @@ function UpcomingTab() {
                     cursor: "pointer",
                   }}
                   onClick={() => handleRowClick(trip.guid, trip)}>
-                  <CTableTd>{trip.id || ""}</CTableTd>
+                  <CTableTd>{trip.customer || ""}</CTableTd>
+                  <CTableTd minWidth="180px">
+                    <Flex gap="24px" alignItems="center">
+                      <Text color="#181D27">{trip.id || ""}</Text>
+                      <TripStatus status="1" />
+                    </Flex>
+                  </CTableTd>
                   <CTableTd>
-                    <Box>
-                      <Text
-                        h="20px"
-                        fontSize="14px"
-                        fontWeight="500"
-                        color="#181D27">
-                        {" "}
-                        {`${trip.origin?.[0]?.address ?? ""} / ${
-                          trip?.origin?.[0]?.address_2 ?? ""
-                        }` || ""}
-                      </Text>
-                      <Text h="20px">
-                        {(() => {
-                          const rawDate = trip?.origin?.[0]?.date;
-                          const time = trip?.origin?.[0]?.time ?? "";
-                          const formattedDate = rawDate
-                            ? formatToLongWeekday(rawDate, "en-US")
-                            : null;
+                    <Flex alignItems="center" gap="16px">
+                      <Box>
+                        <Text
+                          h="20px"
+                          fontSize="14px"
+                          fontWeight="500"
+                          color="#181D27">
+                          {" "}
+                          {`${trip.origin?.[0]?.address ?? ""} / ${
+                            trip?.origin?.[0]?.address_2 ?? ""
+                          }` || ""}
+                        </Text>
+                        <Text h="20px">
+                          {(() => {
+                            const rawDate = trip?.origin?.[0]?.date;
+                            const time = trip?.origin?.[0]?.time ?? "";
+                            const formattedDate = rawDate
+                              ? formatToLongWeekday(rawDate, "en-US")
+                              : null;
 
-                          return formattedDate
-                            ? `${formattedDate}, ${time}`
-                            : "";
-                        })()}
-                      </Text>
-                    </Box>
+                            return formattedDate
+                              ? `${formattedDate}, ${time}`
+                              : "";
+                          })()}
+                        </Text>
+                      </Box>
+                      <TripStatus status="1" />
+                    </Flex>
                   </CTableTd>
                   <CTableTd>
                     <Box>
-                      <Text
-                        h="20px"
-                        fontSize="14px"
-                        fontWeight="500"
-                        color="#181D27">
-                        {" "}
-                        {`${trip.stops?.[0]?.address ?? ""} / ${
-                          trip?.stops?.[0]?.address_2 ?? ""
-                        }` || ""}
-                      </Text>
-                      <Text h="20px">
-                        {(() => {
-                          const rawDate = trip?.stops?.[0]?.date;
-                          const time = trip?.stops?.[0]?.time ?? "";
-                          const formattedDate = rawDate
-                            ? formatToLongWeekday(rawDate, "en-US")
-                            : null;
+                      <Flex gap="16px" alignItems="center">
+                        <Box>
+                          <Text
+                            h="20px"
+                            fontSize="14px"
+                            fontWeight="500"
+                            color="#181D27">
+                            {" "}
+                            {`${trip.stops?.[0]?.address ?? ""} / ${
+                              trip?.stops?.[0]?.address_2 ?? ""
+                            }` || ""}
+                          </Text>
+                          <Text h="20px">
+                            {(() => {
+                              const rawDate = trip?.stops?.[0]?.date;
+                              const time = trip?.stops?.[0]?.time ?? "";
+                              const formattedDate = rawDate
+                                ? formatToLongWeekday(rawDate, "en-US")
+                                : null;
 
-                          return formattedDate
-                            ? `${formattedDate}, ${time}`
-                            : "";
-                        })()}
-                      </Text>
+                              return formattedDate
+                                ? `${formattedDate}, ${time}`
+                                : "";
+                            })()}
+                          </Text>
+                        </Box>
+                        <TripStopStatus status="1" />
+                      </Flex>
                     </Box>
                   </CTableTd>
                   <CTableTd>{trip?.assets?.external_id ?? ""}</CTableTd>
@@ -264,9 +278,30 @@ function UpcomingTab() {
                       {trip.load_type?.[0] ?? ""}
                     </Badge>
                   </CTableTd>
-                  <CTableTd>{trip.rate || 0}</CTableTd>
-                  <CTableTd>{trip.drivers?.first_name || ""}</CTableTd>
-                  <CTableTd>{trip.loads || 0}</CTableTd>
+                  <CTableTd>
+                    <Flex alignItems="center" justifyContent="center" gap="4px">
+                      <Box
+                        w="13px"
+                        h="13px"
+                        borderRadius="50%"
+                        bg="#FF5B04"></Box>
+                      <Box
+                        w="13px"
+                        h="13px"
+                        borderRadius="50%"
+                        bg="#00707A"></Box>
+                      <Box
+                        w="13px"
+                        h="13px"
+                        borderRadius="50%"
+                        bg="#003B63"></Box>
+                    </Flex>
+                  </CTableTd>
+                  <CTableTd>
+                    <Text color="#EF6820" fontWeight="600">
+                      Assign
+                    </Text>
+                  </CTableTd>
                 </CTableRow>
               ))
             )}
@@ -276,5 +311,79 @@ function UpcomingTab() {
     </Box>
   );
 }
+
+const TripStatus = ({status}) => {
+  return (
+    <Flex
+      flexDirection="row-reverse"
+      w="36px"
+      gap="4px"
+      p="2px 8px"
+      borderRadius="100px"
+      border="1px solid #B2DDFF">
+      <Text fontSize="12px" fontWeight="500" color="#175CD3">
+        1
+      </Text>
+      <img src="/img/statusArrow.svg" alt="" />
+    </Flex>
+  );
+};
+
+const TripStopStatus = ({status = "active"}) => {
+  const statusColors = {
+    active: {bg: "#DEFFEE", icon: "#079455"},
+    inactive: {bg: "#EDEDED", icon: "#079455"},
+    warning: {bg: "#FFF5E5", icon: "#079455"},
+  };
+
+  const {bg, icon} = statusColors[status] || statusColors.active;
+
+  return (
+    <Flex gap="24px" alignItems="center">
+      <Box w="22px" h="22px">
+        <img
+          src="/img/truck.svg"
+          alt="truck"
+          style={{
+            width: "100%",
+            height: "100%",
+            filter: `drop-shadow(0 0 0 ${icon}) saturate(1000%)`,
+          }}
+        />
+      </Box>
+
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        w="44px"
+        h="27px"
+        p="5px"
+        gap="4px"
+        bg={bg}
+        borderRadius="16px">
+        <Box w="17px" h="17px">
+          <img
+            src="/img/driverVerified.svg"
+            alt="driver"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        </Box>
+        <Box w="17px" h="17px">
+          <img
+            src="/img/driverVerified.svg"
+            alt="driver"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        </Box>
+      </Flex>
+    </Flex>
+  );
+};
 
 export default UpcomingTab;

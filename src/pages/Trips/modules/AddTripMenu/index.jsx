@@ -9,8 +9,10 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import React from "react";
+import {useNavigate} from "react-router-dom";
 
 const AddTripMenu = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Flex alignItems={"center"} justifyContent={"space-between"} h={"32px"}>
@@ -53,6 +55,7 @@ const AddTripMenu = () => {
               </Text>
             </MenuItem>
             <MenuItem
+              onClick={() => navigate("/admin/trips/add-trip")}
               display={"flex"}
               alignItems={"center"}
               gap={"8px"}

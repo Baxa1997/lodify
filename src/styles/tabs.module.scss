@@ -27,13 +27,13 @@
   }
 
   :global(.react-tabs__tab:hover) {
-    color: #3b82f6 !important;
+    color: #ff5b04 !important;
   }
 
   :global(.react-tabs__tab--selected) {
-    color: #3b82f6 !important;
+    color: #ff5b04 !important;
     font-weight: 600 !important;
-    border-bottom: 2px solid #3b82f6 !important;
+    border-bottom: 2px solid #ff5b04 !important;
   }
 
   :global(.react-tabs__tab--selected::after) {
@@ -43,7 +43,7 @@
     left: 0 !important;
     right: 0 !important;
     height: 2px !important;
-    background-color: #3b82f6 !important;
+    background-color: #ff5b04 !important;
     border-radius: 1px !important;
   }
 

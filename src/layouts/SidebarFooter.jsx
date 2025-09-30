@@ -82,15 +82,15 @@ const SidebarFooter = ({sidebarOpen = true}) => {
                 as={Flex}
                 justifyContent={"flex-start"}
                 position={"relative"}
-                bg={"#12161C"}
+                bg={"transparent"}
                 alignItems={"center"}
                 gap={"8px"}
                 borderRadius={"12px"}
-                border={"1px solid #22262F"}
+                border={"0.5px solid #eee"}
                 p={"8px 12px"}
                 h={"64px"}
                 cursor={"pointer"}
-                _hover={{bg: "#1a1f2a"}}
+                _hover={{bg: "transparent"}}
                 _active={{bg: "#1a1f2a"}}
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                 width="100%">
@@ -104,13 +104,14 @@ const SidebarFooter = ({sidebarOpen = true}) => {
                 <Box
                   w={"40px"}
                   h={"40px"}
-                  bg={"#22262F"}
+                  bg={"transparent"}
                   borderRadius={"50%"}
                   display={"flex"}
                   alignItems={"center"}
                   justifyContent={"center"}
                   color={"#94979C"}
                   fontWeight={"600"}
+                  border={"0.5px solid #eee"}
                   fontSize={"16px"}>
                   J
                 </Box>

@@ -1,34 +1,31 @@
 import React from "react";
-import {Box, Flex, Text} from "@chakra-ui/react";
+import {Box, Flex, Text, Button} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import styles from "../../styles/tabs.module.scss";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import HistoryTab from "./Tabs/HistoryTab";
 import TransitTab from "./Tabs/TransitTab.jsx";
 import UpcomingTab from "./Tabs/UpcomingTab";
+import AddTripMenu from "./modules/AddTripMenu";
 
 const Trips = () => {
   return (
     <>
       <Flex flexDir={"column"} gap={"20px"}>
         <HeadBreadCrumb />
-        <Box h={"32px"}>
-          <Text
-            h={"32px"}
-            color={"#181D27"}
-            fontWeight={"600"}
-            fontSize={"24px"}>
-            Trips
-          </Text>
-        </Box>
+        <AddTripMenu />
 
         <Tabs className={styles.tabsContainer}>
           <TabList>
+            <Tab>Actions Needed</Tab>
             <Tab>Upcoming</Tab>
             <Tab>In Transit</Tab>
-            <Tab>History</Tab>
+            <Tab>Completed</Tab>
           </TabList>
 
+          <TabPanel>
+            <UpcomingTab />
+          </TabPanel>
           <TabPanel>
             <UpcomingTab />
           </TabPanel>

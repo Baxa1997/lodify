@@ -24,7 +24,7 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
 .sidebar {
   padding: 24px 0;
   width: 280px;
-  background: $sidebar-bg;
+  background: linear-gradient(to bottom, #0b2432, #015261);
   color: $white;
   display: flex;
   flex-direction: column;

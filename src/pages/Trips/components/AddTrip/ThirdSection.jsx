@@ -1,12 +1,28 @@
-import React from "react";
-import {Flex} from "@chakra-ui/react";
+import React, {useState} from "react";
+import {Flex, Button, HStack, Icon} from "@chakra-ui/react";
 import {Box} from "@chakra-ui/react";
 import {Text} from "@chakra-ui/react";
 import HFTextField from "../../../../components/HFTextField";
 import HFMultiSelect from "../../../../components/HFMultiSelect";
 import HFFilesField from "../../../../components/HFFilesField";
+import AddReferenceModal from "./AddReferenceModal";
 
 function ThirdSection({control}) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [references, setReferences] = useState([]);
+
+  const handleAddReference = (referenceData) => {
+    setReferences((prev) => [...prev, referenceData]);
+  };
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Box
       mt={"20px"}
@@ -192,24 +208,43 @@ function ThirdSection({control}) {
           </Box>
         </Flex>
       </Flex>
-      <Box width="100%" mt={"24px"}>
-        <Text
-          width={"100%"}
-          fontSize={"14px"}
-          fontWeight={"600"}
-          color={"#181D27"}
-          borderBottom={"1px solid #E9EAEB"}
-          pb={"12px"}>
-          Total Rates
-        </Text>
 
-        <Text mt={"16px"} fontSize={"14px"} color={"#414651"} fontWeight="400">
-          <span style={{fontWeight: "600"}}>$6,800.00</span> Invoicing
-        </Text>
-        <Text mt={"6px"} fontSize={"14px"} fontWeight={"400"} color={"#414651"}>
-          <span style={{fontWeight: "600"}}>$6,800.00</span> Assignees
-        </Text>
+      <Box mt="24px" display="flex" justifyContent="flex-start">
+        <Button
+          bg="#FF6B35"
+          color="white"
+          _hover={{bg: "#E55A2B"}}
+          onClick={handleModalOpen}
+          leftIcon={
+            <Box
+              w="16px"
+              h="16px"
+              bg="white"
+              borderRadius="50%"
+              display="flex"
+              alignItems="center"
+              justifyContent="center">
+              <Text
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                fontSize="12px"
+                fontWeight="bold"
+                color="#FF6B35">
+                +
+              </Text>
+            </Box>
+          }>
+          Reference
+        </Button>
       </Box>
+
+      <AddReferenceModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        control={control}
+        onAddReference={handleAddReference}
+      />
     </Box>
   );
 }

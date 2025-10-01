@@ -8,6 +8,8 @@ import FirstSection from "./FirstSection";
 import SecondSection from "./SecondSection";
 import ThirdSection from "./ThirdSection";
 import FourthSection from "./FourthSection";
+import PackageSection from "./PackageSection";
+import TotalRatesSection from "./TotalRatesSection";
 import AddressSection from "./AddressSection";
 import tripsService from "../../../../services/tripsService";
 import {useSelector} from "react-redux";
@@ -85,8 +87,11 @@ function AddTrip() {
 
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <FirstSection control={control} />
-        <SecondSection control={control} />
+        {/* <SecondSection control={control} /> */}
         <ThirdSection control={control} />
+
+        <PackageSection control={control} />
+        <TotalRatesSection control={control} />
         <FourthSection control={control} />
         <AddressSection
           control={control}

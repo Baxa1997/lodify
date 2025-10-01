@@ -15,7 +15,7 @@ function FirstSection({control}) {
       justifyContent="space-between">
       <Box w={"100%"}>
         <Text mb={"6px"} fontSize={"14px"} fontWeight={"500"} color={"#414651"}>
-          Booked For <span>*</span>
+          Customer <span>*</span>
         </Text>
         <HFSelect
           view_field="legal_name"
@@ -29,7 +29,7 @@ function FirstSection({control}) {
       </Box>
       <Box w={"100%"}>
         <Text mb={"6px"} fontSize={"14px"} fontWeight={"500"} color={"#414651"}>
-          Dispatcher <span>*</span>
+          Load ID <span>*</span>
         </Text>
         <HFSelect
           view_field="full_name"
@@ -44,7 +44,7 @@ function FirstSection({control}) {
       </Box>
       <Box w={"100%"}>
         <Text mb={"6px"} fontSize={"14px"} fontWeight={"500"} color={"#414651"}>
-          Unit number <span>*</span>
+          Created By <span>*</span>
         </Text>
         <HFSelect
           view_field="external_id"

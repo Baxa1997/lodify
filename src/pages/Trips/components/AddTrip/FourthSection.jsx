@@ -15,6 +15,7 @@ function FourthSection({control}) {
           w="300px">
           <Flex id="tripRadio" gap={"12px"}>
             <HFRadio
+              array={true}
               control={control}
               name="trip_type"
               value="One Way"
@@ -27,6 +28,7 @@ function FourthSection({control}) {
 
           <Flex mt="16px" id="tripRadio" gap={"12px"}>
             <HFRadio
+              array={true}
               control={control}
               name="trip_type"
               value="Round Trip"
@@ -46,6 +48,7 @@ function FourthSection({control}) {
           gap={"16px"}>
           <Flex id="tripRadio" gap={"12px"}>
             <HFRadio
+              array={true}
               control={control}
               name="driver_type"
               value="Solo"
@@ -58,6 +61,7 @@ function FourthSection({control}) {
 
           <Flex mt="16px" id="tripRadio" gap={"12px"}>
             <HFRadio
+              array={true}
               control={control}
               name="driver_type"
               value="Team"

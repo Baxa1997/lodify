@@ -3,8 +3,13 @@ import {Flex} from "@chakra-ui/react";
 import {Box} from "@chakra-ui/react";
 import {Text} from "@chakra-ui/react";
 import HFSelect from "../../../../components/HFSelect";
+import HFTextField from "../../../../components/HFTextField";
+import {useSelector} from "react-redux";
+import {generateID} from "@utils/generateID";
 
 function FirstSection({control}) {
+  const userData = useSelector((state) => state?.auth?.user_data);
+
   return (
     <Flex
       border="1px solid #E9EAEB"
@@ -18,12 +23,12 @@ function FirstSection({control}) {
           Customer <span>*</span>
         </Text>
         <HFSelect
-          view_field="legal_name"
+          view_field="name"
           value="guid"
-          table_slug="companies"
+          table_slug="shippers"
           size="md"
           control={control}
-          name="company_id"
+          name="shippers_id"
           options={[]}
         />
       </Box>
@@ -31,30 +36,28 @@ function FirstSection({control}) {
         <Text mb={"6px"} fontSize={"14px"} fontWeight={"500"} color={"#414651"}>
           Load ID <span>*</span>
         </Text>
-        <HFSelect
-          view_field="full_name"
-          value="guid"
-          table_slug="users"
+        <HFTextField
+          disabled={true}
+          placeholder="Load ID"
+          border="1px solid #D5D7DA"
           size="md"
           width={"100%"}
           control={control}
-          name="users_id"
-          options={[]}
+          name="generated_id"
         />
       </Box>
       <Box w={"100%"}>
         <Text mb={"6px"} fontSize={"14px"} fontWeight={"500"} color={"#414651"}>
           Created By <span>*</span>
         </Text>
-        <HFSelect
-          view_field="external_id"
-          value="guid"
-          table_slug="trailers"
+        <HFTextField
+          value={userData?.company_name}
+          disabled={true}
+          border="1px solid #D5D7DA"
           size="md"
           width={"100%"}
           control={control}
-          name="trailers_id"
-          options={[]}
+          name="companies_id"
         />
       </Box>
     </Flex>

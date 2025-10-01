@@ -6,6 +6,7 @@ import HFTextField from "../../../../components/HFTextField";
 import HFMultiSelect from "../../../../components/HFMultiSelect";
 import HFFilesField from "../../../../components/HFFilesField";
 import AddReferenceModal from "./AddReferenceModal";
+import HFSelect from "@components/HFSelect";
 
 function ThirdSection({control}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -136,9 +137,10 @@ function ThirdSection({control}) {
               fontSize={"14px"}
               fontWeight={"500"}
               color={"#414651"}>
-              Service Fee <span>*</span>
+              Lodify Verificaion Fee <span>*</span>
             </Text>
             <HFTextField
+              disabled={true}
               size="md"
               border={"1px solid #D5D7DA"}
               control={control}
@@ -164,14 +166,12 @@ function ThirdSection({control}) {
               color={"#414651"}>
               Rate Confirmation <span>*</span>
             </Text>
-            <HFMultiSelect
+            <HFFilesField
               size="md"
+              border={"1px solid #D5D7DA"}
               control={control}
               name="rate_confirmation"
-              options={[
-                {label: "Load-0000001", value: "Load-0000001"},
-                {label: "Load-0000002", value: "Load-0000002"},
-              ]}
+              placeholder="Enter BOL/POD"
             />
           </Box>
           <Box w={"100%"}>

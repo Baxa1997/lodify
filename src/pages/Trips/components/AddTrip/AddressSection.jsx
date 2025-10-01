@@ -6,7 +6,7 @@ import PickupFields from "./PickupFields";
 function AddressSection({control, isLoading = false, onCancel}) {
   const {fields, append, remove} = useFieldArray({
     control,
-    name: "driver_order_items",
+    name: "trip_pickups",
   });
 
   return (

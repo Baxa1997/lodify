@@ -2,7 +2,7 @@ import React from "react";
 import {Controller} from "react-hook-form";
 import {Radio} from "@chakra-ui/react";
 
-function HFRadio({control, name, ...props}) {
+function HFRadio({control, name, array = false, ...props}) {
   return (
     <Controller
       control={control}
@@ -11,8 +11,14 @@ function HFRadio({control, name, ...props}) {
         <Radio
           {...field}
           {...props}
-          isChecked={field.value?.[0] === props.value}
-          onChange={(e) => field.onChange([e.target.value])}
+          isChecked={
+            array
+              ? field.value?.[0] === props.value
+              : field.value === props.value
+          }
+          onChange={(e) =>
+            field.onChange(array ? [e.target.value] : e.target.value)
+          }
         />
       )}
     />

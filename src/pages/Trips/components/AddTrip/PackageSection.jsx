@@ -1,41 +1,18 @@
 import React, {useState} from "react";
 import {Box, Flex, Text, Radio, RadioGroup, Stack} from "@chakra-ui/react";
 import {Controller} from "react-hook-form";
+import {useQuery} from "@tanstack/react-query";
+import tripsService from "@services/tripsService";
+import {htmlToString} from "@utils/htmlToString";
 
-const PackageSection = ({control}) => {
-  const [selectedPackage, setSelectedPackage] = useState("core");
+const PackageSection = ({control, setValue}) => {
+  const [selectedPackage, setSelectedPackage] = useState("");
 
-  const packages = [
-    {
-      id: "core",
-      title: "Core",
-      description: "Visibility + basic fraud prevention without heavy gates",
-      price: "$15 per Load",
-      icon: "📊",
-    },
-    {
-      id: "high-value",
-      title: "High-Value",
-      description:
-        "3-of-N consensus, insurance-gated release, team enforcement",
-      price: "$30 Per Load",
-      icon: "👥",
-    },
-    {
-      id: "secure",
-      title: "Secure",
-      description: "Lock PU#/DEL numbers to presence; enforce asset checks",
-      price: "$45 Per Load",
-      icon: "🛡️",
-    },
-    {
-      id: "ultra-secure",
-      title: "Ultra-Secure",
-      description: "Max gates, corridor rules, ELD session/HOS gating included",
-      price: "$60 Per Load",
-      icon: "⚡",
-    },
-  ];
+  const {data: packageList, isLoading} = useQuery({
+    queryKey: ["GET_PACKAGE_LIST"],
+    queryFn: () => tripsService.getPackageList(),
+    select: (res) => res?.data?.response ?? [],
+  });
 
   return (
     <Box mb="32px" mt="24px">
@@ -48,9 +25,9 @@ const PackageSection = ({control}) => {
       </Text>
 
       <Controller
-        name="package_plan"
+        name="lodify_fees_id"
         control={control}
-        defaultValue="core"
+        defaultValue=""
         render={({field}) => (
           <RadioGroup
             value={field.value}
@@ -59,9 +36,9 @@ const PackageSection = ({control}) => {
               setSelectedPackage(value);
             }}>
             <Flex gap="16px" flexWrap="wrap">
-              {packages.map((pkg) => (
+              {packageList?.map((pkg) => (
                 <Box
-                  key={pkg.id}
+                  key={pkg.guid}
                   flex="1"
                   minW="280px"
                   maxW="320px"
@@ -70,7 +47,7 @@ const PackageSection = ({control}) => {
                   borderRadius="12px"
                   border="2px solid"
                   borderColor={
-                    selectedPackage === pkg.id ? "#FF6B35" : "#E9EAEB"
+                    selectedPackage === pkg.guid ? "#FF6B35" : "#E9EAEB"
                   }
                   position="relative"
                   cursor="pointer"
@@ -81,12 +58,12 @@ const PackageSection = ({control}) => {
                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                   }}
                   onClick={() => {
-                    field.onChange(pkg.id);
-                    setSelectedPackage(pkg.id);
+                    field.onChange(pkg.guid);
+                    setValue("service_fee", pkg.amount);
+                    setSelectedPackage(pkg.guid);
                   }}>
-                  {/* Radio Button */}
                   <Radio
-                    value={pkg.id}
+                    value={pkg.guid}
                     position="absolute"
                     top="16px"
                     right="16px"
@@ -94,49 +71,52 @@ const PackageSection = ({control}) => {
                     size="lg"
                   />
 
-                  {/* Icon */}
                   <Box
                     fontSize="32px"
                     mb="16px"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
-                    w="48px"
-                    h="48px"
-                    bg={selectedPackage === pkg.id ? "#FFF4F0" : "#F8F9FA"}
+                    w="40px"
+                    h="40px"
+                    bg={"transparent"}
                     borderRadius="8px">
-                    {pkg.icon}
+                    <img src={pkg?.image_url} alt="" />
                   </Box>
 
-                  {/* Title */}
                   <Text
                     fontSize="18px"
                     fontWeight="600"
                     color="#181D27"
                     mb="8px">
-                    {pkg.title}
+                    {pkg.label}
                   </Text>
 
-                  {/* Description */}
                   <Text
                     fontSize="14px"
                     color="#717680"
                     mb="16px"
                     lineHeight="1.5"
                     minH="42px">
-                    {pkg.description}
+                    {htmlToString(pkg.description)}
                   </Text>
 
-                  {/* Price */}
                   <Text
-                    fontSize="16px"
+                    fontSize="24px"
                     fontWeight="600"
                     color="#181D27"
                     mb="12px">
-                    {pkg.price}
+                    ${pkg.amount ?? 0}{" "}
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "#717680",
+                      }}>
+                      Per Load
+                    </span>
                   </Text>
 
-                  {/* More Details Link */}
                   <Text
                     fontSize="14px"
                     color="#FF6B35"

@@ -77,7 +77,6 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
         justifyContent="space-between"
         bg={disabled ? "gray.50" : "white"}
         cursor={disabled ? "not-allowed" : "pointer"}>
-        {/* Empty state */}
         {(!value || value.length === 0) && (
           <HStack justify="space-between" w="100%">
             <Text fontSize="14px" color="gray.500">
@@ -95,7 +94,6 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
           </HStack>
         )}
 
-        {/* Files exist */}
         {value && value.length > 0 && (
           <HStack justify="space-between" w="100%">
             <HStack spacing="2" w="300px">
@@ -145,7 +143,6 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
           </HStack>
         )}
 
-        {/* Hidden file input */}
         <Input
           ref={inputRef}
           type="file"
@@ -220,7 +217,7 @@ export default function HFFilesField({
     <Controller
       control={control}
       name={name}
-      defaultValue={[]} // important for multiFile
+      defaultValue={[]}
       rules={{
         required: required ? "This is a required field" : false,
         ...rules,

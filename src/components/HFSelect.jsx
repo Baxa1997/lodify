@@ -12,13 +12,13 @@ function HFSelect({
   size,
   table_slug = "",
   view_field = "name",
+  disabled = false,
   props,
 }) {
   const [Internaloptions, setInternalOptions] = useState([]);
   const getOptions = async () => {
     if (table_slug) {
       const response = await tripsService.getSelectOptions(table_slug);
-      console.log(response.data);
       return setInternalOptions(
         response.data?.response?.map((item) => ({
           label: item[view_field],
@@ -40,6 +40,7 @@ function HFSelect({
             onChange={field.onChange}
             size={size}
             onClick={getOptions}
+            isDisabled={disabled}
           />
         )}
       />

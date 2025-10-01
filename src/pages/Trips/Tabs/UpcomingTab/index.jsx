@@ -170,15 +170,19 @@ function UpcomingTab() {
                   onClick={() => handleRowClick(trip.guid, trip)}>
                   <CTableTd>{trip.shipper?.name || ""}</CTableTd>
                   <CTableTd minWidth="180px">
-                    <Flex gap="24px" alignItems="center">
+                    <Flex
+                      gap="24px"
+                      alignItems="center"
+                      justifyContent="space-between">
                       <Text color="#181D27">{trip.id || ""}</Text>
-                      {trip?.current_trip && (
-                        <TripStatus status={trip?.current_trip} />
-                      )}
+                      <TripStatus status={trip?.current_trip} />
                     </Flex>
                   </CTableTd>
                   <CTableTd>
-                    <Flex alignItems="center" gap="16px">
+                    <Flex
+                      alignItems="center"
+                      gap="16px"
+                      justifyContent="space-between">
                       <Box>
                         <Text
                           h="20px"
@@ -194,14 +198,15 @@ function UpcomingTab() {
                           {formatDate(trip?.origin?.[0]?.depart_at ?? "")}
                         </Text>
                       </Box>
-                      {trip?.total_trips && (
-                        <TripStatus status={trip?.total_trips} />
-                      )}
+                      <TripStatus status={trip?.total_trips} />
                     </Flex>
                   </CTableTd>
                   <CTableTd>
                     <Box>
-                      <Flex gap="16px" alignItems="center">
+                      <Flex
+                        gap="16px"
+                        alignItems="center"
+                        justifyContent="space-between">
                         <Box>
                           <Text
                             h="20px"
@@ -230,7 +235,7 @@ function UpcomingTab() {
                     </Box>
                   </CTableTd>
                   <CTableTd>
-                    <Flex gap="12px">
+                    <Flex gap="12px" justifyContent="space-between">
                       <Text
                         h="20px"
                         fontSize="14px"
@@ -268,7 +273,7 @@ function UpcomingTab() {
                   <CTableTd>
                     <TripProgress
                       total_trips={trip.total_trips}
-                      current_trips={trip.current_trips}
+                      current_trips={trip.current_trip}
                     />
                   </CTableTd>
                   <CTableTd>
@@ -289,6 +294,8 @@ function UpcomingTab() {
 const TripStatus = ({status}) => {
   return (
     <Flex
+      alignItems="center"
+      justifyContent="center"
       flexDirection="row-reverse"
       w="36px"
       gap="4px"
@@ -296,18 +303,17 @@ const TripStatus = ({status}) => {
       borderRadius="100px"
       border="1px solid #B2DDFF">
       <Text fontSize="12px" fontWeight="500" color="#175CD3">
-        {status}
+        {status || 1}
       </Text>
-      <img src="/img/statusArrow.svg" alt="" />
+      {status !== 0 && <img src="/img/statusArrow.svg" alt="" />}
     </Flex>
   );
 };
 
-const TripProgress = ({total_trips = 8, current_trips = 2}) => {
+const TripProgress = ({total_trips = 0, current_trips = 0}) => {
   const colors = ["#FF5B04", "#00707A", "#003B63"];
-
   return (
-    <Flex alignItems="center" justifyContent="center" gap="6px">
+    <Flex alignItems="center" justifyContent="flex-start" gap="6px">
       {Array.from({length: total_trips}).map((_, index) => {
         const isFilled = index < current_trips;
         const color = colors[index % colors.length];
@@ -328,18 +334,6 @@ const TripProgress = ({total_trips = 8, current_trips = 2}) => {
 
 const TripDriverVerification = ({trip}) => {
   const stop = trip?.stop?.[0];
-
-  const statusColors = {
-    active: {bg: "#DEFFEE", icon: "#079455"},
-    inactive: {bg: "#EDEDED", icon: "#079455"},
-    warning: {bg: "#FFF5E5", icon: "#079455"},
-  };
-
-  const equipment_type = {
-    "Power only": <img src="/img/powerOnly.svg" alt="powerOnly" />,
-  };
-
-  const {bg, icon} = statusColors["driver_type"] || statusColors.active;
 
   return (
     <Flex gap="24px" alignItems="center">

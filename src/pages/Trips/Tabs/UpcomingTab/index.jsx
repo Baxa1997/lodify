@@ -15,6 +15,7 @@ import {
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
+import {formatDate} from "@utils/dateFormats";
 
 function UpcomingTab() {
   const navigate = useNavigate();
@@ -86,16 +87,6 @@ function UpcomingTab() {
     setSearchTerm(searchValue);
     setCurrentPage(1);
   };
-
-  function formatToLongWeekday(dateInput) {
-    const date = new Date(dateInput);
-
-    if (!isValid(date)) {
-      return null;
-    }
-
-    return format(date, "EEEE, d MMMM");
-  }
 
   const totalPages = tripsData?.total
     ? Math.ceil(tripsData.total / pageSize)
@@ -177,11 +168,13 @@ function UpcomingTab() {
                     cursor: "pointer",
                   }}
                   onClick={() => handleRowClick(trip.guid, trip)}>
-                  <CTableTd>{trip.customer || ""}</CTableTd>
+                  <CTableTd>{trip.shipper?.name || ""}</CTableTd>
                   <CTableTd minWidth="180px">
                     <Flex gap="24px" alignItems="center">
                       <Text color="#181D27">{trip.id || ""}</Text>
-                      <TripStatus status="1" />
+                      {trip?.current_trip && (
+                        <TripStatus status={trip?.current_trip} />
+                      )}
                     </Flex>
                   </CTableTd>
                   <CTableTd>
@@ -198,20 +191,12 @@ function UpcomingTab() {
                           }` || ""}
                         </Text>
                         <Text h="20px">
-                          {(() => {
-                            const rawDate = trip?.origin?.[0]?.date;
-                            const time = trip?.origin?.[0]?.time ?? "";
-                            const formattedDate = rawDate
-                              ? formatToLongWeekday(rawDate, "en-US")
-                              : null;
-
-                            return formattedDate
-                              ? `${formattedDate}, ${time}`
-                              : "";
-                          })()}
+                          {formatDate(trip?.origin?.[0]?.depart_at ?? "")}
                         </Text>
                       </Box>
-                      <TripStatus status="1" />
+                      {trip?.total_trips && (
+                        <TripStatus status={trip?.total_trips} />
+                      )}
                     </Flex>
                   </CTableTd>
                   <CTableTd>
@@ -224,78 +209,67 @@ function UpcomingTab() {
                             fontWeight="500"
                             color="#181D27">
                             {" "}
-                            {`${trip.stops?.[0]?.address ?? ""} / ${
-                              trip?.stops?.[0]?.address_2 ?? ""
+                            {`${trip.stop?.[0]?.address ?? ""} / ${
+                              trip?.stop?.[0]?.address_2 ?? ""
                             }` || ""}
                           </Text>
                           <Text h="20px">
-                            {(() => {
-                              const rawDate = trip?.stops?.[0]?.date;
-                              const time = trip?.stops?.[0]?.time ?? "";
-                              const formattedDate = rawDate
-                                ? formatToLongWeekday(rawDate, "en-US")
-                                : null;
-
-                              return formattedDate
-                                ? `${formattedDate}, ${time}`
-                                : "";
-                            })()}
+                            {formatDate(trip?.stop?.[0]?.arrive_by ?? "")}
                           </Text>
                         </Box>
-                        <TripStopStatus status="1" />
+                        <TripDriverVerification trip={trip} />
                       </Flex>
                     </Box>
                   </CTableTd>
-                  <CTableTd>{trip?.assets?.external_id ?? ""}</CTableTd>
+                  <CTableTd>{trip?.tractors?.plate_number ?? "---"}</CTableTd>
                   <CTableTd>
                     <Box>
                       <Text h="20px">
-                        {trip?.destination_miles
-                          ? `${trip?.destination_miles} mi`
-                          : "0 mi"}
+                        {trip?.trailers?.plate_number ?? "---"}
                       </Text>
-                      <Text h="20px">{trip?.destination_time ?? ""}</Text>
                     </Box>
                   </CTableTd>
                   <CTableTd>
-                    <Text
-                      h="20px"
-                      fontSize="14px"
-                      fontWeight="500"
-                      color="#535862">
-                      {trip?.assets?.type?.[0] ?? ""}
-                    </Text>
+                    <Flex gap="12px">
+                      <Text
+                        h="20px"
+                        fontSize="14px"
+                        fontWeight="500"
+                        color="#535862">
+                        {trip?.origin?.[0]?.equipment_type ?? "ss"}
+                      </Text>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        border="1px solid #dcddde"
+                        w="24px"
+                        h="22px"
+                        borderRadius="50%"
+                        bg="#fff">
+                        {trip?.origin?.[0]?.equipment_availability?.[0]?.[0] ??
+                          ""}
+                      </Flex>
+                    </Flex>
                   </CTableTd>
                   <CTableTd>
                     <Badge
-                      colorScheme={getLoadTypeColor(trip.load_type?.[0] ?? "")}
+                      colorScheme={getLoadTypeColor(
+                        trip.origin?.[0]?.load_type?.[0] ?? ""
+                      )}
                       variant="subtle"
                       px={3}
                       py={1}
                       borderRadius="full"
                       fontSize="12px"
                       fontWeight="500">
-                      {trip.load_type?.[0] ?? ""}
+                      {trip.origin?.[0]?.load_type?.[0] ?? ""}
                     </Badge>
                   </CTableTd>
                   <CTableTd>
-                    <Flex alignItems="center" justifyContent="center" gap="4px">
-                      <Box
-                        w="13px"
-                        h="13px"
-                        borderRadius="50%"
-                        bg="#FF5B04"></Box>
-                      <Box
-                        w="13px"
-                        h="13px"
-                        borderRadius="50%"
-                        bg="#00707A"></Box>
-                      <Box
-                        w="13px"
-                        h="13px"
-                        borderRadius="50%"
-                        bg="#003B63"></Box>
-                    </Flex>
+                    <TripProgress
+                      total_trips={trip.total_trips}
+                      current_trips={trip.current_trips}
+                    />
                   </CTableTd>
                   <CTableTd>
                     <Text color="#EF6820" fontWeight="600">
@@ -322,26 +296,96 @@ const TripStatus = ({status}) => {
       borderRadius="100px"
       border="1px solid #B2DDFF">
       <Text fontSize="12px" fontWeight="500" color="#175CD3">
-        1
+        {status}
       </Text>
       <img src="/img/statusArrow.svg" alt="" />
     </Flex>
   );
 };
 
-const TripStopStatus = ({status = "active"}) => {
+const TripProgress = ({total_trips = 8, current_trips = 2}) => {
+  const colors = ["#FF5B04", "#00707A", "#003B63"];
+
+  return (
+    <Flex alignItems="center" justifyContent="center" gap="6px">
+      {Array.from({length: total_trips}).map((_, index) => {
+        const isFilled = index < current_trips;
+        const color = colors[index % colors.length];
+
+        return (
+          <Box
+            key={index}
+            w="13px"
+            h="13px"
+            borderRadius="50%"
+            bg={isFilled ? color : "#E0E0E0"}
+          />
+        );
+      })}
+    </Flex>
+  );
+};
+
+const TripDriverVerification = ({trip}) => {
+  const stop = trip?.stop?.[0];
+
   const statusColors = {
     active: {bg: "#DEFFEE", icon: "#079455"},
     inactive: {bg: "#EDEDED", icon: "#079455"},
     warning: {bg: "#FFF5E5", icon: "#079455"},
   };
 
-  const {bg, icon} = statusColors[status] || statusColors.active;
+  const equipment_type = {
+    "Power only": <img src="/img/powerOnly.svg" alt="powerOnly" />,
+  };
+
+  const {bg, icon} = statusColors["driver_type"] || statusColors.active;
 
   return (
     <Flex gap="24px" alignItems="center">
       <Box w="22px" h="22px">
-        <img
+        {stop?.equipment_type === "Power Only" ? (
+          trip?.is_truck_verified ? (
+            <img
+              src="/img/verifiedFullTruck.svg"
+              alt="powerOnly"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          ) : (
+            (
+              <img
+                src="/img/unverifiedFullTruck.svg"
+                alt="powerOnly"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            )``
+          )
+        ) : trip?.is_truck_verified ? (
+          <img
+            src="/img/verifiedEmptyTruck.svg"
+            alt="truck"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        ) : (
+          <img
+            src="/img/unverifiedEmptyTruck.svg"
+            alt="truck"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        )}
+        {/* <img
           src="/img/truck.svg"
           alt="truck"
           style={{
@@ -349,7 +393,7 @@ const TripStopStatus = ({status = "active"}) => {
             height: "100%",
             filter: `drop-shadow(0 0 0 ${icon}) saturate(1000%)`,
           }}
-        />
+        /> */}
       </Box>
 
       <Flex
@@ -359,27 +403,50 @@ const TripStopStatus = ({status = "active"}) => {
         h="27px"
         p="5px"
         gap="4px"
-        bg={bg}
+        bg={trip?.is_driver_verified ? "#DEFFEE" : "#EDEDED"}
         borderRadius="16px">
         <Box w="17px" h="17px">
-          <img
-            src="/img/driverVerified.svg"
-            alt="driver"
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
+          {trip?.driver_type?.[0] === "Team" &&
+            (trip?.is_driver_verified ? (
+              <img
+                src="/img/unverifiedSecondDriver.svg"
+                alt="driver"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            ) : (
+              <img
+                src="/img/unvSecondDriver.svg"
+                alt="driver"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            ))}
         </Box>
         <Box w="17px" h="17px">
-          <img
-            src="/img/driverVerified.svg"
-            alt="driver"
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
+          {trip?.is_driver_verified ? (
+            <img
+              src="/img/driverVerified.svg"
+              alt="driver"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          ) : (
+            <img
+              src="/img/unverifiedDriver.svg"
+              alt="driver"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          )}
         </Box>
       </Flex>
     </Flex>

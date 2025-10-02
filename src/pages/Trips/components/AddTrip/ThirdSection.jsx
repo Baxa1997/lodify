@@ -7,6 +7,7 @@ import HFMultiSelect from "../../../../components/HFMultiSelect";
 import HFFilesField from "../../../../components/HFFilesField";
 import AddReferenceModal from "./AddReferenceModal";
 import HFSelect from "@components/HFSelect";
+import {AddIcon} from "@chakra-ui/icons";
 
 function ThirdSection({control}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -211,31 +212,16 @@ function ThirdSection({control}) {
 
       <Box mt="24px" display="flex" justifyContent="flex-start">
         <Button
-          bg="#FF6B35"
-          color="white"
-          _hover={{bg: "#E55A2B"}}
-          onClick={handleModalOpen}
-          leftIcon={
-            <Box
-              w="16px"
-              h="16px"
-              bg="white"
-              borderRadius="50%"
-              display="flex"
-              alignItems="center"
-              justifyContent="center">
-              <Text
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                fontSize="12px"
-                fontWeight="bold"
-                color="#FF6B35">
-                +
-              </Text>
-            </Box>
-          }>
-          Reference
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          gap="8px"
+          border="1px solid #ffcaad"
+          bg="#fff"
+          _hover={{bg: "#fff"}}
+          onClick={handleModalOpen}>
+          <AddIcon w="16px" h="16px" color="#EF6820" />
+          <Text color="#181D27">Reference</Text>
         </Button>
       </Box>
 

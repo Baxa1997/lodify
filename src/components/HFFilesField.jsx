@@ -18,6 +18,7 @@ import {
   ModalFooter,
   Button,
   VStack,
+  Flex,
 } from "@chakra-ui/react";
 import {Controller} from "react-hook-form";
 import {CloseIcon} from "@chakra-ui/icons";
@@ -65,92 +66,103 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
         </FormLabel>
       )}
 
-      <Box
-        h="40px"
-        border="1px solid"
-        borderColor="gray.300"
-        borderRadius="md"
-        px="3"
-        py="2"
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        bg={disabled ? "gray.50" : "white"}
-        cursor={disabled ? "not-allowed" : "pointer"}>
-        {(!value || value.length === 0) && (
-          <HStack justify="space-between" w="100%">
-            <Text fontSize="14px" color="gray.500">
-              Upload Files
-            </Text>
-            <IconButton
-              bg="none"
-              _hover={{bg: "none"}}
-              aria-label="upload"
-              size="sm"
-              icon={<img src="/img/upload.svg" alt="upload" />}
-              onClick={() => inputRef.current.click()}
-              isDisabled={disabled || loading}
-            />
-          </HStack>
-        )}
-
-        {value && value.length > 0 && (
-          <HStack justify="space-between" w="100%">
-            <HStack spacing="2" w="300px">
-              <Text fontSize="13px" w="100%">
-                {getShortFileName(value[0], 20).shortName}
+      <Flex width="100%" alignItems="center" gap="12px">
+        <Box
+          w={"100%"}
+          h="40px"
+          border="1px solid"
+          borderColor="gray.300"
+          borderRadius="md"
+          px="3"
+          py="2"
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          bg={disabled ? "gray.50" : "white"}
+          cursor={disabled ? "not-allowed" : "pointer"}>
+          {(!value || value.length === 0) && (
+            <HStack justify="space-between" w="100%">
+              <Text fontSize="14px" color="gray.500">
+                Upload Files
               </Text>
-              {value.length > 1 && (
-                <Badge
-                  colorScheme="blue"
-                  borderRadius="full"
-                  fontSize="11px"
-                  px="2"
-                  cursor="pointer"
-                  onClick={() => setIsModalOpen(true)}>
-                  +{value.length - 1}
-                </Badge>
-              )}
-              <IconButton
-                size="xs"
-                border="1px solid"
-                borderColor="gray.200"
+            </HStack>
+          )}
+
+          {value && value.length > 0 && (
+            <HStack justify="space-between" w="100%">
+              <HStack spacing="2" w="300px">
+                <Text fontSize="13px" w="100%">
+                  {getShortFileName(value[0], 20).shortName}
+                </Text>
+                {value.length > 1 && (
+                  <Badge
+                    colorScheme="blue"
+                    borderRadius="full"
+                    fontSize="11px"
+                    px="2"
+                    cursor="pointer"
+                    onClick={() => setIsModalOpen(true)}>
+                    +{value.length - 1}
+                  </Badge>
+                )}
+                <IconButton
+                  size="xs"
+                  border="1px solid"
+                  borderColor="gray.200"
+                  bg="none"
+                  _hover={{bg: "none"}}
+                  aria-label="remove"
+                  icon={
+                    <img
+                      src="/img/cancelIcon.svg"
+                      width={"12px"}
+                      height={"12px"}
+                      alt="close"
+                    />
+                  }
+                  onClick={() => removeFile(value[0])}
+                />
+              </HStack>
+
+              {/* <IconButton
                 bg="none"
                 _hover={{bg: "none"}}
-                aria-label="remove"
-                icon={
-                  <img
-                    src="/img/cancelIcon.svg"
-                    width={"12px"}
-                    height={"12px"}
-                    alt="close"
-                  />
-                }
-                onClick={() => removeFile(value[0])}
-              />
+                aria-label="upload"
+                size="sm"
+                icon={<img src="/img/upload.svg" alt="upload" />}
+                onClick={() => inputRef.current.click()}
+                isDisabled={disabled || loading}
+              /> */}
             </HStack>
+          )}
 
-            {/* Upload another */}
-            <IconButton
-              bg="none"
-              _hover={{bg: "none"}}
-              aria-label="upload"
-              size="sm"
-              icon={<img src="/img/upload.svg" alt="upload" />}
-              onClick={() => inputRef.current.click()}
-              isDisabled={disabled || loading}
-            />
-          </HStack>
-        )}
-
-        <Input
-          ref={inputRef}
-          type="file"
-          display="none"
-          onChange={handleFileChange}
-          isDisabled={disabled}
-        />
-      </Box>
+          <Input
+            ref={inputRef}
+            type="file"
+            display="none"
+            onChange={handleFileChange}
+            isDisabled={disabled}
+          />
+        </Box>
+        <Button
+          border="2px solid #ce6c38"
+          width="44px"
+          height="40px"
+          borderRadius="8px"
+          bg="#EF6820"
+          _hover={{bg: "#EF6820"}}
+          aria-label="upload"
+          size="xs"
+          onClick={() => inputRef.current.click()}
+          isDisabled={disabled || loading}>
+          <img
+            src="/img/uploadWhite.svg"
+            alt="upload"
+            width="16px"
+            height="15px"
+          />
+        </Button>
+      </Flex>
 
       <Modal
         isOpen={isModalOpen}

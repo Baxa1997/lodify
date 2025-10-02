@@ -123,16 +123,6 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
                   onClick={() => removeFile(value[0])}
                 />
               </HStack>
-
-              {/* <IconButton
-                bg="none"
-                _hover={{bg: "none"}}
-                aria-label="upload"
-                size="sm"
-                icon={<img src="/img/upload.svg" alt="upload" />}
-                onClick={() => inputRef.current.click()}
-                isDisabled={disabled || loading}
-              /> */}
             </HStack>
           )}
 

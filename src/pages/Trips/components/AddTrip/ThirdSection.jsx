@@ -4,6 +4,7 @@ import {Box} from "@chakra-ui/react";
 import {Text} from "@chakra-ui/react";
 import HFTextField from "../../../../components/HFTextField";
 import HFMultiSelect from "../../../../components/HFMultiSelect";
+import Accessorials from "../Accessorials";
 import HFFilesField from "../../../../components/HFFilesField";
 import AddReferenceModal from "./AddReferenceModal";
 import HFSelect from "@components/HFSelect";
@@ -117,19 +118,11 @@ function ThirdSection({control}) {
             />
           </Box>
           <Box w={"100%"}>
-            <Text
-              mb={"6px"}
-              fontSize={"14px"}
-              fontWeight={"500"}
-              color={"#414651"}>
-              Accessorials <span>*</span>
-            </Text>
-            <HFMultiSelect
-              size="md"
-              width={"100%"}
+            <Accessorials
               control={control}
               name="accessorials"
-              options={[]}
+              label="Accessorials"
+              required={true}
             />
           </Box>
           <Box w={"100%"}>

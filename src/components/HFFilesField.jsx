@@ -21,7 +21,6 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import {Controller} from "react-hook-form";
-import {CloseIcon} from "@chakra-ui/icons";
 import fileService from "@services/fileService";
 import {getShortFileName} from "@utils/getFileName";
 
@@ -90,38 +89,106 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
 
           {value && value.length > 0 && (
             <HStack justify="space-between" w="100%">
-              <HStack spacing="2" w="300px">
-                <Text fontSize="13px" w="100%">
-                  {getShortFileName(value[0], 20).shortName}
-                </Text>
-                {value.length > 1 && (
-                  <Badge
-                    colorScheme="blue"
-                    borderRadius="full"
-                    fontSize="11px"
-                    px="2"
-                    cursor="pointer"
-                    onClick={() => setIsModalOpen(true)}>
-                    +{value.length - 1}
-                  </Badge>
+              <HStack spacing="2" w="320px" flexWrap="wrap">
+                {value.length <= 2 ? (
+                  value.map((fileUrl, idx) => (
+                    <Box
+                      key={idx}
+                      display="flex"
+                      alignItems="center"
+                      px="2"
+                      py="0"
+                      bg="white"
+                      border="1px solid"
+                      borderColor="gray.300"
+                      borderRadius="8px"
+                      fontSize="13px"
+                      color="gray.700"
+                      maxW="210px"
+                      onClick={() => setIsModalOpen(true)}>
+                      <Text fontSize="13px" isTruncated maxW="150px">
+                        {getShortFileName(fileUrl, 7).shortName}
+                      </Text>
+                      <IconButton
+                        size="xs"
+                        bg="none"
+                        _hover={{bg: "none"}}
+                        ml="1"
+                        aria-label="remove"
+                        icon={
+                          <img
+                            src="/img/cancelIcon.svg"
+                            width={"10px"}
+                            height={"10px"}
+                            alt="close"
+                          />
+                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeFile(fileUrl);
+                        }}
+                      />
+                    </Box>
+                  ))
+                ) : (
+                  <>
+                    {value.slice(0, 2).map((fileUrl, idx) => (
+                      <Box
+                        key={idx}
+                        display="flex"
+                        alignItems="center"
+                        px="2"
+                        py="0"
+                        bg="white"
+                        border="1px solid"
+                        borderColor="gray.300"
+                        borderRadius="8px"
+                        fontSize="13px"
+                        color="gray.700"
+                        maxW="200px"
+                        onClick={() => setIsModalOpen(true)}>
+                        <Text fontSize="13px" isTruncated maxW="150px">
+                          {getShortFileName(fileUrl, 7).shortName}
+                        </Text>
+                        <IconButton
+                          size="xs"
+                          bg="none"
+                          _hover={{bg: "none"}}
+                          ml="1"
+                          aria-label="remove"
+                          icon={
+                            <img
+                              src="/img/cancelIcon.svg"
+                              width={"10px"}
+                              height={"10px"}
+                              alt="close"
+                            />
+                          }
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFile(fileUrl);
+                          }}
+                        />
+                      </Box>
+                    ))}
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      px="2"
+                      py="2px"
+                      bg="white"
+                      border="1px solid"
+                      borderColor="gray.300"
+                      borderRadius="8px"
+                      fontSize="13px"
+                      color="gray.700"
+                      cursor="pointer"
+                      _hover={{bg: "gray.50"}}
+                      onClick={() => setIsModalOpen(true)}>
+                      +{value.length - 2}
+                    </Box>
+                  </>
                 )}
-                <IconButton
-                  size="xs"
-                  border="1px solid"
-                  borderColor="gray.200"
-                  bg="none"
-                  _hover={{bg: "none"}}
-                  aria-label="remove"
-                  icon={
-                    <img
-                      src="/img/cancelIcon.svg"
-                      width={"12px"}
-                      height={"12px"}
-                      alt="close"
-                    />
-                  }
-                  onClick={() => removeFile(value[0])}
-                />
               </HStack>
             </HStack>
           )}

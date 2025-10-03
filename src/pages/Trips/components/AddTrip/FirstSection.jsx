@@ -5,7 +5,6 @@ import {Text} from "@chakra-ui/react";
 import HFSelect from "../../../../components/HFSelect";
 import HFTextField from "../../../../components/HFTextField";
 import {useSelector} from "react-redux";
-import {generateID} from "@utils/generateID";
 
 function FirstSection({control}) {
   const userData = useSelector((state) => state?.auth?.user_data);

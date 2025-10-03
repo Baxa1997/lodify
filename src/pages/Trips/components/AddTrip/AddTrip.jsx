@@ -29,7 +29,7 @@ function AddTrip({tripData = {}}) {
     handleSubmit,
     formState: {errors},
     watch,
-  } = useForm({});
+  } = useForm();
 
   const transformTripData = (data) => {
     if (!data || Object.keys(data).length === 0) return {};
@@ -100,11 +100,12 @@ function AddTrip({tripData = {}}) {
   });
 
   const onSubmit = (data) => {
+    console.log("data", data);
     const dataToSend = {
       data: {
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
         environment_id: envId,
-        method: "create",
+        method: Boolean(id) ? "update" : "create",
         object_data: {
           main_trip: {
             ...data,

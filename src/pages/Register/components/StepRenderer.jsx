@@ -2,9 +2,6 @@ import CompanyDetails from "./forms/CompanyDetails";
 import AddressDetails from "./forms/AddressDetails";
 import ContactDetails from "./forms/ContactDetails";
 import VerificationStep from "./forms/VerificationStep";
-import PhoneVerification from "./forms/PhoneVerification";
-import EmailVerification from "./forms/EmailVerification";
-import EmailOTP from "./forms/EmailOTP";
 import {useGetLodify} from "@services/lodify-user.service";
 
 const StepRenderer = ({
@@ -17,8 +14,6 @@ const StepRenderer = ({
   reset = () => {},
   getValues = () => {},
   onNext = () => {},
-  currentSubStep,
-  setCurrentSubStep,
 }) => {
   switch (currentStep) {
     case 1:
@@ -40,6 +35,7 @@ const StepRenderer = ({
           errors={errors}
           watch={watch}
           onNext={onNext}
+          setValue={setValue}
         />
       );
     case 3:
@@ -47,49 +43,14 @@ const StepRenderer = ({
         <ContactDetails control={control} errors={errors} onNext={onNext} />
       );
     case 4:
-      // Handle verification substeps
-      switch (currentSubStep) {
-        case "phone":
-        case "phone-verify":
-          return (
-            <PhoneVerification
-              phone={watch("phone")}
-              onNext={onNext}
-              currentSubStep={currentSubStep}
-              setCurrentSubStep={setCurrentSubStep}
-              setValue={setValue}
-            />
-          );
-        case "email":
-          return (
-            <EmailVerification
-              email={watch("email")}
-              onNext={onNext}
-              currentSubStep={currentSubStep}
-              setCurrentSubStep={setCurrentSubStep}
-              setValue={setValue}
-            />
-          );
-        case "email-verify":
-          return (
-            <EmailOTP
-              email={watch("email")}
-              onNext={onNext}
-              currentSubStep={currentSubStep}
-              setCurrentSubStep={setCurrentSubStep}
-            />
-          );
-        default:
-          return (
-            <PhoneVerification
-              phone={watch("phone")}
-              onNext={onNext}
-              currentSubStep={currentSubStep}
-              setCurrentSubStep={setCurrentSubStep}
-              setValue={setValue}
-            />
-          );
-      }
+      return (
+        <VerificationStep
+          watch={watch}
+          setValue={setValue}
+          onSubmit={onSubmit}
+          onNext={onNext}
+        />
+      );
     default:
       return null;
   }

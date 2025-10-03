@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import {Box, Text, VStack, Button, Flex} from "@chakra-ui/react";
+import {Box, Text, VStack, Button, Flex, useToast} from "@chakra-ui/react";
+import authService from "../../../../services/auth/authService";
 
 const EmailVerification = ({
   email,
@@ -10,15 +11,52 @@ const EmailVerification = ({
   setValue,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [smsId, setSmsId] = useState(null);
+  const toast = useToast();
 
   const handleSendEmailCode = async () => {
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // After sending email code, move to email OTP verification
-      setCurrentSubStep("email-verify");
+      const response = await authService.sendCode(
+        {
+          type: "MAILCHIMP",
+          recipient: email,
+          sms_template_id: "4b73c53e-df0b-4f24-8d24-e7f03d858cda",
+          field_slug: "text",
+          variables: {},
+        },
+        {
+          project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
+        }
+      );
+
+      if (response?.data?.sms_id) {
+        setSmsId(response.data.sms_id);
+        setValue("emailSmsId", response.data.sms_id);
+
+        toast({
+          title: "Code Sent Successfully!",
+          description: "Verification code has been sent to your email.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+
+        // After sending email code, move to email OTP verification
+        setCurrentSubStep("email-verify");
+      }
     } catch (error) {
       console.error("Failed to send email code:", error);
+      toast({
+        title: "Failed to Send Code",
+        description:
+          error?.response?.data?.message || "Please try again later.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
     } finally {
       setIsLoading(false);
     }

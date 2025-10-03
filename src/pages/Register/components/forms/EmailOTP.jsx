@@ -1,6 +1,15 @@
 import React, {useState} from "react";
-import {Box, Text, VStack, Button, Link, Flex} from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  VStack,
+  Button,
+  Link,
+  Flex,
+  useToast,
+} from "@chakra-ui/react";
 import OtpInput from "react-otp-input";
+import authService from "../../../../services/auth/authService";
 
 const EmailOTP = ({
   email,
@@ -8,23 +17,60 @@ const EmailOTP = ({
   onBack,
   currentSubStep,
   setCurrentSubStep,
+  watch,
+  setValue,
 }) => {
   const [emailCode, setEmailCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const toast = useToast();
 
   const handleEmailCodeChange = (value) => {
     setEmailCode(value);
+    setValue("emailCode", value);
   };
 
   const handleSendEmailCode = async () => {
-    setIsLoading(true);
+    setIsResending(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // Resend email code
+      const response = await authService.sendCode(
+        {
+          type: "MAILCHIMP",
+          recipient: email,
+          sms_template_id: "4b73c53e-df0b-4f24-8d24-e7f03d858cda",
+          field_slug: "text",
+          variables: {},
+        },
+        {
+          project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
+        }
+      );
+
+      if (response?.data?.sms_id) {
+        setValue("emailSmsId", response.data.sms_id);
+
+        toast({
+          title: "Code Resent Successfully!",
+          description: "New verification code has been sent to your email.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      }
     } catch (error) {
       console.error("Failed to resend email code:", error);
+      toast({
+        title: "Failed to Resend Code",
+        description:
+          error?.response?.data?.message || "Please try again later.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
     } finally {
-      setIsLoading(false);
+      setIsResending(false);
     }
   };
 
@@ -32,11 +78,49 @@ const EmailOTP = ({
     if (emailCode.length === 4) {
       setIsLoading(true);
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        // After email verification, proceed to next step
-        onNext && onNext();
+        const smsId = watch("emailSmsId");
+        if (!smsId) {
+          throw new Error(
+            "No verification session found. Please resend the code."
+          );
+        }
+
+        const response = await authService.verifyCode(
+          smsId,
+          {
+            provider: "email",
+            otp: emailCode,
+          },
+          {
+            project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
+          }
+        );
+
+        if (response?.data) {
+          toast({
+            title: "Email Verified Successfully!",
+            description:
+              "Your email has been verified. Proceeding to registration.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+
+          // After email verification, proceed to next step
+          onNext && onNext();
+        }
       } catch (error) {
         console.error("Failed to verify email code:", error);
+        toast({
+          title: "Verification Failed",
+          description:
+            error?.response?.data?.message || "Invalid code. Please try again.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
       } finally {
         setIsLoading(false);
       }
@@ -142,8 +226,12 @@ const EmailOTP = ({
       <VStack spacing={2} w="100%">
         <Text fontSize="16px" color="#6B7280" textAlign="center">
           Code didn't send?{" "}
-          <Link color="#EF6820" onClick={handleSendEmailCode}>
-            Click to resend
+          <Link
+            color="#EF6820"
+            onClick={handleSendEmailCode}
+            cursor={isResending ? "not-allowed" : "pointer"}
+            opacity={isResending ? 0.6 : 1}>
+            {isResending ? "Resending..." : "Click to resend"}
           </Link>
         </Text>
         <Flex align="center" gap="8px" justify="center">

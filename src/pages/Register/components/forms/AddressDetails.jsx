@@ -8,17 +8,22 @@ import {
   Link,
   Input,
   HStack,
+  useToast,
 } from "@chakra-ui/react";
 import OtpInput from "react-otp-input";
 import HFTextField from "../../../../components/HFTextField";
 import styles from "../../MultiStepRegister.module.scss";
 import HFPhoneInput from "../../../../components/HFPhoneInput";
+import authService from "../../../../services/auth/authService";
 
-const AddressDetails = ({control, errors, watch, onNext}) => {
+const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   const [currentSubStep, setCurrentSubStep] = useState("form");
   const [phoneCode, setPhoneCode] = useState("1234");
   const [emailCode, setEmailCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [emailSmsId, setEmailSmsId] = useState(null);
+  const toast = useToast();
 
   const formData = watch();
 
@@ -28,6 +33,7 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
 
   const handleEmailCodeChange = (value) => {
     setEmailCode(value);
+    setValue("emailCode", value);
   };
 
   const handleSendPhoneCode = async () => {
@@ -45,10 +51,45 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
   const handleSendEmailCode = async () => {
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setCurrentSubStep("email-verify");
+      const response = await authService.sendCode(
+        {
+          type: "MAILCHIMP",
+          recipient: formData.email,
+          sms_template_id: "4b73c53e-df0b-4f24-8d24-e7f03d858cda",
+          field_slug: "text",
+          variables: {},
+        },
+        {
+          project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
+        }
+      );
+
+      if (response?.sms_id) {
+        setEmailSmsId(response.sms_id);
+        setValue("emailSmsId", response.sms_id);
+        setCurrentSubStep("email-verify");
+
+        toast({
+          title: "Code Sent Successfully!",
+          description: "Verification code has been sent to your email.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+
+        setCurrentSubStep("email-verify");
+      }
     } catch (error) {
-      console.error("Failed to send email code:", error);
+      toast({
+        title: "Failed to Send Code",
+        description:
+          error?.response?.data?.message || "Please try again later.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -68,36 +109,98 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
     }
   };
 
-  console.log("currentSubStepcurrentSubStep", currentSubStep);
-
   const handleVerifyEmail = async () => {
     if (emailCode.length === 4) {
       setIsLoading(true);
       try {
-        // API call for email verification
-        const response = await fetch("/api/verify-email", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            code: emailCode,
-          }),
-        });
+        const smsId = emailSmsId || formData.emailSmsId;
+        if (!smsId) {
+          throw new Error(
+            "No verification session found. Please resend the code."
+          );
+        }
 
-        if (response.ok) {
+        const response = await authService.verifyCode(
+          smsId,
+          {
+            provider: "email",
+            otp: emailCode,
+          },
+          {
+            project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
+          }
+        );
+
+        if (response) {
+          toast({
+            title: "Email Verified Successfully!",
+            description:
+              "Your email has been verified. Proceeding to next step.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+
           onNext && onNext();
-        } else {
-          throw new Error("Email verification failed");
         }
       } catch (error) {
-        console.error("Failed to verify email code:", error);
-        // For now, still proceed to next step (remove this in production)
-        onNext && onNext();
+        toast({
+          title: "Verification Failed",
+          description:
+            error?.response?.data?.message || "Invalid code. Please try again.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+
+  const handleResendEmailCode = async () => {
+    setIsResending(true);
+    try {
+      const response = await authService.sendCode(
+        {
+          type: "MAILCHIMP",
+          recipient: formData.email,
+          sms_template_id: "4b73c53e-df0b-4f24-8d24-e7f03d858cda",
+          field_slug: "text",
+          variables: {},
+        },
+        {
+          project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
+        }
+      );
+
+      if (response?.data?.sms_id) {
+        setEmailSmsId(response.data.sms_id);
+        setValue("emailSmsId", response.data.sms_id);
+        setCurrentSubStep("email-verify");
+        toast({
+          title: "Code Resent Successfully!",
+          description: "New verification code has been sent to your email.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to Resend Code",
+        description:
+          error?.response?.data?.message || "Please try again later.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -429,8 +532,12 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
         <VStack spacing={2} w="100%">
           <Text fontSize="16px" color="#6B7280" textAlign="center">
             Code didn't send?{" "}
-            <Link color="#EF6820" onClick={handleSendEmailCode}>
-              Click to resend
+            <Link
+              color="#EF6820"
+              onClick={handleResendEmailCode}
+              cursor={isResending ? "not-allowed" : "pointer"}
+              opacity={isResending ? 0.6 : 1}>
+              {isResending ? "Resending..." : "Click to resend"}
             </Link>
           </Text>
           <Flex align="center" gap="8px" justify="center">

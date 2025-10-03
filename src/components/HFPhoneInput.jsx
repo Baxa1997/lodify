@@ -4,7 +4,7 @@ import "react-international-phone/style.css";
 import {Box} from "@chakra-ui/react";
 import {Controller} from "react-hook-form";
 
-const HFPhoneInput = ({control, name}) => {
+const HFPhoneInput = ({control, name, disabled}) => {
   return (
     <Controller
       control={control}
@@ -21,10 +21,14 @@ const HFPhoneInput = ({control, name}) => {
             boxShadow: "none",
           }}>
           <PhoneInput
+            disableCountryGuess
             defaultCountry="us"
+            forceCallingCode="1"
+            preferredCountries={["us"]}
             value={field.value}
             onChange={(phone) => field.onChange(phone)}
             id="phone"
+            disabled={disabled}
             style={{
               "--rip-border-radius": "0",
               "--rip-border-color": "transparent",
@@ -64,7 +68,6 @@ const HFPhoneInput = ({control, name}) => {
             hideDropdown={false}
             showDropdownSearch={true}
             disableFormatting={false}
-            placeholder="(937) 301-3613"
           />
         </Box>
       )}

@@ -20,7 +20,8 @@ const SearchToggle = ({
   const {data, isSuccess, isError, error, refetch, isLoading} = useGetLodify(
     fmcsa,
     {
-      enabled: false,
+      queryKey: ["GET_FMCSA_DATA", fmcsa],
+      enabled: Boolean(fmcsa),
     }
   );
 
@@ -47,7 +48,7 @@ const SearchToggle = ({
             zip_code: responseData?.phy_zip,
             country: responseData?.phy_country,
             email: responseData?.email_address,
-            phone: responseData?.telephone,
+            phone: `+1${responseData?.telephone}`,
             companyDetails: {
               name: responseData?.legal_name,
               dotNumber: responseData?.dot_number || responseData?.us_dot,

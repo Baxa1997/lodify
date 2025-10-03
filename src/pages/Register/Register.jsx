@@ -15,6 +15,7 @@ const Register = () => {
   const [role, setRole] = useState("");
   const [completedSteps, setCompletedSteps] = useState(new Set());
   const toast = useToast();
+  const [registerSuccess, setRegisterSuccess] = useState(false);
 
   const {
     register,
@@ -46,6 +47,7 @@ const Register = () => {
       phone: "",
       emailCode: "",
       emailSmsId: "",
+      confirmPassword: "",
       type: "phone",
       client_type_id: "706337d3-80dc-4aca-80b3-67fad16cd0d6",
       role_id: "abc236d0-8a9a-4b10-9f44-6b51fcb35e9f",
@@ -85,7 +87,11 @@ const Register = () => {
   };
 
   const validateStep4 = (data) => {
-    return data.emailCode && data.emailCode.trim() !== "";
+    const hasPassword = data.password && data.password.trim() !== "";
+    const hasConfirmPassword =
+      data.confirmPassword && data.confirmPassword.trim() !== "";
+    const passwordsMatch = data.password === data.confirmPassword;
+    return hasPassword && hasConfirmPassword && passwordsMatch;
   };
 
   const getStepValidation = (step) => {
@@ -208,17 +214,7 @@ const Register = () => {
 
       const response = await authService.register(apiData);
 
-      toast({
-        title: "Registration Successful!",
-        description:
-          "Your account has been created successfully. Please log in to continue.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top-right",
-      });
-
-      navigate("/login");
+      setRegisterSuccess(true);
     } catch (error) {
       console.error("Registration failed:", error);
 
@@ -262,6 +258,7 @@ const Register = () => {
         onNext={handleNext}
         onBack={handleBack}
         isLoading={isLoading}
+        registerSuccess={registerSuccess}
         handleStepChange={handleStepChange}
         getStepValidation={getStepValidation}
       />

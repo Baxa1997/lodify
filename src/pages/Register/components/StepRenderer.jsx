@@ -14,6 +14,7 @@ const StepRenderer = ({
   reset = () => {},
   getValues = () => {},
   onNext = () => {},
+  registerSuccess = false,
 }) => {
   switch (currentStep) {
     case 1:
@@ -49,6 +50,8 @@ const StepRenderer = ({
           setValue={setValue}
           onSubmit={onSubmit}
           onNext={onNext}
+          control={control}
+          registerSuccess={registerSuccess}
         />
       );
     default:

@@ -220,7 +220,10 @@ function Accessorials({control, name, label, required}) {
                 <Input
                   value={newAccessorial.name}
                   onChange={(e) =>
-                    setNewAccessorial({...newAccessorial, name: e.target.value})
+                    setNewAccessorial({
+                      ...newAccessorial,
+                      title: e.target.value,
+                    })
                   }
                   placeholder="Accessorial's name"
                   size="md"
@@ -236,7 +239,7 @@ function Accessorials({control, name, label, required}) {
                   value={`$ ${newAccessorial.price}`}
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^0-9.]/g, "");
-                    setNewAccessorial({...newAccessorial, price: value});
+                    setNewAccessorial({...newAccessorial, amount: value});
                   }}
                   placeholder="$ 0"
                   size="md"

@@ -1,13 +1,18 @@
-import { useEffect, useState } from "react";
-import { useCreateIntegrationsMutation, useGetIntegrations, useUpdateIntegrationsMutation } from "../../../../services/integrations.service";
-import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { useToast } from "@chakra-ui/react";
+import {useEffect, useState} from "react";
+import {
+  useCreateIntegrationsMutation,
+  useGetIntegrations,
+  useUpdateIntegrationsMutation,
+} from "../../../../services/integrations.service";
+import {useForm} from "react-hook-form";
+import {useSelector} from "react-redux";
+import {useToast} from "@chakra-ui/react";
 
 const RESOURCES_MAP = {
   ELD: "ELD",
   SAMSARA: "SAMSARA",
   BLUE_YONDER: "BLUE_YONDER",
+  MOTIVE: "MOTIVE",
 };
 
 const content = [
@@ -15,43 +20,57 @@ const content = [
     icon: "/img/fmcsa.png",
     title: "FMCSS",
     type: ["FMCSS"],
-    description: "Federal Motor Carrier Safety System – government database integration for compliance, carrier safety records, and DOT checks.",
+    description:
+      "Federal Motor Carrier Safety System – government database integration for compliance, carrier safety records, and DOT checks.",
   },
   {
     icon: "/img/stripe.svg",
     title: "FACTOR ELD",
     type: [RESOURCES_MAP.ELD],
-    description: "Online payment processing platform for freight billing, invoicing, and secure transactions.",
+    description:
+      "Online payment processing platform for freight billing, invoicing, and secure transactions.",
   },
   {
     icon: "/img/samsara.png",
     title: "Samsara",
     type: [RESOURCES_MAP.SAMSARA],
-    description: "Electronic Logging Device (ELD) and telematics integration for driver hours, fleet tracking, and compliance reporting.",
+    description:
+      "Electronic Logging Device (ELD) and telematics integration for driver hours, fleet tracking, and compliance reporting.",
+  },
+  {
+    icon: "/img/gomotive.jpg",
+    title: "Motive",
+    type: [RESOURCES_MAP.MOTIVE],
+    description:
+      "Streamline your business operations with the all-in-one solution.",
   },
   {
     icon: "/img/blue-yonder.png",
     title: "Blue Yonder",
     type: [RESOURCES_MAP.BLUE_YONDER],
-    description: "Transportation Management System for supply chain optimization, load planning, and freight execution.",
+    description:
+      "Transportation Management System for supply chain optimization, load planning, and freight execution.",
   },
   {
     icon: "/img/sumsub.png",
     title: "SumSub",
     type: ["SUMSUB"],
-    description: "Digital identity verification and liveness detection service for secure onboarding and fraud prevention.",
+    description:
+      "Digital identity verification and liveness detection service for secure onboarding and fraud prevention.",
   },
   {
     icon: "/img/firebase.png",
     title: "Firebase SMS Auth",
     type: ["Firebase SMS Auth"],
-    description: "Google Firebase authentication via SMS OTP for secure user login and access control.",
+    description:
+      "Google Firebase authentication via SMS OTP for secure user login and access control.",
   },
   {
     icon: "/img/mailchimp.svg",
     title: "Mailchimp",
     type: ["Mailchimp"],
-    description: "Email automation and SMTP integration for notifications, marketing campaigns, and transactional emails.",
+    description:
+      "Email automation and SMTP integration for notifications, marketing campaigns, and transactional emails.",
   },
   {
     icon: "/img/google-map.svg",
@@ -62,8 +81,9 @@ const content = [
 ];
 
 export const useViewAllProps = () => {
-
-  const { companies_id: companyId, guid } = useSelector(state => state.auth.user_data);
+  const {companies_id: companyId, guid} = useSelector(
+    (state) => state.auth.user_data
+  );
 
   const companies_id = companyId || guid;
 
@@ -76,18 +96,22 @@ export const useViewAllProps = () => {
 
   const [currentContent, setCurrentContent] = useState(null);
 
-  const { handleSubmit, register, reset } = useForm();
+  const {handleSubmit, register, reset} = useForm();
 
   const handleSetCurrentContent = (content) => setCurrentContent(content);
 
   const handleOpenResource = (content) => {
-    if(content?.type?.[0] === RESOURCES_MAP.ELD) {
+    if (content?.type?.[0] === RESOURCES_MAP.ELD) {
       reset({
         username: content?.username,
         password: content?.password,
         api_key: content?.api_key,
       });
-    } else if(content?.type?.[0] === RESOURCES_MAP.SAMSARA) {
+    } else if (content?.type?.[0] === RESOURCES_MAP.SAMSARA) {
+      reset({
+        api_key: content?.api_key,
+      });
+    } else if (content?.type?.[0] === RESOURCES_MAP.MOTIVE) {
       reset({
         api_key: content?.api_key,
       });
@@ -114,9 +138,9 @@ export const useViewAllProps = () => {
     setCurrentContent(null);
   };
 
-  const { data, refetch } = useGetIntegrations({}, companies_id);
+  const {data, refetch} = useGetIntegrations({}, companies_id);
 
-  const checkedTypes = data?.response?.map(item => item?.type?.[0]);
+  const checkedTypes = data?.response?.map((item) => item?.type?.[0]);
 
   const onSuccess = () => {
     handleCloseResource();
@@ -137,26 +161,45 @@ export const useViewAllProps = () => {
     });
   };
 
-  const handleUpdateIntegration =  useUpdateIntegrationsMutation({ onSuccess, onError });
-  const handleCreateIntegration =  useCreateIntegrationsMutation({ onSuccess, onError });
+  const handleUpdateIntegration = useUpdateIntegrationsMutation({
+    onSuccess,
+    onError,
+  });
+  const handleCreateIntegration = useCreateIntegrationsMutation({
+    onSuccess,
+    onError,
+  });
 
   const onSubmit = (data) => {
-    if(currentContent.guid) {
-      handleUpdateIntegration.mutate({ data: { ...data, guid: currentContent.guid, companies_id, type: currentContent.type, status: true } });
+    if (currentContent.guid) {
+      handleUpdateIntegration.mutate({
+        data: {
+          ...data,
+          guid: currentContent.guid,
+          companies_id,
+          type: currentContent.type,
+          status: true,
+        },
+      });
     } else {
-      handleCreateIntegration.mutate({ data: { ...data, companies_id, type: currentContent.type, status: true } });
+      handleCreateIntegration.mutate({
+        data: {...data, companies_id, type: currentContent.type, status: true},
+      });
     }
   };
 
   const handleChange = (e, item) => {
-
-    if(item.type?.[0] !== RESOURCES_MAP.ELD && item.type?.[0] !== RESOURCES_MAP.SAMSARA) {
+    if (
+      item.type?.[0] !== RESOURCES_MAP.ELD &&
+      item.type?.[0] !== RESOURCES_MAP.SAMSARA &&
+      item.type?.[0] !== RESOURCES_MAP.MOTIVE
+    ) {
       e.preventDefault();
       return;
     }
 
-    if(item.status) {
-      handleUpdateIntegration.mutate({ data: { ...item, status: false } });
+    if (item.status) {
+      handleUpdateIntegration.mutate({data: {...item, status: false}});
     } else {
       e.preventDefault();
       handleOpenResource(item);
@@ -165,10 +208,9 @@ export const useViewAllProps = () => {
 
   useEffect(() => {
     if (data?.response) {
-
-      setResources(prev => (
-        prev.map(item => {
-          const createdResource = data?.response?.find(el => {
+      setResources((prev) =>
+        prev.map((item) => {
+          const createdResource = data?.response?.find((el) => {
             return el?.type?.[0] === item?.type[0];
           });
 
@@ -180,8 +222,7 @@ export const useViewAllProps = () => {
           }
           return item;
         })
-      ));
-
+      );
     }
   }, [data]);
 

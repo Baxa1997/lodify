@@ -11,6 +11,7 @@ const Register = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [currentSubStep, setCurrentSubStep] = useState("phone");
   const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState("");
   const [completedSteps, setCompletedSteps] = useState(new Set());
@@ -82,7 +83,12 @@ const Register = () => {
   };
 
   const validateStep4 = (data) => {
-    return data.emailCode && data.emailCode.trim() !== "";
+    // Step 4 is complete only when email verification is done
+    return (
+      currentSubStep === "email-verify" &&
+      data.emailCode &&
+      data.emailCode.trim() !== ""
+    );
   };
 
   const getStepValidation = (step) => {
@@ -160,6 +166,13 @@ const Register = () => {
         if (skip) {
           setCurrentStep(currentStep + 1);
         }
+      }
+    } else if (currentStep === 4) {
+      // Handle step 4 completion - only proceed when email verification is complete
+      if (currentSubStep === "email-verify" && getStepValidation(currentStep)) {
+        setCompletedSteps((prev) => new Set([...prev, currentStep]));
+        // Registration is complete, proceed to final submission
+        handleSubmit(onSubmit)();
       }
     }
   };
@@ -259,6 +272,8 @@ const Register = () => {
         isLoading={isLoading}
         handleStepChange={handleStepChange}
         getStepValidation={getStepValidation}
+        currentSubStep={currentSubStep}
+        setCurrentSubStep={setCurrentSubStep}
       />
     </Flex>
   );

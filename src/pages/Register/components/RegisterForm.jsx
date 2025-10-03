@@ -19,6 +19,8 @@ const RegisterForm = ({
   getValues = () => {},
   handleStepChange = () => {},
   reset,
+  currentSubStep,
+  setCurrentSubStep,
 }) => {
   return (
     <Box className={styles.mainContent}>
@@ -61,9 +63,11 @@ const RegisterForm = ({
             reset={reset}
             onNext={onNext}
             handleStepChange={handleStepChange}
+            currentSubStep={currentSubStep}
+            setCurrentSubStep={setCurrentSubStep}
           />
 
-          {currentStep === 4 && (
+          {currentStep === 4 && currentSubStep === "email-verify" && (
             <Box display="flex" width="100%">
               <Button
                 type="button"
@@ -92,7 +96,7 @@ const RegisterForm = ({
                   cursor: "not-allowed",
                   transform: "none",
                 }}>
-                {isLoading ? "Loading..." : "Continue"}
+                {isLoading ? "Loading..." : "Complete Registration"}
               </Button>
             </Box>
           )}

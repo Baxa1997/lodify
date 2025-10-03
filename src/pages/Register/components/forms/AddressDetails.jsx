@@ -58,7 +58,6 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
     if (phoneCode.length === 4) {
       setIsLoading(true);
       try {
-        // Simulate API call for phone verification
         await new Promise((resolve) => setTimeout(resolve, 1000));
         setCurrentSubStep("email");
       } catch (error) {
@@ -68,6 +67,8 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
       }
     }
   };
+
+  console.log("currentSubStepcurrentSubStep", currentSubStep);
 
   const handleVerifyEmail = async () => {
     if (emailCode.length === 4) {
@@ -277,6 +278,52 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
   }
 
   if (currentSubStep === "email") {
+    return (
+      <Box borderRadius="12px" bg="white">
+        <VStack maxW="360px" align="start" spacing={2}>
+          <Text fontSize="18px" fontWeight="600" color="#111827">
+            Verify your Email address
+          </Text>
+          <Text fontSize="16px" color="#6B7280">
+            Please input the code we just sent to your FMCSA linked Email
+          </Text>
+
+          <Box w="100%">
+            <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
+              Email address
+            </Text>
+            <HFTextField disabled name="email" control={control} />
+          </Box>
+
+          <Button
+            w="100%"
+            h="44px"
+            bg="#EF6820"
+            color="white"
+            _hover={{bg: "#EF6820"}}
+            borderRadius="8px"
+            onClick={handleSendEmailCode}
+            isLoading={isLoading}
+            loadingText="Sending...">
+            Send Code
+          </Button>
+
+          <Flex align="center" gap="8px" justify="center" w="100%" mt={4}>
+            <img src="/img/backArrow.svg" alt="arrow-left" />
+            <Text
+              fontSize="16px"
+              color="#6B7280"
+              cursor="pointer"
+              onClick={() => setCurrentSubStep("form")}>
+              Back to Verify Identity
+            </Text>
+          </Flex>
+        </VStack>
+      </Box>
+    );
+  }
+
+  if (currentSubStep === "email-verify") {
     return (
       <Box borderRadius="12px" bg="white">
         <Text

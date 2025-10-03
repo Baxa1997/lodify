@@ -54,7 +54,7 @@ const Register = () => {
   });
 
   const validateStep1 = (data) => {
-    return data.companyDetails && data.companyDetails.name;
+    return true;
   };
 
   const validateStep2 = (data) => {
@@ -77,10 +77,11 @@ const Register = () => {
   };
 
   const validateStep3 = (data) => {
-    const requiredFields = ["email", "login", "password"];
-    return requiredFields.every(
-      (field) => data[field] && data[field].trim() !== ""
-    );
+    return true;
+    // const requiredFields = ["email", "login", "password"];
+    // return requiredFields.every(
+    //   (field) => data[field] && data[field].trim() !== ""
+    // );
   };
 
   const validateStep4 = (data) => {
@@ -154,6 +155,8 @@ const Register = () => {
   }, [location.state, navigate]);
 
   const handleNext = (skip = false) => {
+    console.log("currentStep", currentStep);
+
     if (currentStep < 4) {
       if (getStepValidation(currentStep)) {
         setCompletedSteps((prev) => new Set([...prev, currentStep]));

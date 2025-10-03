@@ -391,7 +391,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
             Please input the code we just sent to your FMCSA linked Email
           </Text>
 
-          <Box w="100%">
+          <Box w="100%" mt="16px">
             <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
               Email address
             </Text>
@@ -573,7 +573,6 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           control={control}
           name="legal_name"
           label="Legal name"
-          placeholder="ACME LOGISTICS LLC"
           disabled
         />
         <HFTextField
@@ -581,7 +580,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           control={control}
           name="dba_name"
           label="DBA Name"
-          placeholder="ACME LOGISTICS"
+          placeholder=""
           disabled
         />
       </Flex>

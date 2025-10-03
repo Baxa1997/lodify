@@ -49,11 +49,8 @@ const SearchToggle = ({
             country: responseData?.phy_country,
             email: responseData?.email_address,
             phone: `+1${responseData?.telephone}`,
-            companyDetails: {
-              name: responseData?.legal_name,
-              dotNumber: responseData?.dot_number || responseData?.us_dot,
-              mcNumber: responseData?.mc_number,
-            },
+            legal_name: responseData?.legal_name,
+            dba_name: responseData?.dba_name,
           });
         }
       } else {
@@ -150,7 +147,7 @@ const SearchToggle = ({
               h="96px"
               borderRadius="8px">
               <Text fontWeight="400" color="#181D27">
-                {companyData?.legal_name || "EAGLE EYE TRUCKING LLC"}
+                {companyData?.legal_name || ""}
               </Text>
               <Text fontWeight="400" color="#181D27">
                 US DOT# {companyData?.dot_number || "03472971"}
@@ -275,12 +272,12 @@ const SearchToggle = ({
             bg="#F8D7DA"
             border="1px solid #F5C6CB"
             borderRadius="8px">
-            <Text color="#721C24" fontSize="14px" fontWeight="500" mb="8px">
-              Search Failed
-            </Text>
-            <Text color="#721C24" fontSize="13px">
-              {errorMessage ||
-                "Unable to find company with the provided information. Please check your entry and try again."}
+            <Text
+              color="#721C24"
+              textAlign="center"
+              fontSize="14px"
+              fontWeight="500">
+              No records matching USDOT #{fmcsa}{" "}
             </Text>
           </Box>
         </>

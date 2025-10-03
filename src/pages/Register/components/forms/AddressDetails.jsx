@@ -211,16 +211,16 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   if (currentSubStep === "phone") {
     return (
       <Box borderRadius="12px" bg="white">
-        <VStack maxW="360px" align="start" spacing={2}>
-          <Text fontSize="18px" fontWeight="600" color="#111827">
+        <VStack align="start" spacing={2}>
+          <Text maxW="360px" fontSize="18px" fontWeight="600" color="#111827">
             Enter Mobile Number
           </Text>
-          <Text fontSize="16px" color="#6B7280">
+          <Text fontSize="16px" maxW="360px" color="#6B7280">
             To ensure the security of your account, we require verification of
             your FMCSA linked phone number
           </Text>
 
-          <Box w="100%">
+          <Box w="100%" mt="16px">
             <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
               Phone number <span style={{color: "#EF6820"}}>*</span>
             </Text>
@@ -228,6 +228,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           </Box>
 
           <Button
+            mt="10px"
             w="100%"
             h="44px"
             bg="#EF6820"
@@ -383,15 +384,15 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   if (currentSubStep === "email") {
     return (
       <Box borderRadius="12px" bg="white">
-        <VStack maxW="360px" align="start" spacing={2}>
-          <Text fontSize="18px" fontWeight="600" color="#111827">
+        <VStack align="start" spacing={2}>
+          <Text fontSize="18px" maxW="360px" fontWeight="600" color="#111827">
             Verify your Email address
           </Text>
-          <Text fontSize="16px" color="#6B7280">
+          <Text fontSize="16px" maxW="360px" color="#6B7280">
             Please input the code we just sent to your FMCSA linked Email
           </Text>
 
-          <Box w="100%" mt="16px">
+          <Box w="100%" mt="16px" mb="10px">
             <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
               Email address
             </Text>

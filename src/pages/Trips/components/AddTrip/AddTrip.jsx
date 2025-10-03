@@ -70,6 +70,7 @@ function AddTrip() {
             rate_confirmation: data.rate_confirmation?.[0],
           },
           trip_pickups: data.trip_pickups,
+          accessorials: data.accessorials,
         },
         table: "trips",
       },

@@ -9,42 +9,25 @@ import {
   Input,
   HStack,
 } from "@chakra-ui/react";
+import OtpInput from "react-otp-input";
 import HFTextField from "../../../../components/HFTextField";
 import styles from "../../MultiStepRegister.module.scss";
 import HFPhoneInput from "../../../../components/HFPhoneInput";
 
 const AddressDetails = ({control, errors, watch, onNext}) => {
   const [currentSubStep, setCurrentSubStep] = useState("form");
-  const [phoneCode, setPhoneCode] = useState(["", "", "", ""]);
-  const [emailCode, setEmailCode] = useState(["", "", "", ""]);
+  const [phoneCode, setPhoneCode] = useState("1234");
+  const [emailCode, setEmailCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const formData = watch();
 
-  const handlePhoneCodeChange = (index, value) => {
-    if (value.length <= 1 && /^\d*$/.test(value)) {
-      const newCode = [...phoneCode];
-      newCode[index] = value;
-      setPhoneCode(newCode);
-
-      if (value && index < 3) {
-        const nextInput = document.getElementById(`phone-code-${index + 1}`);
-        if (nextInput) nextInput.focus();
-      }
-    }
+  const handlePhoneCodeChange = (value) => {
+    setPhoneCode(value);
   };
 
-  const handleEmailCodeChange = (index, value) => {
-    if (value.length <= 1 && /^\d*$/.test(value)) {
-      const newCode = [...emailCode];
-      newCode[index] = value;
-      setEmailCode(newCode);
-
-      if (value && index < 3) {
-        const nextInput = document.getElementById(`email-code-${index + 1}`);
-        if (nextInput) nextInput.focus();
-      }
-    }
+  const handleEmailCodeChange = (value) => {
+    setEmailCode(value);
   };
 
   const handleSendPhoneCode = async () => {
@@ -72,10 +55,10 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
   };
 
   const handleVerifyPhone = async () => {
-    const code = phoneCode.join("");
-    if (code.length === 4) {
+    if (phoneCode.length === 4) {
       setIsLoading(true);
       try {
+        // Simulate API call for phone verification
         await new Promise((resolve) => setTimeout(resolve, 1000));
         setCurrentSubStep("email");
       } catch (error) {
@@ -87,14 +70,30 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
   };
 
   const handleVerifyEmail = async () => {
-    const code = emailCode.join("");
-    if (code.length === 4) {
+    if (emailCode.length === 4) {
       setIsLoading(true);
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        onNext && onNext();
+        // API call for email verification
+        const response = await fetch("/api/verify-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            code: emailCode,
+          }),
+        });
+
+        if (response.ok) {
+          onNext && onNext();
+        } else {
+          throw new Error("Email verification failed");
+        }
       } catch (error) {
         console.error("Failed to verify email code:", error);
+        // For now, still proceed to next step (remove this in production)
+        onNext && onNext();
       } finally {
         setIsLoading(false);
       }
@@ -155,70 +154,123 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
   if (currentSubStep === "phone-verify") {
     return (
       <Box borderRadius="12px" bg="white">
-        <VStack maxW="360px" align="start" spacing={4}>
-          <Text fontSize="18px" fontWeight="600" color="#111827">
-            Verification
-          </Text>
-          <Text fontSize="16px" color="#6B7280">
-            Please input the code we just sent to your FMCSA linked phone number
-          </Text>
+        <Text
+          fontSize="18px"
+          w="360px"
+          fontWeight="600"
+          mb="8px"
+          color="#111827">
+          Verification
+        </Text>
+        <Text fontSize="16px" w="360px" color="#6B7280">
+          Please input the code we just sent to your FMCSA linked phone number
+        </Text>
 
-          <HStack spacing={4} justify="center" w="100%">
-            {phoneCode.map((digit, index) => (
-              <Input
-                key={index}
-                id={`phone-code-${index}`}
-                value={digit}
-                onChange={(e) => handlePhoneCodeChange(index, e.target.value)}
-                maxLength={1}
-                width="60px"
-                height="60px"
-                textAlign="center"
-                fontSize="24px"
-                fontWeight="600"
-                border="2px solid #d6d7da"
-                borderRadius="8px"
-                bg="white"
-                _focus={{
-                  borderColor: "#EF6820",
-                  boxShadow: "0 0 0 3px rgba(239, 104, 32, 0.1)",
+        <Box display="flex" w="356px" mt="30px">
+          <OtpInput
+            value={phoneCode}
+            onChange={handlePhoneCodeChange}
+            numInputs={4}
+            renderSeparator={<span style={{width: "0px"}} />}
+            renderInput={(props) => (
+              <input
+                {...props}
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  textAlign: "center",
+                  border: "2px solid #e2e8f0",
+                  borderRadius: "8px",
+                  background: "#f8fafc",
+                  color: "#1e293b",
+                  outline: "none",
+                  transition: "all 0.2s ease",
+                }}
+                placeholder="0"
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#3b82f6";
+                  e.target.style.background = "white";
+                  e.target.style.boxShadow =
+                    "0 0 0 3px rgba(59, 130, 246, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e2e8f0";
+                  e.target.style.background = "#f8fafc";
+                  e.target.style.boxShadow = "none";
+                }}
+                onMouseEnter={(e) => {
+                  if (document.activeElement !== e.target) {
+                    e.target.style.borderColor = "#cbd5e1";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (document.activeElement !== e.target) {
+                    e.target.style.borderColor = "#e2e8f0";
+                  }
                 }}
               />
-            ))}
-          </HStack>
+            )}
+            inputStyle={{
+              width: "70px",
+              height: "70px",
+              fontSize: "24px",
+              fontWeight: "600",
+              textAlign: "center",
+              border: "2px solid #e2e8f0",
+              borderRadius: "8px",
+              background: "#f8fafc",
+              color: "#1e293b",
+              outline: "none",
+              transition: "all 0.2s ease",
+            }}
+            focusStyle={{
+              borderColor: "#3b82f6",
+              background: "white",
+              boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.1)",
+            }}
+            containerStyle={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          />
+        </Box>
 
-          <Button
-            w="100%"
-            h="44px"
-            bg="#EF6820"
-            color="white"
-            _hover={{bg: "#EF6820"}}
-            borderRadius="8px"
-            onClick={handleVerifyPhone}
-            isLoading={isLoading}
-            loadingText="Verifying..."
-            isDisabled={phoneCode.join("").length !== 4}>
-            Verify phone number
-          </Button>
+        <Button
+          my="20px"
+          w="100%"
+          h="44px"
+          bg="#EF6820"
+          color="white"
+          _hover={{bg: "#EF6820"}}
+          borderRadius="8px"
+          onClick={handleVerifyPhone}
+          isLoading={isLoading}
+          loadingText="Verifying..."
+          isDisabled={phoneCode.length !== 4}>
+          Verify phone number
+        </Button>
 
-          <VStack spacing={2} w="100%">
-            <Text fontSize="16px" color="#6B7280" textAlign="center">
-              Code didn't send?{" "}
-              <Link color="#EF6820" onClick={handleSendPhoneCode}>
-                Click to resend
-              </Link>
+        <VStack spacing={2} w="100%">
+          <Text fontSize="16px" color="#6B7280" textAlign="center">
+            Code didn't send?{" "}
+            <Link color="#EF6820" onClick={handleSendPhoneCode}>
+              Click to resend
+            </Link>
+          </Text>
+          <Flex align="center" gap="8px" justify="center">
+            <img src="/img/backArrow.svg" alt="arrow-left" />
+            <Text
+              fontSize="16px"
+              color="#6B7280"
+              cursor="pointer"
+              onClick={() => setCurrentSubStep("phone")}>
+              Back to Verify Identity
             </Text>
-            <Flex align="center" gap="8px" justify="center">
-              <img src="/img/backArrow.svg" alt="arrow-left" />
-              <Text
-                fontSize="16px"
-                color="#6B7280"
-                cursor="pointer"
-                onClick={() => setCurrentSubStep("phone")}>
-                Back to Verify Identity
-              </Text>
-            </Flex>
-          </VStack>
+          </Flex>
         </VStack>
       </Box>
     );
@@ -226,71 +278,124 @@ const AddressDetails = ({control, errors, watch, onNext}) => {
 
   if (currentSubStep === "email") {
     return (
-      <Box borderRadius="12px" bg="white" p={6}>
-        <VStack align="start" spacing={4}>
-          <Text fontSize="18px" fontWeight="600" color="#111827">
-            Verify your Email
-          </Text>
-          <Text fontSize="16px" color="#6B7280">
-            Please input the code we just sent to your FMCSA linked Email
-          </Text>
+      <Box borderRadius="12px" bg="white">
+        <Text
+          fontSize="18px"
+          w="360px"
+          fontWeight="600"
+          mb="8px"
+          color="#111827">
+          Verify your Email
+        </Text>
+        <Text w="360px" fontSize="16px" color="#6B7280">
+          Please input the code we just sent to your FMCSA linked Email
+        </Text>
 
-          <HStack spacing={4} justify="center" w="100%">
-            {emailCode.map((digit, index) => (
-              <Input
-                key={index}
-                id={`email-code-${index}`}
-                value={digit}
-                onChange={(e) => handleEmailCodeChange(index, e.target.value)}
-                maxLength={1}
-                width="60px"
-                height="60px"
-                textAlign="center"
-                fontSize="24px"
-                fontWeight="600"
-                border="2px solid #d6d7da"
-                borderRadius="8px"
-                bg="white"
-                _focus={{
-                  borderColor: "#EF6820",
-                  boxShadow: "0 0 0 3px rgba(239, 104, 32, 0.1)",
+        <Box display="flex" w="356px" my="20px">
+          <OtpInput
+            value={emailCode}
+            onChange={handleEmailCodeChange}
+            numInputs={4}
+            renderSeparator={<span style={{width: "0px", gap: "4px"}} />}
+            renderInput={(props) => (
+              <input
+                {...props}
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  textAlign: "center",
+                  border: "2px solid #e2e8f0",
+                  borderRadius: "8px",
+                  background: "#f8fafc",
+                  color: "#1e293b",
+                  outline: "none",
+                  transition: "all 0.2s ease",
+                }}
+                placeholder="0"
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#3b82f6";
+                  e.target.style.background = "white";
+                  e.target.style.boxShadow =
+                    "0 0 0 3px rgba(59, 130, 246, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e2e8f0";
+                  e.target.style.background = "#f8fafc";
+                  e.target.style.boxShadow = "none";
+                }}
+                onMouseEnter={(e) => {
+                  if (document.activeElement !== e.target) {
+                    e.target.style.borderColor = "#cbd5e1";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (document.activeElement !== e.target) {
+                    e.target.style.borderColor = "#e2e8f0";
+                  }
                 }}
               />
-            ))}
-          </HStack>
+            )}
+            inputStyle={{
+              width: "70px",
+              height: "70px",
+              fontSize: "24px",
+              fontWeight: "600",
+              textAlign: "center",
+              border: "2px solid #e2e8f0",
+              borderRadius: "8px",
+              background: "#f8fafc",
+              color: "#1e293b",
+              outline: "none",
+              transition: "all 0.2s ease",
+            }}
+            focusStyle={{
+              borderColor: "#3b82f6",
+              background: "white",
+              boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.1)",
+            }}
+            containerStyle={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          />
+        </Box>
 
-          <Button
-            w="100%"
-            h="44px"
-            bg="#EF6820"
-            color="white"
-            _hover={{bg: "#EF6820"}}
-            borderRadius="8px"
-            onClick={handleVerifyEmail}
-            isLoading={isLoading}
-            loadingText="Verifying..."
-            isDisabled={emailCode.join("").length !== 4}>
-            Verify Email
-          </Button>
+        <Button
+          mb="20px"
+          w="100%"
+          h="44px"
+          bg="#EF6820"
+          color="white"
+          _hover={{bg: "#EF6820"}}
+          borderRadius="8px"
+          onClick={handleVerifyEmail}
+          isLoading={isLoading}
+          loadingText="Verifying..."
+          isDisabled={emailCode.length !== 4}>
+          Verify Email
+        </Button>
 
-          <VStack spacing={2} w="100%">
-            <Text fontSize="16px" color="#6B7280" textAlign="center">
-              Code didn't send?{" "}
-              <Link color="#EF6820" onClick={handleSendEmailCode}>
-                Click to resend
-              </Link>
+        <VStack spacing={2} w="100%">
+          <Text fontSize="16px" color="#6B7280" textAlign="center">
+            Code didn't send?{" "}
+            <Link color="#EF6820" onClick={handleSendEmailCode}>
+              Click to resend
+            </Link>
+          </Text>
+          <Flex align="center" gap="8px" justify="center">
+            <img src="/img/backArrow.svg" alt="arrow-left" />
+            <Text
+              fontSize="16px"
+              color="#6B7280"
+              cursor="pointer"
+              onClick={() => setCurrentSubStep("phone-verify")}>
+              Back to Verify Identity
             </Text>
-            <Flex align="center" gap="8px" justify="center">
-              <img src="/img/backArrow.svg" alt="arrow-left" />
-              <Text
-                fontSize="16px"
-                color="#6B7280"
-                cursor="pointer"
-                onClick={() => setCurrentSubStep("phone-verify")}>
-                Back to Verify Identity
-              </Text>
-            </Flex>
-          </VStack>
+          </Flex>
         </VStack>
       </Box>
     );

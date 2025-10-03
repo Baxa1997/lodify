@@ -29,6 +29,8 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const safeValue = Array.isArray(value) ? value : [];
+
   const handleFileChange = (e) => {
     setLoading(true);
     const file = e.target.files[0];
@@ -40,16 +42,13 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
     fileService
       .upload(data, {folder_name: "trips"})
       .then((res) => {
-        onChange([
-          ...(value || []),
-          `${"https://cdn.u-code.io"}/${res?.filename}`,
-        ]);
+        onChange([...safeValue, `${"https://cdn.u-code.io"}/${res?.filename}`]);
       })
       .finally(() => setLoading(false));
   };
 
   const removeFile = (fileUrl) => {
-    onChange(value.filter((f) => f !== fileUrl));
+    onChange(safeValue.filter((f) => f !== fileUrl));
   };
 
   return (
@@ -79,7 +78,7 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
           justifyContent="space-between"
           bg={disabled ? "gray.50" : "white"}
           cursor={disabled ? "not-allowed" : "pointer"}>
-          {(!value || value.length === 0) && (
+          {(!safeValue || safeValue.length === 0) && (
             <HStack justify="space-between" w="100%">
               <Text fontSize="14px" color="gray.500">
                 Upload Files
@@ -87,11 +86,11 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
             </HStack>
           )}
 
-          {value && value.length > 0 && (
+          {safeValue && safeValue.length > 0 && (
             <HStack justify="space-between" w="100%">
               <HStack spacing="2" w="320px" flexWrap="wrap">
-                {value.length <= 2 ? (
-                  value.map((fileUrl, idx) => (
+                {safeValue.length <= 2 ? (
+                  safeValue?.map((fileUrl, idx) => (
                     <Box
                       key={idx}
                       display="flex"
@@ -132,7 +131,7 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
                   ))
                 ) : (
                   <>
-                    {value.slice(0, 2).map((fileUrl, idx) => (
+                    {safeValue?.slice(0, 2).map((fileUrl, idx) => (
                       <Box
                         key={idx}
                         display="flex"
@@ -185,7 +184,7 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
                       cursor="pointer"
                       _hover={{bg: "gray.50"}}
                       onClick={() => setIsModalOpen(true)}>
-                      +{value.length - 2}
+                      +{safeValue?.length - 2}
                     </Box>
                   </>
                 )}
@@ -231,7 +230,7 @@ function FileInput({label, value = [], onChange, name, required, disabled}) {
           <ModalCloseButton />
           <ModalBody>
             <VStack align="stretch" spacing={1}>
-              {value.map((fileUrl, idx) => (
+              {safeValue?.map((fileUrl, idx) => (
                 <HStack
                   key={idx}
                   px="3"
@@ -296,7 +295,7 @@ export default function HFFilesField({
           <FileInput
             label={label}
             name={name}
-            value={value}
+            value={Array.isArray(value) ? value : []}
             onChange={onChange}
             required={required}
             disabled={disabled}

@@ -15,20 +15,22 @@ import tripsService from "../../../../services/tripsService";
 import {useSelector} from "react-redux";
 import {generateID} from "@utils/generateID";
 
-function AddTrip() {
+function AddTrip({tripData = {}}) {
   const {id} = useParams();
   const navigate = useNavigate();
   const toast = useToast();
   const userData = useSelector((state) => state?.auth?.user_data);
   const envId = useSelector((state) => state.auth.environmentId);
-
+  console.log("tripDatatripData", tripData);
   const {
     setValue,
     control,
     handleSubmit,
     formState: {errors},
     watch,
-  } = useForm();
+  } = useForm({
+    defaultValues: tripData,
+  });
 
   const createTripMutation = useMutation({
     mutationFn: (data) => tripsService.createTrip(data),

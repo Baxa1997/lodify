@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Controller} from "react-hook-form";
 import Select from "./Select";
 import {Flex} from "@chakra-ui/react";
 import tripsService from "../services/tripsService";
+import {useParams} from "react-router-dom";
 
 function HFSelect({
   control,
@@ -15,6 +16,7 @@ function HFSelect({
   disabled = false,
   props,
 }) {
+  const {id} = useParams();
   const [Internaloptions, setInternalOptions] = useState([]);
   const getOptions = async () => {
     if (table_slug) {
@@ -27,6 +29,12 @@ function HFSelect({
       );
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      getOptions();
+    }
+  }, [id]);
 
   return (
     <Flex {...props}>

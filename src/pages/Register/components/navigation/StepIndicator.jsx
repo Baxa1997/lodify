@@ -13,6 +13,9 @@ const StepIndicator = ({steps, currentStep, handleStepChange = () => {}}) => {
 
   return (
     <Box className={styles.steps}>
+      <Box mb="60px">
+        <img src="/img/logoLodify.svg" alt="" />
+      </Box>
       {steps.map((step, index) => {
         const isCompleted = step.completed;
         const isActive = step.active;

@@ -5,10 +5,9 @@ import styles from "../../styles/tabs.module.scss";
 import HistoryTripsTab from "./Tabs/HistoryTripsTab";
 import HeadBreadCrumb from "@components/HeadBreadCrumb";
 import GeneralTripsTab from "./Tabs/GeneralsTripTab";
+import AddTrip from "./components/AddTrip/AddTrip";
 
 function UpcomingTabSinglePage() {
-  const navigate = useNavigate();
-
   return (
     <Box>
       <HeadBreadCrumb />
@@ -21,13 +20,18 @@ function UpcomingTabSinglePage() {
 
       <Tabs className={styles.tabsContainer}>
         <TabList>
-          <Tab>General Details</Tab>
+          <Tab>Trip</Tab>
+          {/* <Tab>General Details</Tab> */}
           <Tab>History</Tab>
         </TabList>
 
         <TabPanel>
-          <HistoryTripsTab />
+          <AddTrip />
         </TabPanel>
+
+        {/* <TabPanel>
+          <HistoryTripsTab />
+        </TabPanel> */}
 
         <TabPanel>
           <GeneralTripsTab />

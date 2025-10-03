@@ -24,7 +24,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
 .sidebar {
   width: 300px;
-  background: $sidebar-bg;
+  background: linear-gradient(to bottom, #0b2432, #015261);
   color: $white;
   display: flex;
   flex-direction: column;
@@ -52,7 +52,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     top: 40px;
     width: 2px;
     height: 20px;
-    background: #3b82f6;
+    background: #ff5b04;
     z-index: 1;
     transition: background 0.3s ease;
   }
@@ -74,6 +74,7 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
     position: relative;
     z-index: 2;
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    border: 2px solid #ff5b04;
   }
 
   .checkmark {
@@ -99,15 +100,15 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   .stepTitle {
     font-size: 16px;
     font-weight: 500;
-    color: $sidebar-text;
+    color: white;
     transition: color 0.3s ease;
   }
 
   &.active {
     .stepIndicator {
-      background: #3b82f6;
-      border: 2px solid #3b82f6;
-      outline: 2px solid $primary-color;
+      background: #ff5b04;
+      border: 2px solid #ff5b04;
+      outline: 2px solid #ff944d;
       outline-offset: 2px;
     }
 
@@ -118,8 +119,8 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
 
   &.completed {
     .stepIndicator {
-      background: #3b82f6;
-      border: 2px solid #3b82f6;
+      background: #ff5b04;
+      border: 2px solid #ff5b04;
     }
 
     .stepTitle {
@@ -130,20 +131,20 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   &.pending {
     .stepIndicator {
       background: transparent;
-      border: 2px solid #9ca3af;
+      border: 2px solid #d5d7da;
     }
 
     .stepTitle {
-      color: $sidebar-text;
+      color: #fff;
     }
   }
 
   &.disabled {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 1;
 
     .stepTitle {
-      color: #6b7280;
+      color: #fff;
     }
   }
 }
@@ -168,49 +169,31 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex-direction: column;
   background-color: #fff;
+  position: relative;
+  background-image: url("/img/registerBg.png");
+  background-size: contain;
+  background-position: bottom;
+  background-repeat: no-repeat;
 }
 
 .formContainer {
-  width: 100%;
-  max-width: 500px;
+  margin-top: 90px;
+  width: 360px;
+  max-width: 420px;
+  min-height: 360px;
   background: $white;
   border-radius: $border-radius-lg;
-  padding: 40px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: $text-primary;
-    margin: 0 0 8px 0;
-    text-align: center;
-  }
-
-  p {
-    color: $text-muted;
-    font-size: 16px;
-    margin: 0 0 30px 0;
-    text-align: center;
-  }
+  box-shadow: $shadow-light;
 }
 
 .stepContent {
-  width: 360px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-
-  p {
-    margin-bottom: 24px;
-    text-align: center;
-  }
+  width: 100%;
+  text-align: justify;
 }
 
 .formGroup {
@@ -414,7 +397,6 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 }
 
-// Button Styles
 .continueBtn {
   width: 360px;
   height: 44px;
@@ -446,7 +428,6 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 }
 
-// Step Dots
 .stepDots {
   display: flex;
   justify-content: center;
@@ -466,7 +447,6 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 }
 
-// Back Link
 .backLink {
   text-align: center;
 
@@ -482,7 +462,6 @@ $shadow-button: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 }
 
-// Responsive Design
 @media (max-width: 768px) {
   .multiStepContainer {
     flex-direction: column;

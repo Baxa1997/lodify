@@ -1,11 +1,11 @@
 import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import InputFormField from "../InputFormField";
 import SelectFormField from "../SelectFormField";
-import { US_STATES, COUNTRIES, ZIP_CODE_PATTERNS } from "../../constants/states";
+import {US_STATES, COUNTRIES, ZIP_CODE_PATTERNS} from "../../constants/states";
 import styles from "../../MultiStepRegister.module.scss";
 
-const AddressDetails = ({ register, errors, watch }) => {
+const AddressDetails = ({register, errors, watch}) => {
   const selectedCountry = watch("country");
 
   const stateValidation = {
@@ -26,7 +26,7 @@ const AddressDetails = ({ register, errors, watch }) => {
 
   return (
     <Box className={styles.stepContent}>
-      <InputFormField
+      {/* <InputFormField
         label="Address Line 1"
         name="physical_address1"
         placeholder="606 Hillrose Ave Unit B"
@@ -102,7 +102,7 @@ const AddressDetails = ({ register, errors, watch }) => {
           validation={countryValidation}
           disabled
         />
-      </Flex>
+      </Flex> */}
     </Box>
   );
 };

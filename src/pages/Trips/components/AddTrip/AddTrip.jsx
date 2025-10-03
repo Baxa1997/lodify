@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import HeadBreadCrumb from "../../../../components/HeadBreadCrumb";
 import {Box, Flex, Text, useToast} from "@chakra-ui/react";
 import {useForm} from "react-hook-form";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useMutation} from "@tanstack/react-query";
 import FirstSection from "./FirstSection";
 import SecondSection from "./SecondSection";
@@ -16,6 +16,7 @@ import {useSelector} from "react-redux";
 import {generateID} from "@utils/generateID";
 
 function AddTrip() {
+  const {id} = useParams();
   const navigate = useNavigate();
   const toast = useToast();
   const userData = useSelector((state) => state?.auth?.user_data);
@@ -86,18 +87,23 @@ function AddTrip() {
   }, []);
 
   return (
-    <>
-      <HeadBreadCrumb />
-      <Box h={"32px"} mb={"30px"}>
-        <Text
-          mt="16px"
-          fontSize={"24px"}
-          h={"32px"}
-          color={"#181D27"}
-          fontWeight={"600"}>
-          Add Trip
-        </Text>
-      </Box>
+    <Box mt={Boolean(id) ? "20px" : "0px"}>
+      {!Boolean(id) && (
+        <>
+          {" "}
+          <HeadBreadCrumb />
+          <Box h={"32px"} mb={"30px"}>
+            <Text
+              mt="16px"
+              fontSize={"24px"}
+              h={"32px"}
+              color={"#181D27"}
+              fontWeight={"600"}>
+              Add Trip
+            </Text>
+          </Box>
+        </>
+      )}
 
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <FirstSection control={control} />
@@ -112,7 +118,7 @@ function AddTrip() {
           onCancel={handleCancel}
         />
       </form>
-    </>
+    </Box>
   );
 }
 

@@ -14,9 +14,6 @@ const RegisterSidebar = ({steps, currentStep, handleStepChange = () => {}}) => {
 
       <Box className={styles.sidebarFooter}>
         <Box className={styles.footerLeft}>© Lodify 2025</Box>
-        <Box className={styles.footerRight}>
-          <img src="/img/mailIcon.svg" alt="" /> help@lodify.com
-        </Box>
       </Box>
     </Box>
   );

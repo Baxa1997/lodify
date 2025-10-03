@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { Flex, useToast } from "@chakra-ui/react";
+import React, {useState, useEffect} from "react";
+import {useNavigate, useLocation} from "react-router-dom";
+import {useForm} from "react-hook-form";
+import {Flex, useToast} from "@chakra-ui/react";
 import RegisterSidebar from "./components/RegisterSidebar";
 import RegisterForm from "./components/RegisterForm";
 import authService from "../../services/auth/authService";
@@ -19,10 +19,11 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
     watch,
     setValue,
     trigger,
+    control,
     reset,
     getValues,
   } = useForm({
@@ -51,10 +52,7 @@ const Register = () => {
   });
 
   const validateStep1 = (data) => {
-    const requiredFields = ["company_name", "us_dot", "identifier"];
-    return requiredFields.every(
-      (field) => data[field] && data[field].trim() !== "",
-    );
+    return data.companyDetails && data.companyDetails.name;
   };
 
   const validateStep2 = (data) => {
@@ -66,10 +64,9 @@ const Register = () => {
       "country",
     ];
     const hasRequiredFields = requiredFields.every(
-      (field) => data[field] && data[field].trim() !== "",
+      (field) => data[field] && data[field].trim() !== ""
     );
 
-    // Validate zip code format (US format: 12345 or 12345-6789)
     if (data.zip_code && !/^\d{5}(-\d{4})?$/.test(data.zip_code)) {
       return false;
     }
@@ -80,7 +77,7 @@ const Register = () => {
   const validateStep3 = (data) => {
     const requiredFields = ["email", "login", "password"];
     return requiredFields.every(
-      (field) => data[field] && data[field].trim() !== "",
+      (field) => data[field] && data[field].trim() !== ""
     );
   };
 
@@ -92,16 +89,16 @@ const Register = () => {
     const data = watch();
     const isValid = (() => {
       switch (step) {
-      case 1:
-        return validateStep1(data);
-      case 2:
-        return validateStep2(data);
-      case 3:
-        return validateStep3(data);
-      case 4:
-        return validateStep4(data);
-      default:
-        return false;
+        case 1:
+          return validateStep1(data);
+        case 2:
+          return validateStep2(data);
+        case 3:
+          return validateStep3(data);
+        case 4:
+          return validateStep4(data);
+        default:
+          return false;
       }
     })();
 
@@ -121,25 +118,25 @@ const Register = () => {
   const steps = [
     {
       id: 1,
-      title: "Your details",
+      title: "Select Carrier",
       completed: completedSteps.has(1),
       active: currentStep === 1,
     },
     {
       id: 2,
-      title: "Address",
+      title: "Verify Contact Info",
       completed: completedSteps.has(2),
       active: currentStep === 2,
     },
     {
       id: 3,
-      title: "Info",
+      title: "Verify Identity",
       completed: completedSteps.has(3),
       active: currentStep === 3,
     },
     {
       id: 4,
-      title: "Verification",
+      title: "Join Carrier",
       completed: completedSteps.has(4),
       active: currentStep === 4,
     },
@@ -154,11 +151,15 @@ const Register = () => {
     }
   }, [location.state, navigate]);
 
-  const handleNext = () => {
+  const handleNext = (skip = false) => {
     if (currentStep < 4) {
       if (getStepValidation(currentStep)) {
         setCompletedSteps((prev) => new Set([...prev, currentStep]));
         setCurrentStep(currentStep + 1);
+      } else {
+        if (skip) {
+          setCurrentStep(currentStep + 1);
+        }
       }
     }
   };
@@ -236,19 +237,17 @@ const Register = () => {
   }
 
   return (
-    <Flex
-      className={styles.multiStepContainer}
-      minHeight="100vh">
+    <Flex className={styles.multiStepContainer} minHeight="100vh">
       <RegisterSidebar
         steps={steps}
         currentStep={currentStep}
         handleStepChange={handleStepChange}
       />
       <RegisterForm
+        control={control}
         onSubmit={onSubmit}
         currentStep={currentStep}
         steps={steps}
-        register={register}
         errors={errors}
         watch={watch}
         setValue={setValue}
@@ -258,6 +257,7 @@ const Register = () => {
         onNext={handleNext}
         onBack={handleBack}
         isLoading={isLoading}
+        handleStepChange={handleStepChange}
         getStepValidation={getStepValidation}
       />
     </Flex>

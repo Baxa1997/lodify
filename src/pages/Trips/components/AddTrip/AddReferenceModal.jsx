@@ -59,7 +59,7 @@ const AddReferenceModal = ({isOpen, onClose, control, onAddReference}) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size="md">
+    <Modal isOpen={isOpen} onClose={handleClose} size="md" isCentered>
       <ModalOverlay />
       <ModalContent borderRadius="12px">
         <ModalHeader fontSize="18px" fontWeight="600" color="#181D27" pb="16px">

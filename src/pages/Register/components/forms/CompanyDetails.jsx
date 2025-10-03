@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, HStack, Button, Text, Textarea, Flex} from "@chakra-ui/react";
+import {Box, HStack, Button, Text, Flex} from "@chakra-ui/react";
 import {SearchIcon} from "@chakra-ui/icons";
 import {useGetLodify} from "@services/lodify-user.service";
 import HFTextField from "@components/HFTextField";
@@ -48,6 +48,11 @@ const SearchToggle = ({
             country: responseData?.phy_country,
             email: responseData?.email_address,
             phone: responseData?.telephone,
+            companyDetails: {
+              name: responseData?.legal_name,
+              dotNumber: responseData?.dot_number || responseData?.us_dot,
+              mcNumber: responseData?.mc_number,
+            },
           });
         }
       } else {
@@ -79,15 +84,19 @@ const SearchToggle = ({
       </Box>
       <HStack spacing={3} mt={4}>
         <HStack
+          height="44px"
           spacing={0}
+          p="4px"
           border="1px solid #E5E7EB"
           borderRadius="8px"
-          overflow="hidden">
+          overflow="hidden"
+          bg="#F9FAFB">
           <Button
+            boxShadow={"rgba(10, 13, 18, 0.1)"}
             isDisabled={true}
             size="sm"
             variant="ghost"
-            bg={searchType === "MC" ? "#F9FAFB" : "white"}
+            bg={searchType === "MC" ? "#fff" : ""}
             color="#374151"
             fontSize="14px"
             fontWeight="500"
@@ -96,9 +105,10 @@ const SearchToggle = ({
             MC
           </Button>
           <Button
+            boxShadow="rgba(10, 13, 18, 0.1)"
             size="sm"
             variant="ghost"
-            bg={searchType === "US DOT" ? "#F9FAFB" : "white"}
+            bg={searchType === "US DOT" ? "#fff" : ""}
             color="#374151"
             fontSize="14px"
             fontWeight="500"
@@ -272,23 +282,6 @@ const SearchToggle = ({
                 "Unable to find company with the provided information. Please check your entry and try again."}
             </Text>
           </Box>
-
-          <Button
-            _hover={{bg: "#EF6820"}}
-            mt="10px"
-            width="100%"
-            height="40px"
-            bg="#EF6820"
-            color="white"
-            borderRadius="8px"
-            fontSize="16px"
-            fontWeight="600"
-            onClick={() => {
-              setSearchStatus("idle");
-              setErrorMessage("");
-            }}>
-            Try Again
-          </Button>
         </>
       )}
 

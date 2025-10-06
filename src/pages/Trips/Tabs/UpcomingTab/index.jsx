@@ -332,7 +332,7 @@ const TripProgress = ({total_trips = 0, current_trips = 0}) => {
   );
 };
 
-const TripDriverVerification = ({trip}) => {
+const TripDriverVerification = ({trip = {}}) => {
   const stop = trip?.stop?.[0];
 
   return (
@@ -349,16 +349,14 @@ const TripDriverVerification = ({trip}) => {
               }}
             />
           ) : (
-            (
-              <img
-                src="/img/unverifiedFullTruck.svg"
-                alt="powerOnly"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            )``
+            <img
+              src="/img/unverifiedFullTruck.svg"
+              alt="powerOnly"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
           )
         ) : trip?.is_truck_verified ? (
           <img

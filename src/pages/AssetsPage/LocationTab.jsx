@@ -120,7 +120,6 @@ const LocationTab = () => {
     );
   }
 
-  // Check if we have valid coordinates
   if (!mapData || !mapData[0] || !latitude || !longitude) {
     return (
       <Box

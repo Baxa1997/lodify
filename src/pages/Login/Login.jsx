@@ -416,9 +416,6 @@ const Login = () => {
   return (
     <>
       <div className={styles.authContainer}>
-        <Box mb="40px">
-          <img src="/img/lodifyLogoDark.svg" alt="loginBackground" />
-        </Box>
         <div className={styles.authCard}>
           <div className={styles.authHeader}>
             <h1>Sign in with Lodify</h1>

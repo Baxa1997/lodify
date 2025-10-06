@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
   Box,
   Flex,
@@ -15,10 +15,13 @@ import HFTextField from "../../../../components/HFTextField";
 import styles from "../../MultiStepRegister.module.scss";
 import HFPhoneInput from "../../../../components/HFPhoneInput";
 import authService from "../../../../services/auth/authService";
+import {RecaptchaVerifier, signInWithPhoneNumber} from "firebase/auth";
+import {auth} from "../../../../config/firebase";
+import {FiDivide} from "react-icons/fi";
 
 const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   const [currentSubStep, setCurrentSubStep] = useState("form");
-  const [phoneCode, setPhoneCode] = useState("1234");
+  const [phoneCode, setPhoneCode] = useState("");
   const [emailCode, setEmailCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -36,16 +39,79 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
     setValue("emailCode", value);
   };
 
-  const handleSendPhoneCode = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setCurrentSubStep("phone-verify");
-    } catch (error) {
-      console.error("Failed to send phone code:", error);
-    } finally {
-      setIsLoading(false);
+  const handleSendPhoneCode = async (values) => {
+    const phoneNumber = formData?.phone;
+    if (!phoneNumber) {
+      toast({
+        title: "Error",
+        description: "Please enter a phone number",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
     }
+
+    const cleanPhone = phoneNumber.replace(/\D/g, "");
+    const formattedPhone = cleanPhone.startsWith("1")
+      ? `+${cleanPhone}`
+      : `+1${cleanPhone}`;
+
+    console.log("Original phone:", phoneNumber);
+    console.log("Formatted phone:", formattedPhone);
+
+    setIsLoading(true);
+
+    try {
+      const existingContainer = document.getElementById("recaptcha-container");
+      if (existingContainer) {
+        existingContainer.innerHTML = "";
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const recaptchaVerifier = new RecaptchaVerifier(
+        "recaptcha-container",
+        {
+          size: "normal",
+          callback: (response) => {
+            console.log("reCAPTCHA solved:", response);
+          },
+          "expired-callback": () => {
+            console.log("reCAPTCHA expired");
+          },
+        },
+        auth
+      );
+
+      console.log("Rendering reCAPTCHA...");
+      await recaptchaVerifier.render();
+      console.log("reCAPTCHA rendered successfully");
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      console.log("Sending verification code...");
+      const result = await signInWithPhoneNumber(
+        auth,
+        formattedPhone,
+        recaptchaVerifier
+      );
+
+      console.log("Verification code sent successfully:", result);
+
+      setValue("firebaseToken", result?.verificationId);
+      setValue("formType", "FIREBASEOTP");
+
+      toast({
+        title: "Success",
+        description: "Verification code sent successfully!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      setCurrentSubStep("phone-verify");
+    } catch (error) {}
   };
 
   const handleSendEmailCode = async () => {
@@ -96,13 +162,33 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   };
 
   const handleVerifyPhone = async () => {
-    if (phoneCode.length === 4) {
+    if (phoneCode.length === 6) {
       setIsLoading(true);
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        console.log("Verifying phone code:", phoneCode);
+
+        toast({
+          title: "Phone Verified Successfully!",
+          description: "Phone number has been verified",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+
+        setValue("phoneVerified", true);
+        setValue("phoneVerificationId", "firebase-verified");
+
         setCurrentSubStep("email");
       } catch (error) {
         console.error("Failed to verify phone code:", error);
+        toast({
+          title: "Verification Failed",
+          description:
+            "An error occurred during verification. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       } finally {
         setIsLoading(false);
       }
@@ -177,8 +263,8 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
       );
 
       if (response?.data?.sms_id) {
-        setEmailSmsId(response.data.sms_id);
-        setValue("emailSmsId", response.data.sms_id);
+        setEmailSmsId(response?.data?.sms_id);
+        setValue("emailSmsId", response?.data?.sms_id);
         setCurrentSubStep("email-verify");
         toast({
           title: "Code Resent Successfully!",
@@ -275,7 +361,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           <OtpInput
             value={phoneCode}
             onChange={handlePhoneCodeChange}
-            numInputs={4}
+            numInputs={6}
             renderSeparator={<span style={{width: "0px"}} />}
             renderInput={(props) => (
               <input
@@ -355,7 +441,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           onClick={handleVerifyPhone}
           isLoading={isLoading}
           loadingText="Verifying..."
-          isDisabled={phoneCode.length !== 4}>
+          isDisabled={phoneCode.length !== 6}>
           Verify phone number
         </Button>
 
@@ -377,6 +463,17 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
             </Text>
           </Flex>
         </VStack>
+
+        {/* reCAPTCHA container - visible for user interaction */}
+        <div
+          id="recaptcha-container"
+          style={{
+            margin: "20px 0",
+            display: "flex",
+            justifyContent: "center",
+            minHeight: "78px",
+            width: "100%",
+          }}></div>
       </Box>
     );
   }

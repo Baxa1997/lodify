@@ -31,12 +31,11 @@ export const MotiveResources = ({
             <Box display="flex" flexDir="column" gap="16px">
               <Input
                 {...register("api_key", {
-                  required: "API Key is required",
+                  required: true,
                 })}
-                placeholder="Enter Motive API Key"
+                placeholder="Api key"
                 defaultValue={content?.api_key || ""}
                 required
-                type="password"
               />
             </Box>
           </form>

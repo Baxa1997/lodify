@@ -10,6 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {showAlert} from "../../store/alert/alert.thunk";
 import listToOptions from "../../utils/listTopOptions";
 import {loginAction} from "../../store/auth/auth.thunk";
+import {Box, Button, Text} from "@chakra-ui/react";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -413,95 +414,106 @@ const Login = () => {
   }, [connectionCheck, getFormValue?.tables]);
 
   return (
-    <div className={styles.authContainer}>
-      <div className={styles.authCard}>
-        <div className={styles.authHeader}>
-          <h1>Welcome Back</h1>
-          <p>Sign in to your admin account</p>
-        </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.authForm}>
-          <div className={styles.formGroup}>
-            <label htmlFor="username">Login</label>
-            <input
-              type="text"
-              id="username"
-              placeholder="Enter your Username"
-              className={errors.username ? "error" : ""}
-              {...register("username", {
-                required: "Username is required",
-                minLength: {
-                  value: 3,
-                  message: "Username must be at least 3 characters",
-                },
-                maxLength: {
-                  value: 50,
-                  message: "Username must be less than 50 characters",
-                },
-              })}
-            />
-            {errors.username && (
-              <span className={styles.errorMessage}>
-                {errors.username.message}
-              </span>
-            )}
+    <>
+      <div className={styles.authContainer}>
+        <Box mb="40px">
+          <img src="/img/lodifyLogoDark.svg" alt="loginBackground" />
+        </Box>
+        <div className={styles.authCard}>
+          <div className={styles.authHeader}>
+            <h1>Sign in with Lodify</h1>
+            <p>Description</p>
           </div>
 
-          <div className={styles.formGroup}>
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter your password"
-              className={errors.password ? "error" : ""}
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-                maxLength: {
-                  value: 100,
-                  message: "Password must be less than 100 characters",
-                },
-              })}
-            />
-            {errors.password && (
-              <span className={styles.errorMessage}>
-                {errors.password.message}
-              </span>
-            )}
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.authForm}>
+            <div className={styles.formGroup}>
+              <label htmlFor="username">
+                Email or mobile phone number{" "}
+                <span style={{color: "#EF6820"}}>*</span>
+              </label>
+              <input
+                type="text"
+                id="username"
+                placeholder="Enter your Username"
+                className={errors.username ? "error" : ""}
+                {...register("username", {
+                  required: "Username is required",
+                  minLength: {
+                    value: 3,
+                    message: "Username must be at least 3 characters",
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: "Username must be less than 50 characters",
+                  },
+                })}
+              />
+            </div>
 
-          <div className={styles.formOptions}>
-            <label className={styles.checkboxLabel}>
-              <input type="checkbox" {...register("rememberMe")} />
-              <span>Remember me</span>
-            </label>
+            <div className={styles.formGroup}>
+              <label htmlFor="password">
+                Password <span style={{color: "#EF6820"}}>*</span>
+              </label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                className={errors.password ? "error" : ""}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  maxLength: {
+                    value: 100,
+                    message: "Password must be less than 100 characters",
+                  },
+                })}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className={styles.authButton}
+              disabled={isLoading || !isFormValid}>
+              {isLoading ? "Signing in..." : "Sign In"}
+            </button>
+
             <Link to="/forgot-password" className={styles.forgotLink}>
               Forgot password?
             </Link>
+          </form>
+
+          <div className={styles.authFooter}>
+            <Button
+              as={Link}
+              to="/role-selection"
+              mb="10px"
+              w="100%"
+              mt="20px"
+              bg="#fff"
+              border="1px solid #D5D7DA"
+              _hover={{
+                color: "#414651",
+                textDecoration: "none",
+              }}>
+              Create an account
+            </Button>
+            <Text textAlign="center" color="#535862" fontWeight="400">
+              New to Lodify?
+            </Text>
+            {/* <p>
+              Don't have an account?
+              <Link to="/role-selection" className={styles.authLink}>
+                {" "}
+                Sign up
+              </Link>
+            </p> */}
           </div>
-
-          <button
-            type="submit"
-            className={styles.authButton}
-            disabled={isLoading || !isFormValid}>
-            {isLoading ? "Signing in..." : "Sign In"}
-          </button>
-        </form>
-
-        <div className={styles.authFooter}>
-          <p>
-            Don't have an account?
-            <Link to="/role-selection" className={styles.authLink}>
-              {" "}
-              Sign up
-            </Link>
-          </p>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

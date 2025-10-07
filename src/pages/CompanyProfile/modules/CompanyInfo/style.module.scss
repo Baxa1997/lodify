@@ -1,32 +1,85 @@
 @use "../../../../styles/variables.scss" as *;
 
-.header {
+.container {
+  margin-top: 20px;
+  background: #fff;
+  min-height: 100vh;
+}
+
+.headerSection {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.companyHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding-bottom: 20px;
-  margin-top: 32px;
-  border-bottom: 1px solid $border-color;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.contactsSection {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.formSection {
-  display: flex;
-  align-items: start;
-  gap: 32px;
-  padding: 20px 0;
+.metricsSection {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
 
-  &:not(:last-child) {
-    border-bottom: 1px solid $border-color;
+.equipmentSection {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.resourcesSection {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.equipmentCard {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 }
 
-.textFieldWrapper {
-  display: flex;
-  column-gap: 24px;
+.resourceCard {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .companyHeader {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .equipmentSection,
+  .resourcesSection {
+    padding: 16px;
+  }
 }

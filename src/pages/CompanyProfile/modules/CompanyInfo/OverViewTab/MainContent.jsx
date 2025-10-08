@@ -67,34 +67,11 @@ function MainContent() {
         </AccordionItem>
       </Accordion>
 
-      <Accordion allowMultiple className={styles.mainAccordion}>
+      {/* <Accordion allowMultiple className={styles.mainAccordion}>
         <AccordionItem className={styles.accordionItem}>
           <AccordionButton className={styles.connectedButton}>
             <Flex justify="space-between" align="center" width="100%">
-              <HStack spacing={3}>
-                <Box
-                  w="24px"
-                  h="24px"
-                  bg="#10b981"
-                  borderRadius="full"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center">
-                  <CheckIcon color="white" w="12px" h="12px" />
-                </Box>
-                <VStack align="start" spacing={1}>
-                  <Text fontSize="16px" fontWeight="600" color="#181d27">
-                    Connected
-                  </Text>
-                  <Text fontSize="14px" color="#6b7280">
-                    The carrier has a connected and active ELD providing a clear
-                    physical and digital footprint
-                  </Text>
-                  <Text fontSize="12px" color="#9ca3af">
-                    Connected on 4/2/2025, Updated 13 minutes ago
-                  </Text>
-                </VStack>
-              </HStack>
+             
               <AccordionIcon />
             </Flex>
           </AccordionButton>
@@ -102,7 +79,31 @@ function MainContent() {
             <Text>Connection status details content here...</Text>
           </AccordionPanel>
         </AccordionItem>
-      </Accordion>
+      </Accordion> */}
+      <HStack p="16px" className={styles.mainAccordion} spacing={3}>
+        <Box
+          w="24px"
+          h="24px"
+          bg="#10b981"
+          borderRadius="full"
+          display="flex"
+          alignItems="center"
+          justifyContent="center">
+          <CheckIcon color="white" w="12px" h="12px" />
+        </Box>
+        <VStack align="start" spacing={1}>
+          <Text fontSize="16px" fontWeight="600" color="#181d27">
+            Connected
+          </Text>
+          <Text fontSize="14px" color="#6b7280">
+            The carrier has a connected and active ELD providing a clear
+            physical and digital footprint
+          </Text>
+          <Text fontSize="12px" color="#9ca3af">
+            Connected on 4/2/2025, Updated 13 minutes ago
+          </Text>
+        </VStack>
+      </HStack>
 
       <Accordion allowMultiple className={styles.mainAccordion}>
         <AccordionItem className={styles.accordionItem}>

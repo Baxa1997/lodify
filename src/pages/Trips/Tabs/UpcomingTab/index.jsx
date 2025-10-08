@@ -1,9 +1,20 @@
-import {Box, Badge, Text, Flex} from "@chakra-ui/react";
+import {
+  Box,
+  Badge,
+  Text,
+  Flex,
+  Collapse,
+  IconButton,
+  VStack,
+  HStack,
+  Divider,
+} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {format, isValid} from "date-fns";
+import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
 import tripsService from "@services/tripsService";
 import tableElements from "../../components/mockElements";
 import {
@@ -16,6 +27,7 @@ import {
 import CTableRow from "@components/tableElements/CTableRow";
 import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
 import {formatDate} from "@utils/dateFormats";
+import TripRowDetails from "./TripRowDetails";
 
 function UpcomingTab() {
   const navigate = useNavigate();
@@ -23,6 +35,7 @@ function UpcomingTab() {
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
+  const [expandedRows, setExpandedRows] = useState(new Set());
   const envId = useSelector((state) => state.auth.environmentId);
 
   const getLoadTypeColor = (loadType) => {
@@ -76,6 +89,7 @@ function UpcomingTab() {
   };
 
   const handleRowClick = (id, trip) => {
+    console.log("trip", trip, id);
     navigate(`/admin/trips/${id}`, {
       state: {
         label: `${trip?.drivers?.first_name?.[0]}.${trip?.drivers?.last_name}`,
@@ -88,10 +102,24 @@ function UpcomingTab() {
     setCurrentPage(1);
   };
 
+  const toggleRowExpansion = (tripId, event) => {
+    event.stopPropagation();
+    setExpandedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(tripId)) {
+        newSet.delete(tripId);
+      } else {
+        newSet.add(tripId);
+      }
+      return newSet;
+    });
+  };
+
   const totalPages = tripsData?.total
     ? Math.ceil(tripsData.total / pageSize)
     : 0;
   const trips = tripsData?.data || tripsData || [];
+  console.log("tripstrips", trips);
 
   return (
     <Box mt={"26px"}>
@@ -107,7 +135,7 @@ function UpcomingTab() {
       <Box mt={6}>
         <CTable
           width="100%"
-          height="calc(100vh - 320px)"
+          height="calc(100vh - 330px)"
           overflow="auto"
           currentPage={currentPage}
           totalPages={totalPages}
@@ -118,6 +146,7 @@ function UpcomingTab() {
             <Box as={"tr"}>
               {tableElements.map((element) => (
                 <CTableTh
+                  maxW="334px"
                   sortable={element.sortable}
                   sortDirection={
                     sortConfig.key === element.key ? sortConfig.direction : null
@@ -160,129 +189,174 @@ function UpcomingTab() {
                 </CTableTd>
               </CTableRow>
             ) : (
-              trips?.map((trip, index) => (
-                <CTableRow
-                  key={trip.id || index}
-                  style={{
-                    backgroundColor: "white",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleRowClick(trip.guid, trip)}>
-                  <CTableTd>{trip.shipper?.name || ""}</CTableTd>
-                  <CTableTd minWidth="180px">
-                    <Flex
-                      gap="24px"
-                      alignItems="center"
-                      justifyContent="space-between">
-                      <Text color="#181D27">{trip.id || ""}</Text>
-                      <TripStatus status={trip?.current_trip} />
-                    </Flex>
-                  </CTableTd>
-                  <CTableTd>
-                    <Flex
-                      alignItems="center"
-                      gap="16px"
-                      justifyContent="space-between">
-                      <Box>
-                        <Text
-                          h="20px"
-                          fontSize="14px"
-                          fontWeight="500"
-                          color="#181D27">
-                          {" "}
-                          {`${trip.origin?.[0]?.address ?? ""} / ${
-                            trip?.origin?.[0]?.address_2 ?? ""
-                          }` || ""}
-                        </Text>
-                        <Text h="20px">
-                          {formatDate(trip?.origin?.[0]?.depart_at ?? "")}
-                        </Text>
-                      </Box>
-                      <TripStatus status={trip?.total_trips} />
-                    </Flex>
-                  </CTableTd>
-                  <CTableTd>
-                    <Box>
-                      <Flex
-                        gap="16px"
-                        alignItems="center"
-                        justifyContent="space-between">
+              trips?.map((trip, index) => {
+                const isExpanded = expandedRows.has(trip.id || trip.guid);
+                return (
+                  <React.Fragment key={trip.id || index}>
+                    <CTableRow
+                      style={{
+                        backgroundColor: "white",
+                        cursor: "pointer",
+                      }}
+                      onClick={
+                        (e) => handleRowClick(trip.id || trip.guid, trip)
+                        // toggleRowExpansion(trip.id || trip.guid, e)
+                      }>
+                      <CTableTd>{trip.shipper?.name || ""}</CTableTd>
+                      <CTableTd minWidth="180px">
+                        <Flex
+                          gap="24px"
+                          alignItems="center"
+                          justifyContent="space-between">
+                          <Text color="#181D27">{trip.id || ""}</Text>
+                          <TripStatus
+                            rowClick={handleRowClick}
+                            onExpand={toggleRowExpansion}
+                            status={trip?.current_trip}
+                            tripId={trip.id || trip.guid}
+                          />
+                        </Flex>
+                      </CTableTd>
+                      <CTableTd>
+                        <Flex
+                          alignItems="center"
+                          gap="16px"
+                          justifyContent="space-between">
+                          <Box>
+                            <Text
+                              h="20px"
+                              fontSize="14px"
+                              fontWeight="500"
+                              color="#181D27">
+                              {" "}
+                              {`${trip.origin?.[0]?.address ?? ""} / ${
+                                trip?.origin?.[0]?.address_2 ?? ""
+                              }` || ""}
+                            </Text>
+                            <Text h="20px">
+                              {formatDate(trip?.origin?.[0]?.depart_at ?? "")}
+                            </Text>
+                          </Box>
+                          <TripStatus status={trip?.total_trips} />
+                        </Flex>
+                      </CTableTd>
+                      <CTableTd>
                         <Box>
+                          <Flex
+                            gap="16px"
+                            alignItems="center"
+                            justifyContent="space-between">
+                            <Box>
+                              <Text
+                                h="20px"
+                                fontSize="14px"
+                                fontWeight="500"
+                                color="#181D27">
+                                {" "}
+                                {`${trip.stop?.[0]?.address ?? ""} / ${
+                                  trip?.stop?.[0]?.address_2 ?? ""
+                                }` || ""}
+                              </Text>
+                              <Text h="20px">
+                                {formatDate(trip?.stop?.[0]?.arrive_by ?? "")}
+                              </Text>
+                            </Box>
+                            <TripDriverVerification trip={trip} />
+                          </Flex>
+                        </Box>
+                      </CTableTd>
+                      <CTableTd>
+                        {trip?.tractors?.plate_number ?? "---"}
+                      </CTableTd>
+                      <CTableTd>
+                        <Box>
+                          <Text h="20px">
+                            {trip?.trailers?.plate_number ?? "---"}
+                          </Text>
+                        </Box>
+                      </CTableTd>
+                      <CTableTd>
+                        <Flex gap="12px" justifyContent="space-between">
                           <Text
                             h="20px"
                             fontSize="14px"
                             fontWeight="500"
-                            color="#181D27">
-                            {" "}
-                            {`${trip.stop?.[0]?.address ?? ""} / ${
-                              trip?.stop?.[0]?.address_2 ?? ""
-                            }` || ""}
+                            color="#535862">
+                            {trip?.origin?.[0]?.equipment_type ?? "ss"}
                           </Text>
-                          <Text h="20px">
-                            {formatDate(trip?.stop?.[0]?.arrive_by ?? "")}
+                          <Flex
+                            alignItems="center"
+                            justifyContent="center"
+                            border="1px solid #dcddde"
+                            w="24px"
+                            h="22px"
+                            borderRadius="50%"
+                            bg="#fff">
+                            {trip?.origin?.[0]
+                              ?.equipment_availability?.[0]?.[0] ?? ""}
+                          </Flex>
+                        </Flex>
+                      </CTableTd>
+                      <CTableTd>
+                        <Badge
+                          colorScheme={getLoadTypeColor(
+                            trip.origin?.[0]?.load_type?.[0] ?? ""
+                          )}
+                          variant="subtle"
+                          px={3}
+                          py={1}
+                          borderRadius="full"
+                          fontSize="12px"
+                          fontWeight="500">
+                          {trip.origin?.[0]?.load_type?.[0] ?? ""}
+                        </Badge>
+                      </CTableTd>
+                      <CTableTd>
+                        <TripProgress
+                          total_trips={trip.total_trips}
+                          current_trips={trip.current_trip}
+                        />
+                      </CTableTd>
+                      <CTableTd>
+                        <Flex alignItems="center" gap={2}>
+                          <Text color="#EF6820" fontWeight="600">
+                            Assign
                           </Text>
-                        </Box>
-                        <TripDriverVerification trip={trip} />
-                      </Flex>
-                    </Box>
-                  </CTableTd>
-                  <CTableTd>{trip?.tractors?.plate_number ?? "---"}</CTableTd>
-                  <CTableTd>
-                    <Box>
-                      <Text h="20px">
-                        {trip?.trailers?.plate_number ?? "---"}
-                      </Text>
-                    </Box>
-                  </CTableTd>
-                  <CTableTd>
-                    <Flex gap="12px" justifyContent="space-between">
-                      <Text
-                        h="20px"
-                        fontSize="14px"
-                        fontWeight="500"
-                        color="#535862">
-                        {trip?.origin?.[0]?.equipment_type ?? "ss"}
-                      </Text>
-                      <Flex
-                        alignItems="center"
-                        justifyContent="center"
-                        border="1px solid #dcddde"
-                        w="24px"
-                        h="22px"
-                        borderRadius="50%"
-                        bg="#fff">
-                        {trip?.origin?.[0]?.equipment_availability?.[0]?.[0] ??
-                          ""}
-                      </Flex>
-                    </Flex>
-                  </CTableTd>
-                  <CTableTd>
-                    <Badge
-                      colorScheme={getLoadTypeColor(
-                        trip.origin?.[0]?.load_type?.[0] ?? ""
-                      )}
-                      variant="subtle"
-                      px={3}
-                      py={1}
-                      borderRadius="full"
-                      fontSize="12px"
-                      fontWeight="500">
-                      {trip.origin?.[0]?.load_type?.[0] ?? ""}
-                    </Badge>
-                  </CTableTd>
-                  <CTableTd>
-                    <TripProgress
-                      total_trips={trip.total_trips}
-                      current_trips={trip.current_trip}
-                    />
-                  </CTableTd>
-                  <CTableTd>
-                    <Text color="#EF6820" fontWeight="600">
-                      Assign
-                    </Text>
-                  </CTableTd>
-                </CTableRow>
-              ))
+                          {/* <IconButton
+                            size="sm"
+                            variant="ghost"
+                            icon={
+                              isExpanded ? (
+                                <ChevronUpIcon />
+                              ) : (
+                                <ChevronDownIcon />
+                              )
+                            }
+                            onClick={(e) =>
+                              toggleRowExpansion(trip.id || trip.guid, e)
+                            }
+                            aria-label={
+                              isExpanded ? "Collapse details" : "Expand details"
+                            }
+                            _hover={{bg: "#f3f4f6"}}
+                          /> */}
+                        </Flex>
+                      </CTableTd>
+                    </CTableRow>
+
+                    <CTableRow>
+                      <CTableTd colSpan={tableElements.length} p={0}>
+                        <Collapse in={isExpanded} animateOpacity>
+                          <TripRowDetails
+                            handleRowClick={handleRowClick}
+                            trip={trip}
+                          />
+                        </Collapse>
+                      </CTableTd>
+                    </CTableRow>
+                  </React.Fragment>
+                );
+              })
             )}
           </CTableBody>
         </CTable>
@@ -291,9 +365,18 @@ function UpcomingTab() {
   );
 }
 
-const TripStatus = ({status}) => {
+const TripStatus = ({
+  status,
+  onExpand = () => {},
+  tripId = "",
+  rowClick = () => {},
+}) => {
   return (
     <Flex
+      onClick={(e) => {
+        e.stopPropagation();
+        onExpand(tripId, e);
+      }}
       alignItems="center"
       justifyContent="center"
       flexDirection="row-reverse"
@@ -301,7 +384,8 @@ const TripStatus = ({status}) => {
       gap="4px"
       p="2px 8px"
       borderRadius="100px"
-      border="1px solid #B2DDFF">
+      border="1px solid #B2DDFF"
+      cursor="pointer">
       <Text fontSize="12px" fontWeight="500" color="#175CD3">
         {status || 1}
       </Text>
@@ -377,15 +461,6 @@ const TripDriverVerification = ({trip = {}}) => {
             }}
           />
         )}
-        {/* <img
-          src="/img/truck.svg"
-          alt="truck"
-          style={{
-            width: "100%",
-            height: "100%",
-            filter: `drop-shadow(0 0 0 ${icon}) saturate(1000%)`,
-          }}
-        /> */}
       </Box>
 
       <Flex

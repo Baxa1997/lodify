@@ -9,10 +9,21 @@ const CTable = ({
   pageSize,
   onPageChange,
   onPageSizeChange,
-  height = "400px",
+  height,
+  minHeight,
   w = "100%",
+  isPagination = true,
   ...props
 }) => {
+  // Determine which height property to use
+  const heightProps = {};
+  if (height) {
+    heightProps.height = height;
+  }
+  if (minHeight) {
+    heightProps.minHeight = minHeight;
+  }
+
   return (
     <Box
       w={w}
@@ -22,8 +33,8 @@ const CTable = ({
       borderColor="gray.200"
       display="flex"
       flexDirection="column"
-      height={height}
       overflow="hidden"
+      {...heightProps}
       {...props}>
       <Box
         flex="1"
@@ -52,13 +63,15 @@ const CTable = ({
         </Box>
       </Box>
 
-      <CTablePagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        pageSize={pageSize}
-        onPageChange={onPageChange}
-        onPageSizeChange={onPageSizeChange}
-      />
+      {isPagination && (
+        <CTablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
+        />
+      )}
     </Box>
   );
 };

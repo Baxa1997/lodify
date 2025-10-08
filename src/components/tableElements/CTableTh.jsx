@@ -7,6 +7,12 @@ const CTableTh = ({
   sortable = false,
   sortDirection = null,
   onSort,
+  bg = "gray.50",
+  py = "8px",
+  px = "20px",
+  maxW = "100%",
+  width = "auto",
+  minW = "80px",
   ...props
 }) => {
   const getSortIcon = () => {
@@ -33,17 +39,18 @@ const CTableTh = ({
       onClick={sortable ? onSort : undefined}
       cursor={sortable ? "pointer" : "default"}
       userSelect="none"
-      py={4}
-      px={6}
+      py={py}
+      px={px}
       fontSize="14px"
       fontWeight="600"
       color="#1E293B"
       borderBottom="1px solid"
       borderColor="gray.200"
       textAlign="left"
-      bg="gray.50"
-      minWidth="80px"
-      width="auto"
+      bg={bg}
+      minWidth={minW}
+      width={width}
+      maxW={maxW}
       whiteSpace="nowrap"
       _hover={sortable ? {bg: "gray.100"} : {}}
       transition="all 0.2s ease"

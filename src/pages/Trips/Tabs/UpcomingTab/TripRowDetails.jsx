@@ -230,7 +230,10 @@ const TripRowDetails = ({trip = {}, handleRowClick}) => {
             </Button>
             <Button
               _hover={{bg: "#EF6820"}}
-              onClick={() => handleRowClick(trip.id || trip.guid, trip)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRowClick(trip.guid, trip);
+              }}
               variant="outline"
               h="40px"
               fontSize="14px"

@@ -89,10 +89,10 @@ function UpcomingTab() {
   };
 
   const handleRowClick = (id, trip) => {
-    console.log("trip", trip, id);
+    console.log("trippppppppppp", trip);
     navigate(`/admin/trips/${id}`, {
       state: {
-        label: `${trip?.drivers?.first_name?.[0]}.${trip?.drivers?.last_name}`,
+        label: `${trip?.drivers?.first_name}.${trip?.drivers?.last_name}`,
       },
     });
   };
@@ -192,15 +192,14 @@ function UpcomingTab() {
               trips?.map((trip, index) => {
                 const isExpanded = expandedRows.has(trip.id || trip.guid);
                 return (
-                  <React.Fragment key={trip.id || index}>
+                  <React.Fragment key={trip.guid || index}>
                     <CTableRow
                       style={{
                         backgroundColor: "white",
                         cursor: "pointer",
                       }}
-                      onClick={
-                        (e) => handleRowClick(trip.id || trip.guid, trip)
-                        // toggleRowExpansion(trip.id || trip.guid, e)
+                      onClick={(e) =>
+                        toggleRowExpansion(trip.id || trip.guid, e)
                       }>
                       <CTableTd>{trip.shipper?.name || ""}</CTableTd>
                       <CTableTd minWidth="180px">

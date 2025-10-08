@@ -349,6 +349,7 @@ function UpcomingTab() {
                           <TripRowDetails
                             handleRowClick={handleRowClick}
                             trip={trip}
+                            isExpanded={isExpanded}
                           />
                         </Collapse>
                       </CTableTd>

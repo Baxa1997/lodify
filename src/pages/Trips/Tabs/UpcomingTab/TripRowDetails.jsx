@@ -1,5 +1,7 @@
 import React from "react";
 import {Box, Text, Flex, Badge, Button} from "@chakra-ui/react";
+import {useQuery} from "@tanstack/react-query";
+import {useSelector} from "react-redux";
 import {
   CTable,
   CTableHead,
@@ -8,9 +10,68 @@ import {
   CTableTd,
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
-import {formatDate} from "@utils/dateFormats";
+import tripsService from "@services/tripsService";
+import {parseISO, format} from "date-fns";
 
-const TripRowDetails = ({trip = {}, handleRowClick}) => {
+const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
+  const envId = useSelector((state) => state.auth.environmentId);
+  console.log("trip======>", trip);
+  const {
+    data: detailedTripData = {},
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["TRIP_DETAILS", trip.guid, envId],
+    queryFn: () => {
+      return tripsService.getTripById({
+        app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
+        environment_id: envId,
+        method: "single",
+        object_data: {
+          trip_id: trip.guid,
+        },
+        table: "trips_dashboard",
+      });
+    },
+    enabled: !!trip.guid && !!envId && isExpanded,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 10 * 60 * 1000,
+    retry: 1,
+    retryDelay: 1000,
+    select: (res) => res?.data?.response?.[0] || {},
+  });
+
+  function formatScheduleDate(isoString) {
+    try {
+      const date = parseISO(isoString);
+      return `Sch. ${format(date, "dd MMM, HH:mm")}`;
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function getLoadTypeColor(loadType) {
+    switch (loadType?.toLowerCase()) {
+      case "Dry":
+        return "#14B8A6";
+      case "Refrigerated":
+        return "#F59E0B";
+      case "Temperature Controlled":
+        return "#1E40AF";
+      case "Other":
+        return "#6B7280";
+      case "Preloaded":
+        return "#F59E0B";
+      case "Drop":
+        return "#1E40AF";
+      default:
+        return "#6B7280";
+    }
+  }
+
   if (!trip) {
     return (
       <Box p="8px 20px" bg="#f8f9fa">
@@ -20,6 +81,28 @@ const TripRowDetails = ({trip = {}, handleRowClick}) => {
       </Box>
     );
   }
+
+  if (isLoading) {
+    return (
+      <Box p="8px 20px" bg="#f8f9fa">
+        <Text fontSize="14px" color="#6b7280">
+          Loading trip details...
+        </Text>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box p="8px 20px" bg="#f8f9fa">
+        <Text fontSize="14px" color="#red.500">
+          Error loading trip details: {error?.message || "Unknown error"}
+        </Text>
+      </Box>
+    );
+  }
+
+  const tripData = detailedTripData?.data?.response || detailedTripData || trip;
 
   const tableHeads = [
     {
@@ -58,40 +141,10 @@ const TripRowDetails = ({trip = {}, handleRowClick}) => {
     return `${baseHeight + minRows * rowHeight + padding}px`;
   };
 
-  const getTripData = () => {
-    return {
-      pickup: {
-        address:
-          `${trip.origin?.[0]?.address || ""} ${
-            trip?.origin?.[0]?.address_2 || ""
-          }`.trim() || "N/A",
-        date: trip?.origin?.[0]?.depart_at
-          ? formatDate(trip.origin[0].depart_at)
-          : "N/A",
-      },
-      equipment: trip?.origin?.[0]?.equipment_type || "N/A",
-      loadType: trip?.origin?.[0]?.load_type?.[0] || "N/A",
-      arrival: {
-        address:
-          `${trip.stop?.[0]?.address || ""} ${
-            trip?.stop?.[0]?.address_2 || ""
-          }`.trim() || "N/A",
-        date: trip?.stop?.[0]?.arrive_by
-          ? formatDate(trip.stop[0].arrive_by)
-          : "N/A",
-      },
-      eta: trip?.duration || "N/A",
-    };
-  };
-
-  const tripData = getTripData();
+  console.log("tripDatatripData", tripData);
 
   return (
-    <Box
-      bg="#fff"
-      borderTop="1px solid #e5e7eb"
-      minHeight="200px"
-      position="relative">
+    <Box bg="#fff" minHeight="200px" position="relative">
       <Box
         p="8px 20px"
         pb="0px"
@@ -141,54 +194,88 @@ const TripRowDetails = ({trip = {}, handleRowClick}) => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            <CTableRow hover={false}>
-              <CTableTd py="12px" px="20px">
-                <Box>
-                  <Text fontSize="14px" fontWeight="500" color="#181d27" mb={1}>
-                    {tripData.pickup.address}
+            {tripData?.pickups?.map((item) => (
+              <CTableRow key={item?.guid} hover={false}>
+                <CTableTd py="12px" px="20px">
+                  <Box>
+                    <TripStatus status={item?.index} />
+                    <Text
+                      my="8px"
+                      fontSize="16px"
+                      fontWeight="400"
+                      color="#181d27">
+                      {`${item?.address}, ${item?.state}, ${item?.zip_code}`}
+                    </Text>
+                    <Text fontSize="12px" color="#6b7280">
+                      {formatScheduleDate(item?.arrive_by)}
+                    </Text>
+                  </Box>
+                </CTableTd>
+
+                <CTableTd py="12px" px="20px">
+                  <Flex mb={"8px"} fontSize="14px" color="#181d27">
+                    <Text color={"#414651"} fontWeight={"500"}>
+                      Tractor Unit #
+                    </Text>
+                    <Text>{item?.tractors?.plate_number}</Text>
+                  </Flex>
+
+                  <Flex mb={"8px"} fontSize="14px" color="#181d27">
+                    <Text color={"#414651"} fontWeight={"500"}>
+                      Tractor ID
+                    </Text>
+                    <Text>{item?.tractors?.external_id}</Text>
+                  </Flex>
+
+                  <Flex alignItems={"center"} gap={"8px"}>
+                    <Text color={"#414651"} fontWeight={"500"}>
+                      53' Reefer
+                    </Text>
+                    <TripDriverVerification trip={item} />
+                  </Flex>
+                </CTableTd>
+
+                <CTableTd py="12px" px="20px">
+                  <Box>
+                    <Badge
+                      bg={getLoadTypeColor(item?.load_type?.[0])}
+                      color="white"
+                      px={3}
+                      py={1}
+                      borderRadius="full"
+                      fontSize="12px"
+                      fontWeight="500">
+                      {item?.load_type?.[0] || "N/A"}
+                    </Badge>
+                  </Box>
+                </CTableTd>
+
+                <CTableTd py="12px" px="20px">
+                  <Box>
+                    <Text
+                      fontSize="14px"
+                      fontWeight="400"
+                      color="#181d27"
+                      mb={1}>
+                      {`${item?.address}, ${item?.state}, ${item?.zip_code}`}
+                    </Text>
+                    <Text fontSize="12px" color="#6b7280">
+                      {formatScheduleDate(item?.arrive_by)}
+                    </Text>
+                  </Box>
+                </CTableTd>
+
+                <CTableTd py="12px" px="20px">
+                  <Text fontSize="14px" color="#181d27">
+                    {tripData?.duration}
                   </Text>
-                  <Text fontSize="12px" color="#6b7280">
-                    {tripData.pickup.date}
-                  </Text>
-                </Box>
-              </CTableTd>
-              <CTableTd py="12px" px="20px">
-                <Text fontSize="14px" color="#181d27">
-                  {tripData.equipment}
-                </Text>
-              </CTableTd>
-              <CTableTd py="12px" px="20px">
-                <Badge
-                  colorScheme="blue"
-                  variant="subtle"
-                  px={2}
-                  py={1}
-                  borderRadius="full"
-                  fontSize="12px">
-                  {tripData.loadType}
-                </Badge>
-              </CTableTd>
-              <CTableTd py="12px" px="20px">
-                <Box>
-                  <Text fontSize="14px" fontWeight="500" color="#181d27" mb={1}>
-                    {tripData.arrival.address}
-                  </Text>
-                  <Text fontSize="12px" color="#6b7280">
-                    {tripData.arrival.date}
-                  </Text>
-                </Box>
-              </CTableTd>
-              <CTableTd py="12px" px="20px">
-                <Text fontSize="14px" color="#181d27">
-                  {tripData.eta}
-                </Text>
-              </CTableTd>
-            </CTableRow>
+                </CTableTd>
+              </CTableRow>
+            ))}
           </CTableBody>
         </CTable>
       </Box>
 
-      {/* SUB ACTIONS - Fixed at bottom, Full Width, Not Scrollable */}
       <Box
         position="sticky"
         bottom={0}
@@ -197,6 +284,7 @@ const TripRowDetails = ({trip = {}, handleRowClick}) => {
         width="100%"
         bg="#fff"
         px="20px"
+        py="10px"
         zIndex={10}>
         <Flex
           maxWidth="1275px"
@@ -246,6 +334,137 @@ const TripRowDetails = ({trip = {}, handleRowClick}) => {
         </Flex>
       </Box>
     </Box>
+  );
+};
+
+const TripStatus = ({
+  status,
+  onExpand = () => {},
+  tripId = "",
+  rowClick = () => {},
+}) => {
+  return (
+    <Flex
+      onClick={(e) => {
+        e.stopPropagation();
+        onExpand(tripId, e);
+      }}
+      alignItems="center"
+      justifyContent="center"
+      flexDirection="row-reverse"
+      w="36px"
+      gap="4px"
+      p="2px 8px"
+      borderRadius="100px"
+      border="1px solid #B2DDFF"
+      cursor="pointer">
+      <Text fontSize="12px" fontWeight="500" color="#175CD3">
+        {status || 1}
+      </Text>
+      {status !== 0 && <img src="/img/statusArrow.svg" alt="" />}
+    </Flex>
+  );
+};
+
+const TripDriverVerification = ({trip = {}}) => {
+  return (
+    <Flex gap="24px" alignItems="center">
+      <Box w="22px" h="22px">
+        {trip?.equipment_type === "Power Only" ? (
+          trip?.is_truck_verified ? (
+            <img
+              src="/img/verifiedFullTruck.svg"
+              alt="powerOnly"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          ) : (
+            <img
+              src="/img/unverifiedFullTruck.svg"
+              alt="powerOnly"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          )
+        ) : trip?.is_truck_verified ? (
+          <img
+            src="/img/verifiedEmptyTruck.svg"
+            alt="truck"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        ) : (
+          <img
+            src="/img/unverifiedEmptyTruck.svg"
+            alt="truck"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        )}
+      </Box>
+
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        w="44px"
+        h="27px"
+        p="5px"
+        gap="4px"
+        bg={trip?.is_driver_verified ? "#DEFFEE" : "#EDEDED"}
+        borderRadius="16px">
+        <Box w="17px" h="17px">
+          {trip?.driver_type?.[0] === "Team" &&
+            (trip?.is_driver_verified ? (
+              <img
+                src="/img/unverifiedSecondDriver.svg"
+                alt="driver"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            ) : (
+              <img
+                src="/img/unvSecondDriver.svg"
+                alt="driver"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            ))}
+        </Box>
+        <Box w="17px" h="17px">
+          {trip?.is_driver_verified ? (
+            <img
+              src="/img/driverVerified.svg"
+              alt="driver"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          ) : (
+            <img
+              src="/img/unverifiedDriver.svg"
+              alt="driver"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          )}
+        </Box>
+      </Flex>
+    </Flex>
   );
 };
 

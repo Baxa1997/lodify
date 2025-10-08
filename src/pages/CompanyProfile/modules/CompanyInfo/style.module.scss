@@ -9,7 +9,7 @@
 .headerSection {
   background: white;
   border-radius: 12px;
-  padding: 16px;
+  // padding: 16px;
   margin-bottom: 24px;
   border: 1px solid #e5e7eb;
 }
@@ -21,17 +21,20 @@
   margin-bottom: 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid #e5e7eb;
+  padding: 16px;
 }
 
 .contactsSection {
   margin-bottom: 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid #e5e7eb;
+  padding: 0px 16px 16px;
 }
 
 .metricsSection {
   padding-bottom: 16px;
   border-bottom: 1px solid #e5e7eb;
+  padding: 0px 16px 16px;
 }
 
 .equipmentSection {
@@ -82,4 +85,21 @@
   .resourcesSection {
     padding: 16px;
   }
+}
+
+.sidebarTab {
+  color: #181d27;
+}
+
+.sidebarTabInactive {
+  color: #ef6820;
+  background: #fef7ee;
+}
+
+.accordionItem {
+  width: 100%;
+}
+
+.pickupAccordionButton {
+  padding: 20px 24px;
 }

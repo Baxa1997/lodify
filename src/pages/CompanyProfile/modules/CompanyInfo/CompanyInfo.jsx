@@ -3,6 +3,7 @@ import {Box, Button, Text, HStack, VStack, Flex} from "@chakra-ui/react";
 import StarRating from "../../../../components/Rating";
 import {FiPhone, FiMail, FiMapPin} from "react-icons/fi";
 import {FaCheck, FaTimes} from "react-icons/fa";
+import TabsSection from "./TabsSection";
 
 export const CompanyInfo = () => {
   const companyData = {
@@ -191,7 +192,7 @@ export const CompanyInfo = () => {
           </Box>
         </Box>
 
-        <Flex borderBottom="1px solid #E9EAEB" py="16px">
+        <Flex borderBottom="1px solid #E9EAEB" p="16px">
           <Box
             display="grid"
             gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
@@ -219,7 +220,7 @@ export const CompanyInfo = () => {
           </Box>
         </Flex>
 
-        <Box borderBottom="1px solid #E9EAEB" py="16px">
+        <Box borderBottom="1px solid #E9EAEB" p="16px">
           <Text mb="16px" fontSize={"16px"} color="#181D27" fontWeight={600}>
             Verified Carrier Resources on Lodify
           </Text>
@@ -250,17 +251,196 @@ export const CompanyInfo = () => {
           </Box>
         </Box>
 
-        <Box py="16px">
+        <Box borderBottom="1px solid #E9EAEB" p="16px">
           <Text mb="16px" fontSize={"16px"} color="#181D27" fontWeight={600}>
             Carrier’s Performance Score on Lodify
           </Text>
           <Box
             display="grid"
-            gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+            gridTemplateColumns="repeat(auto-fit, minmax(167px, 1fr))"
             gap="12px"
-            width="100%"></Box>
+            width="100%">
+            <Box
+              h="128px"
+              p="20px"
+              gridColumn="span 2"
+              border="1px solid #E9EAEB"
+              borderRadius="12px">
+              <Text color="#181D27" fontWeight={500} fontSize="14px">
+                Overall
+              </Text>
+              <Flex mb="8px" gap="12px">
+                <Text color="#181D27" fontSize="20px" fontWeight={560}>
+                  99%
+                </Text>
+                <Flex
+                  justifyContent="center"
+                  alignItems="center"
+                  w="50px"
+                  h="32px"
+                  bg="#DCFAE6"
+                  border="1px solid #ABEFC6"
+                  borderRadius="4px"
+                  color="#079455"
+                  fontWeight={600}
+                  fontSize={"22px"}>
+                  A
+                </Flex>
+              </Flex>
+              <Flex color="#175CD3" gap="4px">
+                <img src="/img/questionRound.svg" alt="info" />
+                <Text color="#175CD3" fontSize="14px" fontWeight={600}>
+                  How is my grade calculated?
+                </Text>
+              </Flex>
+            </Box>
+
+            <Box
+              h="128px"
+              p="20px"
+              border="1px solid #E9EAEB"
+              borderRadius="12px">
+              <Flex alignItems="center" gap="4px" h="20px" mb="8px">
+                <Text color="#181D27" fontWeight={500} fontSize="14px">
+                  On time
+                </Text>
+                <img
+                  src="/img/info.svg"
+                  alt="info"
+                  width="20px"
+                  height="20px"
+                />
+              </Flex>
+              <Flex mb="8px" gap="12px" h="32px">
+                <Text color="#181D27" fontSize="20px" fontWeight={560}>
+                  100.00%
+                </Text>
+              </Flex>
+              <Flex color="#175CD3" gap="4px">
+                <Text>0.0%</Text>
+                <Text>1 week</Text>
+              </Flex>
+            </Box>
+
+            <Box
+              h="128px"
+              p="20px"
+              border="1px solid #E9EAEB"
+              borderRadius="12px">
+              <Flex alignItems="center" gap="4px" h="20px" mb="8px">
+                <Text color="#181D27" fontWeight={500} fontSize="14px">
+                  Acceptance
+                </Text>
+                <img
+                  src="/img/info.svg"
+                  alt="info"
+                  width="20px"
+                  height="20px"
+                />
+              </Flex>
+              <Flex mb="8px" gap="12px" h="32px">
+                <Text color="#181D27" fontSize="20px" fontWeight={560}>
+                  100.00%
+                </Text>
+              </Flex>
+              <Flex color="#175CD3" gap="4px">
+                <Text>0.0%</Text>
+                <Text>1 week</Text>
+              </Flex>
+            </Box>
+
+            <Box
+              h="128px"
+              p="20px"
+              border="1px solid #E9EAEB"
+              borderRadius="12px">
+              <Flex alignItems="center" gap="4px" h="20px" mb="8px">
+                <Text color="#181D27" fontWeight={500} fontSize="14px">
+                  App usage
+                </Text>
+                <img
+                  src="/img/info.svg"
+                  alt="info"
+                  width="20px"
+                  height="20px"
+                />
+              </Flex>
+              <Flex mb="8px" gap="12px" h="32px">
+                <Text color="#181D27" fontSize="20px" fontWeight={560}>
+                  100.00%
+                </Text>
+              </Flex>
+              <Flex color="#175CD3" gap="4px">
+                <Text>0.0%</Text>
+                <Text>1 week</Text>
+              </Flex>
+            </Box>
+
+            <Box
+              h="128px"
+              p="20px"
+              border="1px solid #E9EAEB"
+              borderRadius="12px">
+              <Flex alignItems="center" gap="4px" h="20px" mb="8px">
+                <Text color="#181D27" fontWeight={500} fontSize="14px">
+                  Disruption free
+                </Text>
+                <img
+                  src="/img/info.svg"
+                  alt="info"
+                  width="20px"
+                  height="20px"
+                />
+              </Flex>
+              <Flex mb="8px" gap="12px" h="32px">
+                <Text color="#181D27" fontSize="20px" fontWeight={560}>
+                  100.00%
+                </Text>
+              </Flex>
+              <Flex color="#175CD3" gap="4px">
+                <Text>0.0%</Text>
+                <Text>1 week</Text>
+              </Flex>
+            </Box>
+          </Box>
         </Box>
+
+        <Flex p="16px" justifyContent="space-between" alignItems="center">
+          <Flex gap="6px">
+            <img src="/img/reportFraud.svg" alt="" />
+            <Text fontSize="16px" fontWeight="600" color="#535862">
+              Report Fraud
+            </Text>
+          </Flex>
+
+          <Flex gap="12px">
+            <Button
+              _hover={{
+                bg: "none",
+              }}
+              bg="none"
+              border="1px solid #D5D7DA"
+              borderRadius="8px"
+              px="16px"
+              py="8px">
+              Report Fraud
+            </Button>
+            <Button
+              _hover={{
+                bg: "none",
+              }}
+              color="#16B364"
+              bg="#EDFCF2"
+              border="1px solid #16B364"
+              borderRadius="8px"
+              px="16px"
+              py="8px">
+              Connected
+            </Button>
+          </Flex>
+        </Flex>
       </Box>
+      <TabsSection />
     </Box>
   );
 };

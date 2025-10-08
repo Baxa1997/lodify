@@ -13,6 +13,7 @@ const CTableTh = ({
   maxW = "100%",
   width = "auto",
   minW = "80px",
+  zIndex = 0,
   ...props
 }) => {
   const getSortIcon = () => {
@@ -35,6 +36,7 @@ const CTableTh = ({
 
   return (
     <Box
+      zIndex={zIndex}
       as="th"
       onClick={sortable ? onSort : undefined}
       cursor={sortable ? "pointer" : "default"}

@@ -89,7 +89,6 @@ function UpcomingTab() {
   };
 
   const handleRowClick = (id, trip) => {
-    console.log("trippppppppppp", trip);
     navigate(`/admin/trips/${id}`, {
       state: {
         label: `${trip?.drivers?.first_name}.${trip?.drivers?.last_name}`,
@@ -142,10 +141,11 @@ function UpcomingTab() {
           pageSize={pageSize}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}>
-          <CTableHead>
+          <CTableHead zIndex={999999}>
             <Box as={"tr"}>
               {tableElements.map((element) => (
                 <CTableTh
+                  zIndex={999999}
                   maxW="334px"
                   sortable={element.sortable}
                   sortDirection={

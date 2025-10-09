@@ -1,22 +1,22 @@
-import { Box, Text } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import {Box, Text} from "@chakra-ui/react";
+import {useNavigate} from "react-router-dom";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import styles from "../../styles/tabs.module.scss";
 import HistoryTripsTab from "./Tabs/HistoryTripsTab";
 import HeadBreadCrumb from "@components/HeadBreadCrumb";
 import GeneralTripsTab from "./Tabs/GeneralsTripTab";
 import AddTrip from "./components/AddTrip/AddTrip";
 import tripsService from "@services/tripsService";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import {useQuery} from "@tanstack/react-query";
+import {useParams} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {useState} from "react";
 
 function UpcomingTabSinglePage() {
-  const { id } = useParams();
+  const {id} = useParams();
   const [selectedTabId, setSelectedTabId] = useState(1);
   const envId = useSelector((state) => state.auth.environmentId);
-  const { data: tripData = {}, isLoading } = useQuery({
+  const {data: tripData = {}, isLoading} = useQuery({
     queryKey: ["TRIP_BY_ID", id, selectedTabId],
     queryFn: () =>
       tripsService.getTripById({
@@ -32,31 +32,22 @@ function UpcomingTabSinglePage() {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     staleTime: 0,
-    select: (data) => console.log("data=====>", data) || [],
+    select: (data) => data?.data?.response?.[0] || [],
   });
 
   return (
     <Box>
       <HeadBreadCrumb />
 
-      <Box
-        my={"20px"}
-        h={"32px"}
-      >
-        <Text
-          h={"32px"}
-          color={"#181D27"}
-          fontWeight={"600"}
-          fontSize={"24px"}
-        >
+      <Box my={"20px"} h={"32px"}>
+        <Text h={"32px"} color={"#181D27"} fontWeight={"600"} fontSize={"24px"}>
           Trips
         </Text>
       </Box>
 
       <Tabs
         onSelect={(index) => setSelectedTabId(index)}
-        className={styles.tabsContainer}
-      >
+        className={styles.tabsContainer}>
         <TabList>
           <Tab>Trip</Tab>
           {/* <Tab>General Details</Tab> */}

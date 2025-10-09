@@ -16,6 +16,7 @@ export default defineConfig({
       "@store": "/src/store",
       "@utils": "/src/utils",
       "@services": "/src/services",
+      "@styles": "/src/styles",
     },
   },
   build: {

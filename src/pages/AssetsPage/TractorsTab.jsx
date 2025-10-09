@@ -1,6 +1,6 @@
 import React from "react";
 import FiltersComponent from "../../components/FiltersComponent";
-import {Badge, Box} from "@chakra-ui/react";
+import { Badge, Box } from "@chakra-ui/react";
 import {
   CTable,
   CTableBody,
@@ -8,10 +8,10 @@ import {
   CTableTh,
   CTableTd,
 } from "../../components/tableElements";
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CTableRow from "../../components/tableElements/CTableRow";
-import {useQuery} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import assetsService from "../../services/assetsService";
 import AddAssetsModal from "./components/AddAssetsModal";
 import {
@@ -33,7 +33,7 @@ const TractorsTab = () => {
 
   const offset = (currentPage - 1) * pageSize;
 
-  const {data: assetsData, isLoading} = useQuery({
+  const { data: assetsData, isLoading } = useQuery({
     queryKey: [
       "GET_ASSETS_LIST",
       currentPage,
@@ -104,7 +104,10 @@ const TractorsTab = () => {
           verifySelect={true}
           actionButton={true}
         />
-        <Box mt={6} p={4} textAlign="center">
+        <Box
+          mt={6}
+          p={4}
+          textAlign="center">
           Loading assets...
         </Box>
       </Box>
@@ -169,7 +172,7 @@ const TractorsTab = () => {
                 <CTableTd>
                   <Badge
                     colorScheme={getVerificationStatusColor(
-                      asset.status || asset.status
+                      asset.status || asset.status,
                     )}
                     variant="subtle"
                     px={3}

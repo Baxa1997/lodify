@@ -1,8 +1,8 @@
 import React from "react";
-import {Box} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 // Custom RadioGroup Component
-const CustomRadioGroup = ({value, onChange, children, name, ...props}) => {
+const CustomRadioGroup = ({ value, onChange, children, name, ...props }) => {
   const handleChange = (event) => {
     if (onChange) {
       onChange(event.target.value);

@@ -1,9 +1,9 @@
-import {Box, Badge, Text, Flex} from "@chakra-ui/react";
-import React, {useState} from "react";
-import {useQuery} from "@tanstack/react-query";
-import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {format, isValid} from "date-fns";
+import { Box, Badge, Text, Flex } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { format, isValid } from "date-fns";
 import tripsService from "@services/tripsService";
 import tableElements from "../../components/mockElements";
 import {
@@ -15,13 +15,13 @@ import {
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
-import {formatDate} from "@utils/dateFormats";
+import { formatDate } from "@utils/dateFormats";
 
 function UpcomingTab() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
+  const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
   const [searchTerm, setSearchTerm] = useState("");
   const envId = useSelector((state) => state.auth.environmentId);
 
@@ -235,7 +235,9 @@ function UpcomingTab() {
                     </Box>
                   </CTableTd>
                   <CTableTd>
-                    <Flex gap="12px" justifyContent="space-between">
+                    <Flex
+                      gap="12px"
+                      justifyContent="space-between">
                       <Text
                         h="20px"
                         fontSize="14px"
@@ -259,7 +261,7 @@ function UpcomingTab() {
                   <CTableTd>
                     <Badge
                       colorScheme={getLoadTypeColor(
-                        trip.origin?.[0]?.load_type?.[0] ?? ""
+                        trip.origin?.[0]?.load_type?.[0] ?? "",
                       )}
                       variant="subtle"
                       px={3}
@@ -277,7 +279,9 @@ function UpcomingTab() {
                     />
                   </CTableTd>
                   <CTableTd>
-                    <Text color="#EF6820" fontWeight="600">
+                    <Text
+                      color="#EF6820"
+                      fontWeight="600">
                       Assign
                     </Text>
                   </CTableTd>
@@ -291,7 +295,7 @@ function UpcomingTab() {
   );
 }
 
-const TripStatus = ({status}) => {
+const TripStatus = ({ status }) => {
   return (
     <Flex
       alignItems="center"
@@ -302,19 +306,27 @@ const TripStatus = ({status}) => {
       p="2px 8px"
       borderRadius="100px"
       border="1px solid #B2DDFF">
-      <Text fontSize="12px" fontWeight="500" color="#175CD3">
+      <Text
+        fontSize="12px"
+        fontWeight="500"
+        color="#175CD3">
         {status || 1}
       </Text>
-      {status !== 0 && <img src="/img/statusArrow.svg" alt="" />}
+      {status !== 0 && <img
+        src="/img/statusArrow.svg"
+        alt="" />}
     </Flex>
   );
 };
 
-const TripProgress = ({total_trips = 0, current_trips = 0}) => {
+const TripProgress = ({ total_trips = 0, current_trips = 0 }) => {
   const colors = ["#FF5B04", "#00707A", "#003B63"];
   return (
-    <Flex alignItems="center" justifyContent="flex-start" gap="6px">
-      {Array.from({length: total_trips}).map((_, index) => {
+    <Flex
+      alignItems="center"
+      justifyContent="flex-start"
+      gap="6px">
+      {Array.from({ length: total_trips }).map((_, index) => {
         const isFilled = index < current_trips;
         const color = colors[index % colors.length];
 
@@ -332,12 +344,16 @@ const TripProgress = ({total_trips = 0, current_trips = 0}) => {
   );
 };
 
-const TripDriverVerification = ({trip = {}}) => {
+const TripDriverVerification = ({ trip = {} }) => {
   const stop = trip?.stop?.[0];
 
   return (
-    <Flex gap="24px" alignItems="center">
-      <Box w="22px" h="22px">
+    <Flex
+      gap="24px"
+      alignItems="center">
+      <Box
+        w="22px"
+        h="22px">
         {stop?.equipment_type === "Power Only" ? (
           trip?.is_truck_verified ? (
             <img
@@ -397,7 +413,9 @@ const TripDriverVerification = ({trip = {}}) => {
         gap="4px"
         bg={trip?.is_driver_verified ? "#DEFFEE" : "#EDEDED"}
         borderRadius="16px">
-        <Box w="17px" h="17px">
+        <Box
+          w="17px"
+          h="17px">
           {trip?.driver_type?.[0] === "Team" &&
             (trip?.is_driver_verified ? (
               <img
@@ -419,7 +437,9 @@ const TripDriverVerification = ({trip = {}}) => {
               />
             ))}
         </Box>
-        <Box w="17px" h="17px">
+        <Box
+          w="17px"
+          h="17px">
           {trip?.is_driver_verified ? (
             <img
               src="/img/driverVerified.svg"

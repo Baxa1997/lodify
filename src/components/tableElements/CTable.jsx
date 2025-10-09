@@ -1,5 +1,5 @@
 import React from "react";
-import {Box} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import CTablePagination from "./CTablePagination";
 
 const CTable = ({
@@ -47,7 +47,11 @@ const CTable = ({
             background: "#a8a8a8",
           },
         }}>
-        <Box as="table" borderCollapse="collapse" w="100%" tableLayout="fixed">
+        <Box
+          as="table"
+          borderCollapse="collapse"
+          w="100%"
+          tableLayout="fixed">
           {children}
         </Box>
       </Box>

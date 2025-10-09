@@ -1,6 +1,6 @@
 import React from "react";
-import {Box, Flex, Text, Button} from "@chakra-ui/react";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import { Box, Flex, Text, Button } from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import styles from "../../styles/tabs.module.scss";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import HistoryTab from "./Tabs/HistoryTab";
@@ -11,7 +11,9 @@ import AddTripMenu from "./modules/AddTripMenu";
 const Trips = () => {
   return (
     <>
-      <Flex flexDir={"column"} gap={"20px"}>
+      <Flex
+        flexDir={"column"}
+        gap={"20px"}>
         <HeadBreadCrumb />
         <AddTripMenu />
 

@@ -1,4 +1,4 @@
-import {differenceInMinutes, isValid} from "date-fns";
+import { differenceInMinutes, isValid } from "date-fns";
 
 export function getHoursMinutesDifference(dateTimeA, dateTimeB) {
   // Validate input dates

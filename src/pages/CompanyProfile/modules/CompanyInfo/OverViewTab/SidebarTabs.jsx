@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Flex, Text} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Flex, Text } from "@chakra-ui/react";
 import styles from "../style.module.scss";
 
 const SidebarTabs = () => {
@@ -22,10 +22,15 @@ const SidebarTabs = () => {
     "Matched Data",
   ];
   return (
-    <Flex flexDir={"column"} gap={"4px"} w="175px">
+    <Flex
+      flexDir={"column"}
+      gap={"4px"}
+      w="175px">
       {tabs.map((tab, index) => (
         <Text
+          as="a"
           w="100%"
+          href={`#${tab}`}
           onClick={() => setActiveTab(index)}
           className={
             activeTab === index ? styles.sidebarTabInactive : styles.sidebarTab
@@ -35,7 +40,12 @@ const SidebarTabs = () => {
           fontSize={"13px"}
           fontWeight={"600"}
           borderRadius={"8px"}
-          key={tab}>
+          key={tab}
+          _hover={{
+            textDecoration: "none",
+            color: "#181d27",
+          }}
+        >
           {tab}
         </Text>
       ))}

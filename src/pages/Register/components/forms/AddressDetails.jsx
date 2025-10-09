@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -15,11 +15,11 @@ import HFTextField from "../../../../components/HFTextField";
 import styles from "../../MultiStepRegister.module.scss";
 import HFPhoneInput from "../../../../components/HFPhoneInput";
 import authService from "../../../../services/auth/authService";
-import {RecaptchaVerifier, signInWithPhoneNumber} from "firebase/auth";
-import {auth} from "../../../../config/firebase";
-import {FiDivide} from "react-icons/fi";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "../../../../config/firebase";
+import { FiDivide } from "react-icons/fi";
 
-const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
+const AddressDetails = ({ control, errors, watch, onNext, setValue }) => {
   const [currentSubStep, setCurrentSubStep] = useState("form");
   const [phoneCode, setPhoneCode] = useState("");
   const [emailCode, setEmailCode] = useState("");
@@ -81,7 +81,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
             console.log("reCAPTCHA expired");
           },
         },
-        auth
+        auth,
       );
 
       console.log("Rendering reCAPTCHA...");
@@ -94,7 +94,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
       const result = await signInWithPhoneNumber(
         auth,
         formattedPhone,
-        recaptchaVerifier
+        recaptchaVerifier,
       );
 
       console.log("Verification code sent successfully:", result);
@@ -127,7 +127,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         },
         {
           project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
-        }
+        },
       );
 
       if (response?.sms_id) {
@@ -202,7 +202,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         const smsId = emailSmsId || formData.emailSmsId;
         if (!smsId) {
           throw new Error(
-            "No verification session found. Please resend the code."
+            "No verification session found. Please resend the code.",
           );
         }
 
@@ -214,7 +214,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           },
           {
             project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
-          }
+          },
         );
 
         if (response) {
@@ -259,7 +259,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         },
         {
           project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
-        }
+        },
       );
 
       if (response?.data?.sms_id) {
@@ -296,21 +296,41 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
 
   if (currentSubStep === "phone") {
     return (
-      <Box borderRadius="12px" bg="white">
-        <VStack align="start" spacing={2}>
-          <Text maxW="360px" fontSize="18px" fontWeight="600" color="#111827">
+      <Box
+        borderRadius="12px"
+        bg="white">
+        <VStack
+          align="start"
+          spacing={2}>
+          <Text
+            maxW="360px"
+            fontSize="18px"
+            fontWeight="600"
+            color="#111827">
             Enter Mobile Number
           </Text>
-          <Text fontSize="16px" maxW="360px" color="#6B7280">
+          <Text
+            fontSize="16px"
+            maxW="360px"
+            color="#6B7280">
             To ensure the security of your account, we require verification of
             your FMCSA linked phone number
           </Text>
 
-          <Box w="100%" mt="16px">
-            <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
-              Phone number <span style={{color: "#EF6820"}}>*</span>
+          <Box
+            w="100%"
+            mt="16px">
+            <Text
+              fontSize="14px"
+              fontWeight="500"
+              color="#414651"
+              mb={2}>
+              Phone number <span style={{ color: "#EF6820" }}>*</span>
             </Text>
-            <HFPhoneInput disabled name="phone" control={control} />
+            <HFPhoneInput
+              disabled
+              name="phone"
+              control={control} />
           </Box>
 
           <Button
@@ -319,7 +339,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
             h="44px"
             bg="#EF6820"
             color="white"
-            _hover={{bg: "#EF6820"}}
+            _hover={{ bg: "#EF6820" }}
             borderRadius="8px"
             onClick={handleSendPhoneCode}
             isLoading={isLoading}
@@ -327,8 +347,15 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
             Send Code
           </Button>
 
-          <Flex align="center" gap="8px" justify="center" w="100%" mt={4}>
-            <img src="/img/backArrow.svg" alt="arrow-left" />
+          <Flex
+            align="center"
+            gap="8px"
+            justify="center"
+            w="100%"
+            mt={4}>
+            <img
+              src="/img/backArrow.svg"
+              alt="arrow-left" />
             <Text
               fontSize="16px"
               color="#6B7280"
@@ -344,7 +371,9 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
 
   if (currentSubStep === "phone-verify") {
     return (
-      <Box borderRadius="12px" bg="white">
+      <Box
+        borderRadius="12px"
+        bg="white">
         <Text
           fontSize="18px"
           w="360px"
@@ -353,16 +382,22 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           color="#111827">
           Verification
         </Text>
-        <Text fontSize="16px" w="360px" color="#6B7280">
+        <Text
+          fontSize="16px"
+          w="360px"
+          color="#6B7280">
           Please input the code we just sent to your FMCSA linked phone number
         </Text>
 
-        <Box display="flex" w="356px" mt="30px">
+        <Box
+          display="flex"
+          w="356px"
+          mt="30px">
           <OtpInput
             value={phoneCode}
             onChange={handlePhoneCodeChange}
             numInputs={6}
-            renderSeparator={<span style={{width: "0px"}} />}
+            renderSeparator={<span style={{ width: "0px" }} />}
             renderInput={(props) => (
               <input
                 {...props}
@@ -436,7 +471,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           h="44px"
           bg="#EF6820"
           color="white"
-          _hover={{bg: "#EF6820"}}
+          _hover={{ bg: "#EF6820" }}
           borderRadius="8px"
           onClick={handleVerifyPhone}
           isLoading={isLoading}
@@ -445,15 +480,27 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           Verify phone number
         </Button>
 
-        <VStack spacing={2} w="100%">
-          <Text fontSize="16px" color="#6B7280" textAlign="center">
+        <VStack
+          spacing={2}
+          w="100%">
+          <Text
+            fontSize="16px"
+            color="#6B7280"
+            textAlign="center">
             Code didn't send?{" "}
-            <Link color="#EF6820" onClick={handleSendPhoneCode}>
+            <Link
+              color="#EF6820"
+              onClick={handleSendPhoneCode}>
               Click to resend
             </Link>
           </Text>
-          <Flex align="center" gap="8px" justify="center">
-            <img src="/img/backArrow.svg" alt="arrow-left" />
+          <Flex
+            align="center"
+            gap="8px"
+            justify="center">
+            <img
+              src="/img/backArrow.svg"
+              alt="arrow-left" />
             <Text
               fontSize="16px"
               color="#6B7280"
@@ -480,20 +527,41 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
 
   if (currentSubStep === "email") {
     return (
-      <Box borderRadius="12px" bg="white">
-        <VStack align="start" spacing={2}>
-          <Text fontSize="18px" maxW="360px" fontWeight="600" color="#111827">
+      <Box
+        borderRadius="12px"
+        bg="white">
+        <VStack
+          align="start"
+          spacing={2}>
+          <Text
+            fontSize="18px"
+            maxW="360px"
+            fontWeight="600"
+            color="#111827">
             Verify your Email address
           </Text>
-          <Text fontSize="16px" maxW="360px" color="#6B7280">
+          <Text
+            fontSize="16px"
+            maxW="360px"
+            color="#6B7280">
             Please input the code we just sent to your FMCSA linked Email
           </Text>
 
-          <Box w="100%" mt="16px" mb="10px">
-            <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
+          <Box
+            w="100%"
+            mt="16px"
+            mb="10px">
+            <Text
+              fontSize="14px"
+              fontWeight="500"
+              color="#414651"
+              mb={2}>
               Email address
             </Text>
-            <HFTextField disabled name="email" control={control} />
+            <HFTextField
+              disabled
+              name="email"
+              control={control} />
           </Box>
 
           <Button
@@ -501,7 +569,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
             h="44px"
             bg="#EF6820"
             color="white"
-            _hover={{bg: "#EF6820"}}
+            _hover={{ bg: "#EF6820" }}
             borderRadius="8px"
             onClick={handleSendEmailCode}
             isLoading={isLoading}
@@ -509,8 +577,15 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
             Send Code
           </Button>
 
-          <Flex align="center" gap="8px" justify="center" w="100%" mt={4}>
-            <img src="/img/backArrow.svg" alt="arrow-left" />
+          <Flex
+            align="center"
+            gap="8px"
+            justify="center"
+            w="100%"
+            mt={4}>
+            <img
+              src="/img/backArrow.svg"
+              alt="arrow-left" />
             <Text
               fontSize="16px"
               color="#6B7280"
@@ -526,7 +601,9 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
 
   if (currentSubStep === "email-verify") {
     return (
-      <Box borderRadius="12px" bg="white">
+      <Box
+        borderRadius="12px"
+        bg="white">
         <Text
           fontSize="18px"
           w="360px"
@@ -535,16 +612,22 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           color="#111827">
           Verify your Email
         </Text>
-        <Text w="360px" fontSize="16px" color="#6B7280">
+        <Text
+          w="360px"
+          fontSize="16px"
+          color="#6B7280">
           Please input the code we just sent to your FMCSA linked Email
         </Text>
 
-        <Box display="flex" w="356px" my="20px">
+        <Box
+          display="flex"
+          w="356px"
+          my="20px">
           <OtpInput
             value={emailCode}
             onChange={handleEmailCodeChange}
             numInputs={4}
-            renderSeparator={<span style={{width: "0px", gap: "4px"}} />}
+            renderSeparator={<span style={{ width: "0px", gap: "4px" }} />}
             renderInput={(props) => (
               <input
                 {...props}
@@ -618,7 +701,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           h="44px"
           bg="#EF6820"
           color="white"
-          _hover={{bg: "#EF6820"}}
+          _hover={{ bg: "#EF6820" }}
           borderRadius="8px"
           onClick={handleVerifyEmail}
           isLoading={isLoading}
@@ -627,8 +710,13 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           Verify Email
         </Button>
 
-        <VStack spacing={2} w="100%">
-          <Text fontSize="16px" color="#6B7280" textAlign="center">
+        <VStack
+          spacing={2}
+          w="100%">
+          <Text
+            fontSize="16px"
+            color="#6B7280"
+            textAlign="center">
             Code didn't send?{" "}
             <Link
               color="#EF6820"
@@ -638,8 +726,13 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
               {isResending ? "Resending..." : "Click to resend"}
             </Link>
           </Text>
-          <Flex align="center" gap="8px" justify="center">
-            <img src="/img/backArrow.svg" alt="arrow-left" />
+          <Flex
+            align="center"
+            gap="8px"
+            justify="center">
+            <img
+              src="/img/backArrow.svg"
+              alt="arrow-left" />
             <Text
               fontSize="16px"
               color="#6B7280"
@@ -654,12 +747,24 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   }
 
   return (
-    <Box borderRadius="12px" bg="white">
-      <VStack align="start" spacing={2} mb={6}>
-        <Text fontSize="18px" fontWeight="600" color="#111827">
+    <Box
+      borderRadius="12px"
+      bg="white">
+      <VStack
+        align="start"
+        spacing={2}
+        mb={6}>
+        <Text
+          fontSize="18px"
+          fontWeight="600"
+          color="#111827">
           Let’s start with the basics.
         </Text>
-        <Text maxW="560px" fontSize="18px" color="#535862" fontWeight="400">
+        <Text
+          maxW="560px"
+          fontSize="18px"
+          color="#535862"
+          fontWeight="400">
           Please review the information below and confirm that it matches your
           FMCSA records
         </Text>
@@ -683,7 +788,9 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         />
       </Flex>
 
-      <Flex mt={4} className={styles.formRow}>
+      <Flex
+        mt={4}
+        className={styles.formRow}>
         <HFTextField
           borderColor={"#d6d7da"}
           control={control}
@@ -702,7 +809,11 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         />
       </Flex>
 
-      <Text my="20px" fontSize="16px" fontWeight="600" color="#1e293b">
+      <Text
+        my="20px"
+        fontSize="16px"
+        fontWeight="600"
+        color="#1e293b">
         Physical Address
       </Text>
 
@@ -725,7 +836,9 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         />
       </Flex>
 
-      <Flex mt={4} className={styles.formRow}>
+      <Flex
+        mt={4}
+        className={styles.formRow}>
         <HFTextField
           borderColor={"#d6d7da"}
           control={control}
@@ -744,7 +857,9 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         />
       </Flex>
 
-      <Flex mt={4} className={styles.formRow}>
+      <Flex
+        mt={4}
+        className={styles.formRow}>
         <HFTextField
           borderColor={"#d6d7da"}
           control={control}
@@ -763,7 +878,11 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         />
       </Flex>
 
-      <Text fontSize="16px" fontWeight="600" color="#1e293b" my="20px">
+      <Text
+        fontSize="16px"
+        fontWeight="600"
+        color="#1e293b"
+        my="20px">
         Contact Information
       </Text>
 
@@ -792,22 +911,36 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         w="100%"
         bg="#EF6820"
         color="white"
-        _hover={{bg: "#EF6820"}}
+        _hover={{ bg: "#EF6820" }}
         borderRadius="8px"
         onClick={handleConfirmAndContinue}>
         Confirm & Continue
       </Button>
 
-      <VStack mt={4} spacing={2}>
-        <Text fontSize="16px" color="#000" fontWeight="600">
+      <VStack
+        mt={4}
+        spacing={2}>
+        <Text
+          fontSize="16px"
+          color="#000"
+          fontWeight="600">
           If something doesn’t look right,{" "}
-          <Link color="#EF6820" href="#">
+          <Link
+            color="#EF6820"
+            href="#">
             Contact us
           </Link>
         </Text>
-        <Flex align="center" gap="8px">
-          <img src="/img/backArrow.svg" alt="arrow-left" />
-          <Text fontSize="16px" color="#6B7280" cursor="pointer">
+        <Flex
+          align="center"
+          gap="8px">
+          <img
+            src="/img/backArrow.svg"
+            alt="arrow-left" />
+          <Text
+            fontSize="16px"
+            color="#6B7280"
+            cursor="pointer">
             Back to Select Carrier
           </Text>
         </Flex>

@@ -1,7 +1,7 @@
 import React from "react";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import {Flex, Box, Text} from "@chakra-ui/react";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import { Flex, Box, Text } from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import styles from "../../styles/tabs.module.scss";
 import TrailersTab from "./TrailersTab";
 import TractorsTab from "./TractorsTab";
@@ -9,7 +9,9 @@ import TractorsTab from "./TractorsTab";
 const AssetsPage = () => {
   return (
     <>
-      <Flex flexDir={"column"} gap={"20px"}>
+      <Flex
+        flexDir={"column"}
+        gap={"20px"}>
         <HeadBreadCrumb />
         <Box h={"32px"}>
           <Text

@@ -41,7 +41,9 @@ const Analytics = () => {
 
       <div className="analytics-grid">
         {analyticsData.map((item, index) => (
-          <div key={index} className="analytics-card">
+          <div
+            key={index}
+            className="analytics-card">
             <div className="analytics-header">
               <h3 className="analytics-title">{item.title}</h3>
               <div className={`analytics-change ${item.changeType}`}>
@@ -69,13 +71,27 @@ const Analytics = () => {
           <div className="chart-placeholder">
             <div className="chart-mock">
               <div className="chart-bars">
-                <div className="bar" style={{height: "60%"}}></div>
-                <div className="bar" style={{height: "80%"}}></div>
-                <div className="bar" style={{height: "45%"}}></div>
-                <div className="bar" style={{height: "90%"}}></div>
-                <div className="bar" style={{height: "70%"}}></div>
-                <div className="bar" style={{height: "85%"}}></div>
-                <div className="bar" style={{height: "95%"}}></div>
+                <div
+                  className="bar"
+                  style={{ height: "60%" }}></div>
+                <div
+                  className="bar"
+                  style={{ height: "80%" }}></div>
+                <div
+                  className="bar"
+                  style={{ height: "45%" }}></div>
+                <div
+                  className="bar"
+                  style={{ height: "90%" }}></div>
+                <div
+                  className="bar"
+                  style={{ height: "70%" }}></div>
+                <div
+                  className="bar"
+                  style={{ height: "85%" }}></div>
+                <div
+                  className="bar"
+                  style={{ height: "95%" }}></div>
               </div>
               <p>Sales trend over the last 7 days</p>
             </div>

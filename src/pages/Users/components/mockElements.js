@@ -1,4 +1,4 @@
-import {USER_STATUS} from "../../../constants";
+import { USER_STATUS } from "../../../constants";
 
 export const tableHeading = [
   {
@@ -35,15 +35,15 @@ export const tableHeading = [
 
 export const getStatusColor = (status) => {
   switch (status) {
-    case USER_STATUS.ACTIVE:
-      return "green";
-    case USER_STATUS.INVITE_EXPIRED:
-      return "orange";
-    case USER_STATUS.PENDING:
-      return "yellow";
-    case USER_STATUS.INACTIVE:
-      return "red";
-    default:
-      return "gray";
+  case USER_STATUS.ACTIVE:
+    return "green";
+  case USER_STATUS.INVITE_EXPIRED:
+    return "orange";
+  case USER_STATUS.PENDING:
+    return "yellow";
+  case USER_STATUS.INACTIVE:
+    return "red";
+  default:
+    return "gray";
   }
 };

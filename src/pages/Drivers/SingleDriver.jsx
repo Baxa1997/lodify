@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from "react";
-import {useParams, useNavigate} from "react-router-dom";
-import {useForm, Controller} from "react-hook-form";
-import {Box, Flex, Text, Button, useToast} from "@chakra-ui/react";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { Box, Flex, Text, Button, useToast } from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import HFTextField from "../../components/HFTextField";
 import CustomRadio from "../../components/CustomRadio";
@@ -12,7 +12,7 @@ import driversService from "../../services/driversService";
 import styles from "../../styles/tabs.module.scss";
 
 const SingleDriver = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -21,7 +21,7 @@ const SingleDriver = () => {
     control,
     handleSubmit,
     reset,
-    formState: {errors, isDirty},
+    formState: { errors, isDirty },
   } = useForm({
     defaultValues: {
       first_name: "",
@@ -50,7 +50,7 @@ const SingleDriver = () => {
     },
   });
 
-  const {data: driverData, isLoading: driverLoading} = useQuery({
+  const { data: driverData, isLoading: driverLoading } = useQuery({
     queryKey: ["GET_DRIVER_BY_ID", id],
     queryFn: () => driversService.getDriverById(id),
     enabled: !!id,
@@ -62,10 +62,10 @@ const SingleDriver = () => {
   console.log("driverDatadriverData", driverData);
 
   const updateDriverMutation = useMutation({
-    mutationFn: (data) => driversService.updateDriver(id, {data}),
+    mutationFn: (data) => driversService.updateDriver(id, { data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["GET_DRIVER_BY_ID", id]});
-      queryClient.invalidateQueries({queryKey: ["GET_DRIVERS_LIST"]});
+      queryClient.invalidateQueries({ queryKey: ["GET_DRIVER_BY_ID", id] });
+      queryClient.invalidateQueries({ queryKey: ["GET_DRIVERS_LIST"] });
       reset();
       navigate("/admin/drivers");
 
@@ -150,11 +150,13 @@ const SingleDriver = () => {
 
   if (driverLoading) {
     return (
-      <Flex flexDir={"column"} gap={"20px"}>
+      <Flex
+        flexDir={"column"}
+        gap={"20px"}>
         <HeadBreadCrumb
           customPath={[
-            {label: "Driver Info", path: `/admin/drivers/${id}`},
-            {label: "Drivers", path: "/admin/drivers"},
+            { label: "Driver Info", path: `/admin/drivers/${id}` },
+            { label: "Drivers", path: "/admin/drivers" },
           ]}
         />
         <Box>Loading...</Box>
@@ -163,20 +165,26 @@ const SingleDriver = () => {
   }
 
   return (
-    <Flex flexDir={"column"} gap={"20px"}>
+    <Flex
+      flexDir={"column"}
+      gap={"20px"}>
       <HeadBreadCrumb
         customPath={[
-          {label: "Driver Info", path: `/admin/drivers/${id}`},
-          {label: "Drivers", path: "/admin/drivers"},
+          { label: "Driver Info", path: `/admin/drivers/${id}` },
+          { label: "Drivers", path: "/admin/drivers" },
         ]}
       />
 
       <Box h={"32px"}>
-        <Text h={"32px"} color={"#181D27"} fontWeight={"600"} fontSize={"24px"}>
+        <Text
+          h={"32px"}
+          color={"#181D27"}
+          fontWeight={"600"}
+          fontSize={"24px"}>
           {driverData
             ? `${driverData?.response?.first_name || ""} ${
-                driverData?.response?.last_name || ""
-              }`.trim() || "Driver Details"
+              driverData?.response?.last_name || ""
+            }`.trim() || "Driver Details"
             : "Driver Details"}
         </Text>
       </Box>
@@ -188,9 +196,14 @@ const SingleDriver = () => {
         </TabList>
 
         <TabPanel>
-          <Box bg={"white"} borderRadius={"8px"} pt={"24px"}>
+          <Box
+            bg={"white"}
+            borderRadius={"8px"}
+            pt={"24px"}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Flex flexDir={"column"} align={"stretch"}>
+              <Flex
+                flexDir={"column"}
+                align={"stretch"}>
                 <Box
                   w={"100%"}
                   borderBottom={"1px solid #E2E8F0"}
@@ -209,20 +222,23 @@ const SingleDriver = () => {
                         fontSize={"14px"}
                         color={"#181D27"}
                         mb={"8px"}>
-                        Hired to <span style={{color: "#1570EF"}}>*</span>
+                        Hired to <span style={{ color: "#1570EF" }}>*</span>
                       </Text>
                       <HFTextField
                         placeholder="Hired to"
                         control={control}
                         name="hired_to"
                         borderColor={"#E2E8F0"}
-                        _focus={{borderColor: "#3182CE"}}
+                        _focus={{ borderColor: "#3182CE" }}
                       />
                     </Box>
                   </Flex>
                 </Box>
 
-                <Box borderBottom={"1px solid #E2E8F0"} pb={"24px"} mb={"24px"}>
+                <Box
+                  borderBottom={"1px solid #E2E8F0"}
+                  pb={"24px"}
+                  mb={"24px"}>
                   <Flex gap={"32px"}>
                     <Text
                       w={"26%"}
@@ -232,20 +248,23 @@ const SingleDriver = () => {
                       mb={"16px"}>
                       Personal Details
                     </Text>
-                    <Flex w={"48%"} gap={"16px"} flexDir={"column"}>
+                    <Flex
+                      w={"48%"}
+                      gap={"16px"}
+                      flexDir={"column"}>
                       <Box>
                         <Text
                           fontWeight={"500"}
                           fontSize={"14px"}
                           color={"#181D27"}
                           mb={"8px"}>
-                          First name <span style={{color: "#1570EF"}}>*</span>
+                          First name <span style={{ color: "#1570EF" }}>*</span>
                         </Text>
                         <HFTextField
                           control={control}
                           name="first_name"
                           borderColor={"#E2E8F0"}
-                          _focus={{borderColor: "#3182CE"}}
+                          _focus={{ borderColor: "#3182CE" }}
                         />
                       </Box>
 
@@ -255,47 +274,53 @@ const SingleDriver = () => {
                           fontSize={"14px"}
                           color={"#181D27"}
                           mb={"8px"}>
-                          Middle name <span style={{color: "#1570EF"}}>*</span>
+                          Middle name <span style={{ color: "#1570EF" }}>*</span>
                         </Text>
                         <HFTextField
                           control={control}
                           name="middle_name"
                           borderColor={"#E2E8F0"}
-                          _focus={{borderColor: "#3182CE"}}
+                          _focus={{ borderColor: "#3182CE" }}
                         />
                       </Box>
-                      <Flex flex={1} flexDir={"column"} gap={"16px"}>
+                      <Flex
+                        flex={1}
+                        flexDir={"column"}
+                        gap={"16px"}>
                         <Box>
                           <Text
                             fontWeight={"500"}
                             fontSize={"14px"}
                             color={"#181D27"}
                             mb={"8px"}>
-                            Last Name <span style={{color: "#1570EF"}}>*</span>
+                            Last Name <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="last_name"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
 
-                      <Flex w={"100%"} flex={1} gap={"16px"}>
+                      <Flex
+                        w={"100%"}
+                        flex={1}
+                        gap={"16px"}>
                         <Box flex={1}>
                           <Text
                             fontWeight={"500"}
                             fontSize={"14px"}
                             color={"#181D27"}
                             mb={"8px"}>
-                            Phone <span style={{color: "#1570EF"}}>*</span>
+                            Phone <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="phone"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                         <Box flex={1}>
@@ -305,19 +330,21 @@ const SingleDriver = () => {
                             color={"#181D27"}
                             mb={"8px"}>
                             Email Address{" "}
-                            <span style={{color: "#1570EF"}}>*</span>
+                            <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="email"
                             type="email"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
 
-                      <Flex w={"100%"} gap={"16px"}>
+                      <Flex
+                        w={"100%"}
+                        gap={"16px"}>
                         <Box flex={1}>
                           <Text
                             fontWeight={"500"}
@@ -325,13 +352,13 @@ const SingleDriver = () => {
                             color={"#181D27"}
                             mb={"8px"}>
                             Hire(d) Date{" "}
-                            <span style={{color: "#1570EF"}}>*</span>
+                            <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="hire_date"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
 
@@ -342,13 +369,13 @@ const SingleDriver = () => {
                             color={"#181D27"}
                             mb={"8px"}>
                             Data of Birth{" "}
-                            <span style={{color: "#1570EF"}}>*</span>
+                            <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="date_of_birth"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
@@ -361,22 +388,29 @@ const SingleDriver = () => {
                   borderBottom={"1px solid #E2E8F0"}
                   pb={"24px"}
                   mb={"24px"}>
-                  <Flex w={"100%"} gap={"32px"}>
+                  <Flex
+                    w={"100%"}
+                    gap={"32px"}>
                     <Text
                       w={"26%"}
                       fontWeight={"600"}
                       fontSize={"16px"}
                       color={"#181D27"}
                       mb={"16px"}>
-                      Current Address <span style={{color: "#1570EF"}}>*</span>
+                      Current Address <span style={{ color: "#1570EF" }}>*</span>
                     </Text>
-                    <Flex w={"48%"} flexDir={"column"} gap={"16px"}>
+                    <Flex
+                      w={"48%"}
+                      flexDir={"column"}
+                      gap={"16px"}>
                       <Box>
                         <Controller
                           name="country"
                           control={control}
-                          render={({field}) => (
-                            <Flex gap={"24px"} flexDir={"column"}>
+                          render={({ field }) => (
+                            <Flex
+                              gap={"24px"}
+                              flexDir={"column"}>
                               <CustomRadio
                                 value="United States"
                                 name="country"
@@ -415,13 +449,13 @@ const SingleDriver = () => {
                           fontSize={"14px"}
                           color={"#181D27"}
                           mb={"8px"}>
-                          Address <span style={{color: "#1570EF"}}>*</span>
+                          Address <span style={{ color: "#1570EF" }}>*</span>
                         </Text>
                         <HFTextField
                           control={control}
                           name="address_1"
                           borderColor={"#E2E8F0"}
-                          _focus={{borderColor: "#3182CE"}}
+                          _focus={{ borderColor: "#3182CE" }}
                         />
                       </Box>
 
@@ -432,14 +466,14 @@ const SingleDriver = () => {
                             fontSize={"14px"}
                             color={"#181D27"}
                             mb={"8px"}>
-                            Address 2 <span style={{color: "#1570EF"}}>*</span>
+                            Address 2 <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="address_2"
                             placeholder="Address 2"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                         <Box flex={1}>
@@ -448,13 +482,13 @@ const SingleDriver = () => {
                             fontSize={"14px"}
                             color={"#181D27"}
                             mb={"8px"}>
-                            City <span style={{color: "#1570EF"}}>*</span>
+                            City <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="city"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
@@ -466,13 +500,13 @@ const SingleDriver = () => {
                             fontSize={"14px"}
                             color={"#181D27"}
                             mb={"8px"}>
-                            State <span style={{color: "#1570EF"}}>*</span>
+                            State <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="state"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                         <Box flex={1}>
@@ -481,13 +515,13 @@ const SingleDriver = () => {
                             fontSize={"14px"}
                             color={"#181D27"}
                             mb={"8px"}>
-                            ZIP Code <span style={{color: "#1570EF"}}>*</span>
+                            ZIP Code <span style={{ color: "#1570EF" }}>*</span>
                           </Text>
                           <HFTextField
                             control={control}
                             name="zip_code"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
@@ -509,8 +543,13 @@ const SingleDriver = () => {
                       mb={"16px"}>
                       License & Medical Info
                     </Text>
-                    <Flex w={"48%"} flexDir={"column"} gap={"16px"}>
-                      <Flex w={"100%"} gap={"16px"}>
+                    <Flex
+                      w={"48%"}
+                      flexDir={"column"}
+                      gap={"16px"}>
+                      <Flex
+                        w={"100%"}
+                        gap={"16px"}>
                         <Box flex={1}>
                           <Text
                             fontWeight={"500"}
@@ -524,7 +563,7 @@ const SingleDriver = () => {
                             name="cdl_class"
                             placeholder="CDL Class"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                         <Box flex={1}>
@@ -540,11 +579,13 @@ const SingleDriver = () => {
                             name="licence"
                             placeholder="License Number"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
-                      <Flex w={"100%"} gap={"16px"}>
+                      <Flex
+                        w={"100%"}
+                        gap={"16px"}>
                         <Box flex={1}>
                           <Text
                             fontWeight={"500"}
@@ -558,7 +599,7 @@ const SingleDriver = () => {
                             name="medical_card"
                             placeholder="Medical Card"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                         <Box flex={1}>
@@ -574,7 +615,7 @@ const SingleDriver = () => {
                             name="region"
                             placeholder="Region"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
@@ -589,15 +630,15 @@ const SingleDriver = () => {
                         <Controller
                           name="status"
                           control={control}
-                          render={({field}) => (
+                          render={({ field }) => (
                             <Select
                               placeholder="Select status"
                               value={field.value || ""}
                               options={[
-                                {value: "Active", label: "Active"},
-                                {value: "Inactive", label: "Inactive"},
-                                {value: "Pending", label: "Pending"},
-                                {value: "Suspended", label: "Suspended"},
+                                { value: "Active", label: "Active" },
+                                { value: "Inactive", label: "Inactive" },
+                                { value: "Pending", label: "Pending" },
+                                { value: "Suspended", label: "Suspended" },
                               ]}
                               onChange={(value) => field.onChange(value)}
                               borderColor={"#E2E8F0"}
@@ -624,8 +665,13 @@ const SingleDriver = () => {
                       mb={"16px"}>
                       Emergency Contact
                     </Text>
-                    <Flex w={"48%"} flexDir={"column"} gap={"16px"}>
-                      <Flex w={"100%"} gap={"16px"}>
+                    <Flex
+                      w={"48%"}
+                      flexDir={"column"}
+                      gap={"16px"}>
+                      <Flex
+                        w={"100%"}
+                        gap={"16px"}>
                         <Box flex={1}>
                           <Text
                             fontWeight={"500"}
@@ -639,7 +685,7 @@ const SingleDriver = () => {
                             name="emergency_first_name"
                             placeholder="Emergency First Name"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                         <Box flex={1}>
@@ -655,11 +701,13 @@ const SingleDriver = () => {
                             name="emergency_last_name"
                             placeholder="Emergency Last Name"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
-                      <Flex w={"100%"} gap={"16px"}>
+                      <Flex
+                        w={"100%"}
+                        gap={"16px"}>
                         <Box flex={1}>
                           <Text
                             fontWeight={"500"}
@@ -671,17 +719,17 @@ const SingleDriver = () => {
                           <Controller
                             name="relationship"
                             control={control}
-                            render={({field}) => (
+                            render={({ field }) => (
                               <Select
                                 placeholder="Select relationship"
                                 value={field.value || ""}
                                 options={[
-                                  {value: "Grandparent", label: "Grandparent"},
-                                  {value: "Parent", label: "Parent"},
-                                  {value: "Sibling", label: "Sibling"},
-                                  {value: "Spouse", label: "Spouse"},
-                                  {value: "Child", label: "Child"},
-                                  {value: "Other", label: "Other"},
+                                  { value: "Grandparent", label: "Grandparent" },
+                                  { value: "Parent", label: "Parent" },
+                                  { value: "Sibling", label: "Sibling" },
+                                  { value: "Spouse", label: "Spouse" },
+                                  { value: "Child", label: "Child" },
+                                  { value: "Other", label: "Other" },
                                 ]}
                                 onChange={(value) => field.onChange(value)}
                                 borderColor={"#E2E8F0"}
@@ -703,7 +751,7 @@ const SingleDriver = () => {
                             name="emergency_phone"
                             placeholder="Emergency Phone Number"
                             borderColor={"#E2E8F0"}
-                            _focus={{borderColor: "#3182CE"}}
+                            _focus={{ borderColor: "#3182CE" }}
                           />
                         </Box>
                       </Flex>
@@ -725,7 +773,7 @@ const SingleDriver = () => {
                       borderRadius={"8px"}
                       px={"16px"}
                       py={"8px"}
-                      _hover={{bg: "#EDF2F7"}}>
+                      _hover={{ bg: "#EDF2F7" }}>
                       Exit
                     </Button>
 
@@ -741,7 +789,7 @@ const SingleDriver = () => {
                         borderRadius={"8px"}
                         px={"16px"}
                         py={"8px"}
-                        _hover={{bg: "#F7FAFC"}}
+                        _hover={{ bg: "#F7FAFC" }}
                         loadingText="Saving...">
                         Save & Exit
                       </Button>
@@ -753,7 +801,7 @@ const SingleDriver = () => {
                         borderRadius={"8px"}
                         px={"16px"}
                         py={"8px"}
-                        _hover={{bg: "#2C5AA0"}}
+                        _hover={{ bg: "#2C5AA0" }}
                         isLoading={updateDriverMutation.isPending}
                         loadingText="Saving...">
                         Next →

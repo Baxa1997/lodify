@@ -1,15 +1,15 @@
 import React from "react";
-import {PhoneInput} from "react-international-phone";
+import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-import {Box} from "@chakra-ui/react";
-import {Controller} from "react-hook-form";
+import { Box } from "@chakra-ui/react";
+import { Controller } from "react-hook-form";
 
-const HFPhoneInput = ({control, name, disabled}) => {
+const HFPhoneInput = ({ control, name, disabled }) => {
   return (
     <Controller
       control={control}
       name={name}
-      render={({field}) => (
+      render={({ field }) => (
         <Box
           display="flex"
           border="1px solid #E2E8F0"

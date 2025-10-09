@@ -1,17 +1,21 @@
 import React from "react";
-import {Box, Text} from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 // Custom Radio Component
-const CustomRadio = ({value, children, name, checked, onChange, ...props}) => {
+const CustomRadio = ({ value, children, name, checked, onChange, ...props }) => {
   return (
-    <Box as="label" cursor="pointer" display="inline-flex" alignItems="center">
+    <Box
+      as="label"
+      cursor="pointer"
+      display="inline-flex"
+      alignItems="center">
       <input
         type="radio"
         name={name}
         value={value}
         checked={checked}
         onChange={onChange}
-        style={{display: "none"}}
+        style={{ display: "none" }}
         {...props}
       />
       <Box
@@ -40,7 +44,9 @@ const CustomRadio = ({value, children, name, checked, onChange, ...props}) => {
           />
         )}
       </Box>
-      <Text fontSize="14px" color="#181D27">
+      <Text
+        fontSize="14px"
+        color="#181D27">
         {children}
       </Text>
     </Box>

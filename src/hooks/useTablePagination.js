@@ -1,4 +1,4 @@
-import {useState, useMemo} from "react";
+import { useState, useMemo } from "react";
 
 export const useTablePagination = (data, initialPageSize = 10) => {
   const [currentPage, setCurrentPage] = useState(1);

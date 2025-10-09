@@ -1,5 +1,5 @@
 import React from "react";
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   Box,
   Button,
@@ -7,15 +7,15 @@ import {
   Text,
   Select as ChakraSelect,
 } from "@chakra-ui/react";
-import {useTimezone} from "../hooks/useTimezone";
-import {TIMEZONE_OPTIONS} from "../utils/timezones";
+import { useTimezone } from "../hooks/useTimezone";
+import { TIMEZONE_OPTIONS } from "../utils/timezones";
 import HFDateTimePicker from "./HFDateTimePicker";
 
 /**
  * Example component demonstrating timezone usage
  */
 function TimezoneExample() {
-  const {control, handleSubmit, watch} = useForm({
+  const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       pickup_date: null,
       delivery_date: null,
@@ -60,27 +60,47 @@ function TimezoneExample() {
   const exampleApiDate = "2024-01-15T20:30:00Z";
 
   return (
-    <Box p="24px" maxW="800px" mx="auto">
-      <Text fontSize="24px" fontWeight="600" mb="24px">
+    <Box
+      p="24px"
+      maxW="800px"
+      mx="auto">
+      <Text
+        fontSize="24px"
+        fontWeight="600"
+        mb="24px">
         Timezone Management Example
       </Text>
 
       {/* Timezone Info */}
-      <Box mb="24px" p="16px" bg="blue.50" borderRadius="8px">
-        <Text fontSize="14px" mb="8px">
+      <Box
+        mb="24px"
+        p="16px"
+        bg="blue.50"
+        borderRadius="8px">
+        <Text
+          fontSize="14px"
+          mb="8px">
           <strong>Current Timezone:</strong> {timezone}
         </Text>
-        <Text fontSize="14px" mb="8px">
+        <Text
+          fontSize="14px"
+          mb="8px">
           <strong>Browser Timezone:</strong> {userTimezone}
         </Text>
-        <Text fontSize="14px" color="gray.600">
+        <Text
+          fontSize="14px"
+          color="gray.600">
           All dates are converted to UTC before sending to the API
         </Text>
       </Box>
 
       {/* Timezone Selector */}
       <Box mb="24px">
-        <Text mb="6px" fontSize="14px" fontWeight="500" color="#414651">
+        <Text
+          mb="6px"
+          fontSize="14px"
+          fontWeight="500"
+          color="#414651">
           Select Timezone
         </Text>
         <ChakraSelect
@@ -89,7 +109,9 @@ function TimezoneExample() {
           border="1px solid #D5D7DA"
           borderRadius="8px">
           {TIMEZONE_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option
+              key={option.value}
+              value={option.value}>
               {option.label}
             </option>
           ))}
@@ -98,7 +120,9 @@ function TimezoneExample() {
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack spacing="24px" align="stretch">
+        <VStack
+          spacing="24px"
+          align="stretch">
           {/* Pickup Date */}
           <Box>
             <HFDateTimePicker
@@ -109,12 +133,20 @@ function TimezoneExample() {
               required
             />
             {watchedPickupDate && (
-              <Box mt="8px" p="12px" bg="green.50" borderRadius="8px">
-                <Text fontSize="12px" color="green.700">
+              <Box
+                mt="8px"
+                p="12px"
+                bg="green.50"
+                borderRadius="8px">
+                <Text
+                  fontSize="12px"
+                  color="green.700">
                   <strong>Selected (Local):</strong>{" "}
                   {watchedPickupDate.toString()}
                 </Text>
-                <Text fontSize="12px" color="green.700">
+                <Text
+                  fontSize="12px"
+                  color="green.700">
                   <strong>Will be sent as (UTC):</strong>{" "}
                   {toUTC(watchedPickupDate)?.toISOString()}
                 </Text>
@@ -133,12 +165,20 @@ function TimezoneExample() {
               required
             />
             {watchedDeliveryDate && (
-              <Box mt="8px" p="12px" bg="green.50" borderRadius="8px">
-                <Text fontSize="12px" color="green.700">
+              <Box
+                mt="8px"
+                p="12px"
+                bg="green.50"
+                borderRadius="8px">
+                <Text
+                  fontSize="12px"
+                  color="green.700">
                   <strong>Selected (Local):</strong>{" "}
                   {watchedDeliveryDate.toString()}
                 </Text>
-                <Text fontSize="12px" color="green.700">
+                <Text
+                  fontSize="12px"
+                  color="green.700">
                   <strong>Will be sent as (UTC):</strong>{" "}
                   {toUTC(watchedDeliveryDate)?.toISOString()}
                 </Text>
@@ -147,14 +187,25 @@ function TimezoneExample() {
           </Box>
 
           {/* Example: Display API date */}
-          <Box p="16px" bg="purple.50" borderRadius="8px">
-            <Text fontSize="14px" fontWeight="600" mb="8px">
+          <Box
+            p="16px"
+            bg="purple.50"
+            borderRadius="8px">
+            <Text
+              fontSize="14px"
+              fontWeight="600"
+              mb="8px">
               Example: Display UTC date from API
             </Text>
-            <Text fontSize="12px" color="gray.600" mb="8px">
+            <Text
+              fontSize="12px"
+              color="gray.600"
+              mb="8px">
               API Date (UTC): <code>{exampleApiDate}</code>
             </Text>
-            <VStack align="start" spacing="4px">
+            <VStack
+              align="start"
+              spacing="4px">
               <Text fontSize="12px">
                 <strong>Full DateTime:</strong>{" "}
                 {formatAsDateTime(exampleApiDate)}
@@ -173,7 +224,7 @@ function TimezoneExample() {
             type="submit"
             bg="#FF6B35"
             color="white"
-            _hover={{bg: "#E55A2B"}}
+            _hover={{ bg: "#E55A2B" }}
             h="40px">
             Submit (Check Console)
           </Button>
@@ -181,11 +232,22 @@ function TimezoneExample() {
       </form>
 
       {/* Instructions */}
-      <Box mt="24px" p="16px" bg="gray.50" borderRadius="8px">
-        <Text fontSize="14px" fontWeight="600" mb="8px">
+      <Box
+        mt="24px"
+        p="16px"
+        bg="gray.50"
+        borderRadius="8px">
+        <Text
+          fontSize="14px"
+          fontWeight="600"
+          mb="8px">
           How it works:
         </Text>
-        <VStack align="start" spacing="4px" fontSize="12px" color="gray.700">
+        <VStack
+          align="start"
+          spacing="4px"
+          fontSize="12px"
+          color="gray.700">
           <Text>
             1. Select dates in the date pickers (in your local timezone)
           </Text>

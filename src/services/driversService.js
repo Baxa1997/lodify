@@ -4,7 +4,7 @@ const driversService = {
   getList: (params = {}) => {
     const dataParam = JSON.stringify(params);
     return httpRequest.get(
-      `v2/items/drivers?data=${encodeURIComponent(dataParam)}`
+      `v2/items/drivers?data=${encodeURIComponent(dataParam)}`,
     );
   },
   addDrivercode: (data) =>

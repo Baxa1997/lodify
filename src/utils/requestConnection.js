@@ -1,7 +1,7 @@
 import axios from "axios";
-import {handleError} from "./errorHandler";
-import {showAlert} from "../store/alert/alert.thunk";
-import {store} from "../store";
+import { handleError } from "./errorHandler";
+import { showAlert } from "../store/alert/alert.thunk";
+import { store } from "../store";
 export const baseURL = "https://api.auth.u-code.io";
 
 const requestAuthV2NoEnv = axios.create({
@@ -61,12 +61,12 @@ requestAuthV2NoEnv.interceptors.request.use(
     return config;
   },
 
-  (error) => errorHandler(error)
+  (error) => errorHandler(error),
 );
 
 requestAuthV2NoEnv.interceptors.response.use(
   (response) => response.data.data,
-  errorHandler
+  errorHandler,
 );
 
 export default requestAuthV2NoEnv;

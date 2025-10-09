@@ -1,10 +1,10 @@
 import axios from "axios";
-import {store} from "../store";
-import {authActions} from "../store/auth/auth.slice";
+import { store } from "../store";
+import { authActions } from "../store/auth/auth.slice";
 import authService from "../services/auth/authService";
-import {handleError} from "./errorHandler";
-import {showAlert} from "../store/alert/alert.thunk";
-export const baseURL = `https://api.auth.u-code.io/`;
+import { handleError } from "./errorHandler";
+import { showAlert } from "../store/alert/alert.thunk";
+export const baseURL = "https://api.auth.u-code.io/";
 
 const requestAuth = axios.create({
   baseURL,
@@ -82,7 +82,7 @@ requestAuth.interceptors.request.use(
     return config;
   },
 
-  (error) => errorHandler(error)
+  (error) => errorHandler(error),
 );
 
 requestAuth.interceptors.response.use((response) => {

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Box,
   Text,
@@ -43,7 +43,7 @@ const EmailOTP = ({
         },
         {
           project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
-        }
+        },
       );
 
       if (response?.data?.sms_id) {
@@ -81,7 +81,7 @@ const EmailOTP = ({
         const smsId = watch("emailSmsId");
         if (!smsId) {
           throw new Error(
-            "No verification session found. Please resend the code."
+            "No verification session found. Please resend the code.",
           );
         }
 
@@ -93,7 +93,7 @@ const EmailOTP = ({
           },
           {
             project_id: "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
-          }
+          },
         );
 
         if (response?.data) {
@@ -128,20 +128,34 @@ const EmailOTP = ({
   };
 
   return (
-    <Box borderRadius="12px" bg="white">
-      <Text fontSize="18px" w="360px" fontWeight="600" mb="8px" color="#111827">
+    <Box
+      borderRadius="12px"
+      bg="white">
+      <Text
+        fontSize="18px"
+        w="360px"
+        fontWeight="600"
+        mb="8px"
+        color="#111827">
         Check your email
       </Text>
-      <Text fontSize="16px" w="360px" color="#6B7280" mb="30px">
+      <Text
+        fontSize="16px"
+        w="360px"
+        color="#6B7280"
+        mb="30px">
         We sent a verification code to {email}
       </Text>
 
-      <Box display="flex" w="356px" mt="30px">
+      <Box
+        display="flex"
+        w="356px"
+        mt="30px">
         <OtpInput
           value={emailCode}
           onChange={handleEmailCodeChange}
           numInputs={4}
-          renderSeparator={<span style={{width: "0px"}} />}
+          renderSeparator={<span style={{ width: "0px" }} />}
           renderInput={(props) => (
             <input
               {...props}
@@ -214,7 +228,7 @@ const EmailOTP = ({
         h="44px"
         bg="#EF6820"
         color="white"
-        _hover={{bg: "#EF6820"}}
+        _hover={{ bg: "#EF6820" }}
         borderRadius="8px"
         onClick={handleVerifyEmail}
         isLoading={isLoading}
@@ -223,8 +237,13 @@ const EmailOTP = ({
         Verify email
       </Button>
 
-      <VStack spacing={2} w="100%">
-        <Text fontSize="16px" color="#6B7280" textAlign="center">
+      <VStack
+        spacing={2}
+        w="100%">
+        <Text
+          fontSize="16px"
+          color="#6B7280"
+          textAlign="center">
           Code didn't send?{" "}
           <Link
             color="#EF6820"
@@ -234,8 +253,13 @@ const EmailOTP = ({
             {isResending ? "Resending..." : "Click to resend"}
           </Link>
         </Text>
-        <Flex align="center" gap="8px" justify="center">
-          <img src="/img/backArrow.svg" alt="arrow-left" />
+        <Flex
+          align="center"
+          gap="8px"
+          justify="center">
+          <img
+            src="/img/backArrow.svg"
+            alt="arrow-left" />
           <Text
             fontSize="16px"
             color="#6B7280"

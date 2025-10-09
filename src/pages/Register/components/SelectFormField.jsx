@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Select, Text} from "@chakra-ui/react";
+import { Box, Select, Text } from "@chakra-ui/react";
 import styles from "../MultiStepRegister.module.scss";
 
 const SelectFormField = ({
@@ -16,7 +16,10 @@ const SelectFormField = ({
 }) => {
   return (
     <Box className={styles.formGroup}>
-      <Text as="label" htmlFor={name} className={styles.formLabel}>
+      <Text
+        as="label"
+        htmlFor={name}
+        className={styles.formLabel}>
         {label} <span>{isRequired && "*"}</span>
       </Text>
 
@@ -45,7 +48,9 @@ const SelectFormField = ({
         }}
         {...selectProps}>
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}>
             {option.label}
           </option>
         ))}

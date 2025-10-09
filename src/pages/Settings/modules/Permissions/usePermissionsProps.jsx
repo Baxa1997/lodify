@@ -1,11 +1,11 @@
-import {Box, Checkbox, Flex, IconButton, Image} from "@chakra-ui/react";
-import {FiTable} from "react-icons/fi";
+import { Box, Checkbox, Flex, IconButton, Image } from "@chakra-ui/react";
+import { FiTable } from "react-icons/fi";
 
 export const usePermissionsPropsWithForm = (
   register,
   setValue,
   watch,
-  onFieldModalOpen
+  onFieldModalOpen,
 ) => {
   const getObjectIcon = (objectName) => {
     const iconMap = {
@@ -58,7 +58,7 @@ export const usePermissionsPropsWithForm = (
         head,
         rowIndex,
         isChild = false,
-        parentIndex = null
+        parentIndex = null,
       ) => {
         const fieldName =
           isChild && parentIndex !== null
@@ -84,7 +84,7 @@ export const usePermissionsPropsWithForm = (
         head,
         rowIndex,
         isChild = false,
-        parentIndex = null
+        parentIndex = null,
       ) => {
         const fieldName =
           isChild && parentIndex !== null
@@ -110,7 +110,7 @@ export const usePermissionsPropsWithForm = (
         head,
         rowIndex,
         isChild = false,
-        parentIndex = null
+        parentIndex = null,
       ) => {
         const fieldName =
           isChild && parentIndex !== null
@@ -136,7 +136,7 @@ export const usePermissionsPropsWithForm = (
         head,
         rowIndex,
         isChild = false,
-        parentIndex = null
+        parentIndex = null,
       ) => {
         const fieldName =
           isChild && parentIndex !== null
@@ -162,7 +162,7 @@ export const usePermissionsPropsWithForm = (
         head,
         rowIndex,
         isChild = false,
-        parentIndex = null
+        parentIndex = null,
       ) => {
         const fieldName =
           isChild && parentIndex !== null
@@ -184,10 +184,15 @@ export const usePermissionsPropsWithForm = (
       key: "field",
       infoText: "Field info",
       render: (data, row, head, rowIndex) => (
-        <Box pl="20px" display="flex" gap="8px">
+        <Box
+          pl="20px"
+          display="flex"
+          gap="8px">
           <IconButton
             variant="transparent"
-            icon={<FiTable color="#A4A7AE" size={22} />}
+            icon={<FiTable
+              color="#A4A7AE"
+              size={22} />}
             size="sm"
             onClick={() => onFieldModalOpen?.(row.tableData?.slug)}
             isDisabled={!row.tableData?.slug}

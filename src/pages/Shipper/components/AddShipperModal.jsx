@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -13,9 +13,9 @@ import {
   HStack,
   useToast,
 } from "@chakra-ui/react";
-import {useForm} from "react-hook-form";
-import {useQueryClient} from "@tanstack/react-query";
-import {useSelector} from "react-redux";
+import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 import clientsService from "../../../services/clientsService";
 import HFFileUpload from "@components/HFFileUpload";
 import HFTextField from "@components/HFTextField";
@@ -56,7 +56,7 @@ const AddShipperModal = ({
           await clientsService.createShipper(apiData);
         }
 
-        queryClient.invalidateQueries({queryKey: ["CLIENTS_LIST"]});
+        queryClient.invalidateQueries({ queryKey: ["CLIENTS_LIST"] });
         handleClose();
         setLoading(false);
 
@@ -76,7 +76,7 @@ const AddShipperModal = ({
         setLoading(false);
         console.error(
           isEditMode ? "Error updating shipper:" : "Error adding shipper:",
-          error
+          error,
         );
 
         toast({
@@ -93,14 +93,14 @@ const AddShipperModal = ({
         });
       }
     },
-    [queryClient, userInfo, isEditMode, selectedShipper]
+    [queryClient, userInfo, isEditMode, selectedShipper],
   );
 
   const {
     control,
     handleSubmit: handleFormSubmit,
     reset,
-    formState: {errors, isValid},
+    formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -134,28 +134,44 @@ const AddShipperModal = ({
   }, [selectedShipper, isEditMode, reset]);
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size="lg" isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      size="lg"
+      isCentered>
       <ModalOverlay bg="rgba(0, 0, 0, 0.5)" />
       <ModalContent
         borderRadius="12px"
         bg="white"
         boxShadow="0px 4px 20px rgba(0, 0, 0, 0.1)">
-        <ModalHeader borderBottom="1px solid #E9EAEB" pb={4} pt={6} px={6}>
-          <Text fontSize="18px" fontWeight="600" color="gray.800">
+        <ModalHeader
+          borderBottom="1px solid #E9EAEB"
+          pb={4}
+          pt={6}
+          px={6}>
+          <Text
+            fontSize="18px"
+            fontWeight="600"
+            color="gray.800">
             {isEditMode ? "Edit Shipper" : "Add Shipper"}
           </Text>
         </ModalHeader>
 
-        <ModalBody px={6} py={6}>
+        <ModalBody
+          px={6}
+          py={6}>
           <form onSubmit={handleFormSubmit(onSubmit)}>
-            <VStack spacing={5} align="stretch" flex="1">
+            <VStack
+              spacing={5}
+              align="stretch"
+              flex="1">
               <FormControl isInvalid={!!errors.name}>
                 <FormLabel
                   fontSize="14px"
                   fontWeight="500"
                   color="gray.700"
                   mb={2}>
-                  Shipper Name <span style={{color: "red"}}>*</span>
+                  Shipper Name <span style={{ color: "red" }}>*</span>
                 </FormLabel>
                 <HFTextField
                   name="name"
@@ -180,13 +196,18 @@ const AddShipperModal = ({
                   fontWeight="500"
                   color="gray.700"
                   mb={2}>
-                  Logo <span style={{color: "red"}}>*</span>
+                  Logo <span style={{ color: "red" }}>*</span>
                 </FormLabel>
-                <HFFileUpload name="logo" control={control} />
+                <HFFileUpload
+                  name="logo"
+                  control={control} />
               </FormControl>
             </VStack>
 
-            <HStack spacing={3} justify="flex-end" mt={8}>
+            <HStack
+              spacing={3}
+              justify="flex-end"
+              mt={8}>
               <Button
                 onClick={handleClose}
                 type="button"

@@ -1,8 +1,8 @@
 import React from "react";
-import {Flex, Box, Text, Button} from "@chakra-ui/react";
-import {getShortFileName} from "../../../../utils/getFileName";
+import { Flex, Box, Text, Button } from "@chakra-ui/react";
+import { getShortFileName } from "../../../../utils/getFileName";
 
-function Documents({item = ""}) {
+function Documents({ item = "" }) {
   return (
     <>
       <Flex
@@ -11,10 +11,18 @@ function Documents({item = ""}) {
         margin="0px 14px"
         p="14px 0px"
         border="1px solid #fff">
-        <Flex gap={"8px"} alignItems={"center"}>
-          <img src="/img/filePhoto.svg" alt="" />
+        <Flex
+          gap={"8px"}
+          alignItems={"center"}>
+          <img
+            src="/img/filePhoto.svg"
+            alt="" />
 
-          <Text w="100%" fontWeight={"500"} fontSize={"13px"} color={"#414651"}>
+          <Text
+            w="100%"
+            fontWeight={"500"}
+            fontSize={"13px"}
+            color={"#414651"}>
             {Boolean(item) && getShortFileName(item, 20)?.shortName}
           </Text>
         </Flex>
@@ -23,7 +31,7 @@ function Documents({item = ""}) {
           w="34px"
           h="20px"
           bg="none"
-          _hover={{bg: "none"}}
+          _hover={{ bg: "none" }}
           color="#175CD3"
           fontSize={"14px"}
           fontWeight={"600"}>

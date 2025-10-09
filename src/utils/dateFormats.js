@@ -1,4 +1,4 @@
-import {format, parseISO, isValid} from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 
 export function formatDate(dateString) {
   const date = parseISO(dateString);

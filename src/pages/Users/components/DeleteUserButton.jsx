@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Button,
@@ -11,7 +11,7 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@chakra-ui/react";
-import {FaTrash} from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 
 function DeleteUserButton({
   userId,
@@ -22,8 +22,13 @@ function DeleteUserButton({
   const onClose = () => setIsOpen(false);
   return (
     <>
-      <Flex onClick={() => setIsOpen(true)} flexDir="column">
-        <Text fontSize="18px" fontWeight="600" color="#181D27">
+      <Flex
+        onClick={() => setIsOpen(true)}
+        flexDir="column">
+        <Text
+          fontSize="18px"
+          fontWeight="600"
+          color="#181D27">
           Delete user account
         </Text>
         <Button
@@ -36,9 +41,15 @@ function DeleteUserButton({
           w={"104px"}
           border={"none"}
           bg={"none"}
-          _hover={{bg: "none"}}>
-          <img src="/img/trash.svg" width={"15px"} height={"15px"} alt="" />
-          <Text fontSize={"14px"} color={"#B42318"}>
+          _hover={{ bg: "none" }}>
+          <img
+            src="/img/trash.svg"
+            width={"15px"}
+            height={"15px"}
+            alt="" />
+          <Text
+            fontSize={"14px"}
+            color={"#B42318"}>
             Delete user
           </Text>
         </Button>
@@ -51,7 +62,9 @@ function DeleteUserButton({
         closeOnBlur={true}
         closeOnEsc={true}
         returnFocusOnClose={false}>
-        <ModalOverlay bg="rgba(0, 0, 0, 0.1)" backdropFilter="blur(4px)" />
+        <ModalOverlay
+          bg="rgba(0, 0, 0, 0.1)"
+          backdropFilter="blur(4px)" />
         <ModalContent
           position="fixed"
           top="25%"
@@ -74,12 +87,17 @@ function DeleteUserButton({
             right="16px"
             size="sm"
             color="#64748b"
-            _hover={{color: "#181D27"}}
+            _hover={{ color: "#181D27" }}
           />
-          <ModalBody fontSize="14px" color="#64748b" p="10px 20px">
+          <ModalBody
+            fontSize="14px"
+            color="#64748b"
+            p="10px 20px">
             Are you sure you want to delete ?
           </ModalBody>
-          <ModalFooter p="10px 20px 10px 20px" justifyContent="flex-end">
+          <ModalFooter
+            p="10px 20px 10px 20px"
+            justifyContent="flex-end">
             <Flex gap="12px">
               <Button
                 onClick={onClose}
@@ -87,7 +105,7 @@ function DeleteUserButton({
                 borderColor="#E2E8F0"
                 color="#4A5568"
                 bg="white"
-                _hover={{bg: "#F7FAFC"}}
+                _hover={{ bg: "#F7FAFC" }}
                 size="md">
                 Cancel
               </Button>
@@ -96,7 +114,7 @@ function DeleteUserButton({
                 onClick={() => deleteUser(userId)}
                 bg="#B42318"
                 color="white"
-                _hover={{bg: "#991B1B"}}
+                _hover={{ bg: "#991B1B" }}
                 size="md">
                 {deleteLoading ? "Deleting..." : "Delete"}
               </Button>

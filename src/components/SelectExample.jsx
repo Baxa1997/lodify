@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Box, VStack, Text, Heading} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, VStack, Text, Heading } from "@chakra-ui/react";
 import Select from "./Select";
 
 const SelectExample = () => {
@@ -8,35 +8,44 @@ const SelectExample = () => {
 
   // Example options for domicile filter (matching the image)
   const domicileOptions = [
-    {value: "", label: "Filter by Domicile(s)"},
-    {value: "us", label: "United States"},
-    {value: "uk", label: "United Kingdom"},
-    {value: "ca", label: "Canada"},
-    {value: "au", label: "Australia"},
-    {value: "de", label: "Germany"},
-    {value: "fr", label: "France"},
-    {value: "jp", label: "Japan"},
+    { value: "", label: "Filter by Domicile(s)" },
+    { value: "us", label: "United States" },
+    { value: "uk", label: "United Kingdom" },
+    { value: "ca", label: "Canada" },
+    { value: "au", label: "Australia" },
+    { value: "de", label: "Germany" },
+    { value: "fr", label: "France" },
+    { value: "jp", label: "Japan" },
   ];
 
   // Example options for country selection
   const countryOptions = [
-    {value: "", label: "Select Country"},
-    {value: "us", label: "United States"},
-    {value: "uk", label: "United Kingdom"},
-    {value: "ca", label: "Canada"},
-    {value: "au", label: "Australia"},
+    { value: "", label: "Select Country" },
+    { value: "us", label: "United States" },
+    { value: "uk", label: "United Kingdom" },
+    { value: "ca", label: "Canada" },
+    { value: "au", label: "Australia" },
   ];
 
   return (
-    <Box p={8} maxW="600px" mx="auto">
-      <VStack spacing={6} align="stretch">
-        <Heading size="lg" mb={4}>
+    <Box
+      p={8}
+      maxW="600px"
+      mx="auto">
+      <VStack
+        spacing={6}
+        align="stretch">
+        <Heading
+          size="lg"
+          mb={4}>
           Select Component Examples
         </Heading>
 
         {/* Default Select - matches the image */}
         <Box>
-          <Text mb={2} fontWeight="medium">
+          <Text
+            mb={2}
+            fontWeight="medium">
             Default Select (matches image):
           </Text>
           <Select
@@ -49,7 +58,9 @@ const SelectExample = () => {
 
         {/* Customized Select */}
         <Box>
-          <Text mb={2} fontWeight="medium">
+          <Text
+            mb={2}
+            fontWeight="medium">
             Customized Select:
           </Text>
           <Select
@@ -67,7 +78,9 @@ const SelectExample = () => {
 
         {/* Disabled Select */}
         <Box>
-          <Text mb={2} fontWeight="medium">
+          <Text
+            mb={2}
+            fontWeight="medium">
             Disabled Select:
           </Text>
           <Select
@@ -79,7 +92,9 @@ const SelectExample = () => {
 
         {/* Error State Select */}
         <Box>
-          <Text mb={2} fontWeight="medium">
+          <Text
+            mb={2}
+            fontWeight="medium">
             Error State Select:
           </Text>
           <Select
@@ -92,7 +107,9 @@ const SelectExample = () => {
 
         {/* Dark Theme Select */}
         <Box>
-          <Text mb={2} fontWeight="medium">
+          <Text
+            mb={2}
+            fontWeight="medium">
             Dark Theme Select:
           </Text>
           <Select

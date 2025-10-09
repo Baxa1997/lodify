@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, { useCallback, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -20,15 +20,15 @@ import {
   RadioGroup,
   useToast,
 } from "@chakra-ui/react";
-import {PhoneInput} from "react-international-phone";
+import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import Select from "./Select";
 import styles from "./AddUserModal.module.scss";
-import {useQueryClient} from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import usersService from "../services/usersService";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
-const AddUserModal = ({isOpen, onClose}) => {
+const AddUserModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
   const userInfo = useSelector((state) => state.auth);
@@ -66,13 +66,13 @@ const AddUserModal = ({isOpen, onClose}) => {
                 : "85880d26-5663-4f6d-b61f-68fd3f43492b",
             companies_id:
               userInfo?.user_data?.companies_id || userInfo?.user_data?.guid,
-            notes: `<p>User added via admin panel</p>`,
+            notes: "<p>User added via admin panel</p>",
           },
         };
 
         await usersService.addUser(apiData);
 
-        queryClient.invalidateQueries({queryKey: ["GET_USERS_LIST"]});
+        queryClient.invalidateQueries({ queryKey: ["GET_USERS_LIST"] });
         handleClose();
         setLoading(false);
 
@@ -100,7 +100,7 @@ const AddUserModal = ({isOpen, onClose}) => {
         });
       }
     },
-    [queryClient]
+    [queryClient],
   );
 
   const [formData, setFormData] = useState({
@@ -178,19 +178,30 @@ const AddUserModal = ({isOpen, onClose}) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size="lg" isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      size="lg"
+      isCentered>
       <ModalOverlay bg="rgba(0, 0, 0, 0.5)" />
       <ModalContent className={styles.modalContent}>
         <ModalHeader className={styles.modalHeader}>
           <Text className={styles.modalTitle}>Add User</Text>
-          <Button onClick={handleClose} className={styles.headCloseButton}>
-            <img src="/img/cancelIcon.svg" alt="close" />
+          <Button
+            onClick={handleClose}
+            className={styles.headCloseButton}>
+            <img
+              src="/img/cancelIcon.svg"
+              alt="close" />
           </Button>
         </ModalHeader>
 
         <ModalBody className={styles.modalBody}>
           <form onSubmit={handleSubmit}>
-            <VStack spacing={4} align="stretch" flex="1">
+            <VStack
+              spacing={4}
+              align="stretch"
+              flex="1">
               <FormControl>
                 <FormLabel className={styles.fieldLabel}>
                   Full Name <span className={styles.required}>*</span>
@@ -325,18 +336,28 @@ const AddUserModal = ({isOpen, onClose}) => {
               <Box>
                 <Text className={styles.sectionTitle}>User Role</Text>
 
-                <VStack spacing={2} align="stretch" mt={3}>
+                <VStack
+                  spacing={2}
+                  align="stretch"
+                  mt={3}>
                   <RadioGroup
                     value={formData.role}
                     onChange={(value) => handleInputChange("role", value)}>
-                    <VStack spacing={2} align="stretch">
+                    <VStack
+                      spacing={2}
+                      align="stretch">
                       <Box className={styles.roleOption}>
-                        <HStack spacing={2} align="flex-start">
+                        <HStack
+                          spacing={2}
+                          align="flex-start">
                           <Radio
                             value="dispatcher"
                             className={styles.roleRadio}
                           />
-                          <VStack align="stretch" spacing={1} flex={1}>
+                          <VStack
+                            align="stretch"
+                            spacing={1}
+                            flex={1}>
                             <Text className={styles.roleLabel}>Dispatcher</Text>
                             {/* <Text className={styles.roleDescription}>
                               Accepts and reject trips, assign drivers to loads,
@@ -349,12 +370,17 @@ const AddUserModal = ({isOpen, onClose}) => {
                       </Box>
 
                       <Box className={styles.roleOption}>
-                        <HStack spacing={3} align="flex-start">
+                        <HStack
+                          spacing={3}
+                          align="flex-start">
                           <Radio
                             value="administrator"
                             className={styles.roleRadio}
                           />
-                          <VStack align="stretch" spacing={1} flex={1}>
+                          <VStack
+                            align="stretch"
+                            spacing={1}
+                            flex={1}>
                             <Text className={styles.roleLabel}>
                               Administrator
                             </Text>
@@ -372,8 +398,14 @@ const AddUserModal = ({isOpen, onClose}) => {
               </Box>
             </VStack>
 
-            <HStack spacing={3} justify="flex-end" mt={1}>
-              <Button onClick={handleClose} type="button" variant="outline">
+            <HStack
+              spacing={3}
+              justify="flex-end"
+              mt={1}>
+              <Button
+                onClick={handleClose}
+                type="button"
+                variant="outline">
                 Close
               </Button>
               <Button

@@ -1,12 +1,12 @@
-import React, {useState} from "react";
-import {Box, Flex, Text, Button, Link} from "@chakra-ui/react";
-import {differenceInMinutes, format} from "date-fns";
-import {getShortFileName} from "./mockElements";
+import React, { useState } from "react";
+import { Box, Flex, Text, Button, Link } from "@chakra-ui/react";
+import { differenceInMinutes, format } from "date-fns";
+import { getShortFileName } from "./mockElements";
 import FileViewer from "../../../components/FileViewer";
-import {getHoursMinutesDifference} from "../../../utils/getHoursDifference";
+import { getHoursMinutesDifference } from "../../../utils/getHoursDifference";
 import FilesReader from "../../../components/FileViewer/FilesReader";
 
-function StopsRoute({stop, index, initialStops}) {
+function StopsRoute({ stop, index, initialStops }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileReaderOpen, setIsFileReaderOpen] = useState(false);
   const lastElement = index === initialStops?.length - 1;
@@ -16,7 +16,9 @@ function StopsRoute({stop, index, initialStops}) {
   const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
 
   return (
-    <Box key={index} margin="0 20px 0">
+    <Box
+      key={index}
+      margin="0 20px 0">
       <Flex gap="12px">
         <Box minW={"80px"}>
           <Text
@@ -38,7 +40,7 @@ function StopsRoute({stop, index, initialStops}) {
               initialStops?.[index + 1]?.date_time &&
               getHoursMinutesDifference(
                 stop?.date_time,
-                initialStops?.[index + 1]?.date_time
+                initialStops?.[index + 1]?.date_time,
               )}
           </Text>
         </Box>
@@ -53,7 +55,9 @@ function StopsRoute({stop, index, initialStops}) {
               color="#fff"
               justifyContent="center"
               alignItems="center">
-              <img src="/img/chat.svg" alt="arrival" />
+              <img
+                src="/img/chat.svg"
+                alt="arrival" />
             </Flex>
           ) : stop?.status?.[0] === "Stopped" ? (
             <Flex
@@ -62,7 +66,9 @@ function StopsRoute({stop, index, initialStops}) {
               color="#fff"
               justifyContent="center"
               alignItems="center">
-              <img src="/img/stopIcon.svg" alt="stop" />
+              <img
+                src="/img/stopIcon.svg"
+                alt="stop" />
             </Flex>
           ) : (
             <Flex
@@ -91,12 +97,22 @@ function StopsRoute({stop, index, initialStops}) {
           )}
         </Flex>
 
-        <Box width={"100%"} pb="20px">
+        <Box
+          width={"100%"}
+          pb="20px">
           <Box mb="12px">
-            <Text h="20px" fontSize="14px" fontWeight="600" color="#414651">
+            <Text
+              h="20px"
+              fontSize="14px"
+              fontWeight="600"
+              color="#414651">
               {stop?.status?.[0]}
             </Text>
-            <Text h="20px" fontSize="14px" fontWeight="400" color="#535862">
+            <Text
+              h="20px"
+              fontSize="14px"
+              fontWeight="400"
+              color="#535862">
               {stop?.note}
             </Text>
           </Box>
@@ -137,7 +153,7 @@ function StopsRoute({stop, index, initialStops}) {
                     alt="image"
                     width="40px"
                     height="60px"
-                    style={{objectFit: "cover", height: "60px"}}
+                    style={{ objectFit: "cover", height: "60px" }}
                     objectFit="cover"
                   />
                 </Box>
@@ -189,7 +205,9 @@ function StopsRoute({stop, index, initialStops}) {
                   gap="4px"
                   color="#414651"
                   variant="outline">
-                  <img src="/img/pdfTrip.svg" alt="image" />
+                  <img
+                    src="/img/pdfTrip.svg"
+                    alt="image" />
                   <Text>{getShortFileName(file)}</Text>
                 </Button>
               ))}

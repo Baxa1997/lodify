@@ -1,12 +1,12 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   useCreateIntegrationsMutation,
   useGetIntegrations,
   useUpdateIntegrationsMutation,
 } from "../../../../services/integrations.service";
-import {useForm} from "react-hook-form";
-import {useSelector} from "react-redux";
-import {useToast} from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { useToast } from "@chakra-ui/react";
 
 const RESOURCES_MAP = {
   ELD: "ELD",
@@ -81,8 +81,8 @@ const content = [
 ];
 
 export const useViewAllProps = () => {
-  const {companies_id: companyId, guid} = useSelector(
-    (state) => state.auth.user_data
+  const { companies_id: companyId, guid } = useSelector(
+    (state) => state.auth.user_data,
   );
 
   const companies_id = companyId || guid;
@@ -96,7 +96,7 @@ export const useViewAllProps = () => {
 
   const [currentContent, setCurrentContent] = useState(null);
 
-  const {handleSubmit, register, reset} = useForm();
+  const { handleSubmit, register, reset } = useForm();
 
   const handleSetCurrentContent = (content) => setCurrentContent(content);
 
@@ -138,7 +138,7 @@ export const useViewAllProps = () => {
     setCurrentContent(null);
   };
 
-  const {data, refetch} = useGetIntegrations({}, companies_id);
+  const { data, refetch } = useGetIntegrations({}, companies_id);
 
   const checkedTypes = data?.response?.map((item) => item?.type?.[0]);
 
@@ -183,7 +183,7 @@ export const useViewAllProps = () => {
       });
     } else {
       handleCreateIntegration.mutate({
-        data: {...data, companies_id, type: currentContent.type, status: true},
+        data: { ...data, companies_id, type: currentContent.type, status: true },
       });
     }
   };
@@ -199,7 +199,7 @@ export const useViewAllProps = () => {
     }
 
     if (item.status) {
-      handleUpdateIntegration.mutate({data: {...item, status: false}});
+      handleUpdateIntegration.mutate({ data: { ...item, status: false } });
     } else {
       e.preventDefault();
       handleOpenResource(item);
@@ -221,7 +221,7 @@ export const useViewAllProps = () => {
             };
           }
           return item;
-        })
+        }),
       );
     }
   }, [data]);

@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React from "react";
 import styles from "../style.module.scss";
 import {Box, Text, Button, Flex} from "@chakra-ui/react";
 import StopsRoute from "./StopsRoute";
@@ -39,9 +39,9 @@ function StopsComponent({tripData = {}}) {
       </Flex>
 
       <Box overflowX="hidden">
-        {tripData?.trips_logs?.map((stop, index) => (
+        {tripData?.trip_logs?.map((stop, index) => (
           <StopsRoute
-            initialStops={tripData?.trips_logs}
+            initialStops={tripData?.trip_logs}
             index={index}
             stop={stop}
           />

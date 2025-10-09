@@ -25,7 +25,7 @@ function HistoryTripsTab() {
       tripsService.getTripDetailsByTripId({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
         environment_id: envId,
-        method: "single_2",
+        method: "single",
         object_data: {
           trip_id: id,
         },

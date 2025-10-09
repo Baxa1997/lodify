@@ -20,11 +20,11 @@ function GeneralTripsTab({isLoading = false}) {
       tripsService.getTripDetailsByTripId({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
         environment_id: envId,
-        method: "single_2",
+        method: "single",
         object_data: {
           trip_id: id,
         },
-        table: "trips",
+        table: "trips_history",
       }),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
@@ -32,7 +32,7 @@ function GeneralTripsTab({isLoading = false}) {
     enabled: true,
     select: (res) => res?.data?.response?.[0] || {},
   });
-  console.log("tripDetails", tripDetails);
+
   return (
     <Box>
       <Button

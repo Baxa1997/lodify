@@ -69,10 +69,10 @@ function StopsRoute({stop, index, initialStops}) {
               w="24px"
               h="24px"
               borderRadius="50%"
-              bg="#1570EF"
+              bg="#EF6820"
               color="#fff"
               p="2px 7px"
-              fontSize="14px"
+              fontSize="12px"
               justifyContent="center"
               alignItems="center">
               {index + 1}
@@ -87,7 +87,7 @@ function StopsRoute({stop, index, initialStops}) {
               color="#414651"
               m="6px 0px"
               borderRadius="2px"
-              bg="#2E90FA"></Box>
+              bg="#F7B27A"></Box>
           )}
         </Flex>
 

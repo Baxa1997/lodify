@@ -6,10 +6,11 @@ const CTableRow = ({
   hover = true,
   striped = false,
   index = 0,
+  bg = "#fff",
   ...props
 }) => {
   return (
-    <Box as="tr" _hover={hover ? {bg: "gray.50"} : {}} bg={"#fff"} {...props}>
+    <Box as="tr" _hover={hover ? {bg: "gray.50"} : {}} bg={bg} {...props}>
       {children}
     </Box>
   );

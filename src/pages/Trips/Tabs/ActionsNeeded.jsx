@@ -7,6 +7,7 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
+import SimpleTimer from "@components/SimpleTimer";
 import {
   CTable,
   CTableBody,
@@ -88,6 +89,20 @@ function ActionsNeeded() {
         label: `${trip?.drivers?.first_name}.${trip?.drivers?.last_name}`,
       },
     });
+  };
+
+  const getBackgroundColor = (time) => {
+    if (time > 3600) return "white";
+    if (time > 1800) return "rgba(254, 240, 199, 1)";
+    if (time > 900) return "rgba(254, 228, 226, 1)";
+    return "#FECACA";
+  };
+
+  const getActionButtonText = (time) => {
+    if (time > 3600) return "Send Message";
+    if (time > 1800) return "Send Email";
+    if (time > 900) return "Call Carrier";
+    return "Call Carrier";
   };
 
   const handleSearch = (searchValue) => {
@@ -173,10 +188,8 @@ function ActionsNeeded() {
                 return (
                   <React.Fragment key={trip.guid || index}>
                     <CTableRow
-                      style={{
-                        backgroundColor: "white",
-                        cursor: "pointer",
-                      }}>
+                      hover={false}
+                      bg={getBackgroundColor(trip.timer_seconds || 1200)}>
                       <CTableTd>
                         <Tooltip
                           hasArrow
@@ -366,6 +379,16 @@ function ActionsNeeded() {
                           </Flex>
                         </Box>
                       </CTableTd>
+
+                      <CTableTd>
+                        <SimpleTimer
+                          timeFromAPI={trip.timer_seconds || 1200}
+                          onTimeUp={() => {
+                            console.log(`Timer finished for trip ${trip.id}`);
+                          }}
+                        />
+                      </CTableTd>
+
                       <CTableTd>
                         <Tooltip
                           label={
@@ -402,50 +425,11 @@ function ActionsNeeded() {
                           </Text>
                         </Tooltip>
                       </CTableTd>
-                      <CTableTd>
-                        <Tooltip
-                          label={
-                            <Box
-                              p={3}
-                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
-                              color="white"
-                              borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).companyName}
-                                </Text>
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).customer}
-                                </Text>
-                              </VStack>
-                            </Box>
-                          }
-                          placement="bottom-start"
-                          bg="transparent"
-                          openDelay={300}>
-                          <Box>
-                            <Text
-                              h="20px"
-                              cursor="pointer"
-                              _hover={{textDecoration: "underline"}}
-                              color="#181D27">
-                              {trip?.trailers?.plate_number ?? "---"}
-                            </Text>
-                          </Box>
-                        </Tooltip>
-                      </CTableTd>
 
                       <CTableTd>
                         <Flex alignItems="center" gap={2}>
                           <Text color="#EF6820" fontWeight="600">
-                            Assign
+                            {getActionButtonText(trip.timer_seconds || 1200)}
                           </Text>
                         </Flex>
                       </CTableTd>

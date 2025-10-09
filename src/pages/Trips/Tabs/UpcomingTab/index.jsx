@@ -1,33 +1,28 @@
 import {
-  Box,
   Badge,
-  Text,
-  Flex,
+  Box,
   Collapse,
-  IconButton,
-  VStack,
-  HStack,
-  Divider,
+  Flex,
+  Text,
   Tooltip,
+  VStack,
 } from "@chakra-ui/react";
-import React, {useState} from "react";
-import {useQuery} from "@tanstack/react-query";
-import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {format, isValid} from "date-fns";
-import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
-import tripsService from "@services/tripsService";
-import tableElements from "../../components/mockElements";
 import {
   CTable,
-  CTableHead,
-  CTableTh,
   CTableBody,
+  CTableHead,
   CTableTd,
+  CTableTh,
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
-import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
+import tripsService from "@services/tripsService";
+import {useQuery} from "@tanstack/react-query";
 import {formatDate} from "@utils/dateFormats";
+import React, {useState} from "react";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import tableElements from "../../components/mockElements";
+import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
 import TripRowDetails from "./TripRowDetails";
 
 function UpcomingTab() {

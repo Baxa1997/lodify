@@ -1,33 +1,23 @@
-import React, { useEffect, useState } from "react";
-import styles from "../style.module.scss";
-import { Flex, Box, Text, Button, Badge, useToast } from "@chakra-ui/react";
-import { VStack } from "@chakra-ui/react";
-import { getShortFileName } from "./mockElements";
-import FilesReader from "../../../components/FileViewer/FilesReader";
-import { getHoursMinutesDifference } from "../../../utils/getHoursDifference";
-import { format } from "date-fns";
-import { isValid } from "date-fns";
-import fileService from "@services/fileService";
+import {Box, Button, Flex, Text, useToast} from "@chakra-ui/react";
 import HFFileUpload from "@components/HFFileUpload";
-import { useForm } from "react-hook-form";
-import { useCreateItemMutation } from "@services/items.service";
-import { useGetCompanyId } from "@hooks/useGetCompanyId";
+import {useGetCompanyId} from "@hooks/useGetCompanyId";
+import fileService from "@services/fileService";
+import {useCreateItemMutation} from "@services/items.service";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
+import FilesReader from "../../../components/FileViewer/FilesReader";
+import styles from "../style.module.scss";
+import {getShortFileName} from "./mockElements";
+import {ChevronDownIcon, ChevronRightIcon} from "@chakra-ui/icons";
 
-function RouteInfoComponent({ tripData = {} }) {
+function RouteInfoComponent({tripData = {}}) {
   const [isFilesReaderOpen, setIsFilesReaderOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const { last_statuses, end_trip_point } = tripData;
+  const [showDocumentList, setShowDocumentList] = useState(false);
 
   const companyId = useGetCompanyId();
 
-  const { control, watch, setValue } = useForm();
-
-  const getStatusColor = (status) => {
-    if (status === "Completed") return "green";
-    if (status === "Arrival") return "yellow";
-    if (status === "Pending") return "red";
-    return "gray";
-  };
+  const {control, watch, setValue} = useForm();
 
   const handleFilesReaderOpen = (file) => {
     setSelectedFile(file);
@@ -57,8 +47,9 @@ function RouteInfoComponent({ tripData = {} }) {
 
   const handleUpload = (data) => {
     setLoading(true);
-    fileService.folderUpload(data)
-      .then(res => {
+    fileService
+      .folderUpload(data)
+      .then((res) => {
         setValue("file", res.file_name_download);
         createFileItemMutation.mutate({
           slug: "upload_files",
@@ -74,298 +65,105 @@ function RouteInfoComponent({ tripData = {} }) {
         setLoading(false);
       });
   };
-
+  console.log("tripData", tripData);
   return (
     <>
-      <Flex
-        w="100%"
-        borderBottom={"1px solid #D5D7DA"}
-        p={"20px"}>
+      {tripData?.pickups?.map((pickup, index) => (
         <Flex
-          w="100%"
-          h={"28px"}
-          alignItems={"center"}
-          gap={"10px"}
-          justifyContent={"space-between"}>
-          <Text
-            color={"#181D27"}
-            fontSize={"16px"}
-            fontWeight={"600"}>
-            {tripData?.id}
-          </Text>
-          <Button
-            minW={"20px"}
-            h={"20px"}
-            p="0"
-            bg={"none"}
-            _hover={{ bg: "none" }}>
-            <img
-              src="/img/threeDots.svg"
-              alt="arrowRight" />
-          </Button>
-        </Flex>
-      </Flex>
-      <Flex
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        gap={"10px"}
-        px={"20px"}
-        pt={"20px"}>
-        <Text
-          fontSize={"16px"}
-          color={"#414651"}
-          fontWeight={"600"}>
-          Current Status
-        </Text>
-        <Badge
-          w="94px"
-          p={"2px 10px"}
-          fontSize={"12px"}
-          fontWeight={"500"}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          m={"20px"}
+          gap={"12px"}
+          p="12px 14px"
           borderRadius={"8px"}
-          colorScheme={getStatusColor(tripData?.order_status?.[0])}>
-          {tripData?.order_status?.[0]}
-        </Badge>
-      </Flex>
-
-      {/* STATUS & ETA */}
-      <Box
-        borderRadius={"8px"}
-        m="20px"
-        h={"136px"}
-        border={"1px solid #D5D7DA"}
-        bg={"#FAFAFA"}
-        p={"16px 14px"}>
-        <VStack
-          align="start"
-          spacing={1}
-          h="full">
+          border="1px solid #D5D7DA">
           <Flex
-            align="center"
-            gap={1}>
-            <Box
-              fontSize="12px"
-              w="24px"
-              h="20px"
-              bg="#E3F2FD"
-              borderRadius="full"
-              display="flex"
-              alignItems="center"
-              justifyContent="center">
-              {last_statuses?.[0]?.index}
-            </Box>
-            <Text
-              fontSize="14px"
-              color="#181D27">
-              {last_statuses?.[0]?.address}
-              <span
-                style={{
-                  fontSize: "18px",
-                  fontWeight: "600",
-                  margin: "0 8px",
-                }}>
-                →
-              </span>
-            </Text>
-
-            <Box
-              fontSize="12px"
-              w="24px"
-              h="24px"
-              bg="#E3F2FD"
-              borderRadius="full"
-              display="flex"
-              alignItems="center"
-              justifyContent="center">
-              {last_statuses?.[1]?.index}
-            </Box>
-
-            <Text
-              fontSize="14px"
-              color="#181D27">
-              {last_statuses?.[1]?.address}
-            </Text>
-          </Flex>
-
-          <Text
-            fontSize="14px"
-            color="#414651">
-            Completed{" "}
-            {isValid(last_statuses?.[1]?.date_time)
-              ? format(last_statuses?.[1]?.date_time, "MMM d HH:mm")
-              : "Invalid Date"}{" "}
-            PDT
-          </Text>
-
-          <Flex
-            h="20px"
-            align="center"
-            gap={2}>
-            <Text
-              fontSize="14px"
-              fontWeight={"400"}
-              color="#535862">
-              ETA{" "}
-              {tripData?.eta && isValid(tripData?.eta)
-                ? format(tripData?.eta, "MMM d HH:mm")
-                : "Invalid Date"}{" "}
-              PDT
-            </Text>
-          </Flex>
-
-          <Text
-            fontSize="12px"
-            color="#414651">
-            {getHoursMinutesDifference(
-              last_statuses?.[0]?.date_time,
-              last_statuses?.[1]?.date_time,
-            )}
-          </Text>
-        </VStack>
-      </Box>
-
-      {/* TRIP STATUS & PDT */}
-      <Box
-        p="14px 10px"
-        borderRadius={"8px"}
-        m="20px"
-        minH={"144px"}
-        maxH={"160px"}
-        border={"1px solid #D5D7DA"}
-        bg={"#fff"}>
-        <Flex
-          w="100%"
-          h="28px"
-          gap={2}
-          justifyContent={"space-between"}
-          alignItems={"center"}>
-          <img
-            src="/img/mapping.svg"
-            width="23px"
-            height="23px"
-            alt="clock" />
-          <Text
-            fontSize="14px"
-            color="#181D27"
-            fontWeight={"400"}>
-            PDT
-          </Text>
-        </Flex>
-
-        <Text
-          h="20px"
-          mt="8px"
-          fontSize="14px"
-          color="#194185"
-          fontWeight={"500"}>
-          {end_trip_point?.[0]?.address}
-        </Text>
-        <Text
-          h="20px"
-          fontSize="13px"
-          color="#181D27"
-          fontWeight={"400"}
-          mt="8px">
-          {end_trip_point?.[0]?.location ?? "-"}
-        </Text>
-        <Text
-          h="20px"
-          fontSize="14px"
-          color="#535862"
-          fontWeight={"400"}
-          mt="8px">
-          Trip completed
-        </Text>
-      </Box>
-
-      {/* PROFILE INFO */}
-      <Box
-        p="16px"
-        borderRadius={"8px"}
-        m="20px"
-        h={"72px"}
-        border={"1px solid #D5D7DA"}
-        bg={"#fff"}>
-        <Flex>
-          <Flex
-            w="40px"
-            h="40px"
-            borderRadius="full"
+            w="27px"
+            h="24px"
+            bg="rgba(239, 104, 32, 1)"
+            borderRadius="50%"
             alignItems="center"
             justifyContent="center"
-            bg="#F5F5F5"
-            mr="8px">
-            {tripData?.drivers?.first_name?.[0]}
+            color="#fff"
+            fontSize="12px"
+            fontWeight="600">
+            {index + 1}
           </Flex>
-          <Box>
-            <Text
-              fontSize="14px"
-              color="#181D27"
-              fontWeight={"600"}>
-              {`${tripData?.drivers?.first_name ?? ""} ${
-                tripData?.drivers?.last_name ?? ""
-              }`}
+
+          <Box w="100%">
+            <Text mb="14px" fontSize="14px" fontWeight="600" color="#181D27">
+              Stop
             </Text>
-            <Text
-              fontSize="12px"
-              color="#535862"
-              fontWeight={"400"}>
-              {tripData?.drivers?.email ?? ""}
-            </Text>
+
+            <Flex mb="12px" w="100%" justifyContent="space-between">
+              <Text fontSize="14px" fontWeight="400" color="#535862">
+                Type
+              </Text>
+              <Text fontSize="14px" fontWeight="500" color="#535862">
+                {pickup?.type?.[0]}
+              </Text>
+            </Flex>
+
+            <Flex mb="12px" w="100%" justifyContent="space-between">
+              <Text fontSize="14px" fontWeight="400" color="#535862">
+                Location
+              </Text>
+              <Text fontSize="14px" fontWeight="500" color="#535862">
+                {pickup?.address}
+              </Text>
+            </Flex>
+
+            <Flex mb="12px" w="100%" justifyContent="space-between">
+              <Text fontSize="14px" fontWeight="400" color="#535862">
+                Appointment
+              </Text>
+              <Text fontSize="14px" fontWeight="500" color="#535862">
+                {pickup?.appointment}
+              </Text>
+            </Flex>
+
+            <Box>
+              <Text fontSize="14px" fontWeight="400" color="#535862" mb="6px">
+                Referance Numbers & Instruction:
+              </Text>
+              <Text fontSize="14px" fontWeight="500" color="#181D27">
+                {tripData?.reference} {tripData?.reference_po}{" "}
+                {tripData?.reference_other}
+              </Text>
+            </Box>
           </Box>
         </Flex>
-      </Box>
-
-      {/* ACTION BUTTONS */}
-      <Box
-        className={styles.actionBtns}
-        px="20px">
-        <Button className={styles.actionBtn}>
-          <img
-            src="/img/navigation.svg"
-            alt="edit" />
-          <Text color="#175cd3">Navigation</Text>
-        </Button>
-        <Button className={styles.actionBtn}>
-          <img
-            src="/img/timeline.svg"
-            alt="delete" />
-          <Text color="#175cd3">Timeline</Text>
-        </Button>
-        <Button className={styles.actionBtn}>
-          <img
-            src="/img/fullscreen.svg"
-            alt="view" />
-          <Text color="#175cd3">Fullscreen</Text>
-        </Button>
-      </Box>
+      ))}
 
       {/* DOCUMENT LIST & VIEW */}
-      <Box className={styles.documentsContainer}>
-        <Box className={styles.documentHeader}>
-          <Text
-            fontSize="16px"
-            fontWeight="600"
-            color="#181D27">
+      <Box
+        className={styles.documentsContainer}
+        onClick={() => setShowDocumentList(!showDocumentList)}>
+        <Flex
+          className={styles.documentHeader}
+          justifyContent="space-between"
+          alignItems="center">
+          <Text fontSize="16px" fontWeight="600" color="#181D27">
             Documents
           </Text>
-        </Box>
+          <Flex
+            w="24px"
+            h="24px"
+            alignItems="center"
+            gap="6px"
+            justifyContent="center"
+            cursor="pointer">
+            {showDocumentList ? (
+              <ChevronDownIcon width="20px" height="20px" />
+            ) : (
+              <ChevronRightIcon width="20px" height="20px" />
+            )}
+          </Flex>
+        </Flex>
 
-        <Box>
+        <Box display={showDocumentList ? "block" : "none"}>
           {tripData?.documents?.map((document, index) => (
-            <Box
-              className={styles.documentItem}
-              key={index}
-            >
+            <Box className={styles.documentItem} key={index}>
               <Box className={styles.documentIcon}>
-                <img
-                  src={document}
-                  alt="PDF"
-                  width="32px"
-                  height="40px" />
+                <img src={document} alt="PDF" width="32px" height="40px" />
               </Box>
               <Box className={styles.documentInfo}>
                 <Text className={styles.documentName}>
@@ -380,7 +178,7 @@ function RouteInfoComponent({ tripData = {} }) {
             </Box>
           ))}
         </Box>
-        <Box padding="12px">
+        {/* <Box padding="12px">
           <HFFileUpload
             name="file"
             control={control}
@@ -388,7 +186,7 @@ function RouteInfoComponent({ tripData = {} }) {
             onChange={handleUpload}
             loading={loading}
           />
-        </Box>
+        </Box> */}
         {/* <Button className={styles.actionBtn}>
           <img
             src="/img/navigation.svg"

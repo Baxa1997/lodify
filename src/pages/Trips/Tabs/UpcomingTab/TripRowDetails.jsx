@@ -15,7 +15,7 @@ import {parseISO, format} from "date-fns";
 
 const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
   const envId = useSelector((state) => state.auth.environmentId);
-  console.log("trip======>", trip);
+
   const {
     data: detailedTripData = {},
     isLoading,
@@ -145,7 +145,6 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
     tripData?.pickups?.filter((item) => item?.type?.includes("Pickup")) || [];
   const deliveryItems =
     tripData?.pickups?.filter((item) => item?.type?.includes("Delivery")) || [];
-  console.log("pickupItems", pickupItems);
 
   return (
     <Box bg="#fff" minHeight="200px" position="relative">

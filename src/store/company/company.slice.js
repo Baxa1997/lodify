@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   companies: [],
@@ -15,44 +15,44 @@ const initialState = {
   companyName: "",
 };
 
-export const {actions: companyActions, reducer: companyReducer} = createSlice({
+export const { actions: companyActions, reducer: companyReducer } = createSlice({
   name: "company",
   initialState,
   reducers: {
-    setCompanies: (state, {payload}) => {
+    setCompanies: (state, { payload }) => {
       state.companies = payload ?? [];
     },
-    setProjects: (state, {payload}) => {
+    setProjects: (state, { payload }) => {
       state.projects = payload ?? [];
     },
-    setEnvironments: (state, {payload}) => {
+    setEnvironments: (state, { payload }) => {
       state.environments = payload ?? [];
     },
-    setCompanyItem: (state, {payload}) => {
+    setCompanyItem: (state, { payload }) => {
       state.companyItem = payload ?? {};
     },
-    setProjectItem: (state, {payload}) => {
+    setProjectItem: (state, { payload }) => {
       state.projectItem = payload ?? {};
     },
-    setEnvironmentItem: (state, {payload}) => {
+    setEnvironmentItem: (state, { payload }) => {
       state.environmentItem = payload ?? {};
     },
-    setCompanyId: (state, {payload}) => {
+    setCompanyId: (state, { payload }) => {
       state.companyId = payload ?? "";
     },
-    setProjectId: (state, {payload}) => {
+    setProjectId: (state, { payload }) => {
       state.projectId = payload ?? "";
     },
-    setEnvironmentId: (state, {payload}) => {
+    setEnvironmentId: (state, { payload }) => {
       state.environmentId = payload ?? "";
     },
-    setVersion: (state, {payload}) => {
+    setVersion: (state, { payload }) => {
       state.version = payload ?? "";
     },
-    setDefaultPage: (state, {payload}) => {
+    setDefaultPage: (state, { payload }) => {
       state.defaultPage = payload ?? "";
     },
-    setCompanyName: (state, {payload}) => {
+    setCompanyName: (state, { payload }) => {
       console.log("payloadpayloadpayloadpayload", payload);
       state.companyName = payload ?? "";
     },

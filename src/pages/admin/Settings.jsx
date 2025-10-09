@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 import styles from "./AdminPages.module.scss";
 
 const Settings = () => {
@@ -12,7 +12,7 @@ const Settings = () => {
   });
 
   const handleInputChange = (e) => {
-    const {name, value, type, checked} = e.target;
+    const { name, value, type, checked } = e.target;
     setSettings((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -133,7 +133,9 @@ const Settings = () => {
         </div>
 
         <div className="settings-actions">
-          <button className="primary-btn" onClick={handleSave}>
+          <button
+            className="primary-btn"
+            onClick={handleSave}>
             Save Settings
           </button>
           <button className="secondary-btn">Reset to Defaults</button>

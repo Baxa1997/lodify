@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
-import {Box, Text} from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import { Box, Text } from "@chakra-ui/react";
 import InputFormField from "../InputFormField";
 import styles from "../../MultiStepRegister.module.scss";
 
-const ContactDetails = ({control, errors, setValue, onNext = () => {}}) => {
+const ContactDetails = ({ control, errors, setValue, onNext = () => {} }) => {
   useEffect(() => {
     onNext();
   }, []);

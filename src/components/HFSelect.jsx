@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {Controller} from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { Controller } from "react-hook-form";
 import Select from "./Select";
-import {Flex} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import tripsService from "../services/tripsService";
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function HFSelect({
   control,
@@ -16,7 +16,7 @@ function HFSelect({
   disabled = false,
   props,
 }) {
-  const {id} = useParams();
+  const { id } = useParams();
   const [Internaloptions, setInternalOptions] = useState([]);
   const getOptions = async () => {
     if (table_slug) {
@@ -25,7 +25,7 @@ function HFSelect({
         response.data?.response?.map((item) => ({
           label: item[view_field],
           value: item?.[value] ?? item.guid,
-        }))
+        })),
       );
     }
   };
@@ -41,10 +41,10 @@ function HFSelect({
       <Controller
         control={control}
         name={name}
-        render={({field}) => (
+        render={({ field }) => (
           <Select
             {...field}
-            options={Boolean(table_slug) ? Internaloptions : options}
+            options={table_slug ? Internaloptions : options}
             onChange={field.onChange}
             size={size}
             onClick={getOptions}

@@ -1,10 +1,10 @@
 import axios from "axios";
-import {useCallback, useState} from "react";
+import { useCallback, useState } from "react";
 
 const useDownloader = () => {
   const [loader, setLoader] = useState(false);
 
-  const download = useCallback(({link, fileName}) => {
+  const download = useCallback(({ link, fileName }) => {
     return new Promise(async (resolve, reject) => {
       setLoader(true);
       try {
@@ -29,7 +29,7 @@ const useDownloader = () => {
     });
   }, []);
 
-  return {download, loader};
+  return { download, loader };
 };
 
 export default useDownloader;

@@ -1,5 +1,5 @@
-import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./RoleSelection.module.scss";
 
 const RoleSelection = () => {
@@ -12,7 +12,7 @@ const RoleSelection = () => {
 
   const handleCreateAccount = () => {
     if (selectedRole) {
-      navigate("/register", {state: {role: selectedRole}});
+      navigate("/register", { state: { role: selectedRole } });
     }
   };
 
@@ -30,7 +30,9 @@ const RoleSelection = () => {
             }`}
             onClick={() => handleRoleSelect("broker")}>
             <div className={styles.roleIcon}>
-              <img src="/img/truck.svg" alt="" />
+              <img
+                src="/img/truck.svg"
+                alt="" />
             </div>
             <div className={styles.roleContent}>
               <p>I'm a broker, looking to move freight</p>
@@ -53,7 +55,9 @@ const RoleSelection = () => {
             onClick={() => handleRoleSelect("carrier")}>
             <div className={styles.roleIcon}>
               {" "}
-              <img src="/img/lifeCycle.svg" alt="" />
+              <img
+                src="/img/lifeCycle.svg"
+                alt="" />
             </div>
             <div className={styles.roleContent}>
               <p>I'm a carrier, looking for loads</p>
@@ -82,7 +86,9 @@ const RoleSelection = () => {
         <div className={styles.roleSelectionFooter}>
           <p>
             Already have an account?{" "}
-            <Link to="/login" className={styles.loginLink}>
+            <Link
+              to="/login"
+              className={styles.loginLink}>
               Log in
             </Link>
           </p>

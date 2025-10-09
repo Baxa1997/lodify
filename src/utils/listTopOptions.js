@@ -2,7 +2,7 @@ const listToOptions = (
   list,
   labelFieldName = "title",
   valueFieldName = "id",
-  labelPrefix = ""
+  labelPrefix = "",
 ) => {
   return (
     list?.map((el) => ({

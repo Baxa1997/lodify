@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 // import { listToMap } from "../../utils/listToMap";
 
 const initialState = {
@@ -21,11 +21,11 @@ const initialState = {
   user_data: null,
 };
 
-export const {actions: authActions, reducer: authReducer} = createSlice({
+export const { actions: authActions, reducer: authReducer } = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginSuccess(state, {payload}) {
+    loginSuccess(state, { payload }) {
       state.token = payload.token.access_token;
       state.refreshToken = payload.token.refresh_token;
       state.userInfo = payload.user;
@@ -44,39 +44,39 @@ export const {actions: authActions, reducer: authReducer} = createSlice({
 
       state.permissions = payload?.permissions
         ? payload?.permissions?.reduce((acc, curr) => {
-            acc[curr.table_slug] = {
-              read: curr.read !== "No",
-              write: curr.write !== "No",
-              update: curr.update !== "No",
-              delete: curr.delete !== "No",
-              pdf_action: curr.pdf_action !== "No",
-              add_field: curr.add_field !== "No",
-              automation: curr.automation !== "No",
-              language_btn: curr.language_btn !== "No",
-              settings: curr.settings !== "No",
-              share_modal: curr.share_modal !== "No",
-              view_create: curr.view_create !== "No",
-              add_filter: curr.add_filter !== "No",
-              field_filter: curr.field_filter !== "No",
-              fix_column: curr.fix_column !== "No",
-              columns: curr.columns !== "No",
-              group: curr.group !== "No",
-              excel_menu: curr.excel_menu !== "No",
-              tab_group: curr.tab_group !== "No",
-              search_button: curr.search_button !== "No",
-            };
-            return acc;
-          }, {})
+          acc[curr.table_slug] = {
+            read: curr.read !== "No",
+            write: curr.write !== "No",
+            update: curr.update !== "No",
+            delete: curr.delete !== "No",
+            pdf_action: curr.pdf_action !== "No",
+            add_field: curr.add_field !== "No",
+            automation: curr.automation !== "No",
+            language_btn: curr.language_btn !== "No",
+            settings: curr.settings !== "No",
+            share_modal: curr.share_modal !== "No",
+            view_create: curr.view_create !== "No",
+            add_filter: curr.add_filter !== "No",
+            field_filter: curr.field_filter !== "No",
+            fix_column: curr.fix_column !== "No",
+            columns: curr.columns !== "No",
+            group: curr.group !== "No",
+            excel_menu: curr.excel_menu !== "No",
+            tab_group: curr.tab_group !== "No",
+            search_button: curr.search_button !== "No",
+          };
+          return acc;
+        }, {})
         : [];
       state.loading = false;
       state.after_login = true;
     },
-    setTokens(state, {payload}) {
+    setTokens(state, { payload }) {
       state.token = payload.token.access_token;
       state.refreshToken = payload.token.refresh_token;
       state.isAuth = true;
     },
-    setPermission(state, {payload}) {
+    setPermission(state, { payload }) {
       console.log("payload", payload);
       state.permissions =
         payload?.permissions?.reduce((acc, curr) => {
@@ -105,10 +105,10 @@ export const {actions: authActions, reducer: authReducer} = createSlice({
           return acc;
         }, {}) || [];
     },
-    updateUser(state, {payload}) {
+    updateUser(state, { payload }) {
       state.userInfo[payload.key] = payload.value;
     },
-    updateEnvId(state, {payload}) {
+    updateEnvId(state, { payload }) {
       state.environmentId = payload ?? "";
     },
     logout: (state) => initialState,

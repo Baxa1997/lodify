@@ -1,5 +1,5 @@
 import React from "react";
-import {Modal, Box, ModalOverlay} from "@chakra-ui/react";
+import { Modal, Box, ModalOverlay } from "@chakra-ui/react";
 import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
@@ -7,9 +7,12 @@ import Download from "yet-another-react-lightbox/plugins/download";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-function FileViewer({isOpen = false, onClose, startIndex = 0, images = []}) {
+function FileViewer({ isOpen = false, onClose, startIndex = 0, images = [] }) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="xl">
       <ModalOverlay />
       <Box
         h="500px"
@@ -29,7 +32,7 @@ function FileViewer({isOpen = false, onClose, startIndex = 0, images = []}) {
           index={startIndex}
           slides={images
             ?.filter((image) => Boolean(image))
-            ?.map((el) => ({src: el}))}
+            ?.map((el) => ({ src: el }))}
           carousel={{
             finite: true,
             padding: 0,
@@ -46,7 +49,7 @@ function FileViewer({isOpen = false, onClose, startIndex = 0, images = []}) {
               position: "absolute",
               left: 0,
               bottom: 0,
-              width: `100%`,
+              width: "100%",
               margin: 0,
               padding: "10px 0",
               background: "rgba(18,18,18,0.7)",
@@ -71,7 +74,7 @@ function FileViewer({isOpen = false, onClose, startIndex = 0, images = []}) {
               background: "transparent",
             },
           }}
-          animation={{swipe: 400}}
+          animation={{ swipe: 400 }}
         />
       </Box>
     </Modal>

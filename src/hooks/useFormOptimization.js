@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from "react";
+import { useCallback, useMemo } from "react";
 
 export const useFormOptimization = (formData, validationRules) => {
   const validateField = useCallback(
@@ -24,12 +24,12 @@ export const useFormOptimization = (formData, validationRules) => {
 
       return true;
     },
-    [validationRules]
+    [validationRules],
   );
 
   const isFormValid = useMemo(() => {
     return Object.keys(validationRules).every((fieldName) =>
-      validateField(fieldName, formData[fieldName])
+      validateField(fieldName, formData[fieldName]),
     );
   }, [formData, validateField, validationRules]);
 
@@ -64,7 +64,7 @@ export const useFormOptimization = (formData, validationRules) => {
 
       return null;
     },
-    [formData, validationRules]
+    [formData, validationRules],
   );
 
   return {

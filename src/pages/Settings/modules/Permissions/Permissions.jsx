@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -19,14 +19,14 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import {useForm} from "react-hook-form";
-import {DataTable} from "@components/DataTable";
-import {usePermissionsPropsWithForm} from "./usePermissionsProps";
-import {FieldPermissionsModal} from "@components/FieldPermissionsModal";
-import {AddIcon} from "@chakra-ui/icons";
+import { useForm } from "react-hook-form";
+import { DataTable } from "@components/DataTable";
+import { usePermissionsPropsWithForm } from "./usePermissionsProps";
+import { FieldPermissionsModal } from "@components/FieldPermissionsModal";
+import { AddIcon } from "@chakra-ui/icons";
 import authService from "@services/auth/authService";
-import {useSelector} from "react-redux";
-import {useQuery} from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 
 export const Permissions = () => {
   const toast = useToast();
@@ -49,12 +49,12 @@ export const Permissions = () => {
     setValue,
     handleSubmit,
     reset,
-    formState: {errors, isDirty},
+    formState: { errors, isDirty },
   } = useForm();
 
-  const {bodyData: staticBodyData} = usePermissionsPropsWithForm();
+  const { bodyData: staticBodyData } = usePermissionsPropsWithForm();
 
-  const {data: roles = [], refetch: refetchRoles} = useQuery({
+  const { data: roles = [], refetch: refetchRoles } = useQuery({
     queryKey: ["ROLES", clientTypeId, projectId],
     enabled: !!clientTypeId && !!projectId && !!token,
     refetchOnMount: false,
@@ -69,7 +69,7 @@ export const Permissions = () => {
         },
         {
           Authorization: `Bearer ${token}`,
-        }
+        },
       ),
     select: (data) => data.data?.response,
   });
@@ -120,7 +120,7 @@ export const Permissions = () => {
         },
         {
           "project-id": projectId,
-        }
+        },
       )
       .then((res) => {
         refetch();
@@ -162,11 +162,11 @@ export const Permissions = () => {
     reset();
   };
 
-  const {headData} = usePermissionsPropsWithForm(
+  const { headData } = usePermissionsPropsWithForm(
     register,
     setValue,
     watch,
-    handleFieldModalOpen
+    handleFieldModalOpen,
   );
 
   const bodyData = staticBodyData;
@@ -211,7 +211,7 @@ export const Permissions = () => {
     });
 
     const filteredTables = roleData.tables.filter((table) =>
-      allowedSlugs.includes(table?.slug?.toLowerCase())
+      allowedSlugs.includes(table?.slug?.toLowerCase()),
     );
 
     filteredTables.forEach((table) => {
@@ -349,7 +349,7 @@ export const Permissions = () => {
     Object.values(formData).forEach((permission) => {
       if (permission.tableData?.id) {
         const tableIndex = updatedRoleData.tables.findIndex(
-          (table) => table.id === permission.tableData.id
+          (table) => table.id === permission.tableData.id,
         );
 
         if (tableIndex !== -1) {
@@ -384,7 +384,7 @@ export const Permissions = () => {
         permission.children.forEach((child) => {
           if (child.tableData?.id) {
             const tableIndex = updatedRoleData.tables.findIndex(
-              (table) => table.id === child.tableData.id
+              (table) => table.id === child.tableData.id,
             );
 
             if (tableIndex !== -1) {
@@ -508,7 +508,9 @@ export const Permissions = () => {
               }}
             />
           </HStack>
-          <Box display="flex" gap="12px">
+          <Box
+            display="flex"
+            gap="12px">
             <Button
               h="40px"
               variant="solid"
@@ -561,16 +563,24 @@ export const Permissions = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            <Text fontSize="lg" fontWeight="semibold" color="gray.900">
+            <Text
+              fontSize="lg"
+              fontWeight="semibold"
+              color="gray.900">
               Add Role
             </Text>
           </ModalHeader>
           <ModalCloseButton />
           <form onSubmit={roleForm.handleSubmit(onRoleSubmit)}>
             <ModalBody pb={6}>
-              <VStack spacing={4} align="stretch">
+              <VStack
+                spacing={4}
+                align="stretch">
                 <FormControl isRequired>
-                  <FormLabel fontSize="sm" fontWeight="medium" color="gray.700">
+                  <FormLabel
+                    fontSize="sm"
+                    fontWeight="medium"
+                    color="gray.700">
                     Role Name
                   </FormLabel>
                   <Input
@@ -590,14 +600,20 @@ export const Permissions = () => {
                     }}
                   />
                   {roleForm.formState.errors.roleName && (
-                    <Text color="red.500" fontSize="sm" mt={1}>
+                    <Text
+                      color="red.500"
+                      fontSize="sm"
+                      mt={1}>
                       {roleForm.formState.errors.roleName.message}
                     </Text>
                   )}
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel fontSize="sm" fontWeight="medium" color="gray.700">
+                  <FormLabel
+                    fontSize="sm"
+                    fontWeight="medium"
+                    color="gray.700">
                     Status
                   </FormLabel>
                   <Select
@@ -658,7 +674,7 @@ export const Permissions = () => {
 
           return (
             initialRoleData?.tables?.find(
-              (table) => table.slug === selectedTableSlug
+              (table) => table.slug === selectedTableSlug,
             )?.field_permissions || []
           );
         })()}

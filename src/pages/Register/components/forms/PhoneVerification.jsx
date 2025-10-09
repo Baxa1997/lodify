@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Box, Text, VStack, Button, Link, Flex} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Text, VStack, Button, Link, Flex } from "@chakra-ui/react";
 import OtpInput from "react-otp-input";
 
 const PhoneVerification = ({
@@ -45,7 +45,9 @@ const PhoneVerification = ({
 
   if (currentSubStep === "phone-verify") {
     return (
-      <Box borderRadius="12px" bg="white">
+      <Box
+        borderRadius="12px"
+        bg="white">
         <Text
           fontSize="18px"
           w="360px"
@@ -54,16 +56,22 @@ const PhoneVerification = ({
           color="#111827">
           Verification
         </Text>
-        <Text fontSize="16px" w="360px" color="#6B7280">
+        <Text
+          fontSize="16px"
+          w="360px"
+          color="#6B7280">
           Please input the code we just sent to your FMCSA linked phone number
         </Text>
 
-        <Box display="flex" w="356px" mt="30px">
+        <Box
+          display="flex"
+          w="356px"
+          mt="30px">
           <OtpInput
             value={phoneCode}
             onChange={handlePhoneCodeChange}
             numInputs={4}
-            renderSeparator={<span style={{width: "0px"}} />}
+            renderSeparator={<span style={{ width: "0px" }} />}
             renderInput={(props) => (
               <input
                 {...props}
@@ -137,7 +145,7 @@ const PhoneVerification = ({
           h="44px"
           bg="#EF6820"
           color="white"
-          _hover={{bg: "#EF6820"}}
+          _hover={{ bg: "#EF6820" }}
           borderRadius="8px"
           onClick={handleVerifyPhone}
           isLoading={isLoading}
@@ -146,15 +154,27 @@ const PhoneVerification = ({
           Verify phone number
         </Button>
 
-        <VStack spacing={2} w="100%">
-          <Text fontSize="16px" color="#6B7280" textAlign="center">
+        <VStack
+          spacing={2}
+          w="100%">
+          <Text
+            fontSize="16px"
+            color="#6B7280"
+            textAlign="center">
             Code didn't send?{" "}
-            <Link color="#EF6820" onClick={handleSendPhoneCode}>
+            <Link
+              color="#EF6820"
+              onClick={handleSendPhoneCode}>
               Click to resend
             </Link>
           </Text>
-          <Flex align="center" gap="8px" justify="center">
-            <img src="/img/backArrow.svg" alt="arrow-left" />
+          <Flex
+            align="center"
+            gap="8px"
+            justify="center">
+            <img
+              src="/img/backArrow.svg"
+              alt="arrow-left" />
             <Text
               fontSize="16px"
               color="#6B7280"
@@ -169,19 +189,33 @@ const PhoneVerification = ({
   }
 
   return (
-    <Box borderRadius="12px" bg="white">
-      <VStack maxW="360px" align="start" spacing={2}>
-        <Text fontSize="18px" fontWeight="600" color="#111827">
+    <Box
+      borderRadius="12px"
+      bg="white">
+      <VStack
+        maxW="360px"
+        align="start"
+        spacing={2}>
+        <Text
+          fontSize="18px"
+          fontWeight="600"
+          color="#111827">
           Enter Mobile Number
         </Text>
-        <Text fontSize="16px" color="#6B7280">
+        <Text
+          fontSize="16px"
+          color="#6B7280">
           To ensure the security of your account, we require verification of
           your FMCSA linked phone number
         </Text>
 
         <Box w="100%">
-          <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
-            Phone number <span style={{color: "#EF6820"}}>*</span>
+          <Text
+            fontSize="14px"
+            fontWeight="500"
+            color="#414651"
+            mb={2}>
+            Phone number <span style={{ color: "#EF6820" }}>*</span>
           </Text>
           <Text
             fontSize="16px"
@@ -199,7 +233,7 @@ const PhoneVerification = ({
           h="44px"
           bg="#EF6820"
           color="white"
-          _hover={{bg: "#EF6820"}}
+          _hover={{ bg: "#EF6820" }}
           borderRadius="8px"
           onClick={handleSendPhoneCode}
           isLoading={isLoading}
@@ -207,8 +241,15 @@ const PhoneVerification = ({
           Send Code
         </Button>
 
-        <Flex align="center" gap="8px" justify="center" w="100%" mt={4}>
-          <img src="/img/backArrow.svg" alt="arrow-left" />
+        <Flex
+          align="center"
+          gap="8px"
+          justify="center"
+          w="100%"
+          mt={4}>
+          <img
+            src="/img/backArrow.svg"
+            alt="arrow-left" />
           <Text
             fontSize="16px"
             color="#6B7280"

@@ -7,7 +7,7 @@ import {
   InputRightAddon,
   InputRightElement,
 } from "@chakra-ui/react";
-import {Controller} from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 const HFTextField = ({
   control,
@@ -26,7 +26,7 @@ const HFTextField = ({
     <Controller
       control={control}
       name={name}
-      render={({field}) => (
+      render={({ field }) => (
         <Box width="100%">
           {label && (
             <Box
@@ -38,7 +38,9 @@ const HFTextField = ({
               htmlFor={name}>
               {label}
               {required && (
-                <Box as="span" color="blue.500">
+                <Box
+                  as="span"
+                  color="blue.500">
                   *
                 </Box>
               )}

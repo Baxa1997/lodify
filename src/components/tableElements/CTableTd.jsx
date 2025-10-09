@@ -1,7 +1,7 @@
-import React, {memo} from "react";
-import {Box} from "@chakra-ui/react";
+import React, { memo } from "react";
+import { Box } from "@chakra-ui/react";
 
-const CTableTd = ({children, ...props}) => {
+const CTableTd = ({ children, ...props }) => {
   return (
     <Box
       as="td"

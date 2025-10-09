@@ -1,10 +1,10 @@
 import axios from "axios";
-import {store} from "../store/index";
-import {showAlert} from "../store/alert/alert.thunk";
+import { store } from "../store/index";
+import { showAlert } from "../store/alert/alert.thunk";
 import authService from "../services/auth/authService";
-import {authActions} from "../store/auth/auth.slice";
-import {handleError} from "./errorHandler";
-export const baseURL = `https://api.auth.u-code.io/`;
+import { authActions } from "../store/auth/auth.slice";
+import { handleError } from "./errorHandler";
+export const baseURL = "https://api.auth.u-code.io/";
 
 const requestV2 = axios.create({
   baseURL,
@@ -91,12 +91,12 @@ requestV2.interceptors.request.use(
 
     return config;
   },
-  (error) => errorHandler(error)
+  (error) => errorHandler(error),
 );
 
 requestV2.interceptors.response.use(
   (response) => response.data.data,
-  errorHandler
+  errorHandler,
 );
 
 export default requestV2;

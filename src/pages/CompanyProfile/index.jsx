@@ -8,13 +8,14 @@ import { Report } from "./modules/Report";
 const CompanyProfile = () => {
   return (
     <div>
-      <HeadBreadCrumb title={"Company Profile"} />
+      <HeadBreadCrumb title={"Carriers"} />
       <MainHeading
         mt="20px"
         mb="20px">
-        Company Profile
+        Carrier Info
       </MainHeading>
-      <MainTabs
+      <CarrierProfile />
+      {/* <MainTabs
         tabList={[
           "Company Info",
           "Equipment",
@@ -33,7 +34,7 @@ const CompanyProfile = () => {
           <Report key={"FMCSA Report"} />,
           <CarrierProfile key={"Carrier Profile"} />,
         ]} 
-      />
+      /> */}
     </div>
   );
 };

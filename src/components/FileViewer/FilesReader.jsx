@@ -1,10 +1,10 @@
 import React from "react";
-import {Modal, Box, ModalOverlay, Button, Flex} from "@chakra-ui/react";
-import {CloseIcon, DownloadIcon} from "@chakra-ui/icons";
+import { Modal, Box, ModalOverlay, Button, Flex } from "@chakra-ui/react";
+import { CloseIcon, DownloadIcon } from "@chakra-ui/icons";
 import useDownloader from "../../utils/useDownloader";
 
-function FilesReader({isOpen = false, onClose, file = ""}) {
-  const {download} = useDownloader();
+function FilesReader({ isOpen = false, onClose, file = "" }) {
+  const { download } = useDownloader();
   const fileExt = file?.split(".").pop()?.toLowerCase();
   const isPDF = fileExt === "pdf";
   const isWord = fileExt === "doc" || fileExt === "docx";
@@ -13,7 +13,10 @@ function FilesReader({isOpen = false, onClose, file = ""}) {
   const encodedURL = encodeURIComponent(file || "");
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="xl">
       <ModalOverlay />
       <Box
         h="500px"
@@ -32,11 +35,11 @@ function FilesReader({isOpen = false, onClose, file = ""}) {
           alignItems: "center",
           zIndex: 1400,
         }}>
-        {Boolean(file) ? (
+        {file ? (
           isPDF ? (
             <iframe
               src={file}
-              style={{width: "100%", height: "100%", border: "none"}}
+              style={{ width: "100%", height: "100%", border: "none" }}
               title="PDF Viewer"
             />
           ) : isWord || isExcel ? (
@@ -60,12 +63,16 @@ function FilesReader({isOpen = false, onClose, file = ""}) {
           <div>Document could not be loaded</div>
         )}
 
-        <Flex gap="10px" position="fixed" top="-10%" right="-80%">
+        <Flex
+          gap="10px"
+          position="fixed"
+          top="-10%"
+          right="-80%">
           <Button
             cursor="pointer"
             bg="none"
-            _hover={{bg: "none"}}
-            onClick={() => download({link: file, fileName: "download"})}
+            _hover={{ bg: "none" }}
+            onClick={() => download({ link: file, fileName: "download" })}
             colorScheme="blue">
             <DownloadIcon fontSize="20px" />
           </Button>
@@ -73,7 +80,7 @@ function FilesReader({isOpen = false, onClose, file = ""}) {
           <Button
             cursor="pointer"
             bg="none"
-            _hover={{bg: "none"}}
+            _hover={{ bg: "none" }}
             onClick={onClose}
             colorScheme="blue">
             <CloseIcon fontSize="20px" />

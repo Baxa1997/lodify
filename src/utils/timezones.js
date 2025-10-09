@@ -40,13 +40,13 @@ export const TIMEZONES = {
  * Timezone options for dropdowns/selects
  */
 export const TIMEZONE_OPTIONS = [
-  {label: "Eastern Time (ET)", value: US_TIMEZONES.EASTERN},
-  {label: "Central Time (CT)", value: US_TIMEZONES.CENTRAL},
-  {label: "Mountain Time (MT)", value: US_TIMEZONES.MOUNTAIN},
-  {label: "Arizona Time (MST)", value: US_TIMEZONES.ARIZONA},
-  {label: "Pacific Time (PT)", value: US_TIMEZONES.PACIFIC},
-  {label: "Alaska Time (AKT)", value: US_TIMEZONES.ALASKA},
-  {label: "Hawaii Time (HT)", value: US_TIMEZONES.HAWAII},
+  { label: "Eastern Time (ET)", value: US_TIMEZONES.EASTERN },
+  { label: "Central Time (CT)", value: US_TIMEZONES.CENTRAL },
+  { label: "Mountain Time (MT)", value: US_TIMEZONES.MOUNTAIN },
+  { label: "Arizona Time (MST)", value: US_TIMEZONES.ARIZONA },
+  { label: "Pacific Time (PT)", value: US_TIMEZONES.PACIFIC },
+  { label: "Alaska Time (AKT)", value: US_TIMEZONES.ALASKA },
+  { label: "Hawaii Time (HT)", value: US_TIMEZONES.HAWAII },
 ];
 
 /**

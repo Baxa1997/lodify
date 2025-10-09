@@ -1,7 +1,7 @@
 import React from "react";
-import {Box, Text, VStack, HStack, Button, Link, Flex} from "@chakra-ui/react";
+import { Box, Text, VStack, HStack, Button, Link, Flex } from "@chakra-ui/react";
 
-function AssignedPayouts({tripDetails = {}}) {
+function AssignedPayouts({ tripDetails = {} }) {
   return (
     <Box
       minH="400px"
@@ -17,7 +17,10 @@ function AssignedPayouts({tripDetails = {}}) {
         alignItems="center"
         p={4}
         borderBottom="1px solid #E9EAEB">
-        <Text fontSize="20px" fontWeight="600" color="gray.800">
+        <Text
+          fontSize="20px"
+          fontWeight="600"
+          color="gray.800">
           Assigned Payouts
         </Text>
 
@@ -31,7 +34,7 @@ function AssignedPayouts({tripDetails = {}}) {
               fontWeight="500"
               bg="transparent"
               border="none"
-              _hover={{bg: "transparent"}}>
+              _hover={{ bg: "transparent" }}>
               View all
             </Button>
             <Button
@@ -41,8 +44,10 @@ function AssignedPayouts({tripDetails = {}}) {
               h="20px"
               bg="transparent"
               border="none"
-              _hover={{bg: "transparent"}}>
-              <img src="/img/threeDots.svg" alt="" />
+              _hover={{ bg: "transparent" }}>
+              <img
+                src="/img/threeDots.svg"
+                alt="" />
             </Button>
           </Flex>
         </HStack>
@@ -54,12 +59,19 @@ function AssignedPayouts({tripDetails = {}}) {
         alignItems="center"
         p={4}
         borderBottom="1px solid #E9EAEB">
-        <VStack align="start" spacing={1}>
-          <Text fontSize="16px" fontWeight="700" color="gray.800">
+        <VStack
+          align="start"
+          spacing={1}>
+          <Text
+            fontSize="16px"
+            fontWeight="700"
+            color="gray.800">
             DRIVER PAY {tripDetails?.drivers?.first_name}{" "}
             {tripDetails?.drivers?.last_name}
           </Text>
-          <Text fontSize="14px" color="gray.600">
+          <Text
+            fontSize="14px"
+            color="gray.600">
             1354: STRAIGHT CARGO LLC
           </Text>
         </VStack>
@@ -85,8 +97,10 @@ function AssignedPayouts({tripDetails = {}}) {
             h="20px"
             bg="transparent"
             border="none"
-            _hover={{bg: "transparent"}}>
-            <img src="/img/threeDots.svg" alt="" />
+            _hover={{ bg: "transparent" }}>
+            <img
+              src="/img/threeDots.svg"
+              alt="" />
           </Button>
         </HStack>
       </Box>
@@ -98,19 +112,30 @@ function AssignedPayouts({tripDetails = {}}) {
           gap={6}
           alignItems="start">
           <Box>
-            <Text fontSize="14px" fontWeight="700" color="gray.800" mb={3}>
+            <Text
+              fontSize="14px"
+              fontWeight="700"
+              color="gray.800"
+              mb={3}>
               Rate (Quote)
             </Text>
-            <VStack align="stretch" spacing={2}>
+            <VStack
+              align="stretch"
+              spacing={2}>
               <Box
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
                 py={2}>
-                <Text fontSize="14px" color="gray.700">
+                <Text
+                  fontSize="14px"
+                  color="gray.700">
                   Hauling Rate
                 </Text>
-                <Text fontSize="14px" fontWeight="600" color="gray.800">
+                <Text
+                  fontSize="14px"
+                  fontWeight="600"
+                  color="gray.800">
                   {`$${tripDetails?.hauling_rate || "0.00"}`}
                 </Text>
               </Box>
@@ -122,10 +147,15 @@ function AssignedPayouts({tripDetails = {}}) {
                 px={3}
                 bg="gray.50"
                 borderRadius="6px">
-                <Text fontSize="14px" color="gray.700">
+                <Text
+                  fontSize="14px"
+                  color="gray.700">
                   Total Quote
                 </Text>
-                <Text fontSize="14px" fontWeight="600" color="gray.800">
+                <Text
+                  fontSize="14px"
+                  fontWeight="600"
+                  color="gray.800">
                   {`$${tripDetails?.total_quote || "0.00"}`}
                 </Text>
               </Box>
@@ -133,17 +163,27 @@ function AssignedPayouts({tripDetails = {}}) {
           </Box>
 
           <Box>
-            <Text fontSize="14px" fontWeight="700" color="gray.800" mb={3}>
+            <Text
+              fontSize="14px"
+              fontWeight="700"
+              color="gray.800"
+              mb={3}>
               Contract
             </Text>
-            <VStack align="stretch" spacing={2}>
+            <VStack
+              align="stretch"
+              spacing={2}>
               <Box py={2}>
-                <Text fontSize="14px" color="gray.700">
+                <Text
+                  fontSize="14px"
+                  color="gray.700">
                   Owner Operator {tripDetails?.owner_operator || ""}
                 </Text>
               </Box>
               <Box py={2}>
-                <Text fontSize="14px" color="gray.700">
+                <Text
+                  fontSize="14px"
+                  color="gray.700">
                   Percentage {tripDetails?.percentage || ""}%
                 </Text>
               </Box>
@@ -151,7 +191,11 @@ function AssignedPayouts({tripDetails = {}}) {
           </Box>
 
           <Box>
-            <Text fontSize="14px" fontWeight="700" color="gray.800" mb={3}>
+            <Text
+              fontSize="14px"
+              fontWeight="700"
+              color="gray.800"
+              mb={3}>
               Estimated Payout
             </Text>
             <Box
@@ -159,7 +203,10 @@ function AssignedPayouts({tripDetails = {}}) {
               justifyContent="center"
               alignItems="center"
               minH="60px">
-              <Text fontSize="24px" fontWeight="700" color="gray.800">
+              <Text
+                fontSize="24px"
+                fontWeight="700"
+                color="gray.800">
                 ${tripDetails?.hauling_rate * 0.35 || "0.00"}
               </Text>
             </Box>

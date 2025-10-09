@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import {
   convertToTimezone,
   convertToUTC,
@@ -10,7 +10,7 @@ import {
   formatTime24,
   DEFAULT_TIMEZONE,
 } from "../utils/dateFormats";
-import {getUserTimezone} from "../utils/timezones";
+import { getUserTimezone } from "../utils/timezones";
 
 /**
  * Custom hook for timezone management

@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Text} from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 // Custom Checkbox Component
 const CustomCheckbox = ({
@@ -11,14 +11,18 @@ const CustomCheckbox = ({
   ...props
 }) => {
   return (
-    <Box as="label" cursor="pointer" display="inline-flex" alignItems="center">
+    <Box
+      as="label"
+      cursor="pointer"
+      display="inline-flex"
+      alignItems="center">
       <input
         type="checkbox"
         name={name}
         value={value}
         checked={checked}
         onChange={onChange}
-        style={{display: "none"}}
+        style={{ display: "none" }}
         {...props}
       />
       <Box
@@ -52,7 +56,9 @@ const CustomCheckbox = ({
         )}
       </Box>
       {children && (
-        <Text fontSize="14px" color="#181D27">
+        <Text
+          fontSize="14px"
+          color="#181D27">
           {children}
         </Text>
       )}

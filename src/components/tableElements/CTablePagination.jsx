@@ -1,5 +1,5 @@
-import {Button, Flex, Text} from "@chakra-ui/react";
-import React, {memo} from "react";
+import { Button, Flex, Text } from "@chakra-ui/react";
+import React, { memo } from "react";
 import Select from "../Select";
 
 const CTablePagination = ({
@@ -22,8 +22,12 @@ const CTablePagination = ({
       width="100%"
       flexShrink={0}
       {...props}>
-      <Flex align="center" gap={2}>
-        <Text fontSize="14px" color="gray.600">
+      <Flex
+        align="center"
+        gap={2}>
+        <Text
+          fontSize="14px"
+          color="gray.600">
           Show
         </Text>
         <Select
@@ -42,12 +46,16 @@ const CTablePagination = ({
           size="sm"
           dropdownPosition="top"
         />
-        <Text fontSize="14px" color="gray.600">
+        <Text
+          fontSize="14px"
+          color="gray.600">
           Page {currentPage} of {Math.max(totalPages, 1)}
         </Text>
       </Flex>
 
-      <Flex alignItems="center" gap={"12px"}>
+      <Flex
+        alignItems="center"
+        gap={"12px"}>
         <Button
           h={"32px"}
           p={"8px 14px"}

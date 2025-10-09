@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -14,10 +14,10 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
-import {useForm, Controller} from "react-hook-form";
-import {useQueryClient} from "@tanstack/react-query";
-import {useSelector} from "react-redux";
-import {useQuery} from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 import clientsService from "../../../services/clientsService";
 import HFTextField from "@components/HFTextField";
 import HFPhoneInput from "@components/HFPhoneInput";
@@ -35,7 +35,7 @@ const AddRepresentModal = ({
   const userInfo = useSelector((state) => state.auth);
   const toast = useToast();
 
-  const {data: shippers} = useQuery({
+  const { data: shippers } = useQuery({
     queryKey: ["SHIPPERS_LIST"],
     queryFn: () => clientsService.getListShipper(),
     select: (data) => data?.data?.response || [],
@@ -74,7 +74,7 @@ const AddRepresentModal = ({
           await clientsService.createRepresentative(apiData);
         }
 
-        queryClient.invalidateQueries({queryKey: ["REPRESENTATIVES_LIST"]});
+        queryClient.invalidateQueries({ queryKey: ["REPRESENTATIVES_LIST"] });
         handleClose();
         setLoading(false);
 
@@ -96,7 +96,7 @@ const AddRepresentModal = ({
           isEditMode
             ? "Error updating representative:"
             : "Error adding representative:",
-          error
+          error,
         );
 
         toast({
@@ -115,14 +115,14 @@ const AddRepresentModal = ({
         });
       }
     },
-    [queryClient, userInfo, isEditMode, selectedRepresentative]
+    [queryClient, userInfo, isEditMode, selectedRepresentative],
   );
 
   const {
     control,
     handleSubmit: handleFormSubmit,
     reset,
-    formState: {errors, isValid},
+    formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -165,28 +165,44 @@ const AddRepresentModal = ({
   }, [selectedRepresentative, isEditMode, reset]);
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size="lg" isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      size="lg"
+      isCentered>
       <ModalOverlay bg="rgba(0, 0, 0, 0.5)" />
       <ModalContent
         borderRadius="12px"
         bg="white"
         boxShadow="0px 4px 20px rgba(0, 0, 0, 0.1)">
-        <ModalHeader borderBottom="1px solid #E9EAEB" pb={4} pt={6} px={6}>
-          <Text fontSize="18px" fontWeight="600" color="gray.800">
+        <ModalHeader
+          borderBottom="1px solid #E9EAEB"
+          pb={4}
+          pt={6}
+          px={6}>
+          <Text
+            fontSize="18px"
+            fontWeight="600"
+            color="gray.800">
             {isEditMode ? "Edit Representative" : "Add Representative"}
           </Text>
         </ModalHeader>
 
-        <ModalBody px={6} py={6}>
+        <ModalBody
+          px={6}
+          py={6}>
           <form onSubmit={handleFormSubmit(onSubmit)}>
-            <VStack spacing={5} align="stretch" flex="1">
+            <VStack
+              spacing={5}
+              align="stretch"
+              flex="1">
               <FormControl isInvalid={!!errors.full_name}>
                 <FormLabel
                   fontSize="14px"
                   fontWeight="500"
                   color="gray.700"
                   mb={2}>
-                  Full Name <span style={{color: "red"}}>*</span>
+                  Full Name <span style={{ color: "red" }}>*</span>
                 </FormLabel>
                 <HFTextField
                   name="full_name"
@@ -211,7 +227,7 @@ const AddRepresentModal = ({
                   fontWeight="500"
                   color="gray.700"
                   mb={2}>
-                  Email <span style={{color: "red"}}>*</span>
+                  Email <span style={{ color: "red" }}>*</span>
                 </FormLabel>
                 <HFTextField
                   name="email"
@@ -237,7 +253,7 @@ const AddRepresentModal = ({
                   fontWeight="500"
                   color="gray.700"
                   mb={2}>
-                  Phone <span style={{color: "red"}}>*</span>
+                  Phone <span style={{ color: "red" }}>*</span>
                 </FormLabel>
                 <HFPhoneInput
                   name="phone"
@@ -258,7 +274,7 @@ const AddRepresentModal = ({
                   fontWeight="500"
                   color="gray.700"
                   mb={2}>
-                  Title <span style={{color: "red"}}>*</span>
+                  Title <span style={{ color: "red" }}>*</span>
                 </FormLabel>
                 <HFTextField
                   name="title"
@@ -279,7 +295,7 @@ const AddRepresentModal = ({
                   fontWeight="500"
                   color="gray.700"
                   mb={2}>
-                  Shipper <span style={{color: "red"}}>*</span>
+                  Shipper <span style={{ color: "red" }}>*</span>
                 </FormLabel>
                 <HFSelect
                   name="shippers_id"
@@ -301,7 +317,10 @@ const AddRepresentModal = ({
               </FormControl>
             </VStack>
 
-            <HStack spacing={3} justify="flex-end" mt={8}>
+            <HStack
+              spacing={3}
+              justify="flex-end"
+              mt={8}>
               <Button
                 onClick={handleClose}
                 type="button"

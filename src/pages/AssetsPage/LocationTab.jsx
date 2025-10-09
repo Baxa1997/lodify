@@ -1,29 +1,33 @@
-import React, {useState, useCallback, useRef} from "react";
-import {Box, Flex, Text, Badge, Icon, Button} from "@chakra-ui/react";
+import React, { useState, useCallback, useRef } from "react";
+import { Box, Flex, Text, Badge, Icon, Button } from "@chakra-ui/react";
 import GoogleMapReact from "google-map-react";
-import {FaTachometerAlt, FaCar, FaCrosshairs} from "react-icons/fa";
-import {format} from "date-fns";
+import { FaTachometerAlt, FaCar, FaCrosshairs } from "react-icons/fa";
+import { format } from "date-fns";
 import styles from "./LocationTab.module.scss";
 import assetsService from "../../services/assetsService";
-import {useQuery} from "@tanstack/react-query";
-import {useLocation} from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
-const LocationMarker = ({lat, lng, onClick}) => (
-  <div className={styles.marker} onClick={onClick}>
+const LocationMarker = ({ lat, lng, onClick }) => (
+  <div
+    className={styles.marker}
+    onClick={onClick}>
     <div className={styles.markerInner}>
       <div className={styles.markerDot}></div>
     </div>
   </div>
 );
 
-const InfoPopup = ({isOpen, onClose, mapData}) => {
+const InfoPopup = ({ isOpen, onClose, mapData }) => {
   if (!isOpen) return null;
 
   return (
     <Box className={styles.infoPopup}>
       <Box className={styles.popupHeader}>
         <Text className={styles.driverId}>{mapData?.number}</Text>
-        <Box className={styles.closeButton} onClick={onClose}>
+        <Box
+          className={styles.closeButton}
+          onClick={onClose}>
           ×
         </Box>
       </Box>
@@ -31,13 +35,21 @@ const InfoPopup = ({isOpen, onClose, mapData}) => {
       <Box className={styles.popupContent}>
         <Text className={styles.driverName}>{mapData?.name || "Driver"}</Text>
 
-        <Flex align="center" gap="8px" mb="12px">
+        <Flex
+          align="center"
+          gap="8px"
+          mb="12px">
           <Box className={styles.statusIndicator}></Box>
           <Text className={styles.statusText}>{mapData?.code}</Text>
         </Flex>
 
-        <Flex align="center" gap="8px" mb="8px">
-          <Icon as={FaTachometerAlt} color="#10B981" />
+        <Flex
+          align="center"
+          gap="8px"
+          mb="8px">
+          <Icon
+            as={FaTachometerAlt}
+            color="#10B981" />
           <Text className={styles.speedText}>{mapData?.speed}</Text>
         </Flex>
 
@@ -47,11 +59,15 @@ const InfoPopup = ({isOpen, onClose, mapData}) => {
           align="center"
           gap="8px"
           mb="8px">
-          <Icon as={FaCar} color="#6B7280" />
+          <Icon
+            as={FaCar}
+            color="#6B7280" />
           <Text className={styles.mileageText}>{mapData?.odometer}</Text>
         </Flex>
 
-        <Flex align="center" gap="8px">
+        <Flex
+          align="center"
+          gap="8px">
           <Text>Last updated:</Text>
           <Text className={styles.lastUpdatedText}>
             {mapData?.timestamp
@@ -70,7 +86,7 @@ const LocationTab = () => {
   const [showInfoPopup, setShowInfoPopup] = useState(true);
   const mapRef = useRef(null);
 
-  const {data: mapData, isLoading: mapLoading} = useQuery({
+  const { data: mapData, isLoading: mapLoading } = useQuery({
     queryKey: ["MAP_INVOKE", location.state?.asset?.guid],
     queryFn: () =>
       assetsService.mapInovke({
@@ -104,7 +120,7 @@ const LocationTab = () => {
       latitude !== 0 &&
       longitude !== 0
     ) {
-      mapRef.current.panTo({lat: latitude, lng: longitude});
+      mapRef.current.panTo({ lat: latitude, lng: longitude });
       mapRef.current.setZoom(15);
     }
   }, [latitude, longitude]);
@@ -130,7 +146,9 @@ const LocationTab = () => {
         flexDirection="column"
         gap="10px">
         <Text>No location data available for this asset</Text>
-        <Text fontSize="sm" color="gray.500">
+        <Text
+          fontSize="sm"
+          color="gray.500">
           Latitude: {mapData?.[0]?.latitude || "N/A"}, Longitude:{" "}
           {mapData?.[0]?.longitude || "N/A"}
         </Text>
@@ -149,7 +167,7 @@ const LocationTab = () => {
           lng: longitude,
         }}
         defaultZoom={11}
-        onGoogleApiLoaded={({map}) => onMapLoad(map)}
+        onGoogleApiLoaded={({ map }) => onMapLoad(map)}
         options={{
           mapTypeControl: true,
           streetViewControl: true,
@@ -179,7 +197,10 @@ const LocationTab = () => {
         top="77%"
         right="10px"
         zIndex="10">
-        <Icon fontSize="20px" color="#666666" as={FaCrosshairs} />
+        <Icon
+          fontSize="20px"
+          color="#666666"
+          as={FaCrosshairs} />
       </Button>
 
       <InfoPopup

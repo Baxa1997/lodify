@@ -1,10 +1,10 @@
 import React from "react";
-import {useFieldArray} from "react-hook-form";
-import {Box, Button, Flex, Text} from "@chakra-ui/react";
+import { useFieldArray } from "react-hook-form";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import PickupFields from "./PickupFields";
 
-function AddressSection({control, isLoading = false, onCancel}) {
-  const {fields, append, remove} = useFieldArray({
+function AddressSection({ control, isLoading = false, onCancel }) {
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "trip_pickups",
   });
@@ -21,13 +21,17 @@ function AddressSection({control, isLoading = false, onCancel}) {
         />
       ))}
 
-      <Flex mt="20px" pt="20px" gap="12px" justifyContent="flex-start">
+      <Flex
+        mt="20px"
+        pt="20px"
+        gap="12px"
+        justifyContent="flex-start">
         <Button
           mr={2}
           colorScheme="blue"
           bg="transparent"
           border="1px solid #84CAFF"
-          _hover={{bg: "transparent"}}
+          _hover={{ bg: "transparent" }}
           borderRadius="8px"
           p="10px 16px"
           onClick={() =>
@@ -46,7 +50,11 @@ function AddressSection({control, isLoading = false, onCancel}) {
             width="14px"
             height="14px"
           />
-          <Text ml="6px" fontSize="14px" fontWeight="600" color="#175CD3">
+          <Text
+            ml="6px"
+            fontSize="14px"
+            fontWeight="600"
+            color="#175CD3">
             Add Pickup
           </Text>
         </Button>
@@ -54,7 +62,7 @@ function AddressSection({control, isLoading = false, onCancel}) {
           colorScheme="green"
           border="1px solid #84CAFF"
           bg="transparent"
-          _hover={{bg: "transparent"}}
+          _hover={{ bg: "transparent" }}
           borderRadius="8px"
           fontSize="14px"
           fontWeight="600"
@@ -76,7 +84,11 @@ function AddressSection({control, isLoading = false, onCancel}) {
             width="14px"
             height="14px"
           />
-          <Text ml="6px" fontSize="14px" fontWeight="600" color="#175CD3">
+          <Text
+            ml="6px"
+            fontSize="14px"
+            fontWeight="600"
+            color="#175CD3">
             Add Delivery
           </Text>
         </Button>

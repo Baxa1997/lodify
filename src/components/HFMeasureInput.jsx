@@ -1,5 +1,5 @@
-import {Box, Input, InputGroup, InputLeftAddon} from "@chakra-ui/react";
-import {Controller} from "react-hook-form";
+import { Box, Input, InputGroup, InputLeftAddon } from "@chakra-ui/react";
+import { Controller } from "react-hook-form";
 
 const HFMeasureInput = ({
   control,
@@ -14,7 +14,7 @@ const HFMeasureInput = ({
     <Controller
       control={control}
       name={name}
-      render={({field}) => (
+      render={({ field }) => (
         <Box width="100%">
           {label && (
             <Box
@@ -26,7 +26,9 @@ const HFMeasureInput = ({
               htmlFor={name}>
               {label}
               {required && (
-                <Box as="span" color="blue.500">
+                <Box
+                  as="span"
+                  color="blue.500">
                   *
                 </Box>
               )}

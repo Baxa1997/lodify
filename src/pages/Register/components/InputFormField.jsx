@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Input, Text} from "@chakra-ui/react";
+import { Box, Input, Text } from "@chakra-ui/react";
 import styles from "../MultiStepRegister.module.scss";
 
 const InputFormField = ({
@@ -16,7 +16,10 @@ const InputFormField = ({
 }) => {
   return (
     <Box className={styles.formGroup}>
-      <Text as="label" htmlFor={name} className={styles.formLabel}>
+      <Text
+        as="label"
+        htmlFor={name}
+        className={styles.formLabel}>
         {label} <span>{isRequired && "*"}</span>
       </Text>
 

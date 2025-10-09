@@ -1,8 +1,8 @@
 import { Box, Text } from "@chakra-ui/react";
-import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
 import { StatusText } from "../../../../components/StatusText";
 import { CardData } from "../../../../components/CardData";
 import { format, isValid } from "date-fns";
+import { InfoAccordionItem, InfoAccordionButton, InfoAccordionPanel, InfoAccordionTitle } from "../../../../components/InfoAccordion";
 
 export const Safety = ({ data = {} }) => {
 
@@ -17,28 +17,13 @@ export const Safety = ({ data = {} }) => {
   } = data;
 
   return <Box>
-    <SectionCard
-      isAccordion
-      padding="0 !important"
-      variant="card"
-      overflow="hidden"
-    >
-      <SectionCardHeader
-        bgColor="gray.200"
-        borderBottom="1px solid"
-        borderColor="gray.border-main"
-        padding="20px 24px"
-        borderTopLeftRadius="12px"
-        borderTopRightRadius="12px">
-        <Text
-          fontSize="18px"
-          fontWeight="600"
-          color="primary.500"
-        >
+    <InfoAccordionItem >
+      <InfoAccordionButton>
+        <InfoAccordionTitle>
           Safety
-        </Text>
-      </SectionCardHeader>
-      <SectionCardBody>
+        </InfoAccordionTitle>
+      </InfoAccordionButton>
+      <InfoAccordionPanel>
         <Box
           display="flex"
           alignItems="flex-start"
@@ -123,7 +108,7 @@ export const Safety = ({ data = {} }) => {
             />
           </CardData>
         </Box>
-      </SectionCardBody>
-    </SectionCard>
+      </InfoAccordionPanel>
+    </InfoAccordionItem>
   </Box>;
 };

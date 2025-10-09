@@ -23,6 +23,9 @@ import { Box } from "@chakra-ui/react";
 import { State } from "../State";
 import { Equipment } from "../Equipment";
 import { Authority } from "../Authority";
+import { Safety } from "../Safety";
+import { ActiveAndPendingInsurance } from "../ActiveAndPendingInsurance";
+import { Operations } from "../Operations";
 
 export const Overview = ({
   generalInfo,
@@ -45,6 +48,9 @@ export const Overview = ({
       <State />
       <Equipment />
       <Authority data={carrierDetails} />
+      <ActiveAndPendingInsurance />
+      <Safety data={companySnapshot} />
+      <Operations data={companySnapshot} />
     </InfoAccordion>
     {/* <MainSection
       data={generalInfo}

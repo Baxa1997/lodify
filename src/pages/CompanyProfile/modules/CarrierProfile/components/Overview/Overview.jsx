@@ -22,6 +22,7 @@ import { ConnectedCard } from "../ConnectedCard";
 import { Box } from "@chakra-ui/react";
 import { State } from "../State";
 import { Equipment } from "../Equipment";
+import { Authority } from "../Authority";
 
 export const Overview = ({
   generalInfo,
@@ -43,6 +44,7 @@ export const Overview = ({
       <ConnectedCard />
       <State />
       <Equipment />
+      <Authority data={carrierDetails} />
     </InfoAccordion>
     {/* <MainSection
       data={generalInfo}

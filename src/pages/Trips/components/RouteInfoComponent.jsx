@@ -1,5 +1,4 @@
 import {Box, Button, Flex, Text, useToast} from "@chakra-ui/react";
-import HFFileUpload from "@components/HFFileUpload";
 import {useGetCompanyId} from "@hooks/useGetCompanyId";
 import fileService from "@services/fileService";
 import {useCreateItemMutation} from "@services/items.service";

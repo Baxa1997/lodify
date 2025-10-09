@@ -1,8 +1,6 @@
 import {Box, Text} from "@chakra-ui/react";
-import {useNavigate} from "react-router-dom";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import styles from "../../styles/tabs.module.scss";
-import HistoryTripsTab from "./Tabs/HistoryTripsTab";
 import HeadBreadCrumb from "@components/HeadBreadCrumb";
 import GeneralTripsTab from "./Tabs/GeneralsTripTab";
 import AddTrip from "./components/AddTrip/AddTrip";
@@ -16,6 +14,7 @@ function UpcomingTabSinglePage() {
   const {id} = useParams();
   const [selectedTabId, setSelectedTabId] = useState(1);
   const envId = useSelector((state) => state.auth.environmentId);
+
   const {data: tripData = {}, isLoading} = useQuery({
     queryKey: ["TRIP_BY_ID", id, selectedTabId],
     queryFn: () =>
@@ -50,7 +49,6 @@ function UpcomingTabSinglePage() {
         className={styles.tabsContainer}>
         <TabList>
           <Tab>Trip</Tab>
-          {/* <Tab>General Details</Tab> */}
           <Tab>History</Tab>
         </TabList>
 

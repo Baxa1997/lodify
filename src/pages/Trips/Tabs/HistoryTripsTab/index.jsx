@@ -14,7 +14,7 @@ import GoogleMap from "./GoogleMap";
 
 function HistoryTripsTab() {
   const {id} = useParams();
-
+  console.log("id", id);
   const envId = useSelector((state) => state.auth.environmentId);
   const {control, handleSubmit, reset, watch} = useForm({
     defaultValues: {},
@@ -31,17 +31,16 @@ function HistoryTripsTab() {
         },
         table: "trips",
       }),
+    enabled: Boolean(id),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     staleTime: 0,
-    enabled: Boolean(id),
     select: (res) => res?.data?.response?.[0] || {},
   });
 
   useEffect(() => {
     reset(tripDetails);
   }, [tripDetails, reset]);
-  console.log("tripDetails", tripDetails);
 
   return (
     <>

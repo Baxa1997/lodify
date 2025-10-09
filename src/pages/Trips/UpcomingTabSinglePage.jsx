@@ -16,6 +16,7 @@ function UpcomingTabSinglePage() {
   const {id} = useParams();
   const [selectedTabId, setSelectedTabId] = useState(1);
   const envId = useSelector((state) => state.auth.environmentId);
+
   const {data: tripData = {}, isLoading} = useQuery({
     queryKey: ["TRIP_BY_ID", id, selectedTabId],
     queryFn: () =>
@@ -32,10 +33,9 @@ function UpcomingTabSinglePage() {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     staleTime: 0,
-    select: (data) => data?.data?.response?.[0] || [],
+    select: (data) => console.log("data=====>", data) || [],
   });
 
-  console.log("tripData", tripData);
   return (
     <Box>
       <HeadBreadCrumb />
@@ -64,7 +64,7 @@ function UpcomingTabSinglePage() {
         </TabPanel> */}
 
         <TabPanel>
-          <GeneralTripsTab tripData={tripData} isLoading={isLoading} />
+          <GeneralTripsTab isLoading={isLoading} />
         </TabPanel>
       </Tabs>
     </Box>

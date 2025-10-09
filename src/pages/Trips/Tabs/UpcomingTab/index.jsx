@@ -8,6 +8,7 @@ import {
   VStack,
   HStack,
   Divider,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useQuery} from "@tanstack/react-query";
@@ -46,6 +47,16 @@ function UpcomingTab() {
     };
 
     return loadTypeColors[loadType?.trim()] || "gray";
+  };
+
+  const getCustomerInfo = (trip) => {
+    return {
+      companyName: trip.shipper?.name || "N/A",
+      customer:
+        trip.shipper?.contact_name || trip.shipper?.customer_name || "N/A",
+      trips: trip.shipper?.total_trips || 0,
+      rate: trip.shipper?.rating || 0,
+    };
   };
 
   const {
@@ -200,13 +211,95 @@ function UpcomingTab() {
                       onClick={(e) =>
                         toggleRowExpansion(trip.id || trip.guid, e)
                       }>
-                      <CTableTd>{trip.shipper?.name || ""}</CTableTd>
+                      <CTableTd>
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <Box
+                              p={3}
+                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                              color="white"
+                              borderRadius="md"
+                              minW="180px">
+                              <VStack spacing={1} align="start">
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).companyName}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).customer}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  Karim Otabekov
+                                </Text>
+                              </VStack>
+                            </Box>
+                          }
+                          placement="bottom-start"
+                          bg="transparent"
+                          openDelay={300}>
+                          <Text
+                            cursor="pointer"
+                            _hover={{textDecoration: "underline"}}
+                            color="#181D27">
+                            {trip.shipper?.name || ""}
+                          </Text>
+                        </Tooltip>
+                      </CTableTd>
                       <CTableTd minWidth="180px">
                         <Flex
                           gap="24px"
                           alignItems="center"
                           justifyContent="space-between">
-                          <Text color="#181D27">{trip.id || ""}</Text>
+                          <Tooltip
+                            hasArrow
+                            label={
+                              <Box
+                                p={3}
+                                bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                                color="white"
+                                borderRadius="md"
+                                minW="180px">
+                                <VStack spacing={1} align="start">
+                                  <Text
+                                    fontSize="14px"
+                                    fontWeight="600"
+                                    color="white">
+                                    {getCustomerInfo(trip).companyName}
+                                  </Text>
+                                  <Text
+                                    fontSize="14px"
+                                    fontWeight="600"
+                                    color="white">
+                                    {getCustomerInfo(trip).customer}
+                                  </Text>
+                                  <Text
+                                    fontSize="14px"
+                                    fontWeight="600"
+                                    color="white">
+                                    Otabek Karimov
+                                  </Text>
+                                </VStack>
+                              </Box>
+                            }
+                            placement="bottom-start"
+                            bg="transparent"
+                            openDelay={300}>
+                            <Text
+                              color="#181D27"
+                              cursor="pointer"
+                              _hover={{textDecoration: "underline"}}>
+                              {trip.id || ""}
+                            </Text>
+                          </Tooltip>
                           <TripStatus
                             rowClick={handleRowClick}
                             onExpand={toggleRowExpansion}
@@ -221,19 +314,60 @@ function UpcomingTab() {
                           gap="16px"
                           justifyContent="space-between">
                           <Box>
-                            <Text
-                              h="20px"
-                              fontSize="14px"
-                              fontWeight="500"
-                              color="#181D27">
-                              {" "}
-                              {`${trip.origin?.[0]?.address ?? ""} / ${
-                                trip?.origin?.[0]?.address_2 ?? ""
-                              }` || ""}
-                            </Text>
-                            <Text h="20px">
-                              {formatDate(trip?.origin?.[0]?.depart_at ?? "")}
-                            </Text>
+                            <Tooltip
+                              hasArrow
+                              label={
+                                <Box
+                                  p={3}
+                                  bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                                  color="white"
+                                  borderRadius="md"
+                                  minW="180px">
+                                  <VStack spacing={1} align="start">
+                                    <Text
+                                      fontSize="14px"
+                                      fontWeight="600"
+                                      color="white">
+                                      {getCustomerInfo(trip).companyName}
+                                    </Text>
+                                    <Text
+                                      fontSize="14px"
+                                      fontWeight="600"
+                                      color="white">
+                                      {getCustomerInfo(trip).customer}
+                                    </Text>
+                                    <Text
+                                      fontSize="14px"
+                                      fontWeight="600"
+                                      color="white">
+                                      Otabek Karimov
+                                    </Text>
+                                  </VStack>
+                                </Box>
+                              }
+                              placement="bottom-start"
+                              bg="transparent"
+                              openDelay={300}>
+                              <>
+                                {" "}
+                                <Text
+                                  h="20px"
+                                  fontSize="14px"
+                                  fontWeight="500"
+                                  color="#181D27"
+                                  cursor="pointer"
+                                  _hover={{textDecoration: "underline"}}>
+                                  {`${trip.origin?.[0]?.address ?? ""} / ${
+                                    trip?.origin?.[0]?.address_2 ?? ""
+                                  }` || ""}
+                                </Text>
+                                <Text h="20px">
+                                  {formatDate(
+                                    trip?.origin?.[0]?.depart_at ?? ""
+                                  )}
+                                </Text>
+                              </>
+                            </Tooltip>
                           </Box>
                           <TripStatus status={trip?.total_trips} />
                         </Flex>
@@ -245,16 +379,51 @@ function UpcomingTab() {
                             alignItems="center"
                             justifyContent="space-between">
                             <Box>
-                              <Text
-                                h="20px"
-                                fontSize="14px"
-                                fontWeight="500"
-                                color="#181D27">
-                                {" "}
-                                {`${trip.stop?.[0]?.address ?? ""} / ${
-                                  trip?.stop?.[0]?.address_2 ?? ""
-                                }` || ""}
-                              </Text>
+                              <Tooltip
+                                label={
+                                  <Box
+                                    p={3}
+                                    bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                                    color="white"
+                                    borderRadius="md"
+                                    minW="180px">
+                                    <VStack spacing={1} align="start">
+                                      <Text
+                                        fontSize="14px"
+                                        fontWeight="600"
+                                        color="white">
+                                        {getCustomerInfo(trip).companyName}
+                                      </Text>
+                                      <Text
+                                        fontSize="14px"
+                                        fontWeight="600"
+                                        color="white">
+                                        {getCustomerInfo(trip).customer}
+                                      </Text>
+                                      <Text
+                                        fontSize="14px"
+                                        fontWeight="600"
+                                        color="white">
+                                        Otabek Karimov
+                                      </Text>
+                                    </VStack>
+                                  </Box>
+                                }
+                                placement="bottom-start"
+                                bg="transparent"
+                                openDelay={300}>
+                                <Text
+                                  h="20px"
+                                  fontSize="14px"
+                                  fontWeight="500"
+                                  color="#181D27"
+                                  cursor="pointer"
+                                  _hover={{textDecoration: "underline"}}>
+                                  {`${trip.stop?.[0]?.address ?? ""} / ${
+                                    trip?.stop?.[0]?.address_2 ?? ""
+                                  }` || ""}
+                                </Text>
+                              </Tooltip>
                               <Text h="20px">
                                 {formatDate(trip?.stop?.[0]?.arrive_by ?? "")}
                               </Text>
@@ -264,56 +433,245 @@ function UpcomingTab() {
                         </Box>
                       </CTableTd>
                       <CTableTd>
-                        {trip?.tractors?.plate_number ?? "---"}
-                      </CTableTd>
-                      <CTableTd>
-                        <Box>
-                          <Text h="20px">
-                            {trip?.trailers?.plate_number ?? "---"}
-                          </Text>
-                        </Box>
-                      </CTableTd>
-                      <CTableTd>
-                        <Flex gap="12px" justifyContent="space-between">
+                        <Tooltip
+                          label={
+                            <Box
+                              p={3}
+                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                              color="white"
+                              borderRadius="md"
+                              minW="180px">
+                              <VStack spacing={1} align="start">
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).companyName}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).customer}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  Otabek Karimov
+                                </Text>
+                              </VStack>
+                            </Box>
+                          }
+                          placement="bottom-start"
+                          bg="transparent"
+                          openDelay={300}>
                           <Text
-                            h="20px"
-                            fontSize="14px"
-                            fontWeight="500"
-                            color="#535862">
-                            {trip?.origin?.[0]?.equipment_type ?? "ss"}
+                            cursor="pointer"
+                            _hover={{textDecoration: "underline"}}
+                            color="#181D27">
+                            {trip?.tractors?.plate_number ?? "---"}
                           </Text>
-                          <Flex
-                            alignItems="center"
-                            justifyContent="center"
-                            border="1px solid #dcddde"
-                            w="24px"
-                            h="22px"
-                            borderRadius="50%"
-                            bg="#fff">
-                            {trip?.origin?.[0]
-                              ?.equipment_availability?.[0]?.[0] ?? ""}
+                        </Tooltip>
+                      </CTableTd>
+                      <CTableTd>
+                        <Tooltip
+                          label={
+                            <Box
+                              p={3}
+                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                              color="white"
+                              borderRadius="md"
+                              minW="180px">
+                              <VStack spacing={1} align="start">
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).companyName}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).customer}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  Otabek Karimov
+                                </Text>
+                              </VStack>
+                            </Box>
+                          }
+                          placement="bottom-start"
+                          bg="transparent"
+                          openDelay={300}>
+                          <Box>
+                            <Text
+                              h="20px"
+                              cursor="pointer"
+                              _hover={{textDecoration: "underline"}}
+                              color="#181D27">
+                              {trip?.trailers?.plate_number ?? "---"}
+                            </Text>
+                          </Box>
+                        </Tooltip>
+                      </CTableTd>
+                      <CTableTd>
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <Box
+                              p={3}
+                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                              color="white"
+                              borderRadius="md"
+                              minW="180px">
+                              <VStack spacing={1} align="start">
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).companyName}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).customer}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  Otabek Karimov
+                                </Text>
+                              </VStack>
+                            </Box>
+                          }
+                          placement="bottom-start"
+                          bg="transparent"
+                          openDelay={300}>
+                          <Flex gap="12px" justifyContent="space-between">
+                            <Text
+                              h="20px"
+                              fontSize="14px"
+                              fontWeight="500"
+                              color="#535862"
+                              cursor="pointer"
+                              _hover={{textDecoration: "underline"}}>
+                              {trip?.origin?.[0]?.equipment_type ?? "ss"}
+                            </Text>
+
+                            <Flex
+                              alignItems="center"
+                              justifyContent="center"
+                              border="1px solid #dcddde"
+                              w="24px"
+                              h="22px"
+                              borderRadius="50%"
+                              bg="#fff">
+                              {trip?.origin?.[0]
+                                ?.equipment_availability?.[0]?.[0] ?? ""}
+                            </Flex>
                           </Flex>
-                        </Flex>
+                        </Tooltip>
                       </CTableTd>
                       <CTableTd>
-                        <Badge
-                          colorScheme={getLoadTypeColor(
-                            trip.origin?.[0]?.load_type?.[0] ?? ""
-                          )}
-                          variant="subtle"
-                          px={3}
-                          py={1}
-                          borderRadius="full"
-                          fontSize="12px"
-                          fontWeight="500">
-                          {trip.origin?.[0]?.load_type?.[0] ?? ""}
-                        </Badge>
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <Box
+                              p={3}
+                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                              color="white"
+                              borderRadius="md"
+                              minW="180px">
+                              <VStack spacing={1} align="start">
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).companyName}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).customer}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  Otabek Karimov
+                                </Text>
+                              </VStack>
+                            </Box>
+                          }
+                          placement="bottom-start"
+                          bg="transparent"
+                          openDelay={300}>
+                          <Badge
+                            colorScheme={getLoadTypeColor(
+                              trip.origin?.[0]?.load_type?.[0] ?? ""
+                            )}
+                            variant="subtle"
+                            px={3}
+                            py={1}
+                            borderRadius="full"
+                            fontSize="12px"
+                            fontWeight="500"
+                            cursor="pointer"
+                            _hover={{opacity: 0.8}}>
+                            {trip.origin?.[0]?.load_type?.[0] ?? ""}
+                          </Badge>
+                        </Tooltip>
                       </CTableTd>
                       <CTableTd>
-                        <TripProgress
-                          total_trips={trip.total_trips}
-                          current_trips={trip.current_trip}
-                        />
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <Box
+                              p={3}
+                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                              color="white"
+                              borderRadius="md"
+                              minW="180px">
+                              <VStack spacing={1} align="start">
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).companyName}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).customer}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  Otabek Karimov
+                                </Text>
+                              </VStack>
+                            </Box>
+                          }
+                          placement="bottom-start"
+                          bg="transparent"
+                          openDelay={300}>
+                          <Box cursor="pointer" _hover={{opacity: 0.8}}>
+                            <TripProgress
+                              total_trips={trip.total_trips}
+                              current_trips={trip.current_trip}
+                            />
+                          </Box>
+                        </Tooltip>
                       </CTableTd>
                       <CTableTd>
                         <Flex alignItems="center" gap={2}>

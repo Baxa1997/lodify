@@ -41,6 +41,7 @@ function HistoryTripsTab() {
   useEffect(() => {
     reset(tripDetails);
   }, [tripDetails, reset]);
+  console.log("tripDetails", tripDetails);
 
   return (
     <>

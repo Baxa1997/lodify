@@ -201,7 +201,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {pickupItems.map((item) => (
+                {pickupItems.map((item, index) => (
                   <CTableRow key={item?.guid} hover={false}>
                     <CTableTd py="12px" px="20px" verticalAlign="top">
                       <Box>

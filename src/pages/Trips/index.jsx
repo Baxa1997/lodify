@@ -7,6 +7,7 @@ import HistoryTab from "./Tabs/HistoryTab";
 import TransitTab from "./Tabs/TransitTab.jsx";
 import UpcomingTab from "./Tabs/UpcomingTab";
 import AddTripMenu from "./modules/AddTripMenu";
+import ActionsNeeded from "./Tabs/ActionsNeeded";
 
 const Trips = () => {
   return (
@@ -24,7 +25,7 @@ const Trips = () => {
           </TabList>
 
           <TabPanel>
-            <UpcomingTab />
+            <ActionsNeeded />
           </TabPanel>
           <TabPanel>
             <UpcomingTab />

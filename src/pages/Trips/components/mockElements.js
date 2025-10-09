@@ -82,3 +82,49 @@ export function getShortFileName(url, maxBaseLength = 5) {
 
   return base + ext;
 }
+
+export const tableActionsNeeded = [
+  {
+    id: 1,
+    name: "Customer",
+    key: "customer",
+    sortable: true,
+  },
+  {
+    id: 2,
+    name: "Load ID",
+    key: "loadId",
+    sortable: true,
+  },
+  {
+    id: 3,
+    name: "Origin",
+    key: "origin_address",
+    sortable: true,
+  },
+  {
+    id: 4,
+    name: "Destination",
+    key: "destination",
+    sortable: true,
+  },
+  {
+    id: 5,
+    name: "Timer",
+    key: "timer",
+    sortable: true,
+  },
+  {
+    id: 6,
+    name: "Reason",
+    key: "reason",
+    sortable: true,
+  },
+
+  {
+    id: 7,
+    name: "Actions",
+    key: "actions",
+    sortable: true,
+  },
+];

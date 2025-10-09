@@ -1,53 +1,36 @@
 import {
-  Box,
   Badge,
-  Text,
-  Flex,
+  Box,
   Collapse,
-  IconButton,
-  VStack,
-  HStack,
-  Divider,
+  Flex,
+  Text,
   Tooltip,
+  VStack,
 } from "@chakra-ui/react";
-import React, {useState} from "react";
-import {useQuery} from "@tanstack/react-query";
-import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {format, isValid} from "date-fns";
-import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
-import tripsService from "@services/tripsService";
-import tableElements from "../../components/mockElements";
 import {
   CTable,
-  CTableHead,
-  CTableTh,
   CTableBody,
+  CTableHead,
   CTableTd,
+  CTableTh,
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
-import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
+import tripsService from "@services/tripsService";
+import {useQuery} from "@tanstack/react-query";
 import {formatDate} from "@utils/dateFormats";
-import TripRowDetails from "./TripRowDetails";
+import React, {useState} from "react";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {tableActionsNeeded} from "../components/mockElements";
+import TripsFiltersComponent from "../modules/TripsFiltersComponent";
 
-function UpcomingTab() {
+function ActionsNeeded() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
-  const [expandedRows, setExpandedRows] = useState(new Set());
   const envId = useSelector((state) => state.auth.environmentId);
-
-  const getLoadTypeColor = (loadType) => {
-    const loadTypeColors = {
-      Preloaded: "orange",
-      Live: "green",
-      Drop: "blue",
-    };
-
-    return loadTypeColors[loadType?.trim()] || "gray";
-  };
 
   const getCustomerInfo = (trip) => {
     return {
@@ -112,19 +95,6 @@ function UpcomingTab() {
     setCurrentPage(1);
   };
 
-  const toggleRowExpansion = (tripId, event) => {
-    event.stopPropagation();
-    setExpandedRows((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(tripId)) {
-        newSet.delete(tripId);
-      } else {
-        newSet.add(tripId);
-      }
-      return newSet;
-    });
-  };
-
   const totalPages = tripsData?.total
     ? Math.ceil(tripsData.total / pageSize)
     : 0;
@@ -153,7 +123,7 @@ function UpcomingTab() {
           onPageSizeChange={handlePageSizeChange}>
           <CTableHead zIndex={999999}>
             <Box as={"tr"}>
-              {tableElements.map((element) => (
+              {tableActionsNeeded.map((element) => (
                 <CTableTh
                   zIndex={999999}
                   maxW="334px"
@@ -173,7 +143,7 @@ function UpcomingTab() {
             {isLoading ? (
               <CTableRow>
                 <CTableTd
-                  colSpan={tableElements.length}
+                  colSpan={tableActionsNeeded.length}
                   textAlign="center"
                   py={8}>
                   Loading trips...
@@ -182,7 +152,7 @@ function UpcomingTab() {
             ) : error ? (
               <CTableRow>
                 <CTableTd
-                  colSpan={tableElements.length}
+                  colSpan={tableActionsNeeded.length}
                   textAlign="center"
                   py={8}
                   color="red.500">
@@ -192,7 +162,7 @@ function UpcomingTab() {
             ) : trips.length === 0 ? (
               <CTableRow>
                 <CTableTd
-                  colSpan={tableElements.length}
+                  colSpan={tableActionsNeeded.length}
                   textAlign="center"
                   py={8}>
                   No trips found
@@ -200,17 +170,13 @@ function UpcomingTab() {
               </CTableRow>
             ) : (
               trips?.map((trip, index) => {
-                const isExpanded = expandedRows.has(trip.id || trip.guid);
                 return (
                   <React.Fragment key={trip.guid || index}>
                     <CTableRow
                       style={{
                         backgroundColor: "white",
                         cursor: "pointer",
-                      }}
-                      onClick={(e) =>
-                        toggleRowExpansion(trip.id || trip.guid, e)
-                      }>
+                      }}>
                       <CTableTd>
                         <Tooltip
                           hasArrow
@@ -288,12 +254,6 @@ function UpcomingTab() {
                               {trip.id || ""}
                             </Text>
                           </Tooltip>
-                          <TripStatus
-                            rowClick={handleRowClick}
-                            onExpand={toggleRowExpansion}
-                            status={trip?.current_trip}
-                            tripId={trip.id || trip.guid}
-                          />
                         </Flex>
                       </CTableTd>
                       <CTableTd>
@@ -351,7 +311,6 @@ function UpcomingTab() {
                               </>
                             </Tooltip>
                           </Box>
-                          <TripStatus status={trip?.total_trips} />
                         </Flex>
                       </CTableTd>
                       <CTableTd>
@@ -404,7 +363,6 @@ function UpcomingTab() {
                                 {formatDate(trip?.stop?.[0]?.arrive_by ?? "")}
                               </Text>
                             </Box>
-                            <TripDriverVerification trip={trip} />
                           </Flex>
                         </Box>
                       </CTableTd>
@@ -483,160 +441,13 @@ function UpcomingTab() {
                           </Box>
                         </Tooltip>
                       </CTableTd>
-                      <CTableTd>
-                        <Tooltip
-                          hasArrow
-                          label={
-                            <Box
-                              p={3}
-                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
-                              color="white"
-                              borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).companyName}
-                                </Text>
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).customer}
-                                </Text>
-                              </VStack>
-                            </Box>
-                          }
-                          placement="bottom-start"
-                          bg="transparent"
-                          openDelay={300}>
-                          <Flex gap="12px" justifyContent="space-between">
-                            <Text
-                              h="20px"
-                              fontSize="14px"
-                              fontWeight="500"
-                              color="#535862"
-                              cursor="pointer"
-                              _hover={{textDecoration: "underline"}}>
-                              {trip?.origin?.[0]?.equipment_type ?? "ss"}
-                            </Text>
 
-                            <Flex
-                              alignItems="center"
-                              justifyContent="center"
-                              border="1px solid #dcddde"
-                              w="24px"
-                              h="22px"
-                              borderRadius="50%"
-                              bg="#fff">
-                              {trip?.origin?.[0]
-                                ?.equipment_availability?.[0]?.[0] ?? ""}
-                            </Flex>
-                          </Flex>
-                        </Tooltip>
-                      </CTableTd>
-                      <CTableTd>
-                        <Tooltip
-                          hasArrow
-                          label={
-                            <Box
-                              p={3}
-                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
-                              color="white"
-                              borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).companyName}
-                                </Text>
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).customer}
-                                </Text>
-                              </VStack>
-                            </Box>
-                          }
-                          placement="bottom-start"
-                          bg="transparent"
-                          openDelay={300}>
-                          <Badge
-                            colorScheme={getLoadTypeColor(
-                              trip.origin?.[0]?.load_type?.[0] ?? ""
-                            )}
-                            variant="subtle"
-                            px={3}
-                            py={1}
-                            borderRadius="full"
-                            fontSize="12px"
-                            fontWeight="500"
-                            cursor="pointer"
-                            _hover={{opacity: 0.8}}>
-                            {trip.origin?.[0]?.load_type?.[0] ?? ""}
-                          </Badge>
-                        </Tooltip>
-                      </CTableTd>
-                      <CTableTd>
-                        <Tooltip
-                          hasArrow
-                          label={
-                            <Box
-                              p={3}
-                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
-                              color="white"
-                              borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).companyName}
-                                </Text>
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).customer}
-                                </Text>
-                              </VStack>
-                            </Box>
-                          }
-                          placement="bottom-start"
-                          bg="transparent"
-                          openDelay={300}>
-                          <Box cursor="pointer" _hover={{opacity: 0.8}}>
-                            <TripProgress
-                              total_trips={trip.total_trips}
-                              current_trips={trip.current_trip}
-                            />
-                          </Box>
-                        </Tooltip>
-                      </CTableTd>
                       <CTableTd>
                         <Flex alignItems="center" gap={2}>
                           <Text color="#EF6820" fontWeight="600">
                             Assign
                           </Text>
                         </Flex>
-                      </CTableTd>
-                    </CTableRow>
-
-                    <CTableRow>
-                      <CTableTd colSpan={tableElements.length} p={0}>
-                        <Collapse in={isExpanded} animateOpacity>
-                          <TripRowDetails
-                            handleRowClick={handleRowClick}
-                            trip={trip}
-                            isExpanded={isExpanded}
-                          />
-                        </Collapse>
                       </CTableTd>
                     </CTableRow>
                   </React.Fragment>
@@ -650,159 +461,4 @@ function UpcomingTab() {
   );
 }
 
-const TripStatus = ({
-  status,
-  onExpand = () => {},
-  tripId = "",
-  rowClick = () => {},
-}) => {
-  return (
-    <Flex
-      onClick={(e) => {
-        e.stopPropagation();
-        onExpand(tripId, e);
-      }}
-      alignItems="center"
-      justifyContent="center"
-      flexDirection="row-reverse"
-      w="36px"
-      gap="4px"
-      p="2px 8px"
-      borderRadius="100px"
-      border="1px solid #B2DDFF"
-      cursor="pointer">
-      <Text fontSize="12px" fontWeight="500" color="#175CD3">
-        {status || 1}
-      </Text>
-      {status !== 0 && <img src="/img/statusArrow.svg" alt="" />}
-    </Flex>
-  );
-};
-
-const TripProgress = ({total_trips = 0, current_trips = 0}) => {
-  const colors = ["#FF5B04", "#00707A", "#003B63"];
-  return (
-    <Flex alignItems="center" justifyContent="flex-start" gap="6px">
-      {Array.from({length: total_trips}).map((_, index) => {
-        const isFilled = index < current_trips;
-        const color = colors[index % colors.length];
-
-        return (
-          <Box
-            key={index}
-            w="13px"
-            h="13px"
-            borderRadius="50%"
-            bg={isFilled ? color : "#E0E0E0"}
-          />
-        );
-      })}
-    </Flex>
-  );
-};
-
-const TripDriverVerification = ({trip = {}}) => {
-  const stop = trip?.stop?.[0];
-
-  return (
-    <Flex gap="24px" alignItems="center">
-      <Box w="22px" h="22px">
-        {stop?.equipment_type === "Power Only" ? (
-          trip?.is_truck_verified ? (
-            <img
-              src="/img/verifiedFullTruck.svg"
-              alt="powerOnly"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          ) : (
-            <img
-              src="/img/unverifiedFullTruck.svg"
-              alt="powerOnly"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          )
-        ) : trip?.is_truck_verified ? (
-          <img
-            src="/img/verifiedEmptyTruck.svg"
-            alt="truck"
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
-        ) : (
-          <img
-            src="/img/unverifiedEmptyTruck.svg"
-            alt="truck"
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
-        )}
-      </Box>
-
-      <Flex
-        alignItems="center"
-        justifyContent="center"
-        w="44px"
-        h="27px"
-        p="5px"
-        gap="4px"
-        bg={trip?.is_driver_verified ? "#DEFFEE" : "#EDEDED"}
-        borderRadius="16px">
-        <Box w="17px" h="17px">
-          {trip?.driver_type?.[0] === "Team" &&
-            (trip?.is_driver_verified ? (
-              <img
-                src="/img/unverifiedSecondDriver.svg"
-                alt="driver"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            ) : (
-              <img
-                src="/img/unvSecondDriver.svg"
-                alt="driver"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            ))}
-        </Box>
-        <Box w="17px" h="17px">
-          {trip?.is_driver_verified ? (
-            <img
-              src="/img/driverVerified.svg"
-              alt="driver"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          ) : (
-            <img
-              src="/img/unverifiedDriver.svg"
-              alt="driver"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          )}
-        </Box>
-      </Flex>
-    </Flex>
-  );
-};
-
-export default UpcomingTab;
+export default ActionsNeeded;

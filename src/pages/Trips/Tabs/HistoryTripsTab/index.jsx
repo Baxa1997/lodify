@@ -14,7 +14,7 @@ import GoogleMap from "./GoogleMap";
 
 function HistoryTripsTab() {
   const {id} = useParams();
-  console.log("id", id);
+
   const envId = useSelector((state) => state.auth.environmentId);
   const {control, handleSubmit, reset, watch} = useForm({
     defaultValues: {},

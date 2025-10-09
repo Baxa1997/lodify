@@ -1,8 +1,8 @@
 import React from "react";
-import {Box, Text} from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import styles from "../../MultiStepRegister.module.scss";
 
-const StepIndicator = ({steps, currentStep, handleStepChange = () => {}}) => {
+const StepIndicator = ({ steps, currentStep, handleStepChange = () => {} }) => {
   const canNavigateToStep = (stepId) => {
     return (
       stepId <= currentStep ||
@@ -14,7 +14,9 @@ const StepIndicator = ({steps, currentStep, handleStepChange = () => {}}) => {
   return (
     <Box className={styles.steps}>
       <Box mb="60px">
-        <img src="/img/logoLodify.svg" alt="" />
+        <img
+          src="/img/logoLodify.svg"
+          alt="" />
       </Box>
       {steps.map((step, index) => {
         const isCompleted = step.completed;

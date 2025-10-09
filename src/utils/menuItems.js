@@ -12,6 +12,12 @@ export const menuItems = [
     path: "trips",
   },
   {
+    id: "carriers",
+    label: "Carriers",
+    icon: "/img/user.svg",
+    path: "carriers",
+  },
+  {
     id: "user",
     label: "User",
     icon: "/img/user.svg",
@@ -64,11 +70,5 @@ export const menuItems = [
     label: "Payments",
     icon: "/img/payments.svg",
     path: "#",
-  },
-  {
-    id: "company_profile",
-    label: "Company Profile",
-    icon: "/img/profile.svg",
-    path: "company-profile",
   },
 ];

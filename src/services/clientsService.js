@@ -2,18 +2,18 @@ import httpRequest from "../utils/httpRequest";
 
 const clientsService = {
   getListShipper: () => {
-    return httpRequest.get(`v2/items/shippers`);
+    return httpRequest.get("v2/items/shippers");
   },
   getListRepresentative: () => {
-    return httpRequest.get(`v2/items/representative`);
+    return httpRequest.get("v2/items/representative");
   },
 
   createShipper: (data) => {
-    return httpRequest.post(`v2/items/shippers`, data);
+    return httpRequest.post("v2/items/shippers", data);
   },
 
   createRepresentative: (data) => {
-    return httpRequest.post(`v2/items/representative`, data);
+    return httpRequest.post("v2/items/representative", data);
   },
 
   getSingleRepresentative: (id) => {
@@ -21,7 +21,7 @@ const clientsService = {
   },
 
   updateRepresentative: (data) => {
-    return httpRequest.put(`v2/items/representative`, data);
+    return httpRequest.put("v2/items/representative", data);
   },
 
   getSingleShipper: (id) => {
@@ -29,7 +29,7 @@ const clientsService = {
   },
 
   updateShipper: (data) => {
-    return httpRequest.put(`v2/items/shippers`, data);
+    return httpRequest.put("v2/items/shippers", data);
   },
 
   deleteShipper: (id) => {

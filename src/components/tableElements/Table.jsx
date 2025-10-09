@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Box, Text, Flex, Badge, HStack, IconButton} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Text, Flex, Badge, HStack, IconButton } from "@chakra-ui/react";
 
 import {
   LuChevronUp,
@@ -28,7 +28,7 @@ const Table = ({
   variant = "simple",
   ...props
 }) => {
-  const [sortConfig, setSortConfig] = useState({key: null, direction: "asc"});
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(pageSize);
 
@@ -45,10 +45,10 @@ const Table = ({
       direction = "desc";
     }
 
-    setSortConfig({key, direction});
+    setSortConfig({ key, direction });
 
     if (onSort) {
-      onSort({key, direction});
+      onSort({ key, direction });
     }
   };
 
@@ -80,8 +80,12 @@ const Table = ({
 
     return (
       <HStack spacing={1}>
-        <LuChevronUp size={12} opacity={0.3} />
-        <LuChevronDown size={12} opacity={0.3} />
+        <LuChevronUp
+          size={12}
+          opacity={0.3} />
+        <LuChevronDown
+          size={12}
+          opacity={0.3} />
       </HStack>
     );
   };
@@ -121,8 +125,13 @@ const Table = ({
       borderColor={borderColor}
       overflow="visible"
       {...props}>
-      <Box as="table" width="100%" borderCollapse="collapse">
-        <Box as="thead" bg={headerBg}>
+      <Box
+        as="table"
+        width="100%"
+        borderCollapse="collapse">
+        <Box
+          as="thead"
+          bg={headerBg}>
           <Box as="tr">
             {columns.map((column, index) => (
               <Box
@@ -142,9 +151,11 @@ const Table = ({
                 borderColor={borderColor}
                 textAlign="left"
                 _hover={
-                  sortable && column.sortable !== false ? {bg: "gray.100"} : {}
+                  sortable && column.sortable !== false ? { bg: "gray.100" } : {}
                 }>
-                <Flex align="center" gap={2}>
+                <Flex
+                  align="center"
+                  gap={2}>
                   <Text>{column.title}</Text>
                   {getSortIcon(column.key)}
                 </Flex>
@@ -156,13 +167,21 @@ const Table = ({
         <Box as="tbody">
           {loading ? (
             <Box as="tr">
-              <Box as="td" colSpan={columns.length} textAlign="center" py={8}>
+              <Box
+                as="td"
+                colSpan={columns.length}
+                textAlign="center"
+                py={8}>
                 <Text color="gray.500">Loading...</Text>
               </Box>
             </Box>
           ) : paginatedData.length === 0 ? (
             <Box as="tr">
-              <Box as="td" colSpan={columns.length} textAlign="center" py={8}>
+              <Box
+                as="td"
+                colSpan={columns.length}
+                textAlign="center"
+                py={8}>
                 <Text color="gray.500">{emptyMessage}</Text>
               </Box>
             </Box>
@@ -171,7 +190,7 @@ const Table = ({
               <Box
                 as="tr"
                 key={item[rowKey] || rowIndex}
-                _hover={hover ? {bg: hoverBg} : {}}
+                _hover={hover ? { bg: hoverBg } : {}}
                 bg={striped && rowIndex % 2 === 1 ? "gray.50" : "transparent"}>
                 {columns.map((column, colIndex) => (
                   <Box
@@ -200,8 +219,12 @@ const Table = ({
           borderTop="1px solid"
           borderColor={borderColor}
           bg="gray.50">
-          <Flex align="center" gap={2}>
-            <Text fontSize="14px" color="gray.600">
+          <Flex
+            align="center"
+            gap={2}>
+            <Text
+              fontSize="14px"
+              color="gray.600">
               Show
             </Text>
             <Select
@@ -215,12 +238,16 @@ const Table = ({
               height="32px"
               fontSize="14px"
             />
-            <Text fontSize="14px" color="gray.600">
+            <Text
+              fontSize="14px"
+              color="gray.600">
               entries
             </Text>
           </Flex>
 
-          <Text fontSize="14px" color="gray.600">
+          <Text
+            fontSize="14px"
+            color="gray.600">
             Page {currentPage} of {totalPages}
           </Text>
 

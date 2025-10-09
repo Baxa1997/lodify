@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -21,20 +21,20 @@ import {
   FormControl,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import {AddIcon} from "@chakra-ui/icons";
-import {Controller, useFieldArray} from "react-hook-form";
+import { AddIcon } from "@chakra-ui/icons";
+import { Controller, useFieldArray } from "react-hook-form";
 
-function Accessorials({control, name, label, required}) {
-  const {isOpen, onOpen, onClose} = useDisclosure();
+function Accessorials({ control, name, label, required }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isAddOpen,
     onOpen: onAddOpen,
     onClose: onAddClose,
   } = useDisclosure();
-  const [newAccessorial, setNewAccessorial] = useState({name: "", price: 0});
+  const [newAccessorial, setNewAccessorial] = useState({ name: "", price: 0 });
   const toast = useToast();
 
-  const {fields, append, remove, update} = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: name,
   });
@@ -64,7 +64,7 @@ function Accessorials({control, name, label, required}) {
       name: newAccessorial.name,
       price: parseFloat(newAccessorial.price),
     });
-    setNewAccessorial({name: "", price: 0});
+    setNewAccessorial({ name: "", price: 0 });
     onAddClose();
   };
 
@@ -89,10 +89,16 @@ function Accessorials({control, name, label, required}) {
     <>
       <Box>
         {label && (
-          <Text mb="6px" fontSize="14px" fontWeight="500" color="#414651">
+          <Text
+            mb="6px"
+            fontSize="14px"
+            fontWeight="500"
+            color="#414651">
             {label}{" "}
             {required && (
-              <Box as="span" color="blue.500">
+              <Box
+                as="span"
+                color="blue.500">
                 *
               </Box>
             )}
@@ -109,13 +115,17 @@ function Accessorials({control, name, label, required}) {
           textAlign="left"
           justifyContent="flex-start"
           px="12px"
-          _hover={{bg: "gray.50"}}
+          _hover={{ bg: "gray.50" }}
           onClick={onOpen}>
           {getDisplayValue()}
         </Button>
       </Box>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size="xl"
+        isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader borderBottom="1px solid #E9EAEB">
@@ -123,7 +133,9 @@ function Accessorials({control, name, label, required}) {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack spacing={4} align="stretch">
+            <VStack
+              spacing={4}
+              align="stretch">
               {fields.length > 0 && (
                 <Grid
                   maxH="400px"
@@ -132,8 +144,13 @@ function Accessorials({control, name, label, required}) {
                   gap={4}>
                   {fields.map((field, index) => (
                     <Box key={field.id}>
-                      <HStack justify="space-between" mb="2">
-                        <Text fontSize="14px" fontWeight="500" color="#414651">
+                      <HStack
+                        justify="space-between"
+                        mb="2">
+                        <Text
+                          fontSize="14px"
+                          fontWeight="500"
+                          color="#414651">
                           {field.name}
                         </Text>
                       </HStack>
@@ -162,8 +179,11 @@ function Accessorials({control, name, label, required}) {
                 gap="8px"
                 border="1px solid #ffcaad"
                 bg="#fff"
-                _hover={{bg: "#fff"}}>
-                <AddIcon w="16px" h="16px" color="#EF6820" />
+                _hover={{ bg: "#fff" }}>
+                <AddIcon
+                  w="16px"
+                  h="16px"
+                  color="#EF6820" />
                 <Text color="#181D27">Reference</Text>
               </Button>
 
@@ -198,7 +218,7 @@ function Accessorials({control, name, label, required}) {
             <Button
               bg="#EF6820"
               color="white"
-              _hover={{bg: "#EF6820"}}
+              _hover={{ bg: "#EF6820" }}
               onClick={onClose}>
               Save
             </Button>
@@ -206,7 +226,11 @@ function Accessorials({control, name, label, required}) {
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={isAddOpen} onClose={onAddClose} size="sm" isCentered>
+      <Modal
+        isOpen={isAddOpen}
+        onClose={onAddClose}
+        size="sm"
+        isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add Accessorial's</ModalHeader>
@@ -214,7 +238,10 @@ function Accessorials({control, name, label, required}) {
           <ModalBody>
             <VStack spacing={4}>
               <Box w="100%">
-                <Text mb="2" fontSize="14px" fontWeight="500">
+                <Text
+                  mb="2"
+                  fontSize="14px"
+                  fontWeight="500">
                   Accessorial's
                 </Text>
                 <Input
@@ -232,14 +259,17 @@ function Accessorials({control, name, label, required}) {
                 />
               </Box>
               <Box w="100%">
-                <Text mb="2" fontSize="14px" fontWeight="500">
+                <Text
+                  mb="2"
+                  fontSize="14px"
+                  fontWeight="500">
                   Price
                 </Text>
                 <Input
                   value={`$ ${newAccessorial.price}`}
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^0-9.]/g, "");
-                    setNewAccessorial({...newAccessorial, amount: value});
+                    setNewAccessorial({ ...newAccessorial, amount: value });
                   }}
                   placeholder="$ 0"
                   size="md"
@@ -260,7 +290,7 @@ function Accessorials({control, name, label, required}) {
             <Button
               bg="#EF6820"
               color="white"
-              _hover={{bg: "#EF6820"}}
+              _hover={{ bg: "#EF6820" }}
               onClick={handleAddAccessorial}>
               Add
             </Button>
@@ -288,7 +318,7 @@ export default function HFAccessorialsField({
         required: required ? "This is a required field" : false,
         ...rules,
       }}
-      render={({field: {onChange, value}, fieldState: {error}}) => (
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl isInvalid={!!error}>
           <Accessorials
             control={control}

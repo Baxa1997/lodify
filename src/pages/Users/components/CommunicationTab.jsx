@@ -8,11 +8,11 @@ import {
   RadioGroup,
 } from "@chakra-ui/react";
 import React from "react";
-import {PhoneInput} from "react-international-phone";
+import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import Select from "../../../components/Select";
 import SaveSection from "./SaveSection";
-import {Controller} from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 const CommunicationTab = ({
   userId,
@@ -36,16 +36,25 @@ const CommunicationTab = ({
       />
 
       <Box>
-        <Flex gap="64px" p={"20px 0 24px 0"} borderBottom="1px solid #E9EAEB">
-          <Text w={"26%"} fontSize="14px" fontWeight="600" color="#181D27">
+        <Flex
+          gap="64px"
+          p={"20px 0 24px 0"}
+          borderBottom="1px solid #E9EAEB">
+          <Text
+            w={"26%"}
+            fontSize="14px"
+            fontWeight="600"
+            color="#181D27">
             Email Preferences
           </Text>
 
-          <Flex flexDir="column" gap="16px">
+          <Flex
+            flexDir="column"
+            gap="16px">
             <Controller
               name="email_preferences"
               control={control}
-              render={({field}) => (
+              render={({ field }) => (
                 <CheckBoxItem
                   title="Account Management"
                   description="Receive emails about trip offers, assignments, updates, or cancellations."
@@ -55,8 +64,8 @@ const CommunicationTab = ({
                     const newValue = e.target.checked
                       ? [...currentValue, "Account Management"]
                       : currentValue.filter(
-                          (item) => item !== "Account Management"
-                        );
+                        (item) => item !== "Account Management",
+                      );
                     field.onChange(newValue);
                   }}
                 />
@@ -65,7 +74,7 @@ const CommunicationTab = ({
             <Controller
               name="email_preferences"
               control={control}
-              render={({field}) => (
+              render={({ field }) => (
                 <CheckBoxItem
                   title="Tendered Trips"
                   description="Receive emails about trip offers, assignments, updates, or cancellations."
@@ -75,8 +84,8 @@ const CommunicationTab = ({
                     const newValue = e.target.checked
                       ? [...currentValue, "Tendered Trips"]
                       : currentValue.filter(
-                          (item) => item !== "Tendered Trips"
-                        );
+                        (item) => item !== "Tendered Trips",
+                      );
                     field.onChange(newValue);
                   }}
                 />
@@ -85,13 +94,13 @@ const CommunicationTab = ({
             <Controller
               name="email_preferences"
               control={control}
-              render={({field}) => (
+              render={({ field }) => (
                 <CheckBoxItem
                   title="In-progress trips and disruptions"
                   description="Receive notifications about in-transit issues."
                   checked={
                     field.value?.includes(
-                      "In-progress trips and disruptions"
+                      "In-progress trips and disruptions",
                     ) || false
                   }
                   onCheckboxChange={(e) => {
@@ -99,8 +108,8 @@ const CommunicationTab = ({
                     const newValue = e.target.checked
                       ? [...currentValue, "In-progress trips and disruptions"]
                       : currentValue.filter(
-                          (item) => item !== "In-progress trips and disruptions"
-                        );
+                        (item) => item !== "In-progress trips and disruptions",
+                      );
                     field.onChange(newValue);
                   }}
                 />
@@ -109,15 +118,29 @@ const CommunicationTab = ({
           </Flex>
         </Flex>
 
-        <Flex gap="64px" p={"20px 0 24px 0"} borderBottom="1px solid #E9EAEB">
-          <Text w={"26%"} fontSize="14px" fontWeight="600" color="#181D27">
+        <Flex
+          gap="64px"
+          p={"20px 0 24px 0"}
+          borderBottom="1px solid #E9EAEB">
+          <Text
+            w={"26%"}
+            fontSize="14px"
+            fontWeight="600"
+            color="#181D27">
             Phone Preferences
           </Text>
 
-          <Flex flexDir="column" gap="16px" w={"48%"}>
+          <Flex
+            flexDir="column"
+            gap="16px"
+            w={"48%"}>
             <Box>
-              <Text fontSize="14px" fontWeight="500" color="#181D27" mb="8px">
-                Phone number <span style={{color: "#1570EF"}}>*</span>
+              <Text
+                fontSize="14px"
+                fontWeight="500"
+                color="#181D27"
+                mb="8px">
+                Phone number <span style={{ color: "#1570EF" }}>*</span>
               </Text>
               <Box
                 display="flex"
@@ -175,21 +198,25 @@ const CommunicationTab = ({
             </Box>
 
             <Box>
-              <Text fontSize="14px" fontWeight="500" color="#181D27" mb="8px">
-                Phone type <span style={{color: "#1570EF"}}>*</span>
+              <Text
+                fontSize="14px"
+                fontWeight="500"
+                color="#181D27"
+                mb="8px">
+                Phone type <span style={{ color: "#1570EF" }}>*</span>
               </Text>
               <Controller
                 name="phone_type"
                 control={control}
-                render={({field}) => (
+                render={({ field }) => (
                   <Select
                     placeholder="Select phone type"
                     value={field.value?.[0] || ""}
                     options={[
-                      {value: "Mobile", label: "Mobile"},
-                      {value: "Home", label: "Home"},
-                      {value: "Work", label: "Work"},
-                      {value: "Other", label: "Other"},
+                      { value: "Mobile", label: "Mobile" },
+                      { value: "Home", label: "Home" },
+                      { value: "Work", label: "Work" },
+                      { value: "Other", label: "Other" },
                     ]}
                     onChange={(value) => field.onChange([value])}
                     borderColor="#E2E8F0"
@@ -202,8 +229,11 @@ const CommunicationTab = ({
             <Controller
               name="primary_contact_number"
               control={control}
-              render={({field}) => (
-                <Flex w="100%" gap="8px" alignItems="flex-start">
+              render={({ field }) => (
+                <Flex
+                  w="100%"
+                  gap="8px"
+                  alignItems="flex-start">
                   <Checkbox
                     mt="4px"
                     isChecked={field.value || false}
@@ -211,7 +241,10 @@ const CommunicationTab = ({
                       field.onChange(e.target.checked);
                     }}
                   />
-                  <Text fontSize="14px" fontWeight="500" color="#181D27">
+                  <Text
+                    fontSize="14px"
+                    fontWeight="500"
+                    color="#181D27">
                     Primary contact number
                   </Text>
                 </Flex>
@@ -220,17 +253,29 @@ const CommunicationTab = ({
           </Flex>
         </Flex>
 
-        <Flex gap="64px" p={"20px 0 24px 0"} borderBottom="1px solid #E9EAEB">
-          <Text w={"26%"} fontSize="14px" fontWeight="600" color="#181D27">
+        <Flex
+          gap="64px"
+          p={"20px 0 24px 0"}
+          borderBottom="1px solid #E9EAEB">
+          <Text
+            w={"26%"}
+            fontSize="14px"
+            fontWeight="600"
+            color="#181D27">
             Available hours
           </Text>
 
-          <Flex flexDir="column" gap="12px" w={"48%"}>
-            <Flex gap="16px" flexWrap="wrap">
+          <Flex
+            flexDir="column"
+            gap="12px"
+            w={"48%"}>
+            <Flex
+              gap="16px"
+              flexWrap="wrap">
               <Controller
                 name="available_hours"
                 control={control}
-                render={({field}) => (
+                render={({ field }) => (
                   <CheckBoxItem
                     title="Morning"
                     description=""
@@ -249,7 +294,7 @@ const CommunicationTab = ({
               <Controller
                 name="available_hours"
                 control={control}
-                render={({field}) => (
+                render={({ field }) => (
                   <CheckBoxItem
                     title="Afternoon"
                     description=""
@@ -268,7 +313,7 @@ const CommunicationTab = ({
               <Controller
                 name="available_hours"
                 control={control}
-                render={({field}) => (
+                render={({ field }) => (
                   <CheckBoxItem
                     title="Evening"
                     description=""
@@ -287,7 +332,7 @@ const CommunicationTab = ({
               <Controller
                 name="available_hours"
                 control={control}
-                render={({field}) => (
+                render={({ field }) => (
                   <CheckBoxItem
                     title="Night"
                     description=""
@@ -307,8 +352,13 @@ const CommunicationTab = ({
           </Flex>
         </Flex>
       </Box>
-      <Flex paddingTop={"20px"} flexDir="column">
-        <Text fontSize="18px" fontWeight="600" color="#181D27">
+      <Flex
+        paddingTop={"20px"}
+        flexDir="column">
+        <Text
+          fontSize="18px"
+          fontWeight="600"
+          color="#181D27">
           Delete user account
         </Text>
         <Button
@@ -321,9 +371,15 @@ const CommunicationTab = ({
           w={"104px"}
           border={"none"}
           bg={"none"}
-          _hover={{bg: "none"}}>
-          <img src="/img/trash.svg" width={"15px"} height={"15px"} alt="" />
-          <Text fontSize={"14px"} color={"#B42318"}>
+          _hover={{ bg: "none" }}>
+          <img
+            src="/img/trash.svg"
+            width={"15px"}
+            height={"15px"}
+            alt="" />
+          <Text
+            fontSize={"14px"}
+            color={"#B42318"}>
             Delete user
           </Text>
         </Button>
@@ -340,7 +396,10 @@ const CheckBoxItem = ({
   name,
 }) => {
   return (
-    <Flex w={"100%"} gap="8px" alignItems="flex-start">
+    <Flex
+      w={"100%"}
+      gap="8px"
+      alignItems="flex-start">
       <Checkbox
         mt="4px"
         isChecked={checked}
@@ -348,12 +407,20 @@ const CheckBoxItem = ({
         name={name}
       />
 
-      <Flex flexDir="column" gap="2px">
-        <Text fontSize={"14px"} fontWeight="600" color="#181D27">
+      <Flex
+        flexDir="column"
+        gap="2px">
+        <Text
+          fontSize={"14px"}
+          fontWeight="600"
+          color="#181D27">
           {title}
         </Text>
         {description && (
-          <Text fontSize={"14px"} color="#535862" fontWeight="400">
+          <Text
+            fontSize={"14px"}
+            color="#535862"
+            fontWeight="400">
             {description}
           </Text>
         )}

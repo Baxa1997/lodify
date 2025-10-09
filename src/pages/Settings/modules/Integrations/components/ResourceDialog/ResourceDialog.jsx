@@ -9,7 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import {Input} from "@chakra-ui/react";
+import { Input } from "@chakra-ui/react";
 
 export const ResourceDialog = ({
   isOpen,
@@ -24,14 +24,22 @@ export const ResourceDialog = ({
     isOpen;
 
   return (
-    <Modal isCentered isOpen={shouldShow} onClose={onClose}>
+    <Modal
+      isCentered
+      isOpen={shouldShow}
+      onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{content?.title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <form onSubmit={onSubmit} id="resourceForm">
-            <Box display="flex" flexDir="column" gap="16px">
+          <form
+            onSubmit={onSubmit}
+            id="resourceForm">
+            <Box
+              display="flex"
+              flexDir="column"
+              gap="16px">
               {content?.type?.[0] === "ELD" && (
                 <>
                   <Input
@@ -65,10 +73,15 @@ export const ResourceDialog = ({
           </form>
         </ModalBody>
         <ModalFooter>
-          <Button mr={3} onClick={onClose}>
+          <Button
+            mr={3}
+            onClick={onClose}>
             Close
           </Button>
-          <Button colorScheme="blue" type="submit" form="resourceForm">
+          <Button
+            colorScheme="blue"
+            type="submit"
+            form="resourceForm">
             Save
           </Button>
         </ModalFooter>

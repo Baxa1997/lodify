@@ -1,1 +1,1 @@
-export {MotiveResources} from "./MotiveResources";
+export { MotiveResources } from "./MotiveResources";

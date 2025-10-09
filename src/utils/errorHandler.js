@@ -1,5 +1,5 @@
-import {store} from "../store";
-import {showAlert} from "../store/alert/alert.thunk";
+import { store } from "../store";
+import { showAlert } from "../store/alert/alert.thunk";
 const shownErrors = new Set();
 
 export const handleError = (error) => {

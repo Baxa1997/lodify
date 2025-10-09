@@ -9,7 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import {Input} from "@chakra-ui/react";
+import { Input } from "@chakra-ui/react";
 
 export const MotiveResources = ({
   isOpen,
@@ -21,14 +21,22 @@ export const MotiveResources = ({
   const shouldShow = content?.type?.[0] === "MOTIVE" && isOpen;
 
   return (
-    <Modal isCentered isOpen={shouldShow} onClose={onClose}>
+    <Modal
+      isCentered
+      isOpen={shouldShow}
+      onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{content?.title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <form onSubmit={onSubmit} id="motiveResourceForm">
-            <Box display="flex" flexDir="column" gap="16px">
+          <form
+            onSubmit={onSubmit}
+            id="motiveResourceForm">
+            <Box
+              display="flex"
+              flexDir="column"
+              gap="16px">
               <Input
                 {...register("api_key", {
                   required: true,
@@ -41,10 +49,15 @@ export const MotiveResources = ({
           </form>
         </ModalBody>
         <ModalFooter>
-          <Button mr={3} onClick={onClose}>
+          <Button
+            mr={3}
+            onClick={onClose}>
             Close
           </Button>
-          <Button colorScheme="blue" type="submit" form="motiveResourceForm">
+          <Button
+            colorScheme="blue"
+            type="submit"
+            form="motiveResourceForm">
             Save
           </Button>
         </ModalFooter>

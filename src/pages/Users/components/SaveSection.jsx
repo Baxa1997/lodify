@@ -1,5 +1,5 @@
 import React from "react";
-import {Flex, Box, Text, Button, Spinner} from "@chakra-ui/react";
+import { Flex, Box, Text, Button, Spinner } from "@chakra-ui/react";
 
 const SaveSection = ({
   title,
@@ -18,10 +18,15 @@ const SaveSection = ({
       alignItems={"center"}
       justifyContent={"space-between"}>
       <Box>
-        <Text fontSize="18px" fontWeight="600" color="#181D27">
+        <Text
+          fontSize="18px"
+          fontWeight="600"
+          color="#181D27">
           {title}
         </Text>
-        <Text fontSize="14px" color="#535862">
+        <Text
+          fontSize="14px"
+          color="#535862">
           {description}
         </Text>
       </Box>
@@ -37,7 +42,7 @@ const SaveSection = ({
         </Button>
         <Button
           width="100px"
-          _hover={{bg: "#1570EF"}}
+          _hover={{ bg: "#1570EF" }}
           ml="12px"
           bg={"#1570EF"}
           color={"#fff"}

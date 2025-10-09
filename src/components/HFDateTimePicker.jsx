@@ -1,7 +1,7 @@
 import React from "react";
-import {Controller} from "react-hook-form";
-import {DateTimePicker} from "@mantine/dates";
-import {Box} from "@chakra-ui/react";
+import { Controller } from "react-hook-form";
+import { DateTimePicker } from "@mantine/dates";
+import { Box } from "@chakra-ui/react";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 
@@ -22,7 +22,7 @@ function HFDateTimePicker({
     <Controller
       control={control}
       name={name}
-      render={({field, fieldState: {error}}) => (
+      render={({ field, fieldState: { error } }) => (
         <Box w="100%">
           <DateTimePicker
             {...field}

@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Box, Text, VStack, Button, Flex} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Text, VStack, Button, Flex } from "@chakra-ui/react";
 
 const EmailVerification = ({
   email,
@@ -25,18 +25,32 @@ const EmailVerification = ({
   };
 
   return (
-    <Box borderRadius="12px" bg="white">
-      <VStack maxW="360px" align="start" spacing={2}>
-        <Text fontSize="18px" fontWeight="600" color="#111827">
+    <Box
+      borderRadius="12px"
+      bg="white">
+      <VStack
+        maxW="360px"
+        align="start"
+        spacing={2}>
+        <Text
+          fontSize="18px"
+          fontWeight="600"
+          color="#111827">
           Verify your Email address
         </Text>
-        <Text fontSize="16px" color="#6B7280">
+        <Text
+          fontSize="16px"
+          color="#6B7280">
           A one-time passcode (OTP) will be sent to your FMCSA email
         </Text>
 
         <Box w="100%">
-          <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
-            Email address <span style={{color: "#EF6820"}}>*</span>
+          <Text
+            fontSize="14px"
+            fontWeight="500"
+            color="#414651"
+            mb={2}>
+            Email address <span style={{ color: "#EF6820" }}>*</span>
           </Text>
           <Text
             fontSize="16px"
@@ -54,7 +68,7 @@ const EmailVerification = ({
           h="44px"
           bg="#EF6820"
           color="white"
-          _hover={{bg: "#EF6820"}}
+          _hover={{ bg: "#EF6820" }}
           borderRadius="8px"
           onClick={handleSendEmailCode}
           isLoading={isLoading}
@@ -62,8 +76,15 @@ const EmailVerification = ({
           Send Code
         </Button>
 
-        <Flex align="center" gap="8px" justify="center" w="100%" mt={4}>
-          <img src="/img/backArrow.svg" alt="arrow-left" />
+        <Flex
+          align="center"
+          gap="8px"
+          justify="center"
+          w="100%"
+          mt={4}>
+          <img
+            src="/img/backArrow.svg"
+            alt="arrow-left" />
           <Text
             fontSize="16px"
             color="#6B7280"

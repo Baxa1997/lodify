@@ -1,6 +1,6 @@
-import React, {useState, useRef, useEffect, memo} from "react";
-import {Box, Text, VStack, HStack} from "@chakra-ui/react";
-import {LuChevronDown, LuCheck, LuX} from "react-icons/lu";
+import React, { useState, useRef, useEffect, memo } from "react";
+import { Box, Text, VStack, HStack } from "@chakra-ui/react";
+import { LuChevronDown, LuCheck, LuX } from "react-icons/lu";
 
 const MultiSelect = ({
   placeholder = "Select options",
@@ -81,18 +81,18 @@ const MultiSelect = ({
     if (customSize) return customSize;
 
     switch (size) {
-      case "xs":
-        return {height: "28px", py: "4px", px: "8px", fontSize: "12px"};
-      case "sm":
-        return {height: "32px", py: "6px", px: "12px", fontSize: "14px"};
-      case "md":
-        return {height: "40px", py: "8px", px: "16px", fontSize: "16px"};
-      case "lg":
-        return {height: "48px", py: "12px", px: "20px", fontSize: "18px"};
-      case "xl":
-        return {height: "56px", py: "14px", px: "24px", fontSize: "20px"};
-      default:
-        return {height: "40px", py: "8px", px: "16px", fontSize: "16px"};
+    case "xs":
+      return { height: "28px", py: "4px", px: "8px", fontSize: "12px" };
+    case "sm":
+      return { height: "32px", py: "6px", px: "12px", fontSize: "14px" };
+    case "md":
+      return { height: "40px", py: "8px", px: "16px", fontSize: "16px" };
+    case "lg":
+      return { height: "48px", py: "12px", px: "20px", fontSize: "18px" };
+    case "xl":
+      return { height: "56px", py: "14px", px: "24px", fontSize: "20px" };
+    default:
+      return { height: "40px", py: "8px", px: "16px", fontSize: "16px" };
     }
   };
 
@@ -110,13 +110,18 @@ const MultiSelect = ({
           htmlFor={name}>
           {label}
           {isRequired && (
-            <Box as="span" color="blue.500">
+            <Box
+              as="span"
+              color="blue.500">
               *
             </Box>
           )}
         </Box>
       )}
-      <Box position="relative" ref={dropdownRef} {...props}>
+      <Box
+        position="relative"
+        ref={dropdownRef}
+        {...props}>
         <Box
           ref={selectRef}
           onClick={handleToggle}
@@ -127,8 +132,8 @@ const MultiSelect = ({
             isInvalid
               ? errorBorderColor
               : isFocused || isOpen
-              ? focusBorderColor
-              : borderColor
+                ? focusBorderColor
+                : borderColor
           }
           color={color}
           borderRadius="8px"
@@ -162,7 +167,10 @@ const MultiSelect = ({
                 borderRadius="8px"
                 px="8px"
                 py="2px">
-                <Text color="#414651" fontWeight={500} fontSize="14px">
+                <Text
+                  color="#414651"
+                  fontWeight={500}
+                  fontSize="14px">
                   {opt.label}
                 </Text>
                 <Box
@@ -217,7 +225,9 @@ const MultiSelect = ({
             overflowY="auto"
             mt={dropdownPosition === "top" ? "0" : "2px"}
             mb={dropdownPosition === "top" ? "2px" : "0"}>
-            <VStack spacing={0} align="stretch">
+            <VStack
+              spacing={0}
+              align="stretch">
               {options.length > 0 ? (
                 options.map((option, index) => (
                   <Box
@@ -235,7 +245,9 @@ const MultiSelect = ({
                       bg: option.isDisabled ? "transparent" : "gray.50",
                     }}
                     transition="all 0.2s ease">
-                    <HStack justify="space-between" align="center">
+                    <HStack
+                      justify="space-between"
+                      align="center">
                       <Text fontSize="16px">{option.label}</Text>
                       {value.includes(option.value) && (
                         <LuCheck
@@ -247,7 +259,11 @@ const MultiSelect = ({
                   </Box>
                 ))
               ) : (
-                <Box px="16px" py="8px" color="gray.500" textAlign="center">
+                <Box
+                  px="16px"
+                  py="8px"
+                  color="gray.500"
+                  textAlign="center">
                   <Text fontSize="16px">No options</Text>
                 </Box>
               )}

@@ -1,5 +1,5 @@
 import React from "react";
-import {Box} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 const CTableRow = ({
   children,
@@ -9,7 +9,11 @@ const CTableRow = ({
   ...props
 }) => {
   return (
-    <Box as="tr" _hover={hover ? {bg: "gray.50"} : {}} bg={"#fff"} {...props}>
+    <Box
+      as="tr"
+      _hover={hover ? { bg: "gray.50" } : {}}
+      bg={"#fff"}
+      {...props}>
       {children}
     </Box>
   );

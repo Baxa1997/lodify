@@ -1,16 +1,16 @@
-import React, {useState} from "react";
-import {Flex, Button, HStack, Icon} from "@chakra-ui/react";
-import {Box} from "@chakra-ui/react";
-import {Text} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Flex, Button, HStack, Icon } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import HFTextField from "../../../../components/HFTextField";
 import HFMultiSelect from "../../../../components/HFMultiSelect";
 import Accessorials from "../Accessorials";
 import HFFilesField from "../../../../components/HFFilesField";
 import AddReferenceModal from "./AddReferenceModal";
 import HFSelect from "@components/HFSelect";
-import {AddIcon} from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 
-function ThirdSection({control}) {
+function ThirdSection({ control }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [references, setReferences] = useState([]);
 
@@ -33,8 +33,14 @@ function ThirdSection({control}) {
       gap="24px"
       borderRadius="12px"
       p="24px">
-      <Flex flexDirection="row" gap={"24px"}>
-        <Flex w={"100%"} alignItems="center" gap="24px" flexDirection="column">
+      <Flex
+        flexDirection="row"
+        gap={"24px"}>
+        <Flex
+          w={"100%"}
+          alignItems="center"
+          gap="24px"
+          flexDirection="column">
           <Text
             width={"100%"}
             textAlign="left"
@@ -92,7 +98,11 @@ function ThirdSection({control}) {
             />
           </Box>
         </Flex>
-        <Flex w={"100%"} alignItems="center" gap="24px" flexDirection="column">
+        <Flex
+          w={"100%"}
+          alignItems="center"
+          gap="24px"
+          flexDirection="column">
           <Text
             width={"100%"}
             textAlign="left"
@@ -143,7 +153,11 @@ function ThirdSection({control}) {
             />
           </Box>
         </Flex>
-        <Flex w={"100%"} alignItems="center" gap="24px" flexDirection="column">
+        <Flex
+          w={"100%"}
+          alignItems="center"
+          gap="24px"
+          flexDirection="column">
           <Text
             width={"100%"}
             textAlign="left"
@@ -203,7 +217,10 @@ function ThirdSection({control}) {
         </Flex>
       </Flex>
 
-      <Box mt="24px" display="flex" justifyContent="flex-start">
+      <Box
+        mt="24px"
+        display="flex"
+        justifyContent="flex-start">
         <Button
           display="flex"
           alignItems="center"
@@ -211,9 +228,12 @@ function ThirdSection({control}) {
           gap="8px"
           border="1px solid #ffcaad"
           bg="#fff"
-          _hover={{bg: "#fff"}}
+          _hover={{ bg: "#fff" }}
           onClick={handleModalOpen}>
-          <AddIcon w="16px" h="16px" color="#EF6820" />
+          <AddIcon
+            w="16px"
+            h="16px"
+            color="#EF6820" />
           <Text color="#181D27">Reference</Text>
         </Button>
       </Box>

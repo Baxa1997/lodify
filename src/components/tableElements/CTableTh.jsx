@@ -1,6 +1,6 @@
-import React, {memo} from "react";
-import {Box, Flex, Text, HStack} from "@chakra-ui/react";
-import {LuChevronUp, LuChevronDown} from "react-icons/lu";
+import React, { memo } from "react";
+import { Box, Flex, Text, HStack } from "@chakra-ui/react";
+import { LuChevronUp, LuChevronDown } from "react-icons/lu";
 
 const CTableTh = ({
   children,
@@ -20,7 +20,11 @@ const CTableTh = ({
     if (!sortable) return null;
 
     return (
-      <Flex flexDirection="column" spacing={0} align="center" gap={0}>
+      <Flex
+        flexDirection="column"
+        spacing={0}
+        align="center"
+        gap={0}>
         <LuChevronUp
           size={12}
           color={sortDirection === "asc" ? "#6B7280" : "#A4A7AE"}
@@ -28,7 +32,7 @@ const CTableTh = ({
         <LuChevronDown
           size={12}
           color={sortDirection === "desc" ? "#6B7280" : "#A4A7AE"}
-          style={{marginTop: "-2px"}}
+          style={{ marginTop: "-2px" }}
         />
       </Flex>
     );
@@ -54,11 +58,18 @@ const CTableTh = ({
       width={width}
       maxW={maxW}
       whiteSpace="nowrap"
-      _hover={sortable ? {bg: "gray.100"} : {}}
+      _hover={sortable ? { bg: "gray.100" } : {}}
       transition="all 0.2s ease"
       {...props}>
-      <Flex align="center" gap="8px" width="100%">
-        <Text fontSize="14px" fontWeight="600" color="#1E293B" noOfLines={1}>
+      <Flex
+        align="center"
+        gap="8px"
+        width="100%">
+        <Text
+          fontSize="14px"
+          fontWeight="600"
+          color="#1E293B"
+          noOfLines={1}>
           {children}
         </Text>
         {getSortIcon()}

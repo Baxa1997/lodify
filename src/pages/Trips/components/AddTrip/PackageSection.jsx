@@ -1,25 +1,34 @@
-import React, {useState} from "react";
-import {Box, Flex, Text, Radio, RadioGroup, Stack} from "@chakra-ui/react";
-import {Controller} from "react-hook-form";
-import {useQuery} from "@tanstack/react-query";
+import React, { useState } from "react";
+import { Box, Flex, Text, Radio, RadioGroup, Stack } from "@chakra-ui/react";
+import { Controller } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 import tripsService from "@services/tripsService";
-import {htmlToString} from "@utils/htmlToString";
+import { htmlToString } from "@utils/htmlToString";
 
-const PackageSection = ({control, setValue}) => {
+const PackageSection = ({ control, setValue }) => {
   const [selectedPackage, setSelectedPackage] = useState("");
 
-  const {data: packageList, isLoading} = useQuery({
+  const { data: packageList, isLoading } = useQuery({
     queryKey: ["GET_PACKAGE_LIST"],
     queryFn: () => tripsService.getPackageList(),
     select: (res) => res?.data?.response ?? [],
   });
 
   return (
-    <Box mb="32px" mt="24px">
-      <Text fontSize="24px" fontWeight="600" color="#181D27" mb="8px">
+    <Box
+      mb="32px"
+      mt="24px">
+      <Text
+        fontSize="24px"
+        fontWeight="600"
+        color="#181D27"
+        mb="8px">
         Choose the Right Plan for Your Freight
       </Text>
-      <Text fontSize="16px" color="#717680" mb="24px">
+      <Text
+        fontSize="16px"
+        color="#717680"
+        mb="24px">
         From standard shipments to high-value cargo, Lodify offers tiered
         protection to fit your needs.
       </Text>
@@ -28,14 +37,16 @@ const PackageSection = ({control, setValue}) => {
         name="lodify_fees_id"
         control={control}
         defaultValue=""
-        render={({field}) => (
+        render={({ field }) => (
           <RadioGroup
             value={field.value}
             onChange={(value) => {
               field.onChange(value);
               setSelectedPackage(value);
             }}>
-            <Flex gap="16px" flexWrap="wrap">
+            <Flex
+              gap="16px"
+              flexWrap="wrap">
               {packageList?.map((pkg) => (
                 <Box
                   key={pkg.guid}
@@ -81,7 +92,9 @@ const PackageSection = ({control, setValue}) => {
                     h="40px"
                     bg={"transparent"}
                     borderRadius="8px">
-                    <img src={pkg?.image_url} alt="" />
+                    <img
+                      src={pkg?.image_url}
+                      alt="" />
                   </Box>
 
                   <Text

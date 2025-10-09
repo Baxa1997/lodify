@@ -1,13 +1,13 @@
 import React from "react";
-import {Controller} from "react-hook-form";
-import {Switch} from "@chakra-ui/react";
+import { Controller } from "react-hook-form";
+import { Switch } from "@chakra-ui/react";
 
-function HFSwitch({control, name, ...props}) {
+function HFSwitch({ control, name, ...props }) {
   return (
     <Controller
       control={control}
       name={name}
-      render={({field}) => (
+      render={({ field }) => (
         <Switch
           value={field.value}
           {...field}

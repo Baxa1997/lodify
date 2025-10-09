@@ -28,6 +28,7 @@ export const colors = {
     "border-main": "#E9EAEB",
   },
   success: {
+    500: "#17B26A",
     600: "#079455",
   },
   error: {

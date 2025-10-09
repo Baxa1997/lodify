@@ -1,7 +1,7 @@
-import React, {memo} from "react";
-import {Box, Spinner, Center, Text} from "@chakra-ui/react";
+import React, { memo } from "react";
+import { Box, Spinner, Center, Text } from "@chakra-ui/react";
 
-const ContentLoader = ({message = "Loading..."}) => {
+const ContentLoader = ({ message = "Loading..." }) => {
   return (
     <Box
       position="absolute"
@@ -22,7 +22,10 @@ const ContentLoader = ({message = "Loading..."}) => {
           color="blue.500"
           size="xl"
         />
-        <Text mt={4} color="gray.600" fontSize="sm">
+        <Text
+          mt={4}
+          color="gray.600"
+          fontSize="sm">
           {message}
         </Text>
       </Center>

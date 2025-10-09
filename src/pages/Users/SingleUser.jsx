@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from "react";
-import {useParams, useNavigate} from "react-router-dom";
-import {useForm} from "react-hook-form";
-import {Box, Flex, Text, Button} from "@chakra-ui/react";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Box, Flex, Text, Button } from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
 import styles from "../../styles/tabs.module.scss";
 import AccountTab from "./components/AccountTab";
@@ -13,7 +13,7 @@ import PermissionsTab from "./components/PermissionsTab";
 import usersService from "../../services/usersService";
 
 const SingleUser = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -37,7 +37,7 @@ const SingleUser = () => {
     reset,
     watch,
     setValue,
-    formState: {errors, isDirty},
+    formState: { errors, isDirty },
   } = useForm({
     defaultValues: {
       full_name: "",
@@ -91,9 +91,9 @@ const SingleUser = () => {
   const deleteUser = (id) => {
     setDeleteLoading(true);
     usersService
-      .deleteUser(id, {data: {}})
+      .deleteUser(id, { data: {} })
       .then((res) => {
-        queryClient.refetchQueries({queryKey: ["GET_USERS_LIST"]});
+        queryClient.refetchQueries({ queryKey: ["GET_USERS_LIST"] });
         navigate("/admin/users");
       })
       .finally(() => {
@@ -125,7 +125,7 @@ const SingleUser = () => {
         reset(response?.data);
         console.log("User updated successfully:", response);
 
-        queryClient.invalidateQueries({queryKey: ["user", id]});
+        queryClient.invalidateQueries({ queryKey: ["user", id] });
       })
       .catch((error) => {
         console.error("Error updating user:", error);
@@ -149,11 +149,13 @@ const SingleUser = () => {
 
   if (loading) {
     return (
-      <Flex flexDir={"column"} gap={"20px"}>
+      <Flex
+        flexDir={"column"}
+        gap={"20px"}>
         <HeadBreadCrumb
           customPath={[
-            {label: "Account", path: `/admin/users/${id}`},
-            {label: "Users", path: "/admin/users"},
+            { label: "Account", path: `/admin/users/${id}` },
+            { label: "Users", path: "/admin/users" },
           ]}
         />
         <Box>Loading...</Box>
@@ -163,11 +165,13 @@ const SingleUser = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Flex flexDir={"column"} gap={"20px"}>
+      <Flex
+        flexDir={"column"}
+        gap={"20px"}>
         <HeadBreadCrumb
           customPath={[
-            {label: "Account", path: `/admin/users/${id}`},
-            {label: "Users", path: "/admin/users"},
+            { label: "Account", path: `/admin/users/${id}` },
+            { label: "Users", path: "/admin/users" },
           ]}
         />
 

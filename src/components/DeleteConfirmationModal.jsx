@@ -13,7 +13,7 @@ import {
   useColorModeValue,
   Flex,
 } from "@chakra-ui/react";
-import {WarningIcon} from "@chakra-ui/icons";
+import { WarningIcon } from "@chakra-ui/icons";
 
 const DeleteConfirmationModal = ({
   isOpen,
@@ -28,14 +28,22 @@ const DeleteConfirmationModal = ({
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="sm"
+      isCentered>
       <ModalOverlay bg="rgba(0, 0, 0, 0.5)" />
       <ModalContent
         bg={bgColor}
         borderRadius="12px"
         boxShadow="0px 4px 20px rgba(0, 0, 0, 0.15)">
-        <ModalHeader borderBottom={`1px solid ${borderColor}`} pb={4}>
-          <VStack spacing={1} align="center">
+        <ModalHeader
+          borderBottom={`1px solid ${borderColor}`}
+          pb={4}>
+          <VStack
+            spacing={1}
+            align="center">
             <Icon
               as={WarningIcon}
               w={12}
@@ -48,7 +56,9 @@ const DeleteConfirmationModal = ({
           </VStack>
         </ModalHeader>
 
-        <ModalBody py={1} px={1}>
+        <ModalBody
+          py={1}
+          px={1}>
           <Text
             fontSize="14px"
             color="gray.600"
@@ -58,7 +68,10 @@ const DeleteConfirmationModal = ({
           </Text>
         </ModalBody>
 
-        <ModalFooter borderTop={`1px solid ${borderColor}`} pt={4} gap={3}>
+        <ModalFooter
+          borderTop={`1px solid ${borderColor}`}
+          pt={4}
+          gap={3}>
           <Flex
             w="100%"
             justifyContent="space-between"

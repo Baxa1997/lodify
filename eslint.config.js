@@ -26,6 +26,7 @@ export default defineConfig([
       "object-curly-spacing": ["error", "always"],
       "react/jsx-max-props-per-line": ["error", { maximum: 1 }],
       "react/jsx-first-prop-new-line": ["error", "multiline"],
+      "react/jsx-closing-bracket-location": [1, "line-aligned"],
     },
     settings: {
       react: { version: "detect" },

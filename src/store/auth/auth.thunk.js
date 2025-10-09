@@ -1,12 +1,12 @@
-import {createAsyncThunk} from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../../services/auth/authService";
-import {authActions} from "./auth.slice";
-import {store} from "..";
-import {companyActions} from "../company/company.slice";
+import { authActions } from "./auth.slice";
+import { store } from "..";
+import { companyActions } from "../company/company.slice";
 
 export const loginAction = createAsyncThunk(
   "auth/login",
-  async (data, {dispatch}) => {
+  async (data, { dispatch }) => {
     try {
       const res = await authService.login(data);
       dispatch(
@@ -14,7 +14,7 @@ export const loginAction = createAsyncThunk(
           ...res,
           project_id: data.project_id,
           environment_ids: data?.environment_ids,
-        })
+        }),
       );
       dispatch(companyActions.setCompanyId(res?.user?.company_id));
       dispatch(companyActions.setProjectId(data.project_id));
@@ -34,7 +34,7 @@ export const loginAction = createAsyncThunk(
           {
             project_id:
               data.project_id || "7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1",
-          }
+          },
         )
         .then((res) => {
           store.dispatch(authActions.setTokens(res));
@@ -56,5 +56,5 @@ export const loginAction = createAsyncThunk(
       throw new Error(error);
       // dispatch(showAlert('Username or password is incorrect'))
     }
-  }
+  },
 );

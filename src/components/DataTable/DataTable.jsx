@@ -12,9 +12,9 @@ import {
   Spinner,
   Center,
 } from "@chakra-ui/react";
-import {useState} from "react";
+import { useState } from "react";
 import SimplePagination from "@components/SimplePagination";
-import {ChevronRightIcon, ChevronDownIcon} from "@chakra-ui/icons";
+import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
 
 export const DataTable = ({
   headData = [],
@@ -41,7 +41,10 @@ export const DataTable = ({
   };
 
   return (
-    <Box overflow={"auto"} {...props}>
+    <Box
+      overflow={"auto"}
+      {...props}
+    >
       <Table variant="simple">
         {caption && <TableCaption>{caption}</TableCaption>}
         <Thead
@@ -50,7 +53,8 @@ export const DataTable = ({
           borderColor="gray.200"
           position="sticky"
           top="0"
-          zIndex="1">
+          zIndex="1"
+        >
           <Tr>
             {headData?.map((head, index) => (
               <Th
@@ -60,14 +64,20 @@ export const DataTable = ({
                 color="gray.900"
                 fontWeight={"600"}
                 fontSize={"12px"}
-                {...head.thProps}>
-                <Box display="flex" alignItems="center" gap="6px">
+                {...head.thProps}
+              >
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap="6px"
+                >
                   {head.label}
                   {head?.infoText && (
                     <Tooltip
                       placement="top"
                       flexShrink="0"
-                      label={head.infoText}>
+                      label={head.infoText}
+                    >
                       <img
                         src="/img/info.svg"
                         width="14"
@@ -85,8 +95,14 @@ export const DataTable = ({
           {isLoading ? (
             <Tr>
               <Td colSpan={headData.length}>
-                <Center h="calc(100vh - 420px)" py={8}>
-                  <Spinner size="lg" color="blue.500" />
+                <Center
+                  h="calc(100vh - 420px)"
+                  py={8}
+                >
+                  <Spinner
+                    size="lg"
+                    color="blue.500"
+                  />
                 </Center>
               </Td>
             </Tr>
@@ -102,8 +118,13 @@ export const DataTable = ({
                           padding="8px 6px"
                           width={"180px"}
                           fontWeight={"400"}
-                          fontSize={"14px"}>
-                          <Box display="flex" alignItems="center" gap="6px">
+                          fontSize={"14px"}
+                        >
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap="6px"
+                          >
                             {head?.render
                               ? head.render(row[head.key], row, head, rowIndex)
                               : row[head.key]}
@@ -114,9 +135,13 @@ export const DataTable = ({
                                 alignItems="center"
                                 justifyContent="center"
                                 width="20px"
-                                height="20px">
+                                height="20px"
+                              >
                                 {expandedRows.has(rowIndex) ? (
-                                  <ChevronDownIcon width="20px" height="20px" />
+                                  <ChevronDownIcon
+                                    width="20px"
+                                    height="20px"
+                                  />
                                 ) : (
                                   <ChevronRightIcon
                                     width="20px"
@@ -138,16 +163,17 @@ export const DataTable = ({
                         width={"180px"}
                         fontWeight={"400"}
                         fontSize={"14px"}
-                        {...head.tdProps}>
+                        {...head.tdProps}
+                      >
                         {head?.render
                           ? head.render(
-                              row[head.key],
-                              row,
-                              head,
-                              rowIndex,
-                              false,
-                              null
-                            )
+                            row[head.key],
+                            row,
+                            head,
+                            rowIndex,
+                            false,
+                            null,
+                          )
                           : row[head.key]}
                       </Td>
                     );
@@ -165,20 +191,22 @@ export const DataTable = ({
                           width={"180px"}
                           fontWeight={"400"}
                           fontSize={"14px"}
-                          {...head.tdProps}>
+                          {...head.tdProps}
+                        >
                           <Box
                             paddingLeft={colIndex === 0 ? "32px" : "0"}
                             display="flex"
-                            alignItems="center">
+                            alignItems="center"
+                          >
                             {head?.render
                               ? head.render(
-                                  child[head.key],
-                                  child,
-                                  head,
-                                  childIndex,
-                                  true, // isChild
-                                  rowIndex // parentIndex
-                                )
+                                child[head.key],
+                                child,
+                                head,
+                                childIndex,
+                                true, // isChild
+                                rowIndex, // parentIndex
+                              )
                               : child[head.key]}
                           </Box>
                         </Td>
@@ -192,7 +220,10 @@ export const DataTable = ({
       </Table>
       {pagination && (
         <Box width="100%">
-          <Box padding="12px 24px" width="100%">
+          <Box
+            padding="12px 24px"
+            width="100%"
+          >
             <SimplePagination
               limit={limit}
               setLimit={setLimit}

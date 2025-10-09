@@ -1,1 +1,0 @@
-export { ValidateEquipment } from "./ValidateEquipment";

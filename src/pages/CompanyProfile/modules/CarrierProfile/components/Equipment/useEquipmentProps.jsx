@@ -1,6 +1,6 @@
 import CustomBadge from "../../../../../../components/CustomBadge/CustomBadge";
 
-export const useValidateEquipmentProps = () => {
+export const useEquipmentProps = () => {
   const headData = [
     {
       label: "VIN",
@@ -12,7 +12,8 @@ export const useValidateEquipmentProps = () => {
       render: (data) => {
         return <CustomBadge
           withBgColor
-          variant="success">{data}</CustomBadge>;
+          variant="success"
+        >{data}</CustomBadge>;
       },
     },
     {

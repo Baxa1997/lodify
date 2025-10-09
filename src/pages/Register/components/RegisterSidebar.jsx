@@ -1,9 +1,9 @@
 import React from "react";
-import {Box, Text} from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import StepIndicator from "./navigation/StepIndicator";
 import styles from "../MultiStepRegister.module.scss";
 
-const RegisterSidebar = ({steps, currentStep, handleStepChange = () => {}}) => {
+const RegisterSidebar = ({ steps, currentStep, handleStepChange = () => {} }) => {
   return (
     <Box className={styles.sidebar}>
       <StepIndicator

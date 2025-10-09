@@ -1,5 +1,5 @@
 import React from "react";
-import {Tabs, TabList, Tab, TabPanel} from "react-tabs";
+import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import styles from "../../../../styles/tabs.module.scss";
 import OverViewTab from "./OverViewTab";
 const TabsSection = () => {

@@ -10,12 +10,12 @@ import {
   Divider,
   Tooltip,
 } from "@chakra-ui/react";
-import React, {useState} from "react";
-import {useQuery} from "@tanstack/react-query";
-import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {format, isValid} from "date-fns";
-import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { format, isValid } from "date-fns";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import tripsService from "@services/tripsService";
 import tableElements from "../../components/mockElements";
 import {
@@ -27,14 +27,14 @@ import {
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
-import {formatDate} from "@utils/dateFormats";
+import { formatDate } from "@utils/dateFormats";
 import TripRowDetails from "./TripRowDetails";
 
 function UpcomingTab() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
+  const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedRows, setExpandedRows] = useState(new Set());
   const envId = useSelector((state) => state.auth.environmentId);
@@ -150,7 +150,8 @@ function UpcomingTab() {
           totalPages={totalPages}
           pageSize={pageSize}
           onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}>
+          onPageSizeChange={handlePageSizeChange}
+        >
           <CTableHead zIndex={999999}>
             <Box as={"tr"}>
               {tableElements.map((element) => (
@@ -162,7 +163,8 @@ function UpcomingTab() {
                     sortConfig.key === element.key ? sortConfig.direction : null
                   }
                   key={element.id}
-                  onSort={() => handleSort(element.key)}>
+                  onSort={() => handleSort(element.key)}
+                >
                   {element.name}
                 </CTableTh>
               ))}
@@ -175,7 +177,8 @@ function UpcomingTab() {
                 <CTableTd
                   colSpan={tableElements.length}
                   textAlign="center"
-                  py={8}>
+                  py={8}
+                >
                   Loading trips...
                 </CTableTd>
               </CTableRow>
@@ -185,7 +188,8 @@ function UpcomingTab() {
                   colSpan={tableElements.length}
                   textAlign="center"
                   py={8}
-                  color="red.500">
+                  color="red.500"
+                >
                   Error loading trips: {error?.message || "Unknown error"}
                 </CTableTd>
               </CTableRow>
@@ -194,7 +198,8 @@ function UpcomingTab() {
                 <CTableTd
                   colSpan={tableElements.length}
                   textAlign="center"
-                  py={8}>
+                  py={8}
+                >
                   No trips found
                 </CTableTd>
               </CTableRow>
@@ -210,7 +215,8 @@ function UpcomingTab() {
                       }}
                       onClick={(e) =>
                         toggleRowExpansion(trip.id || trip.guid, e)
-                      }>
+                      }
+                    >
                       <CTableTd>
                         <Tooltip
                           hasArrow
@@ -220,18 +226,24 @@ function UpcomingTab() {
                               bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                               color="white"
                               borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
+                              minW="180px"
+                            >
+                              <VStack
+                                spacing={1}
+                                align="start"
+                              >
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).companyName}
                                 </Text>
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).customer}
                                 </Text>
                               </VStack>
@@ -239,11 +251,13 @@ function UpcomingTab() {
                           }
                           placement="bottom-start"
                           bg="transparent"
-                          openDelay={300}>
+                          openDelay={300}
+                        >
                           <Text
                             cursor="pointer"
-                            _hover={{textDecoration: "underline"}}
-                            color="#181D27">
+                            _hover={{ textDecoration: "underline" }}
+                            color="#181D27"
+                          >
                             {trip.shipper?.name || ""}
                           </Text>
                         </Tooltip>
@@ -252,7 +266,8 @@ function UpcomingTab() {
                         <Flex
                           gap="24px"
                           alignItems="center"
-                          justifyContent="space-between">
+                          justifyContent="space-between"
+                        >
                           <Tooltip
                             hasArrow
                             label={
@@ -261,18 +276,24 @@ function UpcomingTab() {
                                 bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                                 color="white"
                                 borderRadius="md"
-                                minW="180px">
-                                <VStack spacing={1} align="start">
+                                minW="180px"
+                              >
+                                <VStack
+                                  spacing={1}
+                                  align="start"
+                                >
                                   <Text
                                     fontSize="14px"
                                     fontWeight="600"
-                                    color="white">
+                                    color="white"
+                                  >
                                     {getCustomerInfo(trip).companyName}
                                   </Text>
                                   <Text
                                     fontSize="14px"
                                     fontWeight="600"
-                                    color="white">
+                                    color="white"
+                                  >
                                     {getCustomerInfo(trip).customer}
                                   </Text>
                                 </VStack>
@@ -280,11 +301,13 @@ function UpcomingTab() {
                             }
                             placement="bottom-start"
                             bg="transparent"
-                            openDelay={300}>
+                            openDelay={300}
+                          >
                             <Text
                               color="#181D27"
                               cursor="pointer"
-                              _hover={{textDecoration: "underline"}}>
+                              _hover={{ textDecoration: "underline" }}
+                            >
                               {trip.id || ""}
                             </Text>
                           </Tooltip>
@@ -300,7 +323,8 @@ function UpcomingTab() {
                         <Flex
                           alignItems="center"
                           gap="16px"
-                          justifyContent="space-between">
+                          justifyContent="space-between"
+                        >
                           <Box>
                             <Tooltip
                               hasArrow
@@ -310,18 +334,24 @@ function UpcomingTab() {
                                   bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                                   color="white"
                                   borderRadius="md"
-                                  minW="180px">
-                                  <VStack spacing={1} align="start">
+                                  minW="180px"
+                                >
+                                  <VStack
+                                    spacing={1}
+                                    align="start"
+                                  >
                                     <Text
                                       fontSize="14px"
                                       fontWeight="600"
-                                      color="white">
+                                      color="white"
+                                    >
                                       {getCustomerInfo(trip).companyName}
                                     </Text>
                                     <Text
                                       fontSize="14px"
                                       fontWeight="600"
-                                      color="white">
+                                      color="white"
+                                    >
                                       {getCustomerInfo(trip).customer}
                                     </Text>
                                   </VStack>
@@ -329,7 +359,8 @@ function UpcomingTab() {
                               }
                               placement="bottom-start"
                               bg="transparent"
-                              openDelay={300}>
+                              openDelay={300}
+                            >
                               <>
                                 {" "}
                                 <Text
@@ -338,14 +369,15 @@ function UpcomingTab() {
                                   fontWeight="500"
                                   color="#181D27"
                                   cursor="pointer"
-                                  _hover={{textDecoration: "underline"}}>
+                                  _hover={{ textDecoration: "underline" }}
+                                >
                                   {`${trip.origin?.[0]?.address ?? ""} / ${
                                     trip?.origin?.[0]?.address_2 ?? ""
                                   }` || ""}
                                 </Text>
                                 <Text h="20px">
                                   {formatDate(
-                                    trip?.origin?.[0]?.depart_at ?? ""
+                                    trip?.origin?.[0]?.depart_at ?? "",
                                   )}
                                 </Text>
                               </>
@@ -359,7 +391,8 @@ function UpcomingTab() {
                           <Flex
                             gap="16px"
                             alignItems="center"
-                            justifyContent="space-between">
+                            justifyContent="space-between"
+                          >
                             <Box>
                               <Tooltip
                                 label={
@@ -368,18 +401,24 @@ function UpcomingTab() {
                                     bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                                     color="white"
                                     borderRadius="md"
-                                    minW="180px">
-                                    <VStack spacing={1} align="start">
+                                    minW="180px"
+                                  >
+                                    <VStack
+                                      spacing={1}
+                                      align="start"
+                                    >
                                       <Text
                                         fontSize="14px"
                                         fontWeight="600"
-                                        color="white">
+                                        color="white"
+                                      >
                                         {getCustomerInfo(trip).companyName}
                                       </Text>
                                       <Text
                                         fontSize="14px"
                                         fontWeight="600"
-                                        color="white">
+                                        color="white"
+                                      >
                                         {getCustomerInfo(trip).customer}
                                       </Text>
                                     </VStack>
@@ -387,14 +426,16 @@ function UpcomingTab() {
                                 }
                                 placement="bottom-start"
                                 bg="transparent"
-                                openDelay={300}>
+                                openDelay={300}
+                              >
                                 <Text
                                   h="20px"
                                   fontSize="14px"
                                   fontWeight="500"
                                   color="#181D27"
                                   cursor="pointer"
-                                  _hover={{textDecoration: "underline"}}>
+                                  _hover={{ textDecoration: "underline" }}
+                                >
                                   {`${trip.stop?.[0]?.address ?? ""} / ${
                                     trip?.stop?.[0]?.address_2 ?? ""
                                   }` || ""}
@@ -416,18 +457,24 @@ function UpcomingTab() {
                               bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                               color="white"
                               borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
+                              minW="180px"
+                            >
+                              <VStack
+                                spacing={1}
+                                align="start"
+                              >
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).companyName}
                                 </Text>
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).customer}
                                 </Text>
                               </VStack>
@@ -435,11 +482,13 @@ function UpcomingTab() {
                           }
                           placement="bottom-start"
                           bg="transparent"
-                          openDelay={300}>
+                          openDelay={300}
+                        >
                           <Text
                             cursor="pointer"
-                            _hover={{textDecoration: "underline"}}
-                            color="#181D27">
+                            _hover={{ textDecoration: "underline" }}
+                            color="#181D27"
+                          >
                             {trip?.tractors?.plate_number ?? "---"}
                           </Text>
                         </Tooltip>
@@ -452,18 +501,24 @@ function UpcomingTab() {
                               bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                               color="white"
                               borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
+                              minW="180px"
+                            >
+                              <VStack
+                                spacing={1}
+                                align="start"
+                              >
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).companyName}
                                 </Text>
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).customer}
                                 </Text>
                               </VStack>
@@ -471,13 +526,15 @@ function UpcomingTab() {
                           }
                           placement="bottom-start"
                           bg="transparent"
-                          openDelay={300}>
+                          openDelay={300}
+                        >
                           <Box>
                             <Text
                               h="20px"
                               cursor="pointer"
-                              _hover={{textDecoration: "underline"}}
-                              color="#181D27">
+                              _hover={{ textDecoration: "underline" }}
+                              color="#181D27"
+                            >
                               {trip?.trailers?.plate_number ?? "---"}
                             </Text>
                           </Box>
@@ -492,18 +549,24 @@ function UpcomingTab() {
                               bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                               color="white"
                               borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
+                              minW="180px"
+                            >
+                              <VStack
+                                spacing={1}
+                                align="start"
+                              >
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).companyName}
                                 </Text>
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).customer}
                                 </Text>
                               </VStack>
@@ -511,15 +574,20 @@ function UpcomingTab() {
                           }
                           placement="bottom-start"
                           bg="transparent"
-                          openDelay={300}>
-                          <Flex gap="12px" justifyContent="space-between">
+                          openDelay={300}
+                        >
+                          <Flex
+                            gap="12px"
+                            justifyContent="space-between"
+                          >
                             <Text
                               h="20px"
                               fontSize="14px"
                               fontWeight="500"
                               color="#535862"
                               cursor="pointer"
-                              _hover={{textDecoration: "underline"}}>
+                              _hover={{ textDecoration: "underline" }}
+                            >
                               {trip?.origin?.[0]?.equipment_type ?? "ss"}
                             </Text>
 
@@ -530,7 +598,8 @@ function UpcomingTab() {
                               w="24px"
                               h="22px"
                               borderRadius="50%"
-                              bg="#fff">
+                              bg="#fff"
+                            >
                               {trip?.origin?.[0]
                                 ?.equipment_availability?.[0]?.[0] ?? ""}
                             </Flex>
@@ -546,18 +615,24 @@ function UpcomingTab() {
                               bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                               color="white"
                               borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
+                              minW="180px"
+                            >
+                              <VStack
+                                spacing={1}
+                                align="start"
+                              >
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).companyName}
                                 </Text>
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).customer}
                                 </Text>
                               </VStack>
@@ -565,10 +640,11 @@ function UpcomingTab() {
                           }
                           placement="bottom-start"
                           bg="transparent"
-                          openDelay={300}>
+                          openDelay={300}
+                        >
                           <Badge
                             colorScheme={getLoadTypeColor(
-                              trip.origin?.[0]?.load_type?.[0] ?? ""
+                              trip.origin?.[0]?.load_type?.[0] ?? "",
                             )}
                             variant="subtle"
                             px={3}
@@ -577,7 +653,8 @@ function UpcomingTab() {
                             fontSize="12px"
                             fontWeight="500"
                             cursor="pointer"
-                            _hover={{opacity: 0.8}}>
+                            _hover={{ opacity: 0.8 }}
+                          >
                             {trip.origin?.[0]?.load_type?.[0] ?? ""}
                           </Badge>
                         </Tooltip>
@@ -591,18 +668,24 @@ function UpcomingTab() {
                               bg="linear-gradient(to bottom, #1a365d, #2d3748)"
                               color="white"
                               borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
+                              minW="180px"
+                            >
+                              <VStack
+                                spacing={1}
+                                align="start"
+                              >
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).companyName}
                                 </Text>
                                 <Text
                                   fontSize="14px"
                                   fontWeight="600"
-                                  color="white">
+                                  color="white"
+                                >
                                   {getCustomerInfo(trip).customer}
                                 </Text>
                               </VStack>
@@ -610,8 +693,12 @@ function UpcomingTab() {
                           }
                           placement="bottom-start"
                           bg="transparent"
-                          openDelay={300}>
-                          <Box cursor="pointer" _hover={{opacity: 0.8}}>
+                          openDelay={300}
+                        >
+                          <Box
+                            cursor="pointer"
+                            _hover={{ opacity: 0.8 }}
+                          >
                             <TripProgress
                               total_trips={trip.total_trips}
                               current_trips={trip.current_trip}
@@ -620,8 +707,14 @@ function UpcomingTab() {
                         </Tooltip>
                       </CTableTd>
                       <CTableTd>
-                        <Flex alignItems="center" gap={2}>
-                          <Text color="#EF6820" fontWeight="600">
+                        <Flex
+                          alignItems="center"
+                          gap={2}
+                        >
+                          <Text
+                            color="#EF6820"
+                            fontWeight="600"
+                          >
                             Assign
                           </Text>
                         </Flex>
@@ -629,8 +722,14 @@ function UpcomingTab() {
                     </CTableRow>
 
                     <CTableRow>
-                      <CTableTd colSpan={tableElements.length} p={0}>
-                        <Collapse in={isExpanded} animateOpacity>
+                      <CTableTd
+                        colSpan={tableElements.length}
+                        p={0}
+                      >
+                        <Collapse
+                          in={isExpanded}
+                          animateOpacity
+                        >
                           <TripRowDetails
                             handleRowClick={handleRowClick}
                             trip={trip}
@@ -670,20 +769,32 @@ const TripStatus = ({
       p="2px 8px"
       borderRadius="100px"
       border="1px solid #B2DDFF"
-      cursor="pointer">
-      <Text fontSize="12px" fontWeight="500" color="#175CD3">
+      cursor="pointer"
+    >
+      <Text
+        fontSize="12px"
+        fontWeight="500"
+        color="#175CD3"
+      >
         {status || 1}
       </Text>
-      {status !== 0 && <img src="/img/statusArrow.svg" alt="" />}
+      {status !== 0 && <img
+        src="/img/statusArrow.svg"
+        alt=""
+      />}
     </Flex>
   );
 };
 
-const TripProgress = ({total_trips = 0, current_trips = 0}) => {
+const TripProgress = ({ total_trips = 0, current_trips = 0 }) => {
   const colors = ["#FF5B04", "#00707A", "#003B63"];
   return (
-    <Flex alignItems="center" justifyContent="flex-start" gap="6px">
-      {Array.from({length: total_trips}).map((_, index) => {
+    <Flex
+      alignItems="center"
+      justifyContent="flex-start"
+      gap="6px"
+    >
+      {Array.from({ length: total_trips }).map((_, index) => {
         const isFilled = index < current_trips;
         const color = colors[index % colors.length];
 
@@ -701,12 +812,18 @@ const TripProgress = ({total_trips = 0, current_trips = 0}) => {
   );
 };
 
-const TripDriverVerification = ({trip = {}}) => {
+const TripDriverVerification = ({ trip = {} }) => {
   const stop = trip?.stop?.[0];
 
   return (
-    <Flex gap="24px" alignItems="center">
-      <Box w="22px" h="22px">
+    <Flex
+      gap="24px"
+      alignItems="center"
+    >
+      <Box
+        w="22px"
+        h="22px"
+      >
         {stop?.equipment_type === "Power Only" ? (
           trip?.is_truck_verified ? (
             <img
@@ -756,8 +873,12 @@ const TripDriverVerification = ({trip = {}}) => {
         p="5px"
         gap="4px"
         bg={trip?.is_driver_verified ? "#DEFFEE" : "#EDEDED"}
-        borderRadius="16px">
-        <Box w="17px" h="17px">
+        borderRadius="16px"
+      >
+        <Box
+          w="17px"
+          h="17px"
+        >
           {trip?.driver_type?.[0] === "Team" &&
             (trip?.is_driver_verified ? (
               <img
@@ -779,7 +900,10 @@ const TripDriverVerification = ({trip = {}}) => {
               />
             ))}
         </Box>
-        <Box w="17px" h="17px">
+        <Box
+          w="17px"
+          h="17px"
+        >
           {trip?.is_driver_verified ? (
             <img
               src="/img/driverVerified.svg"

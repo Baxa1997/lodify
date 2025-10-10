@@ -55,7 +55,7 @@ const AllLoadsFiltersComponent = ({
 
       <Flex flex={"1"} flexDirection={"column"} gap={"8px"}>
         <Text color="#414651" fontSize={"14px"} fontWeight={"500"}>
-          Customer
+          Broker
         </Text>
         <Select
           height={"40px"}
@@ -67,7 +67,7 @@ const AllLoadsFiltersComponent = ({
 
       <Flex flex={"1"} flexDirection={"column"} gap={"8px"}>
         <Text color="#414651" fontSize={"14px"} fontWeight={"500"}>
-          Carrier
+          Origin
         </Text>
         <Select
           height={"40px"}
@@ -79,27 +79,13 @@ const AllLoadsFiltersComponent = ({
 
       <Flex flex={"1"} flexDirection={"column"} gap={"8px"}>
         <Text color="#414651" fontSize={"14px"} fontWeight={"500"}>
-          Origin
-        </Text>
-        <Select
-          height={"40px"}
-          width={"100%"}
-          placeholder="Select"
-          options={[{label: "Filter by Origin", value: "Filter by Origin"}]}
-        />
-      </Flex>
-
-      <Flex flex={"1"} flexDirection={"column"} gap={"8px"}>
-        <Text color="#414651" fontSize={"14px"} fontWeight={"500"}>
           Destination
         </Text>
         <Select
           height={"40px"}
           width={"100%"}
           placeholder="Select"
-          options={[
-            {label: "Filter by Destination", value: "Filter by Destination"},
-          ]}
+          options={[{label: "Filter by Origin", value: "Filter by Origin"}]}
         />
       </Flex>
 
@@ -118,87 +104,6 @@ const AllLoadsFiltersComponent = ({
                 Reset Filters
               </Text>
             </Button>
-          )}
-
-          {actionButton && (
-            <Menu>
-              <MenuButton p="0" as={Button}>
-                <Button
-                  _hover={{
-                    background: "#1570EF",
-                  }}
-                  borderRadius={"8px"}
-                  bg={"#fff"}
-                  w={"85px"}
-                  h={"40px"}
-                  gap={"8px"}
-                  border={"1px solid #D5D7DA"}
-                  onClick={onActionButtonClick}>
-                  <Text fontSize={"14px"} fontWeight={"600"} color={"#414651"}>
-                    Action
-                  </Text>
-                </Button>
-              </MenuButton>
-              <MenuList zIndex={99999} p="4px 6px" border={"1px solid #E9EAEB"}>
-                <MenuItem
-                  borderRadius={"8px"}
-                  display={"flex"}
-                  alignItems={"center"}
-                  gap={"8px"}>
-                  <img src="/img/userIcon.svg" alt="" />
-                  <Text fontSize={"14px"} fontWeight={"600"} color={"#414651"}>
-                    Assign Load
-                  </Text>
-                </MenuItem>
-                <MenuItem
-                  borderRadius={"8px"}
-                  display={"flex"}
-                  alignItems={"center"}
-                  gap={"8px"}>
-                  <img
-                    src="/img/delete.svg"
-                    width={"16px"}
-                    height={"16px"}
-                    alt=""
-                  />
-                  <Text fontSize={"14px"} fontWeight={"600"} color={"#D92D20"}>
-                    Delete
-                  </Text>
-                </MenuItem>
-
-                <MenuItem
-                  borderRadius={"8px"}
-                  display={"flex"}
-                  alignItems={"center"}
-                  gap={"8px"}>
-                  <img
-                    src="/img/import.svg"
-                    width={"16px"}
-                    height={"16px"}
-                    alt=""
-                  />
-                  <Text fontSize={"14px"} fontWeight={"600"} color={"#414651"}>
-                    Import
-                  </Text>
-                </MenuItem>
-
-                <MenuItem
-                  borderRadius={"8px"}
-                  display={"flex"}
-                  alignItems={"center"}
-                  gap={"8px"}>
-                  <img
-                    src="/img/export.svg"
-                    width={"16px"}
-                    height={"16px"}
-                    alt=""
-                  />
-                  <Text fontSize={"14px"} fontWeight={"600"} color={"#414651"}>
-                    Export
-                  </Text>
-                </MenuItem>
-              </MenuList>
-            </Menu>
           )}
         </Flex>
       </Flex>

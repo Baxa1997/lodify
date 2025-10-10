@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   Collapse,
   Flex,
   Text,
@@ -23,6 +24,8 @@ import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import AllLoadsFiltersComponent from "../../components/Filterscomponent";
 import {tableElements} from "./hooks";
+import {format} from "date-fns";
+import SimpleTimer from "@components/SimpleTimer";
 
 function ActiveLoads() {
   const navigate = useNavigate();
@@ -30,7 +33,6 @@ function ActiveLoads() {
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
-  const [expandedRows, setExpandedRows] = useState(new Set());
   const envId = useSelector((state) => state.auth.environmentId);
   const clientType = useSelector((state) => state.auth.clientType);
 
@@ -67,13 +69,10 @@ function ActiveLoads() {
         environment_id: envId,
         method: "list",
         object_data: {
-          search: searchTerm,
-          limit: pageSize,
-          page: (currentPage - 1) * pageSize,
-          brokers_id:
-            clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
-              ? clientType?.id
-              : undefined,
+          limit: 10,
+          page: 0,
+          with_timer: true,
+          // timer_expired: true,
         },
         table: "trips",
       }),
@@ -111,23 +110,25 @@ function ActiveLoads() {
     setCurrentPage(1);
   };
 
-  const toggleRowExpansion = (tripId, event) => {
-    event.stopPropagation();
-    setExpandedRows((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(tripId)) {
-        newSet.delete(tripId);
-      } else {
-        newSet.add(tripId);
-      }
-      return newSet;
-    });
-  };
-
   const totalPages = tripsData?.total
     ? Math.ceil(tripsData.total / pageSize)
     : 0;
   const trips = tripsData?.data || tripsData || [];
+
+  function formatToAmPm(timeString) {
+    if (!timeString) return "";
+    console.log("timeStringtimeString", timeString);
+    const [hourStr, minuteStr] = timeString.split(":");
+    let hour = parseInt(hourStr, 10);
+    const minute = parseInt(minuteStr || "0", 10);
+
+    hour = (hour + 5) % 24;
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const displayHour = (hour + 11) % 12;
+    const formattedMinute = String(minute).padStart(2, "0");
+
+    return `${displayHour}:${formattedMinute} ${ampm}`;
+  }
 
   return (
     <Box mt={"26px"}>
@@ -199,17 +200,13 @@ function ActiveLoads() {
               </CTableRow>
             ) : (
               trips?.map((trip, index) => {
-                const isExpanded = expandedRows.has(trip.id || trip.guid);
                 return (
                   <React.Fragment key={trip.guid || index}>
                     <CTableRow
                       style={{
                         backgroundColor: "white",
                         cursor: "pointer",
-                      }}
-                      onClick={(e) =>
-                        toggleRowExpansion(trip.id || trip.guid, e)
-                      }>
+                      }}>
                       <CTableTd>
                         <Tooltip
                           hasArrow
@@ -289,7 +286,6 @@ function ActiveLoads() {
                           </Tooltip>
                           <TripStatus
                             rowClick={handleRowClick}
-                            onExpand={toggleRowExpansion}
                             status={trip?.current_trip}
                             tripId={trip.id || trip.guid}
                           />
@@ -403,7 +399,6 @@ function ActiveLoads() {
                                 {formatDate(trip?.stop?.[0]?.arrive_by ?? "")}
                               </Text>
                             </Box>
-                            <TripDriverVerification trip={trip} />
                           </Flex>
                         </Box>
                       </CTableTd>
@@ -435,12 +430,26 @@ function ActiveLoads() {
                           placement="bottom-start"
                           bg="transparent"
                           openDelay={300}>
-                          <Text
-                            cursor="pointer"
-                            _hover={{textDecoration: "underline"}}
-                            color="#181D27">
-                            {trip?.tractors?.plate_number ?? "---"}
-                          </Text>
+                          <Flex gap="24px" alignItems="center">
+                            {" "}
+                            <Box>
+                              <Text
+                                fontSize={"12px"}
+                                fontWeight={500}
+                                cursor="pointer"
+                                _hover={{textDecoration: "underline"}}
+                                color="#181D27">
+                                {format(
+                                  trip?.origin?.[0]?.arrive_by,
+                                  "MM/dd/yyyy"
+                                ) ?? ""}
+                              </Text>
+                              <Text fontSize={"14px"} fontWeight={400} h="20px">
+                                {formatToAmPm(trip?.origin?.[0]?.arrive_by)}
+                              </Text>
+                            </Box>
+                            <TripDriverVerification trip={trip} />
+                          </Flex>
                         </Tooltip>
                       </CTableTd>
                       <CTableTd>
@@ -473,15 +482,98 @@ function ActiveLoads() {
                           openDelay={300}>
                           <Box>
                             <Text
-                              h="20px"
+                              fontSize={"12px"}
+                              fontWeight={500}
                               cursor="pointer"
                               _hover={{textDecoration: "underline"}}
                               color="#181D27">
-                              {trip?.trailers?.plate_number ?? "---"}
+                              {format(
+                                trip?.last_stop?.[0]?.arrive_by,
+                                "MM/dd/yyyy"
+                              ) ?? ""}
+                            </Text>
+                            <Text fontSize={"14px"} fontWeight={400} h="20px">
+                              {formatToAmPm(trip?.last_stop?.[0]?.arrive_by)}
                             </Text>
                           </Box>
                         </Tooltip>
                       </CTableTd>
+                      <CTableTd>
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <Box
+                              p={3}
+                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                              color="white"
+                              borderRadius="md"
+                              minW="180px">
+                              <VStack spacing={1} align="start">
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).companyName}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).customer}
+                                </Text>
+                              </VStack>
+                            </Box>
+                          }
+                          placement="bottom-start"
+                          bg="transparent"
+                          openDelay={300}>
+                          <Flex gap="12px">
+                            <Text
+                              h="20px"
+                              fontSize="14px"
+                              fontWeight="500"
+                              color="#535862"
+                              cursor="pointer"
+                              _hover={{textDecoration: "underline"}}>
+                              ${trip?.total_rates ?? "0"}
+                            </Text>
+                          </Flex>
+                        </Tooltip>
+                      </CTableTd>
+
+                      <CTableTd>
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <Box
+                              p={3}
+                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
+                              color="white"
+                              borderRadius="md"
+                              minW="180px">
+                              <VStack spacing={1} align="start">
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).companyName}
+                                </Text>
+                                <Text
+                                  fontSize="14px"
+                                  fontWeight="600"
+                                  color="white">
+                                  {getCustomerInfo(trip).customer}
+                                </Text>
+                              </VStack>
+                            </Box>
+                          }
+                          placement="bottom-start"
+                          bg="transparent"
+                          openDelay={300}>
+                          <Text>{trip?.created_by?.user_first_name}</Text>
+                        </Tooltip>
+                      </CTableTd>
+
                       <CTableTd>
                         <Tooltip
                           hasArrow
@@ -536,6 +628,7 @@ function ActiveLoads() {
                           </Flex>
                         </Tooltip>
                       </CTableTd>
+
                       <CTableTd>
                         <Tooltip
                           hasArrow
@@ -581,48 +674,43 @@ function ActiveLoads() {
                           </Badge>
                         </Tooltip>
                       </CTableTd>
-                      <CTableTd>
-                        <Tooltip
-                          hasArrow
-                          label={
-                            <Box
-                              p={3}
-                              bg="linear-gradient(to bottom, #1a365d, #2d3748)"
-                              color="white"
-                              borderRadius="md"
-                              minW="180px">
-                              <VStack spacing={1} align="start">
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).companyName}
-                                </Text>
-                                <Text
-                                  fontSize="14px"
-                                  fontWeight="600"
-                                  color="white">
-                                  {getCustomerInfo(trip).customer}
-                                </Text>
-                              </VStack>
-                            </Box>
+                      <CTableTd px="0">
+                        <SimpleTimer
+                          timeFromAPI={
+                            trip?.origin?.[0]?.arrive_by ||
+                            trip?.stop?.[0]?.arrive_by ||
+                            trip?.deadline ||
+                            "2025-10-08T12:33:00"
                           }
-                          placement="bottom-start"
-                          bg="transparent"
-                          openDelay={300}>
-                          <Box cursor="pointer" _hover={{opacity: 0.8}}>
-                            <TripProgress
-                              total_trips={trip.total_trips}
-                              current_trips={trip.current_trip}
-                            />
-                          </Box>
-                        </Tooltip>
+                          onTimeUp={() => {
+                            console.log(`Timer finished for trip ${trip.id}`);
+                          }}
+                        />
                       </CTableTd>
+
                       <CTableTd>
-                        <Flex alignItems="center" gap={2}>
-                          <Text color="#EF6820" fontWeight="600">
-                            Assign
-                          </Text>
+                        <Flex alignItems="center" gap={"16px"}>
+                          <Button
+                            p="0"
+                            w="43px"
+                            fontSize="14px"
+                            fontWeight="600"
+                            bg="none"
+                            border="none"
+                            _hover={{bg: "none"}}>
+                            Reject
+                          </Button>
+                          <Button
+                            p="0"
+                            w="43px"
+                            fontSize="14px"
+                            fontWeight="600"
+                            bg="none"
+                            border="none"
+                            color="#FF5B04"
+                            _hover={{bg: "none"}}>
+                            Accept
+                          </Button>
                         </Flex>
                       </CTableTd>
                     </CTableRow>

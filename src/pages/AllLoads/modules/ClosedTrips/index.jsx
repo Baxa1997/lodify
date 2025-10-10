@@ -4,6 +4,7 @@ import {
   Button,
   Collapse,
   Flex,
+  Spinner,
   Text,
   Tooltip,
   VStack,
@@ -17,7 +18,7 @@ import {
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import tripsService from "@services/tripsService";
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {formatDate} from "@utils/dateFormats";
 import React, {useState} from "react";
 import {useSelector} from "react-redux";
@@ -34,6 +35,9 @@ function ClosedTrips({selectedTabIndex}) {
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
   const envId = useSelector((state) => state.auth.environmentId);
+  const userId = useSelector((state) => state.auth.userId);
+  const [loadingTripId, setLoadingTripId] = useState(null);
+  const queryClient = useQueryClient();
 
   const getLoadTypeColor = (loadType) => {
     const loadTypeColors = {
@@ -79,6 +83,7 @@ function ClosedTrips({selectedTabIndex}) {
           page: 0,
           with_timer: true,
           timer_expired: true,
+          careers_id: userId,
         },
         table: "trips",
       }),
@@ -123,7 +128,7 @@ function ClosedTrips({selectedTabIndex}) {
 
   function formatToAmPm(timeString) {
     if (!timeString) return "";
-    console.log("timeStringtimeString", timeString);
+
     const [hourStr, minuteStr] = timeString.split(":");
     let hour = parseInt(hourStr, 10);
     const minute = parseInt(minuteStr || "0", 10);
@@ -135,6 +140,53 @@ function ClosedTrips({selectedTabIndex}) {
 
     return `${displayHour}:${formattedMinute} ${ampm}`;
   }
+
+  const handleAcceptTrip = (trip) => {
+    setLoadingTripId(`accept-${trip.guid}`);
+    const data = {
+      data: {
+        companies_id: userId,
+        guid: trip?.guid,
+      },
+    };
+    tripsService
+      .acceptTrip(data)
+      .then((res) => {
+        queryClient.invalidateQueries({queryKey: ["TRIPS_LIST_CLOSED"]});
+        setLoadingTripId(null);
+      })
+      .catch((error) => {
+        console.error("Error accepting trip:", error);
+        setLoadingTripId(null);
+      })
+      .finally(() => {
+        setLoadingTripId(null);
+      });
+  };
+
+  const handleRejectTrip = (trip) => {
+    setLoadingTripId(`reject-${trip.guid}`);
+    const computedData = {
+      data: {
+        companies_id: userId,
+        orders_id: trip?.guid,
+        date_time: new Date().toISOString(),
+      },
+    };
+    tripsService
+      .rejectTrip(computedData)
+      .then((res) => {
+        queryClient.invalidateQueries({queryKey: ["TRIPS_LIST_CLOSED"]});
+        setLoadingTripId(null);
+      })
+      .catch((error) => {
+        console.error("Error rejecting trip:", error);
+        setLoadingTripId(null);
+      })
+      .finally(() => {
+        setLoadingTripId(null);
+      });
+  };
 
   return (
     <Box mt={"26px"}>
@@ -690,24 +742,42 @@ function ClosedTrips({selectedTabIndex}) {
                         <Flex alignItems="center" gap={"16px"}>
                           <Button
                             p="0"
-                            w="43px"
+                            minW="60px"
                             fontSize="14px"
                             fontWeight="600"
                             bg="none"
                             border="none"
-                            _hover={{bg: "none"}}>
-                            Reject
+                            _hover={{bg: "none"}}
+                            isDisabled={
+                              loadingTripId === `reject-${trip.guid}` ||
+                              loadingTripId === `accept-${trip.guid}`
+                            }
+                            onClick={() => handleRejectTrip(trip)}>
+                            {loadingTripId === `reject-${trip.guid}` ? (
+                              <Spinner size="sm" />
+                            ) : (
+                              "Reject"
+                            )}
                           </Button>
                           <Button
                             p="0"
-                            w="43px"
+                            minW="60px"
                             fontSize="14px"
                             fontWeight="600"
                             bg="none"
                             border="none"
                             color="#FF5B04"
-                            _hover={{bg: "none"}}>
-                            Accept
+                            _hover={{bg: "none"}}
+                            isDisabled={
+                              loadingTripId === `reject-${trip.guid}` ||
+                              loadingTripId === `accept-${trip.guid}`
+                            }
+                            onClick={() => handleAcceptTrip(trip)}>
+                            {loadingTripId === `accept-${trip.guid}` ? (
+                              <Spinner size="sm" color="#FF5B04" />
+                            ) : (
+                              "Accept"
+                            )}
                           </Button>
                         </Flex>
                       </CTableTd>

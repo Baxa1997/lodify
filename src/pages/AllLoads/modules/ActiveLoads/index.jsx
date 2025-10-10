@@ -4,6 +4,7 @@ import {
   Button,
   Collapse,
   Flex,
+  Spinner,
   Text,
   Tooltip,
   VStack,
@@ -17,7 +18,7 @@ import {
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import tripsService from "@services/tripsService";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {formatDate} from "@utils/dateFormats";
 import React, {useState} from "react";
 import {useSelector} from "react-redux";
@@ -36,6 +37,7 @@ function ActiveLoads({selectedTabIndex}) {
   const [searchTerm, setSearchTerm] = useState("");
   const envId = useSelector((state) => state.auth.environmentId);
   const userId = useSelector((state) => state.auth.userId);
+  const [loadingTripId, setLoadingTripId] = useState(null);
 
   const getLoadTypeColor = (loadType) => {
     const loadTypeColors = {
@@ -80,6 +82,7 @@ function ActiveLoads({selectedTabIndex}) {
           limit: 10,
           page: 0,
           with_timer: true,
+          careers_id: userId,
         },
         table: "trips",
       }),
@@ -88,15 +91,52 @@ function ActiveLoads({selectedTabIndex}) {
     staleTime: 30000,
   });
 
-  const acceptTrip = useMutation({
-    mutationFn: (data) => tripsService.acceptTrip(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["TRIPS_LIST"]});
-    },
-  });
-  // const rejectTrip = useMutation({
-  //   mutationFn: (data) => tripsService.rejectTrip(data),
-  // });
+  const handleAcceptTrip = (trip) => {
+    setLoadingTripId(`accept-${trip.guid}`);
+    const data = {
+      data: {
+        companies_id: userId,
+        guid: trip?.guid,
+      },
+    };
+    tripsService
+      .acceptTrip(data)
+      .then((res) => {
+        queryClient.invalidateQueries({queryKey: ["TRIPS_LIST"]});
+        setLoadingTripId(null);
+      })
+      .catch((error) => {
+        console.error("Error accepting trip:", error);
+        setLoadingTripId(null);
+      })
+      .finally(() => {
+        setLoadingTripId(null);
+      });
+  };
+
+  const handleRejectTrip = (trip) => {
+    setLoadingTripId(`reject-${trip.guid}`);
+    const computedData = {
+      data: {
+        companies_id: userId,
+        orders_id: trip?.guid,
+        date_time: new Date().toISOString(),
+      },
+    };
+    tripsService
+      .rejectTrip(computedData)
+      .then((res) => {
+        queryClient.invalidateQueries({queryKey: ["TRIPS_LIST"]});
+        setLoadingTripId(null);
+      })
+      .catch((error) => {
+        console.error("Error rejecting trip:", error);
+        setLoadingTripId(null);
+      })
+      .finally(() => {
+        setLoadingTripId(null);
+      });
+  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -701,24 +741,42 @@ function ActiveLoads({selectedTabIndex}) {
                         <Flex alignItems="center" gap={"16px"}>
                           <Button
                             p="0"
-                            w="43px"
+                            minW="60px"
                             fontSize="14px"
                             fontWeight="600"
                             bg="none"
                             border="none"
-                            _hover={{bg: "none"}}>
-                            Reject
+                            _hover={{bg: "none"}}
+                            isDisabled={
+                              loadingTripId === `reject-${trip.guid}` ||
+                              loadingTripId === `accept-${trip.guid}`
+                            }
+                            onClick={() => handleRejectTrip(trip)}>
+                            {loadingTripId === `reject-${trip.guid}` ? (
+                              <Spinner size="sm" />
+                            ) : (
+                              "Reject"
+                            )}
                           </Button>
                           <Button
                             p="0"
-                            w="43px"
+                            minW="60px"
                             fontSize="14px"
                             fontWeight="600"
                             bg="none"
                             border="none"
                             color="#FF5B04"
-                            _hover={{bg: "none"}}>
-                            Accept
+                            _hover={{bg: "none"}}
+                            isDisabled={
+                              loadingTripId === `reject-${trip.guid}` ||
+                              loadingTripId === `accept-${trip.guid}`
+                            }
+                            onClick={() => handleAcceptTrip(trip)}>
+                            {loadingTripId === `accept-${trip.guid}` ? (
+                              <Spinner size="sm" color="#FF5B04" />
+                            ) : (
+                              "Accept"
+                            )}
                           </Button>
                         </Flex>
                       </CTableTd>

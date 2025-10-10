@@ -6,7 +6,15 @@ import { InfoCard } from "../InfoCard";
 
 export const Equipment = () => {
 
-  const { headData, bodyData } = useEquipmentProps();
+  const {
+    headData,
+    bodyData,
+    page, 
+    setPage,
+    limit,
+    setLimit,
+    count,
+  } = useEquipmentProps();
 
   return <Box>
     <InfoAccordionItem>
@@ -16,17 +24,13 @@ export const Equipment = () => {
           alignItems="center"
           jusBoxtifyContent="space-between"
         >
-          <InfoAccordionTitle
-            fontSize="18px"
-            fontWeight="600"
-            color="primary.500"
-          >
+          <InfoAccordionTitle>
             Equipment
           </InfoAccordionTitle>
         </Box>
       </InfoAccordionButton>
       <InfoAccordionPanel>
-        <Box
+        {/* <Box
           display="flex"
           gap="20px"
           mb="20px"
@@ -40,13 +44,22 @@ export const Equipment = () => {
             badgeText="No Preferrred Lanes"
             isEmpty
           />
-        </Box>
+        </Box> */}
         <DataTable
           headData={headData}
           data={bodyData}
-          border="1px solid #E9EAEB"
-          borderRadius="8px"
           pagination
+          border="1px solid"
+          borderColor="gray.border-main"
+          borderRadius="12px"
+          count={count}
+          page={page}
+          limit={limit}
+          setLimit={setLimit}
+          setPage={setPage}
+          tableProps={{
+            layout: "fixed",
+          }}
         />
       </InfoAccordionPanel>
     </InfoAccordionItem>

@@ -8,7 +8,6 @@ import {
   Thead,
   Tooltip,
   Tr,
-  Button,
   Spinner,
   Center,
 } from "@chakra-ui/react";
@@ -26,6 +25,8 @@ export const DataTable = ({
   setPage = () => {},
   pagination,
   isLoading = false,
+  tableProps = {},
+  count = 0,
   ...props
 }) => {
   const [expandedRows, setExpandedRows] = useState(new Set());
@@ -45,7 +46,10 @@ export const DataTable = ({
       overflow={"auto"}
       {...props}
     >
-      <Table variant="simple">
+      <Table
+        variant="simple"
+        {...tableProps}
+      >
         {caption && <TableCaption>{caption}</TableCaption>}
         <Thead
           bgColor="gray.50"
@@ -60,7 +64,7 @@ export const DataTable = ({
               <Th
                 key={index}
                 isNumeric={head.isNumeric}
-                width={"230px"}
+                width={"130px"}
                 color="gray.900"
                 fontWeight={"600"}
                 fontSize={"12px"}
@@ -229,7 +233,7 @@ export const DataTable = ({
               setLimit={setLimit}
               page={page}
               setPage={setPage}
-              count={data?.length}
+              pageCount={Math.ceil(count / limit)}
             />
           </Box>
         </Box>

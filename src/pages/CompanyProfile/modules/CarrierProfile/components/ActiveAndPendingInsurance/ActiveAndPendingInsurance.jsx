@@ -6,7 +6,7 @@ import { StatusBadge } from "@components/StatusBadge";
 
 export const ActiveAndPendingInsurance = () => {
 
-  const { headData, bodyData, onAccordionChange } = useActiveAndPendingInsuranceProps();
+  const { pendingInsuranceData, rejectedInsuranceData, onAccordionChange } = useActiveAndPendingInsuranceProps();
 
   return <Box>
     <InfoAccordionItem
@@ -29,17 +29,56 @@ export const ActiveAndPendingInsurance = () => {
           gridTemplateColumns="repeat(2, 1fr)"
           gap="20px"
         >
-          <InsuranceCard />
-          <InsuranceCard />
-          <InsuranceCard />
-          <InsuranceCard />
+          {
+            pendingInsuranceData?.map(item => (<InsuranceCard
+              key={item?.guid}
+              title={item?.mod_col_1}
+              companyName={item?.name_company}
+              status="active"
+              policyNumber={item?.policy_no}
+              effectiveDate={item?.effective_date}
+              cancelEffectiveDate={item?.cancl_effective_date}
+              coverageTo={item?.max_cov_amount}
+              coverageFrom={item?.underl_lim_amount}
+              postedDate={item?.trans_date}
+            />))
+          }
+          {
+            rejectedInsuranceData?.map(item => (<InsuranceCard
+              key={item?.guid}
+              title={item?.mod_col_1}
+              companyName={item?.name_company}
+              status="rejected"
+              policyNumber={item?.policy_no}
+              rejectedDate={item?.rej_date}
+              recvDate={item?.recv_date}
+              rejectionReasons={item?.rej_reasons}
+              coverageTo={item?.min_cov_amount}
+              coverageFrom={item?.mod_col_3}
+            />))
+          }
         </Box>
       </InfoAccordionPanel>
     </InfoAccordionItem>
   </Box>;
 };
 
-const InsuranceCard = () => {
+const InsuranceCard = (
+  {
+    title,
+    status,
+    policyNumber,
+    effectiveDate,
+    cancelEffectiveDate,
+    coverageTo,
+    coverageFrom,
+    postedDate,
+    companyName,
+    rejectedDate,
+    recvDate,
+    rejectionReasons,
+  },
+) => {
   return <Box
     padding="20px"
     border="1px solid"
@@ -56,8 +95,8 @@ const InsuranceCard = () => {
         fontSize="16px"
         fontWeight="600"
         color="primary.500"
-      >General Liability</Text>
-      <StatusBadge status="active">Active</StatusBadge>
+      >{title}</Text>
+      <StatusBadge status={status}>{status || "Active"}</StatusBadge>
     </Box>
     <Box
       display="flex"
@@ -75,7 +114,7 @@ const InsuranceCard = () => {
           fontWeight="500"
           fontSize="16px"
           color="primary.500"
-        >The Burlington Insurance Company</Text>
+        >{companyName}</Text>
       </Box>
       <Box>
         <Text
@@ -88,7 +127,7 @@ const InsuranceCard = () => {
           fontWeight="500"
           fontSize="16px"
           color="primary.500"
-        >277B513423</Text>
+        >{policyNumber}</Text>
       </Box>
       <Box
         display="flex"
@@ -100,12 +139,16 @@ const InsuranceCard = () => {
             fontWeight="400"
             fontSize="14px"
             mb="4px"
-          >Effective date</Text>
+          >
+            {
+              status === "rejected" ? "Rejection date" : "Effective date"
+            }
+          </Text>
           <Text
             fontWeight="500"
             fontSize="16px"
             color="primary.500"
-          >04/01/2025</Text>
+          >{ status === "rejected" ? rejectedDate : effectiveDate}</Text>
         </Box>
         <Box>
           <Text
@@ -113,27 +156,37 @@ const InsuranceCard = () => {
             fontWeight="400"
             fontSize="14px"
             mb="4px"
-          >Expiration date</Text>
+          >
+            {
+              status === "rejected" ? "Received date" : "Posted date"
+            }
+          </Text>
           <Text
             fontWeight="500"
             fontSize="16px"
             color="primary.500"
-          >04/01/2025</Text>
+          >
+            {
+              status === "rejected" ? recvDate : postedDate
+            }
+          </Text>
         </Box>
       </Box>
-      <Box>
-        <Text
-          color="tertiary.600"
-          fontWeight="400"
-          fontSize="14px"
-          mb="4px"
-        >Cancellation date</Text>
-        <Text
-          fontWeight="500"
-          fontSize="16px"
-          color="primary.500"
-        >10/01/2025</Text>
-      </Box>
+      {
+        status !== "rejected" && <Box>
+          <Text
+            color="tertiary.600"
+            fontWeight="400"
+            fontSize="14px"
+            mb="4px"
+          >Cancellation date</Text>
+          <Text
+            fontWeight="500"
+            fontSize="16px"
+            color="primary.500"
+          >{cancelEffectiveDate}</Text>
+        </Box>
+      }
       <Box
         display="flex"
         gap="24px"
@@ -144,12 +197,12 @@ const InsuranceCard = () => {
             fontWeight="400"
             fontSize="14px"
             mb="4px"
-          >Each Occurrence</Text>
+          >Coverage From</Text>
           <Text
             fontWeight="500"
             fontSize="16px"
             color="primary.500"
-          >$1,000,000.00</Text>
+          >${(coverageFrom || 0) * 1000}</Text>
         </Box>
         <Box>
           <Text
@@ -157,12 +210,12 @@ const InsuranceCard = () => {
             fontWeight="400"
             fontSize="14px"
             mb="4px"
-          >General Aggregate</Text>
+          >Coverage To</Text>
           <Text
             fontWeight="500"
             fontSize="16px"
             color="primary.500"
-          >$2,000,000.00</Text>
+          >${(coverageTo || 0) * 1000}</Text>
         </Box>
       </Box>
     </Box>

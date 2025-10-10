@@ -8,9 +8,12 @@ import ActionsNeeded from "./Tabs/ActionsNeeded";
 import HistoryTab from "./Tabs/HistoryTab";
 import TransitTab from "./Tabs/TransitTab.jsx";
 import UpcomingTab from "./Tabs/UpcomingTab";
+import TenderInvitations from "./Tabs/TenderInvitations";
+import {useState} from "react";
 
 const Trips = () => {
   const clientType = useSelector((state) => state.auth.clientType);
+  const [tripType, setTripType] = useState("tender");
 
   return (
     <>
@@ -33,23 +36,34 @@ const Trips = () => {
 
         <Tabs className={styles.tabsContainer}>
           <TabList>
+            {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
+              <Tab onClick={() => setTripType("tender")}>
+                Tender Invitations
+              </Tab>
+            )}
             <Tab>Actions Needed</Tab>
-            <Tab>Upcoming</Tab>
-            <Tab>In Transit</Tab>
-            <Tab>Completed</Tab>
+            <Tab onClick={() => setTripType("upcoming")}>Upcoming</Tab>
+            <Tab onClick={() => setTripType("in_transit")}>In Transit</Tab>
+            <Tab onClick={() => setTripType("completed")}>History</Tab>
           </TabList>
+
+          {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
+            <TabPanel>
+              <TenderInvitations tripType={tripType} />
+            </TabPanel>
+          )}
 
           <TabPanel>
             <ActionsNeeded />
           </TabPanel>
           <TabPanel>
-            <UpcomingTab />
+            <UpcomingTab tripType={tripType} />
           </TabPanel>
           <TabPanel>
-            <TransitTab />
+            <TransitTab tripType={tripType} />
           </TabPanel>
           <TabPanel>
-            <HistoryTab />
+            <HistoryTab tripType={tripType} />
           </TabPanel>
         </Tabs>
       </Flex>

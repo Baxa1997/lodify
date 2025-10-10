@@ -63,8 +63,12 @@ function ActionsNeeded() {
             clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
               ? brokersId
               : undefined,
+          client_type:
+            clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
+              ? "broker"
+              : "carrier",
         },
-        table: "trips",
+        table: "late_trips",
       }),
     select: (data) => data?.data?.response || [],
     refetchOnMount: true,

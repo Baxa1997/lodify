@@ -9,6 +9,12 @@ import {
 } from "@chakra-ui/react";
 import SimpleTimer from "@components/SimpleTimer";
 import {
+  calculateTimeDifference,
+  getRowBackgroundColor,
+  getActionButtonText,
+  getActionButtonColor,
+} from "@utils/timeUtils";
+import {
   CTable,
   CTableBody,
   CTableHead,
@@ -89,20 +95,6 @@ function ActionsNeeded() {
         label: `${trip?.drivers?.first_name}.${trip?.drivers?.last_name}`,
       },
     });
-  };
-
-  const getBackgroundColor = (time) => {
-    if (time > 3600) return "white";
-    if (time > 1800) return "rgba(254, 240, 199, 1)";
-    if (time > 900) return "rgba(254, 228, 226, 1)";
-    return "#FECACA";
-  };
-
-  const getActionButtonText = (time) => {
-    if (time > 3600) return "Send Message";
-    if (time > 1800) return "Send Email";
-    if (time > 900) return "Call Carrier";
-    return "Call Carrier";
   };
 
   const handleSearch = (searchValue) => {
@@ -189,7 +181,9 @@ function ActionsNeeded() {
                   <React.Fragment key={trip.guid || index}>
                     <CTableRow
                       hover={false}
-                      bg={getBackgroundColor(trip.timer_seconds || 1200)}>
+                      bg={getRowBackgroundColor(
+                        calculateTimeDifference(trip?.origin?.[0]?.arrive_by)
+                      )}>
                       <CTableTd>
                         <Tooltip
                           hasArrow
@@ -382,7 +376,12 @@ function ActionsNeeded() {
 
                       <CTableTd>
                         <SimpleTimer
-                          timeFromAPI={trip.timer_seconds || 1200}
+                          timeFromAPI={
+                            trip?.origin?.[0]?.arrive_by ||
+                            trip?.stop?.[0]?.arrive_by ||
+                            trip?.deadline ||
+                            "2025-10-08T12:33:00"
+                          }
                           onTimeUp={() => {
                             console.log(`Timer finished for trip ${trip.id}`);
                           }}
@@ -428,8 +427,24 @@ function ActionsNeeded() {
 
                       <CTableTd>
                         <Flex alignItems="center" gap={2}>
-                          <Text color="#EF6820" fontWeight="600">
-                            {getActionButtonText(trip.timer_seconds || 1200)}
+                          <Text
+                            color={getActionButtonColor(
+                              calculateTimeDifference(
+                                trip?.origin?.[0]?.arrive_by ||
+                                  trip?.stop?.[0]?.arrive_by ||
+                                  trip?.deadline ||
+                                  trip.timer_seconds
+                              )
+                            )}
+                            fontWeight="600">
+                            {getActionButtonText(
+                              calculateTimeDifference(
+                                trip?.origin?.[0]?.arrive_by ||
+                                  trip?.stop?.[0]?.arrive_by ||
+                                  trip?.deadline ||
+                                  trip.timer_seconds
+                              )
+                            )}
                           </Text>
                         </Flex>
                       </CTableTd>

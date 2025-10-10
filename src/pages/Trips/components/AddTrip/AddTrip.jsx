@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import HeadBreadCrumb from "../../../../components/HeadBreadCrumb";
-import { Box, Flex, Text, useToast, Button } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import {Box, Flex, Text, useToast, Button} from "@chakra-ui/react";
+import {useForm} from "react-hook-form";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useMutation} from "@tanstack/react-query";
 import FirstSection from "./FirstSection";
 import SecondSection from "./SecondSection";
 import ThirdSection from "./ThirdSection";
@@ -12,13 +12,15 @@ import PackageSection from "./PackageSection";
 import TotalRatesSection from "./TotalRatesSection";
 import AddressSection from "./AddressSection";
 import tripsService from "../../../../services/tripsService";
-import { useSelector } from "react-redux";
-import { generateID } from "@utils/generateID";
+import {useSelector} from "react-redux";
+import {generateID} from "@utils/generateID";
 
-function AddTrip({ tripData = {} }) {
-  const { id } = useParams();
+function AddTrip({tripData = {}}) {
+  const {id} = useParams();
   const navigate = useNavigate();
   const toast = useToast();
+  const location = useLocation();
+  const addTrip = location?.pathname?.includes("add-trip");
   const userData = useSelector((state) => state?.auth?.user_data);
   const envId = useSelector((state) => state.auth.environmentId);
 
@@ -27,7 +29,7 @@ function AddTrip({ tripData = {} }) {
     setValue,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
     watch,
   } = useForm();
 
@@ -46,18 +48,18 @@ function AddTrip({ tripData = {} }) {
       driver_type: Array.isArray(data.driver_type)
         ? data.driver_type
         : data.driver_type
-          ? [data.driver_type]
-          : [],
+        ? [data.driver_type]
+        : [],
       trip_type: Array.isArray(data.trip_type)
         ? data.trip_type
         : data.trip_type
-          ? [data.trip_type]
-          : [],
+        ? [data.trip_type]
+        : [],
       status: Array.isArray(data.status)
         ? data.status
         : data.status
-          ? [data.status]
-          : [],
+        ? [data.status]
+        : [],
 
       lodify_fees_id: data.lodify_fee?.guid || data.lodify_fees_id,
       service_fee: data.lodify_fee?.amount || data.service_fee,
@@ -69,9 +71,11 @@ function AddTrip({ tripData = {} }) {
   };
 
   useEffect(() => {
-    const transformedData = transformTripData(tripData);
-    reset(transformedData);
-  }, [tripData]);
+    if (!addTrip) {
+      const transformedData = transformTripData(tripData);
+      reset(transformedData);
+    }
+  }, [tripData, addTrip]);
 
   const createTripMutation = useMutation({
     mutationFn: (data) => {
@@ -141,10 +145,10 @@ function AddTrip({ tripData = {} }) {
         object_data: {
           main_trip: {
             ...data,
-            companies_id: userData?.guid,
+            broker_users_id: userData?.guid,
             bold_pod: data.bold_pod?.[0],
             rate_confirmation: data.rate_confirmation?.[0],
-            ...(isUpdate && { trip_id: id }),
+            ...(isUpdate && {trip_id: id}),
           },
           trip_pickups: data.trip_pickups,
           accessorials: data.accessorials,
@@ -178,20 +182,13 @@ function AddTrip({ tripData = {} }) {
     }
   }, [errors]);
 
-  // useEffect(() => {
-  //   const subscription = watch((value, {name, type}) => {});
-  //   return () => subscription.unsubscribe();
-  // }, [watch]);
-
   return (
     <Box mt={id ? "20px" : "0px"}>
       {!id && (
         <>
           {" "}
           <HeadBreadCrumb />
-          <Box
-            h={"32px"}
-            mb={"30px"}>
+          <Box h={"32px"} mb={"30px"}>
             <Text
               mt="16px"
               fontSize={"24px"}
@@ -204,15 +201,11 @@ function AddTrip({ tripData = {} }) {
         </>
       )}
 
-      <form
-        action=""
-        onSubmit={handleSubmit(onSubmit)}>
+      <form action="" onSubmit={handleSubmit(onSubmit)}>
         <FirstSection control={control} />
         <ThirdSection control={control} />
 
-        <PackageSection
-          setValue={setValue}
-          control={control} />
+        <PackageSection setValue={setValue} control={control} />
         <TotalRatesSection control={control} />
         <FourthSection control={control} />
         <AddressSection
@@ -236,23 +229,19 @@ function AddTrip({ tripData = {} }) {
             borderRadius="8px"
             bg="transparent"
             mr="12px"
-            _hover={{ bg: "transparent" }}
+            _hover={{bg: "transparent"}}
             onClick={handleCancel}
             isDisabled={
               createTripMutation.isPending || updateTripMutation.isPending
             }>
-            <Text
-              ml="6px"
-              fontSize="14px"
-              fontWeight="600"
-              color="#A4A7AE">
+            <Text ml="6px" fontSize="14px" fontWeight="600" color="#A4A7AE">
               Cancel
             </Text>
           </Button>
           <Button
             w="80px"
             type="button"
-            _hover={{ bg: "#1570EF" }}
+            _hover={{bg: "#1570EF"}}
             bg="#1570EF"
             loadingText="Saving..."
             isLoading={
@@ -263,7 +252,7 @@ function AddTrip({ tripData = {} }) {
               console.log("Form errors:", errors);
               console.log(
                 "Is pending:",
-                createTripMutation.isPending || updateTripMutation.isPending,
+                createTripMutation.isPending || updateTripMutation.isPending
               );
 
               // Prevent default form submission and manually trigger
@@ -271,11 +260,7 @@ function AddTrip({ tripData = {} }) {
               console.log("Manually triggering form submission...");
               handleManualSubmit();
             }}>
-            <Text
-              ml="6px"
-              fontSize="14px"
-              fontWeight="600"
-              color="#fff">
+            <Text ml="6px" fontSize="14px" fontWeight="600" color="#fff">
               {createTripMutation.isPending || updateTripMutation.isPending
                 ? "Saving..."
                 : "Save"}

@@ -9,7 +9,19 @@ export const menuItems = [
     id: "trips",
     label: "Trips",
     icon: "/img/route.svg",
-    path: "trips",
+    path: "#",
+    children: [
+      {
+        id: "trips",
+        label: "Trips",
+        path: "trips",
+      },
+      {
+        id: "all-loads",
+        label: "All Loads",
+        path: "all-loads",
+      },
+    ],
   },
   {
     id: "carriers",

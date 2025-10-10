@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from "react";
 import {Box, Text} from "@chakra-ui/react";
+import {
+  calculateTimeDifference,
+  getTimerBackgroundColor,
+  getTimerTextColor,
+  formatTime,
+} from "@utils/timeUtils";
 
 const SimpleTimer = ({
   timeFromAPI = 0,
@@ -7,12 +13,13 @@ const SimpleTimer = ({
   className = "",
   style = {},
 }) => {
-  const [timeLeft, setTimeLeft] = useState(timeFromAPI);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
 
   useEffect(() => {
-    setTimeLeft(timeFromAPI);
-    setIsRunning(true);
+    const calculatedTime = calculateTimeDifference(timeFromAPI);
+    setTimeLeft(calculatedTime);
+    setIsRunning(calculatedTime > 0);
   }, [timeFromAPI]);
 
   useEffect(() => {
@@ -41,23 +48,6 @@ const SimpleTimer = ({
     };
   }, [isRunning, timeLeft, onTimeUp]);
 
-  const formatTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const getTextColor = (time) => {
-    if (time > 3600) return "black";
-    if (time > 1800) return "black";
-    if (time > 900) return "#EA580C";
-    return "#DC2626";
-  };
-
   return (
     <Box
       display="flex"
@@ -65,7 +55,6 @@ const SimpleTimer = ({
       justifyContent="center"
       minHeight="40px"
       minWidth="80px"
-      px={0}
       py={2}
       borderRadius="md"
       transition="all 0.3s ease"
@@ -74,7 +63,7 @@ const SimpleTimer = ({
       <Text
         fontSize="14px"
         fontWeight="600"
-        color={getTextColor(timeLeft)}
+        color={getTimerTextColor(timeLeft)}
         fontFamily="mono">
         {formatTime(timeLeft)}
       </Text>

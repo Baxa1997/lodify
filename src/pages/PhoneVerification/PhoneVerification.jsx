@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import styles from "./PhoneVerification.module.scss";
 
 const PhoneVerification = () => {
@@ -33,16 +33,18 @@ const PhoneVerification = () => {
     if (code.length === 4) {
       setIsLoading(true);
 
-      // Simulate API call
+      // Skip Firebase verification - always accept any 4-digit code or default 1234
       setTimeout(() => {
         setIsLoading(false);
+        console.log("Phone verification skipped - proceeding to dashboard");
         navigate("/admin/dashboard");
-      }, 1000);
+      }, 500);
     }
   };
 
   const handleResend = () => {
-    alert("Verification code resent!");
+    // Skip Firebase resend - just show success message
+    alert("Verification code resent! (Use any 4-digit code or 1234)");
   };
 
   return (
@@ -103,9 +105,7 @@ const PhoneVerification = () => {
 
           <p className={styles.resendText}>
             Didn't receive the email?{" "}
-            <span
-              className={styles.resendLink}
-              onClick={handleResend}>
+            <span className={styles.resendLink} onClick={handleResend}>
               Click to resend
             </span>
           </p>

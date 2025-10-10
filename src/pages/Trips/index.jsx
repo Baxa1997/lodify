@@ -12,7 +12,7 @@ import {useSelector} from "react-redux";
 
 const Trips = () => {
   const clientType = useSelector((state) => state.auth.clientType);
-  console.log("clientTypeclientType", clientType);
+
   return (
     <>
       <Flex flexDir={"column"} gap={"20px"}>

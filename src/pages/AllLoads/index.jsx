@@ -3,7 +3,7 @@ import {Flex, Text} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import tabsStyles from "../../styles/tabs.module.scss";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
-import ActiveTrips from "./modules/ActiveTrips";
+import ActiveLoads from "./modules/ActiveLoads";
 import ClosedTrips from "./modules/ClosedTrips";
 import {useSelector} from "react-redux";
 
@@ -26,7 +26,7 @@ const AllLoads = () => {
           </TabList>
 
           <TabPanel>
-            <ActiveTrips />
+            <ActiveLoads />
           </TabPanel>
           <TabPanel>
             <ClosedTrips />

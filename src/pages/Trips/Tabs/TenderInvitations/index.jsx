@@ -67,7 +67,13 @@ function TenderInvitations({tripType = ""}) {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["TRIPS_LIST", currentPage, pageSize, sortConfig, searchTerm],
+    queryKey: [
+      "TRIPS_LIST_TENDER",
+      currentPage,
+      pageSize,
+      sortConfig,
+      searchTerm,
+    ],
     queryFn: () =>
       tripsService.getList({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
@@ -76,6 +82,10 @@ function TenderInvitations({tripType = ""}) {
         object_data: {
           limit: 10,
           page: 0,
+          carriers_id:
+            clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
+              ? undefined
+              : userId,
           brokers_id:
             clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
               ? brokersId
@@ -106,7 +116,7 @@ function TenderInvitations({tripType = ""}) {
     tripsService
       .acceptTrip(data)
       .then((res) => {
-        queryClient.invalidateQueries({queryKey: ["TRIPS_LIST"]});
+        queryClient.invalidateQueries({queryKey: ["TRIPS_LIST_TENDER"]});
         setLoadingTripId(null);
       })
       .catch((error) => {
@@ -130,7 +140,7 @@ function TenderInvitations({tripType = ""}) {
     tripsService
       .rejectTrip(computedData)
       .then((res) => {
-        queryClient.invalidateQueries({queryKey: ["TRIPS_LIST"]});
+        queryClient.invalidateQueries({queryKey: ["TRIPS_LIST_TENDER"]});
         setLoadingTripId(null);
       })
       .catch((error) => {
@@ -214,19 +224,27 @@ function TenderInvitations({tripType = ""}) {
           onPageSizeChange={handlePageSizeChange}>
           <CTableHead zIndex={999999}>
             <Box as={"tr"}>
-              {tableElements.map((element) => (
-                <CTableTh
-                  zIndex={999999}
-                  maxW="334px"
-                  sortable={element.sortable}
-                  sortDirection={
-                    sortConfig.key === element.key ? sortConfig.direction : null
-                  }
-                  key={element.id}
-                  onSort={() => handleSort(element.key)}>
-                  {element.name}
-                </CTableTh>
-              ))}
+              {tableElements
+                ?.filter((element) =>
+                  clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
+                    ? element.key !== "actions"
+                    : true
+                )
+                .map((element) => (
+                  <CTableTh
+                    zIndex={999999}
+                    maxW="334px"
+                    sortable={element.sortable}
+                    sortDirection={
+                      sortConfig.key === element.key
+                        ? sortConfig.direction
+                        : null
+                    }
+                    key={element.id}
+                    onSort={() => handleSort(element.key)}>
+                    {element.name}
+                  </CTableTh>
+                ))}
             </Box>
           </CTableHead>
 
@@ -742,6 +760,53 @@ function TenderInvitations({tripType = ""}) {
                           timeFromAPI={trip?.timer_expiration || "  "}
                         />
                       </CTableTd>
+
+                      {clientType?.id !==
+                        "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
+                        <CTableTd>
+                          <Flex alignItems="center" gap={"16px"}>
+                            <Button
+                              p="0"
+                              minW="60px"
+                              fontSize="14px"
+                              fontWeight="600"
+                              bg="none"
+                              border="none"
+                              _hover={{bg: "none"}}
+                              isDisabled={
+                                loadingTripId === `reject-${trip.guid}` ||
+                                loadingTripId === `accept-${trip.guid}`
+                              }
+                              onClick={() => handleRejectTrip(trip)}>
+                              {loadingTripId === `reject-${trip.guid}` ? (
+                                <Spinner size="sm" />
+                              ) : (
+                                "Reject"
+                              )}
+                            </Button>
+                            <Button
+                              p="0"
+                              minW="60px"
+                              fontSize="14px"
+                              fontWeight="600"
+                              bg="none"
+                              border="none"
+                              color="#FF5B04"
+                              _hover={{bg: "none"}}
+                              isDisabled={
+                                loadingTripId === `reject-${trip.guid}` ||
+                                loadingTripId === `accept-${trip.guid}`
+                              }
+                              onClick={() => handleAcceptTrip(trip)}>
+                              {loadingTripId === `accept-${trip.guid}` ? (
+                                <Spinner size="sm" color="#FF5B04" />
+                              ) : (
+                                "Accept"
+                              )}
+                            </Button>
+                          </Flex>
+                        </CTableTd>
+                      )}
                     </CTableRow>
                   </React.Fragment>
                 );

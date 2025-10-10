@@ -54,4 +54,9 @@ export const tableElements = [
     name: "Timer",
     sortable: true,
   },
+  {
+    key: "actions",
+    name: "Action",
+    sortable: false,
+  },
 ];

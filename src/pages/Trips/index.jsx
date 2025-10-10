@@ -36,22 +36,24 @@ const Trips = () => {
 
         <Tabs className={styles.tabsContainer}>
           <TabList>
-            {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
-              <Tab onClick={() => setTripType("tender")}>
-                Tender Invitations
-              </Tab>
-            )}
+            {/* {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && ( */}
+            <Tab onClick={() => setTripType("tender")}>Tender Invitations</Tab>
+            {/* )} */}
             <Tab>Actions Needed</Tab>
             <Tab onClick={() => setTripType("upcoming")}>Upcoming</Tab>
             <Tab onClick={() => setTripType("in_transit")}>In Transit</Tab>
-            <Tab onClick={() => setTripType("completed")}>History</Tab>
+            <Tab onClick={() => setTripType("completed")}>
+              {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
+                ? "History"
+                : "Completed"}
+            </Tab>
           </TabList>
 
-          {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
-            <TabPanel>
-              <TenderInvitations tripType={tripType} />
-            </TabPanel>
-          )}
+          {/* {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && ( */}
+          <TabPanel>
+            <TenderInvitations tripType={tripType} />
+          </TabPanel>
+          {/* )} */}
 
           <TabPanel>
             <ActionsNeeded />

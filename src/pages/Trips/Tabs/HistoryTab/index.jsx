@@ -40,6 +40,7 @@ function HistoryTab({tripType = ""}) {
   const envId = useSelector((state) => state.auth.environmentId);
   const clientType = useSelector((state) => state.auth.clientType);
   const brokersId = useSelector((state) => state.auth.user_data?.brokers_id);
+  const userId = useSelector((state) => state.auth.userId);
 
   const getLoadTypeColor = (loadType) => {
     const loadTypeColors = {
@@ -84,6 +85,10 @@ function HistoryTab({tripType = ""}) {
           search: searchTerm,
           limit: pageSize,
           page: (currentPage - 1) * pageSize,
+          carriers_id:
+            clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
+              ? undefined
+              : userId,
           brokers_id:
             clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
               ? brokersId

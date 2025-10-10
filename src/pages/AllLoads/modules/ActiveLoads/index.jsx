@@ -28,7 +28,7 @@ import {format} from "date-fns";
 import SimpleTimer from "@components/SimpleTimer";
 import {tableElements} from "../../components/hooks";
 
-function ActiveLoads({selectedTabIndex}) {
+function ActiveLoads() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,14 +65,7 @@ function ActiveLoads({selectedTabIndex}) {
     error,
     refetch,
   } = useQuery({
-    queryKey: [
-      "TRIPS_LIST",
-      selectedTabIndex,
-      currentPage,
-      pageSize,
-      sortConfig,
-      searchTerm,
-    ],
+    queryKey: ["TRIPS_LIST", currentPage, pageSize, sortConfig, searchTerm],
     queryFn: () =>
       tripsService.getList({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
@@ -87,8 +80,6 @@ function ActiveLoads({selectedTabIndex}) {
         table: "trips",
       }),
     select: (data) => data?.data?.response || [],
-    refetchOnWindowFocus: false,
-    staleTime: 30000,
   });
 
   const handleAcceptTrip = (trip) => {

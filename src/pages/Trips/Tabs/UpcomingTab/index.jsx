@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   Collapse,
   Flex,
   Text,
@@ -37,6 +38,7 @@ function UpcomingTab() {
   const envId = useSelector((state) => state.auth.environmentId);
   const clientType = useSelector((state) => state.auth.clientType);
   const brokersId = useSelector((state) => state.auth.user_data?.brokers_id);
+
   const getLoadTypeColor = (loadType) => {
     const loadTypeColors = {
       Preloaded: "orange",
@@ -81,8 +83,9 @@ function UpcomingTab() {
         table: "trips",
       }),
     select: (data) => data?.data?.response || [],
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
-    staleTime: 30000,
+    staleTime: 0,
   });
 
   const handlePageChange = (page) => {
@@ -623,9 +626,22 @@ function UpcomingTab() {
                       </CTableTd>
                       <CTableTd>
                         <Flex alignItems="center" gap={2}>
-                          <Text color="#EF6820" fontWeight="600">
-                            Assign
-                          </Text>
+                          {trip?.drivers?.first_name ? (
+                            <Text color="#535862" fontWeight="400">
+                              {trip?.drivers?.first_name}
+                            </Text>
+                          ) : (
+                            <Button
+                              bg="none"
+                              border="none"
+                              color="#EF6820"
+                              fontWeight="600"
+                              px="0"
+                              _hover={{bg: "none"}}
+                              onClick={(e) => e.stopPropagation()}>
+                              Assign
+                            </Button>
+                          )}
                         </Flex>
                       </CTableTd>
                     </CTableRow>

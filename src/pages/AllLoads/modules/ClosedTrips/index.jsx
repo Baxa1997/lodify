@@ -88,8 +88,10 @@ function ClosedTrips({selectedTabIndex}) {
         table: "trips",
       }),
     select: (data) => data?.data?.response || [],
+    enabled: true,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
-    staleTime: 30000,
+    staleTime: 0,
   });
 
   const handlePageChange = (page) => {

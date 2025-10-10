@@ -67,8 +67,9 @@ function ActionsNeeded() {
         table: "trips",
       }),
     select: (data) => data?.data?.response || [],
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
-    staleTime: 30000,
+    staleTime: 0,
   });
 
   const handlePageChange = (page) => {
@@ -103,7 +104,7 @@ function ActionsNeeded() {
   const totalPages = tripsData?.total
     ? Math.ceil(tripsData.total / pageSize)
     : 0;
-  const trips = tripsData?.data || tripsData || [];
+  const trips = tripsData || [];
 
   return (
     <Box mt={"26px"}>

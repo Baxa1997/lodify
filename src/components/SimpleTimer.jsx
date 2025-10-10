@@ -20,7 +20,7 @@ const SimpleTimer = ({
     setTimeLeft(calculatedTime);
     setIsRunning(calculatedTime > 0);
   }, [timeFromAPI]);
-  console.log("timeFromAPItimeFromAPI", timeFromAPI);
+
   useEffect(() => {
     let interval;
 

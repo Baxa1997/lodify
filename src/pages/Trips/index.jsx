@@ -1,14 +1,13 @@
-import React from "react";
-import {Box, Flex, Text, Button} from "@chakra-ui/react";
+import {Flex, Text} from "@chakra-ui/react";
+import {useSelector} from "react-redux";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import styles from "../../styles/tabs.module.scss";
 import HeadBreadCrumb from "../../components/HeadBreadCrumb";
+import styles from "../../styles/tabs.module.scss";
+import AddTripMenu from "./modules/AddTripMenu";
+import ActionsNeeded from "./Tabs/ActionsNeeded";
 import HistoryTab from "./Tabs/HistoryTab";
 import TransitTab from "./Tabs/TransitTab.jsx";
 import UpcomingTab from "./Tabs/UpcomingTab";
-import AddTripMenu from "./modules/AddTripMenu";
-import ActionsNeeded from "./Tabs/ActionsNeeded";
-import {useSelector} from "react-redux";
 
 const Trips = () => {
   const clientType = useSelector((state) => state.auth.clientType);
@@ -17,6 +16,17 @@ const Trips = () => {
     <>
       <Flex flexDir={"column"} gap={"20px"}>
         <HeadBreadCrumb />
+
+        {clientType?.id !== "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
+          <Text
+            h={"32px"}
+            color={"#181D27"}
+            fontWeight={"600"}
+            fontSize={"24px"}>
+            Trips
+          </Text>
+        )}
+
         {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
           <AddTripMenu />
         )}

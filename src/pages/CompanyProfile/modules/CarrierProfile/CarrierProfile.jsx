@@ -13,7 +13,7 @@ export const CarrierProfile = () => {
     {/* <Box className={styles.header}>
       <MainHeading size="18px">Carrier Profile</MainHeading>
     </Box> */}
-    <MainInfo />
+    <MainInfo generalInfo={generalInfo} />
     <CarrierTabs
       carrierDetails={carrierDetails}
       companySnapshot={companySnapshot}

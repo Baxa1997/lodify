@@ -20,6 +20,7 @@ export const useCarrierProfileProps = () => {
   const generalInfo = {
     ...companySnapshot,
     ...carrierDetails,
+    ...operation,
   };
 
   useEffect(() => {

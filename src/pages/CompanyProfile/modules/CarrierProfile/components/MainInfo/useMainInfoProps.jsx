@@ -71,27 +71,38 @@ export const useMainInfoProps = () => {
     case "Power Units":
       return <img
         src="/img/powerUnit.svg"
-        alt="Power Units" />;
+        alt="Power Units"
+      />;
     case "Box Trucks":
       return <img
         src="/img/boxTrucks.svg"
-        alt="Box Trucks" />;
+        alt="Box Trucks"
+      />;
     case "Low Boy":
       return <img
         src="/img/lowBoy.svg"
-        alt="Low Boy" />;
+        alt="Low Boy"
+      />;
     case "Heavy Haul":
       return <img
         src="/img/heavyHaul.svg"
-        alt="Heavy Haul" />;
+        alt="Heavy Haul"
+      />;
     case "Flat Bed":
       return <img
         src="/img/flatBed.svg"
-        alt="Flat Bed" />;
+        alt="Flat Bed"
+      />;
+    case "Drivers":
+      return <img
+        src="/img/team_drivers2.png"
+        alt="Drivers"
+      />;
     default:
       return <img
         src="/img/dryVan.svg"
-        alt="Dry Van" />;
+        alt="Dry Van"
+      />;
     }
   };
 

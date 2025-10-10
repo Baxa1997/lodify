@@ -36,13 +36,15 @@ const SimplePagination = ({ limit, setLimit = () => {}, page = 1, setPage = () =
         <button
           className={styles.actionBtn}
           onClick={handlePrev}
-          disabled={page === 1}>
+          disabled={page === 1}
+        >
           Prev
         </button>
         <button
           className={styles.actionBtn}
           onClick={handleNext}
-          disabled={page === pageCount}>
+          disabled={page === pageCount}
+        >
           Next
         </button>
       </div>

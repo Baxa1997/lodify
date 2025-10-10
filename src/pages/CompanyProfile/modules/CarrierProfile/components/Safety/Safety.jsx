@@ -3,18 +3,36 @@ import { StatusText } from "../../../../components/StatusText";
 import { CardData } from "../../../../components/CardData";
 import { format, isValid } from "date-fns";
 import { InfoAccordionItem, InfoAccordionButton, InfoAccordionPanel, InfoAccordionTitle } from "../../../../components/InfoAccordion";
+import { DataTable } from "@components/DataTable";
+import { useSafetyProps } from "./useSafetyProps";
+import MainHeading from "@components/MainHeading";
 
 export const Safety = ({ data = {} }) => {
 
+  // const {
+  //   safety_rating_date,
+  //   safety_rating,
+  //   safety_review_date,
+  //   safety_type,
+  //   mcs_150_form_date,
+  //   mcs_150_year,
+  //   mcs_150_mileage,
+  // } = data;
+
   const {
-    safety_rating_date,
-    safety_rating,
-    safety_review_date,
-    safety_type,
-    mcs_150_form_date,
-    mcs_150_year,
-    mcs_150_mileage,
-  } = data;
+    enabled,
+    headData,
+    bodyData,
+    count,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    onAccordionChange,
+    filterOptions,
+    handleFilter,
+    filter,
+  } = useSafetyProps();
 
   return <Box>
     <InfoAccordionItem >
@@ -24,7 +42,7 @@ export const Safety = ({ data = {} }) => {
         </InfoAccordionTitle>
       </InfoAccordionButton>
       <InfoAccordionPanel>
-        <Box
+        {/* <Box
           display="flex"
           alignItems="flex-start"
           gap="20px"
@@ -107,8 +125,61 @@ export const Safety = ({ data = {} }) => {
               data="None"
             />
           </CardData>
+        </Box> */}
+
+        <Box
+          display="grid"
+          gridTemplateColumns="repeat(5, 1fr)"
+          gap="10px"
+          mb="20px"
+        >
+          {
+            filterOptions?.map(item => <FilterBox
+              key={item}
+              title={item}
+              isSelected={filter === item}
+              onChange={handleFilter}
+            />)
+          }
+        </Box>
+
+        <Box>
+          <DataTable
+            headData={headData}
+            data={bodyData}
+            border="1px solid"
+            borderColor="gray.border-main"
+            borderRadius="12px"
+            count={count}
+            page={page}
+            limit={limit}
+            setLimit={setLimit}
+            setPage={setPage}
+            pagination
+          />
         </Box>
       </InfoAccordionPanel>
     </InfoAccordionItem>
+  </Box>;
+};
+
+const FilterBox = ({ title, isSelected, onChange }) => {
+  return <Box
+    onClick={() => onChange(title)}
+    border="1px solid"
+    borderColor={isSelected ? "orange.500" : "gray.border-main"}
+    borderRadius="12px"
+    py="20px"
+    px="16px"
+    display="flex"
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+    textAlign="center"
+    cursor="pointer"
+    fontWeight="600"
+    fontSize="12px"
+  >
+    {title}
   </Box>;
 };

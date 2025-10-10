@@ -26,6 +26,7 @@ import { Authority } from "../Authority";
 import { Safety } from "../Safety";
 import { ActiveAndPendingInsurance } from "../ActiveAndPendingInsurance";
 import { Operations } from "../Operations";
+import { Violation } from "../Violation";
 
 export const Overview = ({
   generalInfo,
@@ -55,6 +56,7 @@ export const Overview = ({
         companySnapshot={companySnapshot}
         operation={operation}
       />
+      <Violation />
     </InfoAccordion>
     {/* <MainSection
       data={generalInfo}

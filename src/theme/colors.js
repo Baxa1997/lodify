@@ -40,4 +40,9 @@ export const colors = {
   tertiary: {
     600: "#535862",
   },
+  orange: {
+    50: "#FEF6EE",
+    400: "#F38744",
+    500: "#EF6820",
+  },
 };

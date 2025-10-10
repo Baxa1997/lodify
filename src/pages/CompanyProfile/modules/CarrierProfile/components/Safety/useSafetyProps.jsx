@@ -1,40 +1,18 @@
 import { useState } from "react";
 import { useGetSmsResult } from "../../../../services/companyInfo.service";
 
-export const useSmsResultProps = () => {
-  const [enabled, setEnabled] = useState(false);
-  const [filter, setFilter] = useState("");
+export const useSafetyProps = () => {
+  const [enabled, setEnabled] = useState(true);
+  const [filter, setFilter] = useState("Unsafe Driving");
 
-  const filterOptions = [
-    {
-      label: "Unsafe Driving",
-      value: "Unsafe Driving",
-    },
-    {
-      label: "Hours-of-Service Compliance",
-      value: "Hours-of-Service Compliance",
-    },
-    {
-      label: "Vehicle Maintenance",
-      value: "Vehicle Maintenance",
-    },
-    {
-      label: "Controlled Substances & Alcohol",
-      value: "Controlled Substances/&#8203;Alcohol",
-    },
-    {
-      label: "Hazardous Materials Compliance",
-      value: "Hazardous Materials Compliance",
-    },
-    {
-      label: "Driver Fitness",
-      value: "Driver Fitness",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const filterOptions = [ "Unsafe Driving", "Hours-of-Service Compliance","Vehicle Maintenance","Controlled Substances & Alcohol", "Driver Fitness"];
 
   const { data } = useGetSmsResult({
     enabled,
-  }, { basic_desc: filter });
+  }, { basic_desc: filter, offset: (page - 1) * limit, limit });
 
   const onAccordionChange = () => {
     setEnabled(true);
@@ -85,6 +63,11 @@ export const useSmsResultProps = () => {
     enabled,
     headData,
     bodyData: data?.response,
+    count: data?.count,
+    page,
+    setPage,
+    limit,
+    setLimit,
     onAccordionChange,
     filterOptions,
     handleFilter,

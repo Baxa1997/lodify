@@ -38,6 +38,7 @@ function ActionsNeeded() {
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
   const envId = useSelector((state) => state.auth.environmentId);
+  const clientType = useSelector((state) => state.auth.clientType);
 
   const getCustomerInfo = (trip) => {
     return {
@@ -65,6 +66,10 @@ function ActionsNeeded() {
           search: searchTerm,
           limit: pageSize,
           page: (currentPage - 1) * pageSize,
+          brokers_id:
+            clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
+              ? clientType?.id
+              : undefined,
         },
         table: "trips",
       }),

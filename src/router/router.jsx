@@ -117,7 +117,7 @@ const Router = () => {
         <Route path="carriers" element={<CompanyProfile />} />
         <Route path="trips" element={<Trips />} />
         <Route path="trips/:id" element={<UpcomingTabSinglePage />} />
-        <Route path="trips/all-loads" element={<AllLoads />} />
+        <Route path="all-loads" element={<AllLoads />} />
         <Route path="trips/add-trip" element={<AddTrip />} />
         <Route path="shipper" element={<Shipper />} />
         <Route path="representative" element={<Representative />} />

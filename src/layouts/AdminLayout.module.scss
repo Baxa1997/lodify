@@ -159,7 +159,7 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
   }
 
   &.active {
-    background-color: #264D5C;
+    background-color: rgba(255, 255, 255, 0.1) !important;
     color: $white;
     position: relative;
   }
@@ -400,7 +400,7 @@ $shadow-sidebar: 4px 0 20px rgba(0, 0, 0, 0.1);
   }
 
   &.active {
-    background-color: #22262f !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
     color: white !important;
 
     &::before {

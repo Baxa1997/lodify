@@ -145,6 +145,7 @@ function AddTrip({tripData = {}}) {
         object_data: {
           main_trip: {
             ...data,
+            brokers_id: userData?.brokers_id,
             broker_users_id: userData?.guid,
             bold_pod: data.bold_pod?.[0],
             rate_confirmation: data.rate_confirmation?.[0],

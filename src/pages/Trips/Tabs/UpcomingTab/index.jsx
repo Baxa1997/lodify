@@ -35,6 +35,7 @@ function UpcomingTab() {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedRows, setExpandedRows] = useState(new Set());
   const envId = useSelector((state) => state.auth.environmentId);
+  const clientType = useSelector((state) => state.auth.clientType);
 
   const getLoadTypeColor = (loadType) => {
     const loadTypeColors = {
@@ -72,6 +73,10 @@ function UpcomingTab() {
           search: searchTerm,
           limit: pageSize,
           page: (currentPage - 1) * pageSize,
+          brokers_id:
+            clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
+              ? clientType?.id
+              : undefined,
         },
         table: "trips",
       }),

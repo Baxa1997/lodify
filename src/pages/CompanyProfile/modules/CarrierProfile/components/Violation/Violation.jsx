@@ -31,7 +31,7 @@ export const Violation = () => {
           fontWeight="500"
           bgColor="orange.50"
           color="orange.400"
-        >Unsafe Driving: 70</Badge>
+        >Unsafe Driving: {count}</Badge>
       </Box>
     </InfoAccordionButton>
     <InfoAccordionPanel>

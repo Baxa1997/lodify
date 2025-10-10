@@ -156,6 +156,9 @@ export const Safety = ({ data = {} }) => {
             setLimit={setLimit}
             setPage={setPage}
             pagination
+            tableProps={{
+              layout: "fixed",
+            }}
           />
         </Box>
       </InfoAccordionPanel>

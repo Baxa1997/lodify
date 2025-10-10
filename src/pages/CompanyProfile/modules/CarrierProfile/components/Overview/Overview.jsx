@@ -49,7 +49,10 @@ export const Overview = ({
       <ConnectedCard />
       <State />
       <Equipment />
-      <Authority data={carrierDetails} />
+      <Authority
+        carrierDetails={carrierDetails}
+        companySnapshot={companySnapshot}
+      />
       <ActiveAndPendingInsurance />
       <Safety data={companySnapshot} />
       <Operations

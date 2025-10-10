@@ -36,6 +36,9 @@ export const useSafetyProps = () => {
     {
       label: "Violation",
       key: "section_desc",
+      thProps: {
+        width: "480px",
+      },
     },
     {
       label: "Vehicle Plate Number",

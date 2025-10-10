@@ -11,6 +11,10 @@ export const StatusBadge = ({ children, status }) => {
       bg: "red.500",
       color: "#fff",
     },
+    rejected: {
+      bg: "red.500",
+      color: "#fff",
+    },
     property: {
       bg: "secondary.700",
       color: "#fff",
@@ -22,10 +26,10 @@ export const StatusBadge = ({ children, status }) => {
     borderRadius="16px"
     fontSize="12px"
     fontWeight="500"
-    color={statuses[status].color}
+    color={statuses[status]?.color || statuses["active"].color}
     border="1px solid"
-    borderColor={statuses[status].border}
-    bgColor={statuses[status].bg}
+    borderColor={statuses[status]?.border || statuses["active"].border}
+    bgColor={statuses[status]?.bg || statuses["active"].bg}
   >
     {children}  
   </Badge>;

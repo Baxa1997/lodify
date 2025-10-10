@@ -44,9 +44,9 @@ export const Overview = ({
   >
     <SidebarTabs />
     <InfoAccordion>
-      <Connection />
+      {/* <Connection />
       <VictimIdentity />
-      <ConnectedCard />
+      <ConnectedCard /> */}
       <State />
       <Equipment />
       <Authority

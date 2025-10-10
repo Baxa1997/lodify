@@ -32,6 +32,7 @@ export const Overview = ({
   companySnapshot,
   carrierDetails,
   insuranceHistory,
+  operation,
 }) => {
 
   return <Box
@@ -50,7 +51,10 @@ export const Overview = ({
       <Authority data={carrierDetails} />
       <ActiveAndPendingInsurance />
       <Safety data={companySnapshot} />
-      <Operations data={companySnapshot} />
+      <Operations
+        companySnapshot={companySnapshot}
+        operation={operation}
+      />
     </InfoAccordion>
     {/* <MainSection
       data={generalInfo}

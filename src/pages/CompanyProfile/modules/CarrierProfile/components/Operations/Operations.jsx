@@ -1,11 +1,11 @@
 import { Box, Text } from "@chakra-ui/react";
-import { SectionCard, SectionCardBody, SectionCardHeader } from "../../../../components/SectionCard/SectionCard";
 import { CardData } from "../../../../components/CardData";
 import { StatusText } from "../../../../components/StatusText";
 import { useOperationsProps } from "./useOperationsProps";
 import { responseStatuses } from "@utils/getResponseStatuses";
+import { InfoAccordionItem, InfoAccordionButton, InfoAccordionPanel, InfoAccordionTitle } from "../../../../components/InfoAccordion";
 
-export const Operations = ({ data = {} }) => {
+export const Operations = ({ companySnapshot, operation = { cargo_types_id_data: {}, cargo_types_id: {} } }) => {
 
   const { extraData } = useOperationsProps();
 
@@ -14,31 +14,73 @@ export const Operations = ({ data = {} }) => {
     us_dot_status,
     operating_status,
     out_of_service_date,
-  } = data;
+  } = companySnapshot;
+
+  const {
+    add_date,
+    carrier_operation,
+    hm_flag,
+    cargo_types_id_data: {
+      crgo_beverages,
+      crgo_drybulk,
+      crgo_produce,
+      crgo_household,
+      crgo_logpole,
+      crgo_mobilehome,
+      crgo_passengers,
+      crgo_waterwell,
+      crgo_cargoothr_desc,
+      crgo_chem,
+      crgo_drivetow,
+      crgo_genfreight,
+      crgo_liqgas,
+      crgo_meat,
+      crgo_oilfield,
+      crgo_cargoothr,
+      crgo_usmail,
+      crgo_coalcoke,
+      crgo_farmsupp,
+      crgo_grainfeed,
+      crgo_livestock,
+      crgo_metalsheet,
+      crgo_paperprod,
+      crgo_utility,
+    } = {},
+    equipment_id_data: {
+      fleetsize,
+      power_units,
+      truck_units,
+      owntract,
+      owntruck,
+      owntrail,
+    } = {},
+    operation_drivers_id_data: {
+      total_drivers,
+      total_cdl,
+      avg_drivers_leased_per_month,
+      driver_inter_total,
+      interstate_within_100_miles,
+      interstate_beyond_100_miles,
+      total_intrastate_drivers,
+      intrastate_within_100_miles,
+      intrastate_beyond_100_miles,
+    } = {},
+  } = operation;
+
+  const carrierOperationMap = {
+    A: "Interstate",
+    B: "Intrastate Hazmat",
+    C: "Intrastate Non-Hazmat",
+  };
 
   return <Box>
-    <SectionCard
-      isAccordion
-      padding="0 !important"
-      variant="card"
-      overflow="hidden"
-    >
-      <SectionCardHeader
-        bgColor="gray.200"
-        borderBottom="1px solid"
-        borderColor="gray.border-main"
-        padding="20px 24px"
-        borderTopLeftRadius="12px"
-        borderTopRightRadius="12px">
-        <Text
-          fontSize="18px"
-          fontWeight="600"
-          color="primary.500"
-        >
+    <InfoAccordionItem >
+      <InfoAccordionButton>
+        <InfoAccordionTitle>
           Operations
-        </Text>
-      </SectionCardHeader>
-      <SectionCardBody padding="20px">
+        </InfoAccordionTitle>
+      </InfoAccordionButton>
+      <InfoAccordionPanel>
         <Box
           display="grid"
           gridTemplateColumns="1fr 1fr"
@@ -61,7 +103,7 @@ export const Operations = ({ data = {} }) => {
             />
             <StatusText
               title="DOT Date:"
-              data={"None"}
+              data={add_date || "N/A"}
             />
           </CardData>
           <CardData
@@ -83,7 +125,7 @@ export const Operations = ({ data = {} }) => {
               data={out_of_service_date}
             />
           </CardData>
-          {/* <CardData
+          <CardData
             display="flex"
             flexDirection="column"
             flexGrow={1}
@@ -102,13 +144,13 @@ export const Operations = ({ data = {} }) => {
             />
             <StatusText
               title="Shipper Operation:"
-              data={"None"}
+              data={carrierOperationMap[carrier_operation] || "None"}
             />
             <StatusText
               title="Hazmat Indicator:"
-              data={"No"}
+              data={hm_flag === "Y" ? "Yes" : "No"}
             />
-          </CardData> */}
+          </CardData>
           <CardData
             display="flex"
             flexDirection="column"
@@ -124,7 +166,8 @@ export const Operations = ({ data = {} }) => {
             </Text>
             <Box
               display="flex"
-              gap="8px">
+              gap="8px"
+            >
               <Box flexGrow={1}>
                 <StatusText
                   title="(A) Authorized for  Hire:"
@@ -176,7 +219,7 @@ export const Operations = ({ data = {} }) => {
             </Box>
           </CardData>
         </Box>
-        {/* <Box mt="40px">
+        <Box mt="40px">
           <CardData>
             <Text
               fontSize="16px"
@@ -194,46 +237,122 @@ export const Operations = ({ data = {} }) => {
               <Box
                 display="flex"
                 flexDirection="column"
-                gap="8px">
-                <Text color="secondary.700">Beverages</Text>
-                <Text color="secondary.700">Commodities Dry Bulk</Text>
-                <Text color="secondary.700">Fresh Produce</Text>
-                <Text color="secondary.700">Household Goods</Text>
-                <Text color="secondary.700">Logs, Poles, Beams, Lumber</Text>
-                <Text color="secondary.700">Mobile Homes</Text>
-                <Text color="secondary.700">Passengers</Text>
-                <Text color="secondary.700">Water Well</Text>
+                gap="8px"
+              >
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_beverages ? "600" : "400"}
+                >Beverages</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_drybulk ? "600" : "400"}
+                >Commodities Dry Bulk</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_produce ? "600" : "400"}
+                >Fresh Produce</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_household ? "600" : "400"}
+                >Household Goods</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_logpole ? "600" : "400"}
+                >Logs, Poles, Beams, Lumber</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_mobilehome ? "600" : "400"}
+                >Mobile Homes</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_passengers ? "600" : "400"}
+                >Passengers</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_waterwell ? "600" : "400"}
+                >Water Well</Text>
               </Box>
               <Box
                 display="flex"
                 flexDirection="column"
-                gap="8px">
-                <Text color="secondary.700">Beverages</Text>
-                <Text color="secondary.700">Commodities Dry Bulk</Text>
-                <Text color="secondary.700">Fresh Produce</Text>
-                <Text color="secondary.700">Household Goods</Text>
-                <Text color="secondary.700">Logs, Poles, Beams, Lumber</Text>
-                <Text color="secondary.700">Mobile Homes</Text>
-                <Text color="secondary.700">Passengers</Text>
-                <Text color="secondary.700">Water Well</Text>
+                gap="8px"
+              >
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_cargoothr_desc ? "600" : "400"}
+                >Other Description</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_chem ? "600" : "400"}
+                >Chemicals</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_drivetow ? "600" : "400"}
+                >Driveway/Towaway</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_genfreight ? "600" : "400"}
+                >General Freight</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_liqgas ? "600" : "400"}
+                >Liquids, Gas</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_meat ? "600" : "400"}
+                >Meat</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_oilfield ? "600" : "400"}
+                >Oilfield Equipment</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_cargoothr ? "600" : "400"}
+                >Other</Text>
               </Box>
               <Box
                 display="flex"
                 flexDirection="column"
-                gap="8px">
-                <Text color="secondary.700">Beverages</Text>
-                <Text color="secondary.700">Commodities Dry Bulk</Text>
-                <Text color="secondary.700">Fresh Produce</Text>
-                <Text color="secondary.700">Household Goods</Text>
-                <Text color="secondary.700">Logs, Poles, Beams, Lumber</Text>
-                <Text color="secondary.700">Mobile Homes</Text>
-                <Text color="secondary.700">Passengers</Text>
-                <Text color="secondary.700">Water Well</Text>
+                gap="8px"
+              >
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_usmail ? "600" : "400"}
+                >US Mail</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_coalcoke ? "600" : "400"}
+                >Coal/Coke</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_farmsupp ? "600" : "400"}
+                >Farm Supplies</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_grainfeed ? "600" : "400"}
+                >Grain, Feed, Hay</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_livestock ? "600" : "400"}
+                >Livestock Containers</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_metalsheet ? "600" : "400"}
+                >Metal, Sheets, Coils, Rolls</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_paperprod ? "600" : "400"}
+                >Paper Products</Text>
+                <Text
+                  color="secondary.700"
+                  fontWeight={crgo_utility ? "600" : "400"}
+                >Uitilty</Text>
               </Box>
               <Box
                 display="flex"
                 flexDirection="column"
-                gap="8px">
+                gap="8px"
+              >
                 <Text color="secondary.700">Beverages</Text>
                 <Text color="secondary.700">Commodities Dry Bulk</Text>
                 <Text color="secondary.700">Fresh Produce</Text>
@@ -252,8 +371,8 @@ export const Operations = ({ data = {} }) => {
               Other Cargo:
             </Text>
           </CardData>
-        </Box> */}
-        {/* <Box mt="40px">
+        </Box>
+        <Box mt="40px">
           <CardData>
             <Text
               fontSize="16px"
@@ -275,15 +394,15 @@ export const Operations = ({ data = {} }) => {
               >
                 <StatusText
                   title="Total Drivers:"
-                  data="320"
+                  data={total_drivers}
                 />
                 <StatusText
                   title="CDL Employed Drivers:"
-                  data="320"
+                  data={total_cdl}
                 />
                 <StatusText
                   title="Monthly Avarage Leased Drivers:"
-                  data="320"
+                  data={avg_drivers_leased_per_month}
                 />
               </Box>
               <Box
@@ -293,15 +412,15 @@ export const Operations = ({ data = {} }) => {
               >
                 <StatusText
                   title="Interstate Drivers:"
-                  data="320"
+                  data={driver_inter_total}
                 />
                 <StatusText
                   title="Interstate < 100 Miles:"
-                  data="320"
+                  data={interstate_within_100_miles}
                 />
                 <StatusText
                   title="Interstate < 100 Miles:"
-                  data="320"
+                  data={interstate_beyond_100_miles}
                 />
               </Box>
               <Box
@@ -311,15 +430,15 @@ export const Operations = ({ data = {} }) => {
               >
                 <StatusText
                   title="Interstate Drivers:"
-                  data="320"
+                  data={total_intrastate_drivers}
                 />
                 <StatusText
                   title="Interstate < 100 Miles:"
-                  data="320"
+                  data={intrastate_within_100_miles}
                 />
                 <StatusText
                   title="Interstate > 100 Miles:"
-                  data="320"
+                  data={intrastate_beyond_100_miles}
                 />
               </Box>
             </Box>
@@ -346,16 +465,16 @@ export const Operations = ({ data = {} }) => {
                 gap="8px"
               >
                 <StatusText
-                  title="Fleet Sizw:"
-                  data="320"
+                  title="Fleet Size:"
+                  data={fleetsize}
                 />
                 <StatusText
                   title="Total Power Units:"
-                  data="320"
+                  data={power_units}
                 />
                 <StatusText
                   title="Total Trucks:"
-                  data="320"
+                  data={truck_units}
                 />
               </Box>
               <Box
@@ -365,33 +484,33 @@ export const Operations = ({ data = {} }) => {
               >
                 <StatusText
                   title="Tractors Owned:"
-                  data="320"
+                  data={owntract}
                 />
                 <StatusText
                   title="Trucks Owned:"
-                  data="320"
+                  data={owntruck}
                 />
                 <StatusText
                   title="Trailers Owned:"
-                  data="320"
+                  data={owntrail}
                 />
               </Box>
-              <Box
+              {/* <Box
                 display="flex"
                 flexDirection="column"
                 gap="8px"
               >
                 <StatusText
                   title="Tractors Term Leased:"
-                  data="320"
+                  data="None"
                 />
                 <StatusText
                   title="Trucks term Leased:"
-                  data="320"
+                  data="None"
                 />
                 <StatusText
                   title="Trailers Term Leased:"
-                  data="320"
+                  data="None"
                 />
               </Box>
               <Box
@@ -401,21 +520,21 @@ export const Operations = ({ data = {} }) => {
               >
                 <StatusText
                   title="Tractors Trip Leased:"
-                  data="320"
+                  data="None"
                 />
                 <StatusText
                   title="Trucks Trip Leased:"
-                  data="320"
+                  data="None"
                 />
                 <StatusText
                   title="Trailers Trip Leased:"
-                  data="320"
+                  data="None"
                 />
-              </Box>
+              </Box> */}
             </Box>
           </CardData>
-        </Box> */}
-      </SectionCardBody>
-    </SectionCard>
+        </Box>
+      </InfoAccordionPanel>
+    </InfoAccordionItem>
   </Box>;
 };

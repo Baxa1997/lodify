@@ -301,7 +301,7 @@ function TenderInvitations({tripType = ""}) {
                             cursor="pointer"
                             _hover={{textDecoration: "underline"}}
                             color="#181D27">
-                            {trip.shipper?.name || ""}
+                            {trip.customer?.name || ""}
                           </Text>
                         </Tooltip>
                       </CTableTd>

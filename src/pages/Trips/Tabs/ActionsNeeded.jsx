@@ -1,4 +1,12 @@
-import {Box, Flex, Text, Tooltip, VStack} from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  Tooltip,
+  VStack,
+  Spinner,
+  Center,
+} from "@chakra-ui/react";
 import SimpleTimer from "@components/SimpleTimer";
 import {
   CTable,
@@ -49,7 +57,13 @@ function ActionsNeeded() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["TRIPS_LIST", currentPage, pageSize, sortConfig, searchTerm],
+    queryKey: [
+      "ACTIONS_NEEDED_TRIPS",
+      currentPage,
+      pageSize,
+      sortConfig,
+      searchTerm,
+    ],
     queryFn: () =>
       tripsService.getList({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
@@ -156,7 +170,9 @@ function ActionsNeeded() {
                   colSpan={tableActionsNeeded.length}
                   textAlign="center"
                   py={8}>
-                  Loading trips...
+                  <Center minH="400px">
+                    <Spinner size="lg" color="#FF5B04" thickness="4px" />
+                  </Center>
                 </CTableTd>
               </CTableRow>
             ) : error ? (
@@ -220,7 +236,7 @@ function ActionsNeeded() {
                             cursor="pointer"
                             _hover={{textDecoration: "underline"}}
                             color="#181D27">
-                            {trip.shipper?.name || ""}
+                            {trip.customer?.name || ""}
                           </Text>
                         </Tooltip>
                       </CTableTd>
@@ -309,8 +325,8 @@ function ActionsNeeded() {
                                   color="#181D27"
                                   cursor="pointer"
                                   _hover={{textDecoration: "underline"}}>
-                                  {`${trip.origin?.[0]?.address ?? ""} / ${
-                                    trip?.origin?.[0]?.address_2 ?? ""
+                                  {`${trip.origin?.address ?? ""} / ${
+                                    trip?.origin?.address_2 ?? ""
                                   }` || ""}
                                 </Text>
                                 <Text h="20px">
@@ -364,8 +380,8 @@ function ActionsNeeded() {
                                   color="#181D27"
                                   cursor="pointer"
                                   _hover={{textDecoration: "underline"}}>
-                                  {`${trip.stop?.[0]?.address ?? ""} / ${
-                                    trip?.stop?.[0]?.address_2 ?? ""
+                                  {`${trip.stop?.address ?? ""} / ${
+                                    trip?.stop?.address_2 ?? ""
                                   }` || ""}
                                 </Text>
                               </Tooltip>
@@ -423,7 +439,7 @@ function ActionsNeeded() {
                             cursor="pointer"
                             _hover={{textDecoration: "underline"}}
                             color="#181D27">
-                            {trip?.tractors?.plate_number ?? "---"}
+                            {trip?.pickup_reason ?? "---"}
                           </Text>
                         </Tooltip>
                       </CTableTd>

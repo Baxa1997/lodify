@@ -7,6 +7,8 @@ import {
   Text,
   Tooltip,
   VStack,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useQuery} from "@tanstack/react-query";
@@ -65,7 +67,14 @@ function UpcomingTab({tripType = ""}) {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["TRIPS_LIST", currentPage, pageSize, sortConfig, searchTerm],
+    queryKey: [
+      "UPCOMING_TRIPS",
+      currentPage,
+      pageSize,
+      sortConfig,
+      searchTerm,
+      tripType,
+    ],
     queryFn: () =>
       tripsService.getList({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
@@ -188,7 +197,9 @@ function UpcomingTab({tripType = ""}) {
                   colSpan={tableElements.length}
                   textAlign="center"
                   py={8}>
-                  Loading trips...
+                  <Center minH="400px">
+                    <Spinner size="lg" color="#FF5B04" thickness="4px" />
+                  </Center>
                 </CTableTd>
               </CTableRow>
             ) : error ? (
@@ -256,7 +267,7 @@ function UpcomingTab({tripType = ""}) {
                             cursor="pointer"
                             _hover={{textDecoration: "underline"}}
                             color="#181D27">
-                            {trip.shipper?.name || ""}
+                            {trip.customer?.name || ""}
                           </Text>
                         </Tooltip>
                       </CTableTd>

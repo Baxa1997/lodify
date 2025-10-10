@@ -10,7 +10,7 @@ const itemService = {
   getInsuranceHistory: (companyId)  => httpRequest.get("v2/items/insurance_history", { params: {
     data: JSON.stringify({ companies_id: companyId }),
   } }),
-  getSmsResult: (filter) => httpRequest.get("v2/items/sms_results", { params: { data: JSON.stringify({ basic_desc: filter }) } }),
+  getSmsResult: (params) => httpRequest.get("v2/items/sms_results", { params: { data: JSON.stringify(params) } }),
   getCrashIndicator: () => httpRequest.get("v2/items/crash_indicator"),
   getTable: (slug, params) => httpRequest.get(`v2/items/${slug}`, { params }),
 };
@@ -25,12 +25,12 @@ export const useGetCompanySingle = (params = {}, id) => {
   });
 };
 
-export const useGetSmsResult = (params = {}, filter) => {
+export const useGetSmsResult = (queryParams = {}, params = {}) => {
   return useQuery({
-    queryKey: ["GET_SMS_RESULT", filter],
-    queryFn: () => itemService.getSmsResult(filter),
+    queryKey: ["GET_SMS_RESULT", params],
+    queryFn: () => itemService.getSmsResult(params),
     select: (res) => res.data,
-    ...params,
+    ...queryParams,
   });
 };
 

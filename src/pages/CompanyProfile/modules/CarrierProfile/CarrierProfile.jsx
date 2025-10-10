@@ -7,18 +7,19 @@ import { CarrierTabs } from "./components/CarrierTabs";
 
 export const CarrierProfile = () => {
 
-  const { generalInfo, companySnapshot, carrierDetails, insuranceHistory } = useCarrierProfileProps();
+  const { generalInfo, companySnapshot, carrierDetails, insuranceHistory, operation } = useCarrierProfileProps();
 
   return <Box>
     {/* <Box className={styles.header}>
       <MainHeading size="18px">Carrier Profile</MainHeading>
     </Box> */}
-    <MainInfo />
+    <MainInfo generalInfo={generalInfo} />
     <CarrierTabs
       carrierDetails={carrierDetails}
       companySnapshot={companySnapshot}
       generalInfo={generalInfo}
       insuranceHistory={insuranceHistory}
+      operation={operation}
     />
   </Box>;
 };

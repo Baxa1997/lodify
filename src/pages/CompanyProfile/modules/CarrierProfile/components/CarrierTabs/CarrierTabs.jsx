@@ -7,6 +7,7 @@ export const CarrierTabs = ({
   companySnapshot,
   generalInfo,
   insuranceHistory,
+  operation,
 }) => {
   return (
     <Tabs className={styles.tabsContainer}>
@@ -18,7 +19,9 @@ export const CarrierTabs = ({
           carrierDetails={carrierDetails}
           companySnapshot={companySnapshot}
           generalInfo={generalInfo}
-          insuranceHistory={insuranceHistory} />
+          insuranceHistory={insuranceHistory}
+          operation={operation}
+        />
       </TabPanel>
     </Tabs>
   );

@@ -4,29 +4,21 @@ import { DataTable } from "@components/DataTable";
 import { useAuthorityProps } from "./useAuthorityProps";
 import { StatusBadge } from "@components/StatusBadge";
 
-export const Authority = ({ data = {} }) => {
+export const Authority = ({ carrierDetails = {}, companySnapshot = {} }) => {
 
   const {
     common_stat,
-    common_app_pend,
-    common_rev_pend,
     contract_stat,
-    contract_app_pend,
-    contract_rev_pend,
     broker_stat,
-    broker_app_pend,
-    broker_rev_pend,
     property_chk,
-    passenger_chk,
-    hhg_chk,
-  } = data;
+  } = carrierDetails;
 
   const {
     headData,
     bodyData,
-    headData1,
-    bodyData1, 
-  } = useAuthorityProps(data);
+    companyHeadData,
+    companyBodyData,
+  } = useAuthorityProps({ companySnapshot });
 
   return <Box>
     <InfoAccordionItem>
@@ -67,8 +59,8 @@ export const Authority = ({ data = {} }) => {
                 >
                 Common
                 </Text>
-                <StatusBadge status={common_stat ? "active" : "inactive"}>
-                  {common_stat ? "Active" : "Inactive"}
+                <StatusBadge status={common_stat === "A" ? "active" : "inactive"}>
+                  {common_stat === "A" ? "Active" : "Inactive"}
                 </StatusBadge>
               </Box>
               <Box
@@ -87,8 +79,8 @@ export const Authority = ({ data = {} }) => {
                 >
                 Contract
                 </Text>
-                <StatusBadge status={contract_stat ? "active" : "inactive"}>
-                  {contract_stat ? "Active" : "Inactive"}
+                <StatusBadge status={contract_stat === "A" ? "active" : "inactive"}>
+                  {contract_stat === "A" ? "Active" : "Inactive"}
                 </StatusBadge>
               </Box>
               <Box
@@ -105,8 +97,8 @@ export const Authority = ({ data = {} }) => {
                 >
                 Broker
                 </Text>
-                <StatusBadge status={broker_stat ? "active" : "inactive"}>
-                  {broker_stat ? "Active" : "Inactive"}
+                <StatusBadge status={broker_stat === "A" ? "active" : "inactive"}>
+                  {broker_stat === "A" ? "Active" : "Inactive"}
                 </StatusBadge>
               </Box>
             </Box>
@@ -135,7 +127,7 @@ export const Authority = ({ data = {} }) => {
               >
               Licensed Capabilities
               </Text>
-              <StatusBadge status={property_chk ? "property" : "property"}>{"Property"}</StatusBadge>
+              <StatusBadge status={property_chk === "Y" ? "property" : "property"}>{"Property"}</StatusBadge>
             </Box>
           </Box>
         </Box>
@@ -153,9 +145,8 @@ export const Authority = ({ data = {} }) => {
             borderRadius="12px"
           />
           <DataTable
-            headData={headData1}
-            data={bodyData1}
-            pagination
+            headData={companyHeadData}
+            data={companyBodyData}
             border="1px solid"
             borderColor="gray.border-main"
             borderRadius="12px"

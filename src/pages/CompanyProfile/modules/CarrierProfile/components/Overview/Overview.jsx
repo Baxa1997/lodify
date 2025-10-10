@@ -26,12 +26,14 @@ import { Authority } from "../Authority";
 import { Safety } from "../Safety";
 import { ActiveAndPendingInsurance } from "../ActiveAndPendingInsurance";
 import { Operations } from "../Operations";
+import { Violation } from "../Violation";
 
 export const Overview = ({
   generalInfo,
   companySnapshot,
   carrierDetails,
   insuranceHistory,
+  operation,
 }) => {
 
   return <Box
@@ -42,15 +44,22 @@ export const Overview = ({
   >
     <SidebarTabs />
     <InfoAccordion>
-      <Connection />
+      {/* <Connection />
       <VictimIdentity />
-      <ConnectedCard />
+      <ConnectedCard /> */}
       <State />
       <Equipment />
-      <Authority data={carrierDetails} />
+      <Authority
+        carrierDetails={carrierDetails}
+        companySnapshot={companySnapshot}
+      />
       <ActiveAndPendingInsurance />
       <Safety data={companySnapshot} />
-      <Operations data={companySnapshot} />
+      <Operations
+        companySnapshot={companySnapshot}
+        operation={operation}
+      />
+      <Violation />
     </InfoAccordion>
     {/* <MainSection
       data={generalInfo}

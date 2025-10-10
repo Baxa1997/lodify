@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import {Box, Text} from "@chakra-ui/react";
 import {
   calculateTimeDifference,
-  getTimerBackgroundColor,
   getTimerTextColor,
   formatTime,
 } from "@utils/timeUtils";
@@ -21,7 +20,7 @@ const SimpleTimer = ({
     setTimeLeft(calculatedTime);
     setIsRunning(calculatedTime > 0);
   }, [timeFromAPI]);
-
+  console.log("timeFromAPItimeFromAPI", timeFromAPI);
   useEffect(() => {
     let interval;
 

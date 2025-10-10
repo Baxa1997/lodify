@@ -17,24 +17,25 @@ import {
 } from "@components/tableElements";
 import CTableRow from "@components/tableElements/CTableRow";
 import tripsService from "@services/tripsService";
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {formatDate} from "@utils/dateFormats";
 import React, {useState} from "react";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import AllLoadsFiltersComponent from "../../components/Filterscomponent";
-import {tableElements} from "./hooks";
 import {format} from "date-fns";
 import SimpleTimer from "@components/SimpleTimer";
+import {tableElements} from "../../components/hooks";
 
-function ActiveLoads() {
+function ActiveLoads({selectedTabIndex}) {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
   const envId = useSelector((state) => state.auth.environmentId);
-  const clientType = useSelector((state) => state.auth.clientType);
+  const userId = useSelector((state) => state.auth.userId);
 
   const getLoadTypeColor = (loadType) => {
     const loadTypeColors = {
@@ -62,7 +63,14 @@ function ActiveLoads() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["TRIPS_LIST", currentPage, pageSize, sortConfig, searchTerm],
+    queryKey: [
+      "TRIPS_LIST",
+      selectedTabIndex,
+      currentPage,
+      pageSize,
+      sortConfig,
+      searchTerm,
+    ],
     queryFn: () =>
       tripsService.getList({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
@@ -72,7 +80,6 @@ function ActiveLoads() {
           limit: 10,
           page: 0,
           with_timer: true,
-          // timer_expired: true,
         },
         table: "trips",
       }),
@@ -80,6 +87,16 @@ function ActiveLoads() {
     refetchOnWindowFocus: false,
     staleTime: 30000,
   });
+
+  const acceptTrip = useMutation({
+    mutationFn: (data) => tripsService.acceptTrip(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["TRIPS_LIST"]});
+    },
+  });
+  // const rejectTrip = useMutation({
+  //   mutationFn: (data) => tripsService.rejectTrip(data),
+  // });
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -117,7 +134,7 @@ function ActiveLoads() {
 
   function formatToAmPm(timeString) {
     if (!timeString) return "";
-    console.log("timeStringtimeString", timeString);
+
     const [hourStr, minuteStr] = timeString.split(":");
     let hour = parseInt(hourStr, 10);
     const minute = parseInt(minuteStr || "0", 10);
@@ -676,15 +693,7 @@ function ActiveLoads() {
                       </CTableTd>
                       <CTableTd px="0">
                         <SimpleTimer
-                          timeFromAPI={
-                            trip?.origin?.[0]?.arrive_by ||
-                            trip?.stop?.[0]?.arrive_by ||
-                            trip?.deadline ||
-                            "2025-10-08T12:33:00"
-                          }
-                          onTimeUp={() => {
-                            console.log(`Timer finished for trip ${trip.id}`);
-                          }}
+                          timeFromAPI={trip?.timer_expiration || "  "}
                         />
                       </CTableTd>
 

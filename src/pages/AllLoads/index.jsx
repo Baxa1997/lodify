@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Flex, Text} from "@chakra-ui/react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import tabsStyles from "../../styles/tabs.module.scss";
@@ -8,8 +8,8 @@ import ClosedTrips from "./modules/ClosedTrips";
 import {useSelector} from "react-redux";
 
 const AllLoads = () => {
-  const clientType = useSelector((state) => state.auth.clientType);
-  console.log("clientTypeclientType", clientType);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
   return (
     <>
       <Flex flexDir={"column"} gap={"20px"}>
@@ -21,15 +21,15 @@ const AllLoads = () => {
 
         <Tabs className={tabsStyles.tabsContainer}>
           <TabList>
-            <Tab>Active</Tab>
-            <Tab>Closed</Tab>
+            <Tab onClick={() => setSelectedTabIndex(0)}>Active</Tab>
+            <Tab onClick={() => setSelectedTabIndex(1)}>Closed</Tab>
           </TabList>
 
           <TabPanel>
-            <ActiveLoads />
+            <ActiveLoads selectedTabIndex={selectedTabIndex} />
           </TabPanel>
           <TabPanel>
-            <ClosedTrips />
+            <ClosedTrips selectedTabIndex={selectedTabIndex} />
           </TabPanel>
         </Tabs>
       </Flex>

@@ -5,7 +5,6 @@ import {useForm} from "react-hook-form";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import FirstSection from "./FirstSection";
-import SecondSection from "./SecondSection";
 import ThirdSection from "./ThirdSection";
 import FourthSection from "./FourthSection";
 import PackageSection from "./PackageSection";
@@ -93,7 +92,7 @@ function AddTrip({tripData = {}}) {
     staleTime: 0,
     select: (data) => data?.data?.response?.[0] || [],
   });
-  console.log("rocFileDatarcFileData", rocFileData);
+
   useEffect(() => {
     if (!addTrip) {
       const transformedData = transformTripData(tripData);
@@ -214,16 +213,28 @@ function AddTrip({tripData = {}}) {
     }
   }, [errors]);
 
+  useEffect(() => {
+    if (isRocFileLoading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isRocFileLoading]);
+
   return (
     <>
-      {!isRocFileLoading && (
+      {isRocFileLoading && (
         <Box
           overflow="hidden"
           zIndex="99999"
           w="100%"
           color="white"
           h="100vh"
-          position="absolute"
+          position="fixed"
           top="0"
           left="0"
           bg="rgba(0, 0, 0, 0.5)"

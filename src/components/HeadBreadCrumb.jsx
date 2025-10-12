@@ -1,11 +1,19 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
-import React, { memo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {Button, Flex, Text} from "@chakra-ui/react";
+import React, {memo} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {sidebarActions} from "../store/sidebar";
 
-const HeadBreadCrumb = ({ customPath = null, title }) => {
+const HeadBreadCrumb = ({customPath = null, title}) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { label } = location.state || {};
+  const dispatch = useDispatch();
+  const sidebarOpen = useSelector((state) => state.sidebar.sidebar);
+  const {label} = location.state || {};
+
+  const toggleSidebar = () => {
+    dispatch(sidebarActions.setSidebar(!sidebarOpen));
+  };
 
   const renderBreadcrumb = () => {
     const baseElements = (
@@ -18,10 +26,11 @@ const HeadBreadCrumb = ({ customPath = null, title }) => {
           maxHeight={"28px"}
           minHeight={"28px"}
           padding={"4px"}
-          bg={"none"}>
-          <img
-            src="/img/sidebar.svg"
-            alt="sidebar" />
+          bg={"none"}
+          onClick={toggleSidebar}
+          cursor="pointer"
+          _hover={{bg: "gray.100"}}>
+          <img src="/img/sidebar.svg" alt="sidebar" />
         </Button>
 
         <Button
@@ -32,10 +41,11 @@ const HeadBreadCrumb = ({ customPath = null, title }) => {
           maxHeight={"28px"}
           minHeight={"28px"}
           padding={"4px"}
-          bg={"none"}>
-          <img
-            src="/img/home.svg"
-            alt="home" />
+          bg={"none"}
+          onClick={() => navigate("/admin/dashboard")}
+          cursor="pointer"
+          _hover={{bg: "gray.100"}}>
+          <img src="/img/home.svg" alt="home" />
         </Button>
 
         <Flex
@@ -43,9 +53,7 @@ const HeadBreadCrumb = ({ customPath = null, title }) => {
           justifyContent={"center"}
           w={"16px"}
           h={"16px"}>
-          <img
-            src="/img/chevron-right.svg"
-            alt="arrow" />
+          <img src="/img/chevron-right.svg" alt="arrow" />
         </Flex>
       </>
     );
@@ -72,9 +80,7 @@ const HeadBreadCrumb = ({ customPath = null, title }) => {
                   justifyContent={"center"}
                   w={"16px"}
                   h={"16px"}>
-                  <img
-                    src="/img/chevron-right.svg"
-                    alt="arrow" />
+                  <img src="/img/chevron-right.svg" alt="arrow" />
                 </Flex>
               )}
             </React.Fragment>
@@ -90,10 +96,7 @@ const HeadBreadCrumb = ({ customPath = null, title }) => {
       <>
         {baseElements}
         <Flex>
-          <Text
-            fontSize={"14px"}
-            fontWeight={"600"}
-            color={"#181D27"}>
+          <Text fontSize={"14px"} fontWeight={"600"} color={"#181D27"}>
             {label || title || titleFromPath}
           </Text>
         </Flex>
@@ -102,11 +105,7 @@ const HeadBreadCrumb = ({ customPath = null, title }) => {
   };
 
   return (
-    <Flex
-      h={"28px"}
-      p={"4px"}
-      gap={"4px"}
-      alignItems={"center"}>
+    <Flex h={"28px"} p={"4px"} gap={"4px"} alignItems={"center"}>
       {renderBreadcrumb()}
     </Flex>
   );

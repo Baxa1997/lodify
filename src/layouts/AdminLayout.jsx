@@ -1,17 +1,25 @@
-import { useState, Suspense, useEffect, useRef } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import {useState, Suspense, useEffect, useRef} from "react";
+import {Outlet, useNavigate, useLocation} from "react-router-dom";
 import styles from "./AdminLayout.module.scss";
-import { Box, IconButton, Tooltip } from "@chakra-ui/react";
-import { LuSearch } from "react-icons/lu";
+import {Box, IconButton, Tooltip} from "@chakra-ui/react";
+import {LuSearch} from "react-icons/lu";
 import SearchInput from "../components/SearchInput";
 import Sidebar from "./Sidebar";
 import ContentLoader from "../components/ContentLoader";
+import {useSelector, useDispatch} from "react-redux";
+import {sidebarActions} from "../store/sidebar";
 
 const AdminLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const sidebarOpen = useSelector((state) => state.sidebar.sidebar);
   const [searchValue, setSearchValue] = useState("");
   const [showSearchInput, setShowSearchInput] = useState(false);
   const searchInputRef = useRef(null);
+
+  const toggleSidebar = () => {
+    dispatch(sidebarActions.setSidebar(!sidebarOpen));
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,22 +49,16 @@ const AdminLayout = () => {
         <div className={styles.sidebarHeader}>
           <div
             className={styles.logo}
-            onClick={() => setSidebarOpen(!sidebarOpen)}>
+            onClick={toggleSidebar}
+            style={{cursor: "pointer"}}>
             {sidebarOpen ? (
-              <img
-                src="/img/logoLodify.svg"
-                alt="Lodify Admin" />
+              <img src="/img/logoLodify.svg" alt="Lodify Admin" />
             ) : (
-              <img
-                src="/img/singleLogo.svg"
-                alt="Lodify Admin" />
+              <img src="/img/singleLogo.svg" alt="Lodify Admin" />
             )}
           </div>
           {sidebarOpen ? (
-            <Box
-              px={"24px"}
-              mt={"20px"}
-              className={styles.sidebarSearch}>
+            <Box px={"24px"} mt={"20px"} className={styles.sidebarSearch}>
               <SearchInput
                 placeholder="Search"
                 onSearch={(value) => setSearchValue(value)}
@@ -77,16 +79,13 @@ const AdminLayout = () => {
             </Box>
           ) : (
             <Box className={styles.sidebarSearchIcon}>
-              <Tooltip
-                label="Search"
-                placement="right"
-                hasArrow>
+              <Tooltip label="Search" placement="right" hasArrow>
                 <IconButton
                   aria-label="Search"
                   icon={<LuSearch size={20} />}
                   variant="ghost"
                   color="white"
-                  _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
+                  _hover={{bg: "rgba(255, 255, 255, 0.1)"}}
                   onClick={() => setShowSearchInput(!showSearchInput)}
                   size="sm"
                   className={styles.searchIconButton}
@@ -96,9 +95,7 @@ const AdminLayout = () => {
           )}
         </div>
 
-        <Sidebar
-          searchValue={searchValue}
-          sidebarOpen={sidebarOpen} />
+        <Sidebar searchValue={searchValue} sidebarOpen={sidebarOpen} />
       </div>
 
       {!sidebarOpen && showSearchInput && (
@@ -131,16 +128,14 @@ const AdminLayout = () => {
             }}
             bg="white"
             focusBorderColor="blue.400"
-            _hover={{ bg: "white", borderColor: "gray.400" }}
-            _focus={{ bg: "white", borderColor: "blue.400" }}
+            _hover={{bg: "white", borderColor: "gray.400"}}
+            _focus={{bg: "white", borderColor: "blue.400"}}
           />
         </Box>
       )}
 
       <div className={styles.mainContent}>
-        <main
-          className={styles.pageContent}
-          style={{ position: "relative" }}>
+        <main className={styles.pageContent} style={{position: "relative"}}>
           <Suspense fallback={<ContentLoader />}>
             <Outlet />
           </Suspense>

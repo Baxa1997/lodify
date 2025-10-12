@@ -12,8 +12,9 @@ import {
 } from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useQuery} from "@tanstack/react-query";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {sidebarActions} from "@store/sidebar";
 import {format, isValid} from "date-fns";
 import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
 import tripsService from "@services/tripsService";
@@ -32,6 +33,7 @@ import TripRowDetails from "./TripRowDetails";
 
 function TransitTab({tripType = ""}) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
@@ -126,6 +128,7 @@ function TransitTab({tripType = ""}) {
   };
 
   const handleRowClick = (id, trip) => {
+    dispatch(sidebarActions.setSidebar(false));
     navigate(`/admin/trips/${id}`, {
       state: {
         label: `${trip?.drivers?.first_name}.${trip?.drivers?.last_name}`,

@@ -1,6 +1,6 @@
 import React from "react";
 import FiltersComponent from "../../components/FiltersComponent";
-import { Badge, Box } from "@chakra-ui/react";
+import {Badge, Box} from "@chakra-ui/react";
 import {
   CTable,
   CTableBody,
@@ -8,10 +8,12 @@ import {
   CTableTh,
   CTableTd,
 } from "../../components/tableElements";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {sidebarActions} from "../../store/sidebar";
 import CTableRow from "../../components/tableElements/CTableRow";
-import { useQuery } from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import assetsService from "../../services/assetsService";
 import AddAssetsModal from "./components/AddAssetsModal";
 import {
@@ -22,6 +24,7 @@ import useDebounce from "../../hooks/useDebounce";
 
 const TractorsTab = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchText, setSearchText] = useState("");
@@ -33,7 +36,7 @@ const TractorsTab = () => {
 
   const offset = (currentPage - 1) * pageSize;
 
-  const { data: assetsData, isLoading } = useQuery({
+  const {data: assetsData, isLoading} = useQuery({
     queryKey: [
       "GET_ASSETS_LIST",
       currentPage,
@@ -89,6 +92,7 @@ const TractorsTab = () => {
   };
 
   const handleRowClick = (assetId, asset) => {
+    dispatch(sidebarActions.setSidebar(false));
     navigate(`/admin/assets/${assetId}`, {
       state: {
         asset,
@@ -104,10 +108,7 @@ const TractorsTab = () => {
           verifySelect={true}
           actionButton={true}
         />
-        <Box
-          mt={6}
-          p={4}
-          textAlign="center">
+        <Box mt={6} p={4} textAlign="center">
           Loading assets...
         </Box>
       </Box>
@@ -172,7 +173,7 @@ const TractorsTab = () => {
                 <CTableTd>
                   <Badge
                     colorScheme={getVerificationStatusColor(
-                      asset.status || asset.status,
+                      asset.status || asset.status
                     )}
                     variant="subtle"
                     px={3}

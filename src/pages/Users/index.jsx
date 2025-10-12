@@ -1,6 +1,8 @@
-import React, { useState, useCallback } from "react";
-import { Box, Flex, Text, Badge } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import React, {useState, useCallback} from "react";
+import {Box, Flex, Text, Badge} from "@chakra-ui/react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {sidebarActions} from "../../store/sidebar";
 import {
   CTable,
   CTableHead,
@@ -13,13 +15,14 @@ import CTableRow from "../../components/tableElements/CTableRow";
 import FiltersComponent from "../../components/FiltersComponent";
 import AddUserModal from "../../components/AddUserModal";
 import usersService from "../../services/usersService";
-import { useQuery } from "@tanstack/react-query";
-import { tableHeading, getStatusColor } from "./components/mockElements";
+import {useQuery} from "@tanstack/react-query";
+import {tableHeading, getStatusColor} from "./components/mockElements";
 import useDebounce from "../../hooks/useDebounce";
 
 const Users = () => {
   const navigate = useNavigate();
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const dispatch = useDispatch();
+  const [sortConfig, setSortConfig] = useState({key: null, direction: "asc"});
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -27,7 +30,7 @@ const Users = () => {
 
   const offset = (currentPage - 1) * pageSize;
 
-  const { data: usersData, isLoading } = useQuery({
+  const {data: usersData, isLoading} = useQuery({
     queryKey: [
       "GET_USERS_LIST",
       currentPage,
@@ -79,16 +82,17 @@ const Users = () => {
       if (sortConfig.key === key && sortConfig.direction === "asc") {
         direction = "desc";
       }
-      setSortConfig({ key, direction });
+      setSortConfig({key, direction});
     },
-    [sortConfig],
+    [sortConfig]
   );
 
   const handleUserClick = useCallback(
     (user) => {
-      navigate(`/admin/users/${user.guid}`, { state: { user } });
+      dispatch(sidebarActions.setSidebar(false));
+      navigate(`/admin/users/${user.guid}`, {state: {user}});
     },
-    [navigate],
+    [navigate, dispatch]
   );
 
   const handleAddUserClick = useCallback(() => {
@@ -98,13 +102,9 @@ const Users = () => {
   if (isLoading) {
     return (
       <>
-        <Flex
-          flexDir={"column"}
-          gap={"20px"}>
+        <Flex flexDir={"column"} gap={"20px"}>
           <HeadBreadCrumb />
-          <Box
-            mb={"20px"}
-            h={"32px"}>
+          <Box mb={"20px"} h={"32px"}>
             <Text
               h={"32px"}
               color={"#181D27"}
@@ -122,10 +122,7 @@ const Users = () => {
           onAddUserClick={handleAddUserClick}
         />
 
-        <Box
-          mt={6}
-          p={4}
-          textAlign="center">
+        <Box mt={6} p={4} textAlign="center">
           Loading users...
         </Box>
       </>
@@ -134,13 +131,9 @@ const Users = () => {
 
   return (
     <>
-      <Flex
-        flexDir={"column"}
-        gap={"20px"}>
+      <Flex flexDir={"column"} gap={"20px"}>
         <HeadBreadCrumb />
-        <Box
-          mb={"20px"}
-          h={"32px"}>
+        <Box mb={"20px"} h={"32px"}>
           <Text
             h={"32px"}
             color={"#181D27"}

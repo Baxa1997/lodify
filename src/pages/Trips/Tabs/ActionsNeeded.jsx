@@ -26,13 +26,15 @@ import {
   getRowBackgroundColor,
 } from "@utils/timeUtils";
 import React, {useState} from "react";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {sidebarActions} from "@store/sidebar";
 import {tableActionsNeeded} from "../components/mockElements";
 import TripsFiltersComponent from "../modules/TripsFiltersComponent";
 
 function ActionsNeeded() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
@@ -107,6 +109,7 @@ function ActionsNeeded() {
   };
 
   const handleRowClick = (id, trip) => {
+    dispatch(sidebarActions.setSidebar(false));
     navigate(`/admin/trips/${id}`, {
       state: {
         label: `${trip?.drivers?.first_name}.${trip?.drivers?.last_name}`,

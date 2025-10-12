@@ -1,6 +1,6 @@
 import React from "react";
 import FiltersComponent from "../../components/FiltersComponent";
-import { Badge, Box } from "@chakra-ui/react";
+import {Badge, Box} from "@chakra-ui/react";
 import {
   CTable,
   CTableBody,
@@ -8,15 +8,18 @@ import {
   CTableTh,
   CTableTd,
 } from "../../components/tableElements";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {sidebarActions} from "../../store/sidebar";
 import CTableRow from "../../components/tableElements/CTableRow";
-import { useQuery } from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import assetsService from "../../services/assetsService";
 import useDebounce from "../../hooks/useDebounce";
 
 const TrailersTab = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({
@@ -27,7 +30,7 @@ const TrailersTab = () => {
 
   const offset = (currentPage - 1) * pageSize;
 
-  const { data: assetsData, isLoading } = useQuery({
+  const {data: assetsData, isLoading} = useQuery({
     queryKey: [
       "GET_TRAILERS_LIST",
       currentPage,
@@ -81,6 +84,7 @@ const TrailersTab = () => {
   };
 
   const handleRowClick = (assetId) => {
+    dispatch(sidebarActions.setSidebar(false));
     navigate(`/admin/assets/${assetId}`);
   };
 
@@ -89,6 +93,29 @@ const TrailersTab = () => {
     if (Array.isArray(status)) {
       const statusValue = status[0]?.toLowerCase();
       switch (statusValue) {
+        case "verified":
+          return "green";
+        case "needs attention":
+        case "pending":
+        case "unverified":
+          return "red";
+        case "in review":
+        case "processing":
+          return "orange";
+        case "expired":
+          return "red";
+        case "approved":
+          return "green";
+        case "rejected":
+        case "denied":
+          return "red";
+        default:
+          return "gray";
+      }
+    }
+
+    // Handle single string
+    switch (status?.toLowerCase()) {
       case "verified":
         return "green";
       case "needs attention":
@@ -107,29 +134,6 @@ const TrailersTab = () => {
         return "red";
       default:
         return "gray";
-      }
-    }
-
-    // Handle single string
-    switch (status?.toLowerCase()) {
-    case "verified":
-      return "green";
-    case "needs attention":
-    case "pending":
-    case "unverified":
-      return "red";
-    case "in review":
-    case "processing":
-      return "orange";
-    case "expired":
-      return "red";
-    case "approved":
-      return "green";
-    case "rejected":
-    case "denied":
-      return "red";
-    default:
-      return "gray";
     }
   };
 
@@ -141,10 +145,7 @@ const TrailersTab = () => {
           verifySelect={true}
           actionButton={true}
         />
-        <Box
-          mt={6}
-          p={4}
-          textAlign="center">
+        <Box mt={6} p={4} textAlign="center">
           Loading assets...
         </Box>
       </Box>
@@ -265,7 +266,7 @@ const TrailersTab = () => {
                 <CTableTd>
                   <Badge
                     colorScheme={getVerificationStatusColor(
-                      asset.verification_status || asset.verificationStatus,
+                      asset.verification_status || asset.verificationStatus
                     )}
                     variant="subtle"
                     px={3}
@@ -274,7 +275,7 @@ const TrailersTab = () => {
                     fontSize="12px"
                     fontWeight="500">
                     {Array.isArray(
-                      asset.verification_status || asset.verificationStatus,
+                      asset.verification_status || asset.verificationStatus
                     )
                       ? (asset.verification_status ||
                           asset.verificationStatus)[0] || "N/A"

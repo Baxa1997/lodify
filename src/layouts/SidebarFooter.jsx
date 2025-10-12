@@ -9,23 +9,26 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { authActions } from "../store/auth/auth.slice";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {authActions} from "../store/auth/auth.slice";
 import styles from "./AdminLayout.module.scss";
-import React, { useState, useRef, useEffect } from "react";
+import React, {useState, useRef, useEffect} from "react";
 
-const SidebarFooter = ({ sidebarOpen = true }) => {
+const SidebarFooter = ({sidebarOpen = true}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
+  const userData = useSelector((state) => state.auth.user_data);
+
+  console.log("userDatauserData", userData);
 
   const handleLogout = () => {
     dispatch(authActions.logout());
     localStorage.removeItem("authToken");
     localStorage.removeItem("refreshToken");
-    navigate("/login", { replace: true });
+    navigate("/login", {replace: true});
   };
 
   const handleSettingsClick = () => {
@@ -60,30 +63,20 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
             cursor={"pointer"}
             borderRadius={"6px"}
             bg="transparent"
-            _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
-            _active={{ bg: "rgba(255, 255, 255, 0.1)" }}
+            _hover={{bg: "rgba(255, 255, 255, 0.1)"}}
+            _active={{bg: "rgba(255, 255, 255, 0.1)"}}
             onClick={handleSettingsClick}
             gap="8px"
             width="100%"
             display="flex"
             alignItems="center"
             justifyContent="flex-start">
-            <img
-              src="/img/setting.svg"
-              alt=""
-              width="20"
-              height="20" />
-            <Text
-              fontSize={"16px"}
-              fontWeight={"600"}
-              color={"#CECFD2"}>
+            <img src="/img/setting.svg" alt="" width="20" height="20" />
+            <Text fontSize={"16px"} fontWeight={"600"} color={"#CECFD2"}>
               Settings
             </Text>
           </Button>
-          <Box
-            ref={profileRef}
-            position="relative"
-            zIndex={99999}>
+          <Box ref={profileRef} position="relative" zIndex={99999}>
             <Menu
               isOpen={isProfileOpen}
               onClose={() => setIsProfileOpen(false)}
@@ -100,8 +93,8 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
                 p={"8px 12px"}
                 h={"64px"}
                 cursor={"pointer"}
-                _hover={{ bg: "transparent" }}
-                _active={{ bg: "#1a1f2a" }}
+                _hover={{bg: "transparent"}}
+                _active={{bg: "#1a1f2a"}}
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                 width="100%">
                 <Box
@@ -109,9 +102,7 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
                   position={"absolute"}
                   right={"12px"}
                   top={"12px"}>
-                  <img
-                    src="/img/chevron.svg"
-                    alt="" />
+                  <img src="/img/chevron.svg" alt="" />
                 </Box>
                 <Box
                   w={"40px"}
@@ -127,20 +118,12 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
                   fontSize={"16px"}>
                   J
                 </Box>
-                <Flex
-                  flexDirection={"column"}
-                  gap={"0px"}>
-                  <Text
-                    fontSize={"14px"}
-                    fontWeight={"600"}
-                    color={"#fff"}>
+                <Flex flexDirection={"column"} gap={"0px"}>
+                  <Text fontSize={"14px"} fontWeight={"600"} color={"#fff"}>
                     Javlon
                   </Text>
-                  <Text
-                    fontSize={"14px"}
-                    fontWeight={"400"}
-                    color={"#94979C"}>
-                    javlon@lodify.com
+                  <Text fontSize={"14px"} fontWeight={"400"} color={"#94979C"}>
+                    {userData?.email}
                   </Text>
                 </Flex>
               </Button>
@@ -157,14 +140,10 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
                 <MenuItem
                   onClick={handleLogout}
                   bg="transparent"
-                  _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
+                  _hover={{bg: "rgba(255, 255, 255, 0.1)"}}
                   color="#ef4444"
                   icon={
-                    <Box
-                      w="16px"
-                      h="16px"
-                      fontSize="12px"
-                      fontWeight="bold">
+                    <Box w="16px" h="16px" fontSize="12px" fontWeight="bold">
                       L
                     </Box>
                   }>
@@ -176,10 +155,7 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
         </>
       ) : (
         <>
-          <Tooltip
-            label="Settings"
-            placement="right"
-            hasArrow>
+          <Tooltip label="Settings" placement="right" hasArrow>
             <Button
               as={Button}
               variant="ghost"
@@ -187,8 +163,8 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
               justifyContent={"center"}
               p={"8px"}
               borderRadius={"8px"}
-              _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
-              _active={{ bg: "rgba(255, 255, 255, 0.1)" }}
+              _hover={{bg: "rgba(255, 255, 255, 0.1)"}}
+              _active={{bg: "rgba(255, 255, 255, 0.1)"}}
               cursor={"pointer"}
               w={"48px"}
               h={"48px"}
@@ -196,24 +172,16 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
               className={styles.footerIconButton}
               onClick={handleSettingsClick}
               mb="8px">
-              <img
-                src="/img/setting.svg"
-                alt="Settings" />
+              <img src="/img/setting.svg" alt="Settings" />
             </Button>
           </Tooltip>
 
-          <Box
-            ref={profileRef}
-            position="relative"
-            zIndex={99999}>
+          <Box ref={profileRef} position="relative" zIndex={99999}>
             <Menu
               isOpen={isProfileOpen}
               onClose={() => setIsProfileOpen(false)}
               placement="right-start">
-              <Tooltip
-                label="Profile"
-                placement="right"
-                hasArrow>
+              <Tooltip label="Profile" placement="right" hasArrow>
                 <Button
                   as={Button}
                   variant="ghost"
@@ -221,8 +189,8 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
                   justifyContent={"center"}
                   p={"8px"}
                   borderRadius={"8px"}
-                  _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
-                  _active={{ bg: "rgba(255, 255, 255, 0.1)" }}
+                  _hover={{bg: "rgba(255, 255, 255, 0.1)"}}
+                  _active={{bg: "rgba(255, 255, 255, 0.1)"}}
                   cursor={"pointer"}
                   w={"48px"}
                   h={"48px"}
@@ -257,14 +225,10 @@ const SidebarFooter = ({ sidebarOpen = true }) => {
                 <MenuItem
                   onClick={handleLogout}
                   bg="transparent"
-                  _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
+                  _hover={{bg: "rgba(255, 255, 255, 0.1)"}}
                   color="#ef4444"
                   icon={
-                    <Box
-                      w="16px"
-                      h="16px"
-                      fontSize="12px"
-                      fontWeight="bold">
+                    <Box w="16px" h="16px" fontSize="12px" fontWeight="bold">
                       L
                     </Box>
                   }>

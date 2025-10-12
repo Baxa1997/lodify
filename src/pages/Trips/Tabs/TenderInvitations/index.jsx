@@ -21,8 +21,9 @@ import tripsService from "@services/tripsService";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {formatDate} from "@utils/dateFormats";
 import React, {useState} from "react";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {sidebarActions} from "@store/sidebar";
 import {format} from "date-fns";
 import SimpleTimer from "@components/SimpleTimer";
 import AllLoadsFiltersComponent from "./components/AllLoadsFiltersComponent";
@@ -31,6 +32,7 @@ import {tableElements} from "./hooks";
 function TenderInvitations({tripType = ""}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
@@ -169,6 +171,7 @@ function TenderInvitations({tripType = ""}) {
   };
 
   const handleRowClick = (id, trip) => {
+    dispatch(sidebarActions.setSidebar(false));
     navigate(`/admin/trips/${id}`, {
       state: {
         label: `${trip?.drivers?.first_name}.${trip?.drivers?.last_name}`,

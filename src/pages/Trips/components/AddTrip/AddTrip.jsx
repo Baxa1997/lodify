@@ -94,8 +94,6 @@ function AddTrip({tripData = {}}) {
     select: (data) => data?.data?.response?.[0] || [],
   });
 
-  console.log("rocFileDatarcFileData", rocFileData);
-
   useEffect(() => {
     if (!addTrip) {
       const transformedData = transformTripData(tripData);

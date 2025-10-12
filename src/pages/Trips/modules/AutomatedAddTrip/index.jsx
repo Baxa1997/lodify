@@ -50,7 +50,7 @@ function AutomatedAddTrip({isOpen, onClose}) {
             required
             control={control}
           />
-          <Flex mt="16px" justifyContent="end">
+          <Flex mt="16px" justifyContent="end" pb="10px">
             <Button
               isDisabled={isNavigating || !uploadLoading}
               isLoading={uploadLoading}

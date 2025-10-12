@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import {ChevronDownIcon} from "@chakra-ui/icons";
 import {
   Flex,
   Text,
@@ -9,28 +9,19 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-const AddTripMenu = () => {
+const AddTripMenu = ({setIsAutomatedAddTrip = false}) => {
   const navigate = useNavigate();
   return (
     <>
-      <Flex
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        h={"32px"}>
-        <Text
-          h={"32px"}
-          color={"#181D27"}
-          fontWeight={"600"}
-          fontSize={"24px"}>
+      <Flex alignItems={"center"} justifyContent={"space-between"} h={"32px"}>
+        <Text h={"32px"} color={"#181D27"} fontWeight={"600"} fontSize={"24px"}>
           Trips
         </Text>
 
         <Menu>
-          <MenuButton
-            p="0"
-            as={Button}>
+          <MenuButton p="0" as={Button}>
             <Button
               outline={"2px solid #EF6820"}
               outlineOffset={"2px"}
@@ -44,33 +35,23 @@ const AddTripMenu = () => {
               w={"114px"}
               fontSize={"14px"}
               fontWeight={"600"}
-              _hover={{ bg: "#EF6820" }}>
-              <Text
-                color={"#fff"}
-                fontWeight={600}>
+              _hover={{bg: "#EF6820"}}>
+              <Text color={"#fff"} fontWeight={600}>
                 Add Trip
               </Text>
-              <ChevronDownIcon
-                w="20px"
-                h="20px" />
+              <ChevronDownIcon w="20px" h="20px" />
             </Button>
           </MenuButton>
-          <MenuList
-            border={"1px solid #E9EAEB"}
-            p="4px 6px">
+          <MenuList border={"1px solid #E9EAEB"} p="4px 6px">
             <MenuItem
               display={"flex"}
               alignItems={"center"}
               gap={"8px"}
               borderRadius={"8px"}
-              _hover={{ bg: "#F5F5F5" }}>
-              <img
-                src="/img/automated.svg"
-                alt="" />
-              <Text
-                color={"#414651"}
-                fontSize={"14px"}
-                fontWeight={"600"}>
+              _hover={{bg: "#F5F5F5"}}
+              onClick={() => setIsAutomatedAddTrip(true)}>
+              <img src="/img/automated.svg" alt="" />
+              <Text color={"#414651"} fontSize={"14px"} fontWeight={"600"}>
                 Automated by Lodify AI
               </Text>
             </MenuItem>
@@ -80,14 +61,9 @@ const AddTripMenu = () => {
               alignItems={"center"}
               gap={"8px"}
               borderRadius={"8px"}
-              _hover={{ bg: "#F5F5F5" }}>
-              <img
-                src="/img/manual.svg"
-                alt="" />
-              <Text
-                color={"#414651"}
-                fontSize={"14px"}
-                fontWeight={"600"}>
+              _hover={{bg: "#F5F5F5"}}>
+              <img src="/img/manual.svg" alt="" />
+              <Text color={"#414651"} fontSize={"14px"} fontWeight={"600"}>
                 Manual
               </Text>
             </MenuItem>

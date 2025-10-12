@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import HeadBreadCrumb from "../../../../components/HeadBreadCrumb";
-import {Box, Flex, Text, useToast, Button} from "@chakra-ui/react";
+import {Box, Flex, Text, useToast, Button, Spinner} from "@chakra-ui/react";
 import {useForm} from "react-hook-form";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import FirstSection from "./FirstSection";
 import SecondSection from "./SecondSection";
 import ThirdSection from "./ThirdSection";
@@ -20,8 +20,12 @@ function AddTrip({tripData = {}}) {
   const navigate = useNavigate();
   const toast = useToast();
   const location = useLocation();
+  const {state} = location;
+  const csvFile = state?.csv?.[0];
+
   const addTrip = location?.pathname?.includes("add-trip");
   const userData = useSelector((state) => state?.auth?.user_data);
+  const userId = useSelector((state) => state.auth.userId);
   const envId = useSelector((state) => state.auth.environmentId);
 
   const {
@@ -69,6 +73,28 @@ function AddTrip({tripData = {}}) {
       accessorials: Array.isArray(data.accessorials) ? data.accessorials : [],
     };
   };
+
+  const {data: rocFileData = {}, isLoading: isRocFileLoading} = useQuery({
+    queryKey: ["TRIP_BY_ID", csvFile],
+    queryFn: () =>
+      tripsService.getTripById({
+        app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
+        environment_id: envId,
+        method: "extract",
+        object_data: {
+          file_url: csvFile,
+          companies_id: userId,
+        },
+        table: "roc_file",
+      }),
+    enabled: Boolean(csvFile),
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    select: (data) => data?.data?.response?.[0] || [],
+  });
+
+  console.log("rocFileDatarcFileData", rocFileData);
 
   useEffect(() => {
     if (!addTrip) {
@@ -184,92 +210,115 @@ function AddTrip({tripData = {}}) {
   }, [errors]);
 
   return (
-    <Box mt={id ? "20px" : "0px"}>
-      {!id && (
-        <>
-          {" "}
-          <HeadBreadCrumb />
-          <Box h={"32px"} mb={"30px"}>
-            <Text
-              mt="16px"
-              fontSize={"24px"}
-              h={"32px"}
-              color={"#181D27"}
-              fontWeight={"600"}>
-              Add Trip
-            </Text>
-          </Box>
-        </>
+    <>
+      {isRocFileLoading && (
+        <Box
+          zIndex="99999"
+          w="100%"
+          color="white"
+          h="100vh"
+          position="absolute"
+          top="0"
+          left="0"
+          bg="rgba(0, 0, 0, 0.5)"
+          display="flex"
+          justifyContent="center"
+          gap="10px"
+          flexDirection="column"
+          alignItems="center">
+          <Spinner size="xl" />
+          <Text fontSize="16px" fontWeight="600" color="white">
+            Loading Data...
+          </Text>
+        </Box>
       )}
 
-      <form action="" onSubmit={handleSubmit(onSubmit)}>
-        <FirstSection control={control} />
-        <ThirdSection control={control} />
+      <Box mt={id ? "20px" : "0px"}>
+        {!id && (
+          <>
+            {" "}
+            <HeadBreadCrumb />
+            <Box h={"32px"} mb={"30px"}>
+              <Text
+                mt="16px"
+                fontSize={"24px"}
+                h={"32px"}
+                color={"#181D27"}
+                fontWeight={"600"}>
+                Add Trip
+              </Text>
+            </Box>
+          </>
+        )}
 
-        <PackageSection setValue={setValue} control={control} />
-        <TotalRatesSection control={control} />
-        <FourthSection control={control} />
-        <AddressSection
-          control={control}
-          isLoading={
-            createTripMutation.isPending || updateTripMutation.isPending
-          }
-          onCancel={handleCancel}
-        />
+        <form action="" onSubmit={handleSubmit(onSubmit)}>
+          <FirstSection control={control} />
+          <ThirdSection control={control} />
 
-        <Flex
-          mt="20px"
-          borderTop="1px solid #E9EAEB"
-          pt="20px"
-          gap="12px"
-          justifyContent="flex-end">
-          <Button
-            type="button"
-            w="80px"
-            border="1px solid #E9EAEB"
-            borderRadius="8px"
-            bg="transparent"
-            mr="12px"
-            _hover={{bg: "transparent"}}
-            onClick={handleCancel}
-            isDisabled={
-              createTripMutation.isPending || updateTripMutation.isPending
-            }>
-            <Text ml="6px" fontSize="14px" fontWeight="600" color="#A4A7AE">
-              Cancel
-            </Text>
-          </Button>
-          <Button
-            w="80px"
-            type="button"
-            _hover={{bg: "#1570EF"}}
-            bg="#1570EF"
-            loadingText="Saving..."
+          <PackageSection setValue={setValue} control={control} />
+          <TotalRatesSection control={control} />
+          <FourthSection control={control} />
+          <AddressSection
+            control={control}
             isLoading={
               createTripMutation.isPending || updateTripMutation.isPending
             }
-            onClick={(e) => {
-              console.log("=== SUBMIT BUTTON CLICKED ===");
-              console.log("Form errors:", errors);
-              console.log(
-                "Is pending:",
-                createTripMutation.isPending || updateTripMutation.isPending
-              );
+            onCancel={handleCancel}
+          />
 
-              // Prevent default form submission and manually trigger
-              e.preventDefault();
-              console.log("Manually triggering form submission...");
-              handleManualSubmit();
-            }}>
-            <Text ml="6px" fontSize="14px" fontWeight="600" color="#fff">
-              {createTripMutation.isPending || updateTripMutation.isPending
-                ? "Saving..."
-                : "Save"}
-            </Text>
-          </Button>
-        </Flex>
-      </form>
-    </Box>
+          <Flex
+            mt="20px"
+            borderTop="1px solid #E9EAEB"
+            pt="20px"
+            gap="12px"
+            justifyContent="flex-end">
+            <Button
+              type="button"
+              w="80px"
+              border="1px solid #E9EAEB"
+              borderRadius="8px"
+              bg="transparent"
+              mr="12px"
+              _hover={{bg: "transparent"}}
+              onClick={handleCancel}
+              isDisabled={
+                createTripMutation.isPending || updateTripMutation.isPending
+              }>
+              <Text ml="6px" fontSize="14px" fontWeight="600" color="#A4A7AE">
+                Cancel
+              </Text>
+            </Button>
+            <Button
+              w="80px"
+              type="button"
+              _hover={{bg: "#1570EF"}}
+              bg="#1570EF"
+              loadingText="Saving..."
+              isLoading={
+                createTripMutation.isPending || updateTripMutation.isPending
+              }
+              onClick={(e) => {
+                console.log("=== SUBMIT BUTTON CLICKED ===");
+                console.log("Form errors:", errors);
+                console.log(
+                  "Is pending:",
+                  createTripMutation.isPending || updateTripMutation.isPending
+                );
+
+                e.preventDefault();
+                console.log("Manually triggering form submission...");
+                handleManualSubmit();
+              }}>
+              <Text ml="6px" fontSize="14px" fontWeight="600" color="#fff">
+                {createTripMutation.isPending || updateTripMutation.isPending
+                  ? "Saving..."
+                  : "Save"}
+              </Text>
+            </Button>
+          </Flex>
+        </form>
+      </Box>
+    </>
   );
 }
 

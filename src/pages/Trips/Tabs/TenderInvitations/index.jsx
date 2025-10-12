@@ -222,7 +222,7 @@ function TenderInvitations({tripType = ""}) {
           pageSize={pageSize}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}>
-          <CTableHead zIndex={999999}>
+          <CTableHead zIndex={9}>
             <Box as={"tr"}>
               {tableElements
                 ?.filter((element) =>
@@ -232,7 +232,7 @@ function TenderInvitations({tripType = ""}) {
                 )
                 .map((element) => (
                   <CTableTh
-                    zIndex={999999}
+                    zIndex={8}
                     maxW="334px"
                     sortable={element.sortable}
                     sortDirection={

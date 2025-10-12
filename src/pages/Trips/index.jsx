@@ -10,8 +10,10 @@ import TransitTab from "./Tabs/TransitTab.jsx";
 import UpcomingTab from "./Tabs/UpcomingTab";
 import TenderInvitations from "./Tabs/TenderInvitations";
 import {useState} from "react";
+import AutomatedAddTrip from "./modules/AutomatedAddTrip";
 
 const Trips = () => {
+  const [isAutomatedAddTrip, setIsAutomatedAddTrip] = useState(false);
   const clientType = useSelector((state) => state.auth.clientType);
   const [tripType, setTripType] = useState("tender");
 
@@ -30,15 +32,14 @@ const Trips = () => {
           </Text>
         )}
 
-        {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
-          <AddTripMenu />
+        {clientType?.id !== "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
+          <AddTripMenu setIsAutomatedAddTrip={setIsAutomatedAddTrip} />
         )}
 
         <Tabs className={styles.tabsContainer}>
           <TabList>
-            {/* {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && ( */}
             <Tab onClick={() => setTripType("tender")}>Tender Invitations</Tab>
-            {/* )} */}
+
             <Tab>Actions Needed</Tab>
             <Tab onClick={() => setTripType("upcoming")}>Upcoming</Tab>
             <Tab onClick={() => setTripType("in_transit")}>In Transit</Tab>
@@ -49,11 +50,9 @@ const Trips = () => {
             </Tab>
           </TabList>
 
-          {/* {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && ( */}
           <TabPanel>
             <TenderInvitations tripType={tripType} />
           </TabPanel>
-          {/* )} */}
 
           <TabPanel>
             <ActionsNeeded />
@@ -69,6 +68,11 @@ const Trips = () => {
           </TabPanel>
         </Tabs>
       </Flex>
+
+      <AutomatedAddTrip
+        isOpen={isAutomatedAddTrip}
+        onClose={() => setIsAutomatedAddTrip(false)}
+      />
     </>
   );
 };

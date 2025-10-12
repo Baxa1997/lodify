@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {useRef, useState} from "react";
 import {
   Box,
   FormControl,
@@ -20,11 +20,19 @@ import {
   VStack,
   Flex,
 } from "@chakra-ui/react";
-import { Controller } from "react-hook-form";
+import {Controller} from "react-hook-form";
 import fileService from "@services/fileService";
-import { getShortFileName } from "@utils/getFileName";
+import {getShortFileName} from "@utils/getFileName";
 
-function FileInput({ label, value = [], onChange, name, required, disabled }) {
+function FileInput({
+  label,
+  value = [],
+  onChange,
+  name,
+  required,
+  disabled,
+  setUploadLoading = () => {},
+}) {
   const inputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +41,7 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
 
   const handleFileChange = (e) => {
     setLoading(true);
+    setUploadLoading(true);
     const file = e.target.files[0];
     if (!file) return;
 
@@ -40,11 +49,14 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
     data.append("file", file);
 
     fileService
-      .upload(data, { folder_name: "trips" })
+      .upload(data, {folder_name: "trips"})
       .then((res) => {
         onChange([...safeValue, `${"https://cdn.u-code.io"}/${res?.filename}`]);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setUploadLoading(false);
+      });
   };
 
   const removeFile = (fileUrl) => {
@@ -54,25 +66,17 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
   return (
     <FormControl>
       {label && (
-        <FormLabel
-          fontWeight="500"
-          fontSize="14px"
-          color="gray.700">
+        <FormLabel fontWeight="500" fontSize="14px" color="gray.700">
           {label}{" "}
           {required && (
-            <Box
-              as="span"
-              color="blue.500">
+            <Box as="span" color="blue.500">
               *
             </Box>
           )}
         </FormLabel>
       )}
 
-      <Flex
-        width="100%"
-        alignItems="center"
-        gap="12px">
+      <Flex width="100%" alignItems="center" gap="12px">
         <Box
           w={"100%"}
           h="40px"
@@ -87,25 +91,16 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
           bg={disabled ? "gray.50" : "white"}
           cursor={disabled ? "not-allowed" : "pointer"}>
           {(!safeValue || safeValue.length === 0) && (
-            <HStack
-              justify="space-between"
-              w="100%">
-              <Text
-                fontSize="14px"
-                color="gray.500">
+            <HStack justify="space-between" w="100%">
+              <Text fontSize="14px" color="gray.500">
                 Upload Files
               </Text>
             </HStack>
           )}
 
           {safeValue && safeValue.length > 0 && (
-            <HStack
-              justify="space-between"
-              w="100%">
-              <HStack
-                spacing="2"
-                w="320px"
-                flexWrap="wrap">
+            <HStack justify="space-between" w="100%">
+              <HStack spacing="2" w="320px" flexWrap="wrap">
                 {safeValue.length <= 2 ? (
                   safeValue?.map((fileUrl, idx) => (
                     <Box
@@ -122,16 +117,13 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
                       color="gray.700"
                       maxW="210px"
                       onClick={() => setIsModalOpen(true)}>
-                      <Text
-                        fontSize="13px"
-                        isTruncated
-                        maxW="150px">
+                      <Text fontSize="13px" isTruncated maxW="150px">
                         {getShortFileName(fileUrl, 7).shortName}
                       </Text>
                       <IconButton
                         size="xs"
                         bg="none"
-                        _hover={{ bg: "none" }}
+                        _hover={{bg: "none"}}
                         ml="1"
                         aria-label="remove"
                         icon={
@@ -166,16 +158,13 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
                         color="gray.700"
                         maxW="200px"
                         onClick={() => setIsModalOpen(true)}>
-                        <Text
-                          fontSize="13px"
-                          isTruncated
-                          maxW="150px">
+                        <Text fontSize="13px" isTruncated maxW="150px">
                           {getShortFileName(fileUrl, 7).shortName}
                         </Text>
                         <IconButton
                           size="xs"
                           bg="none"
-                          _hover={{ bg: "none" }}
+                          _hover={{bg: "none"}}
                           ml="1"
                           aria-label="remove"
                           icon={
@@ -205,7 +194,7 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
                       fontSize="13px"
                       color="gray.700"
                       cursor="pointer"
-                      _hover={{ bg: "gray.50" }}
+                      _hover={{bg: "gray.50"}}
                       onClick={() => setIsModalOpen(true)}>
                       +{safeValue?.length - 2}
                     </Box>
@@ -229,7 +218,7 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
           height="40px"
           borderRadius="8px"
           bg="#EF6820"
-          _hover={{ bg: "#EF6820" }}
+          _hover={{bg: "#EF6820"}}
           aria-label="upload"
           size="xs"
           onClick={() => inputRef.current.click()}
@@ -252,9 +241,7 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
           <ModalHeader>Uploaded Files</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack
-              align="stretch"
-              spacing={1}>
+            <VStack align="stretch" spacing={1}>
               {safeValue?.map((fileUrl, idx) => (
                 <HStack
                   key={idx}
@@ -264,14 +251,12 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
                   borderColor="gray.200"
                   borderRadius="md"
                   justify="space-between">
-                  <Text
-                    fontSize="14px"
-                    w="300px">
+                  <Text fontSize="14px" w="300px">
                     {getShortFileName(fileUrl, 30).shortName}
                   </Text>
                   <IconButton
                     bg="none"
-                    _hover={{ bg: "none" }}
+                    _hover={{bg: "none"}}
                     size="sm"
                     colorScheme="red"
                     aria-label="remove"
@@ -290,9 +275,7 @@ function FileInput({ label, value = [], onChange, name, required, disabled }) {
             </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              onClick={() => setIsModalOpen(false)}>
+            <Button colorScheme="blue" onClick={() => setIsModalOpen(false)}>
               Close
             </Button>
           </ModalFooter>
@@ -309,6 +292,7 @@ export default function HFFilesField({
   rules,
   required,
   disabled,
+  setUploadLoading = () => {},
 }) {
   return (
     <Controller
@@ -319,7 +303,7 @@ export default function HFFilesField({
         required: required ? "This is a required field" : false,
         ...rules,
       }}
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
+      render={({field: {onChange, value}, fieldState: {error}}) => (
         <FormControl isInvalid={!!error}>
           <FileInput
             label={label}
@@ -328,6 +312,7 @@ export default function HFFilesField({
             onChange={onChange}
             required={required}
             disabled={disabled}
+            setUploadLoading={setUploadLoading}
           />
           <FormErrorMessage>{error?.message}</FormErrorMessage>
         </FormControl>

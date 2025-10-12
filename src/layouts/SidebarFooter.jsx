@@ -116,15 +116,35 @@ const SidebarFooter = ({sidebarOpen = true}) => {
                   fontWeight={"600"}
                   border={"0.5px solid #eee"}
                   fontSize={"16px"}>
-                  J
+                  {(userData?.login || "").charAt(0).toUpperCase()}
                 </Box>
-                <Flex flexDirection={"column"} gap={"0px"}>
+                <Flex
+                  flexDirection={"column"}
+                  gap={"0px"}
+                  flex={1}
+                  minWidth={0}
+                  mr={"40px"}>
                   <Text fontSize={"14px"} fontWeight={"600"} color={"#fff"}>
-                    Javlon
+                    {userData?.login || ""}
                   </Text>
-                  <Text fontSize={"14px"} fontWeight={"400"} color={"#94979C"}>
-                    {userData?.email}
-                  </Text>
+                  <Tooltip
+                    label={userData?.email}
+                    placement="top"
+                    hasArrow
+                    bg="#1a1a1a"
+                    color="#fff"
+                    fontSize="12px">
+                    <Text
+                      fontSize={"12px"}
+                      fontWeight={"400"}
+                      color={"#94979C"}
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                      maxWidth="100%">
+                      {userData?.email}
+                    </Text>
+                  </Tooltip>
                 </Flex>
               </Button>
               <MenuList
@@ -208,7 +228,9 @@ const SidebarFooter = ({sidebarOpen = true}) => {
                     color={"#94979C"}
                     fontWeight={"600"}
                     fontSize={"12px"}>
-                    J
+                    {(userData?.name || userData?.email || "J")
+                      .charAt(0)
+                      .toUpperCase()}
                   </Box>
                 </Button>
               </Tooltip>

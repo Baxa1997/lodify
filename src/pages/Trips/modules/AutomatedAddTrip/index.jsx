@@ -10,20 +10,22 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import {useForm} from "react-hook-form";
-import HFFilesField from "@components/HFFilesField";
 import {useNavigate} from "react-router-dom";
+import AutomatedFileUpload from "../AutomatedFileUpload";
 
 function AutomatedAddTrip({isOpen, onClose}) {
   const navigate = useNavigate();
-  const {control, watch} = useForm();
+  const {control, watch} = useForm({
+    defaultValues: {
+      csv: "",
+    },
+  });
   const [uploadLoading, setUploadLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const uploadedFile = watch("csv");
 
   useEffect(() => {
-    console.log("uploadedFileuploadedFile", uploadedFile);
-    if (Boolean(uploadedFile?.[0])) {
-      console.log("uploadedFileuploadedFile", uploadedFile);
+    if (Boolean(uploadedFile)) {
       setIsNavigating(true);
       setTimeout(() => {
         setIsNavigating(false);
@@ -43,7 +45,7 @@ function AutomatedAddTrip({isOpen, onClose}) {
         <ModalHeader>Automated By Lodify AI</ModalHeader>
 
         <ModalBody>
-          <HFFilesField
+          <AutomatedFileUpload
             setUploadLoading={setUploadLoading}
             name="csv"
             label="Upload"

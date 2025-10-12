@@ -21,7 +21,7 @@ function AddTrip({tripData = {}}) {
   const toast = useToast();
   const location = useLocation();
   const {state} = location;
-  const csvFile = state?.csv?.[0];
+  const csvFile = state?.csv ?? "";
 
   const addTrip = location?.pathname?.includes("add-trip");
   const userData = useSelector((state) => state?.auth?.user_data);
@@ -93,13 +93,20 @@ function AddTrip({tripData = {}}) {
     staleTime: 0,
     select: (data) => data?.data?.response?.[0] || [],
   });
-
+  console.log("rocFileDatarcFileData", rocFileData);
   useEffect(() => {
     if (!addTrip) {
       const transformedData = transformTripData(tripData);
       reset(transformedData);
     }
   }, [tripData, addTrip]);
+
+  useEffect(() => {
+    if (rocFileData?.guid) {
+      const transformedData = transformTripData(rocFileData);
+      reset(transformedData);
+    }
+  }, [rocFileData]);
 
   const createTripMutation = useMutation({
     mutationFn: (data) => {
@@ -209,8 +216,9 @@ function AddTrip({tripData = {}}) {
 
   return (
     <>
-      {isRocFileLoading && (
+      {!isRocFileLoading && (
         <Box
+          overflow="hidden"
           zIndex="99999"
           w="100%"
           color="white"

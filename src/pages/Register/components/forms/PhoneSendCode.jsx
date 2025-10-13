@@ -8,7 +8,12 @@ import {
 } from "firebase/auth";
 import {auth} from "../../../../config/firebase";
 
-function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
+function PhoneSendCode({
+  control,
+  setCurrentSubStep = () => {},
+  setSessionInfo = () => {},
+  formData = {},
+}) {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const recaptchaRef = useRef(null);
@@ -38,7 +43,7 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
       });
 
       recaptchaRef.current = verifier;
-
+      console.log("recaptchaRef.current", recaptchaRef.current, auth);
       verifier
         .render()
         .then((widgetId) => {

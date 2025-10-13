@@ -25,6 +25,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [emailSmsId, setEmailSmsId] = useState(null);
+  const [confirmationResult, setConfirmationResult] = useState(null);
   const toast = useToast();
 
   const formData = watch();
@@ -44,7 +45,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
     if (!phoneNumber) {
       toast({
         title: "Error",
-        description: "Please enter a valid phone number",
+        description: "Please enter a phone number",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -52,6 +53,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
       return;
     }
 
+    // Format phone number properly
     const cleanPhone = phoneNumber.replace(/\D/g, "");
     const formattedPhone = cleanPhone.startsWith("1")
       ? `+${cleanPhone}`
@@ -60,35 +62,43 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
     setIsLoading(true);
 
     try {
+      // Clear existing reCAPTCHA container
       const container = document.getElementById("recaptcha-container");
       if (container) container.innerHTML = "";
 
-      window.recaptchaVerifier = new RecaptchaVerifier(
+      // Create new reCAPTCHA verifier
+      const recaptchaVerifier = new RecaptchaVerifier(
         "recaptcha-container",
         {
           size: "invisible",
-          callback: (response) => console.log("Recaptcha solved ✅", response),
-          "expired-callback": () =>
+          callback: (response) => {
+            console.log("reCAPTCHA solved:", response);
+          },
+          "expired-callback": () => {
             toast({
-              title: "ReCAPTCHA expired",
+              title: "reCAPTCHA expired",
               description: "Please try again.",
               status: "warning",
               duration: 3000,
               isClosable: true,
-            }),
+            });
+          },
         },
         auth
       );
 
-      const appVerifier = window.recaptchaVerifier;
-
-      const confirmationResult = await signInWithPhoneNumber(
+      // Send verification code
+      const result = await signInWithPhoneNumber(
         auth,
         formattedPhone,
-        appVerifier
+        recaptchaVerifier
       );
 
-      setValue("firebaseToken", confirmationResult.verificationId);
+      console.log("Verification code sent successfully:", result);
+
+      // Store the confirmation result for later verification
+      setConfirmationResult(result);
+      setValue("firebaseToken", result.verificationId);
       setValue("formType", "FIREBASEOTP");
       setCurrentSubStep("phone-verify");
 
@@ -100,12 +110,24 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         isClosable: true,
       });
     } catch (error) {
-      console.error("Error sending code:", error);
+      console.error("Error sending verification code:", error);
+      let errorMessage = "Failed to send verification code";
+
+      if (error.code === "auth/invalid-phone-number") {
+        errorMessage = "Invalid phone number format";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Too many requests. Please try again later";
+      } else if (error.code === "auth/quota-exceeded") {
+        errorMessage = "SMS quota exceeded. Please try again later";
+      } else if (error.code === "auth/captcha-check-failed") {
+        errorMessage = "reCAPTCHA verification failed. Please try again";
+      }
+
       toast({
         title: "Error",
-        description: error.message || "Failed to send verification code.",
+        description: errorMessage,
         status: "error",
-        duration: 4000,
+        duration: 5000,
         isClosable: true,
       });
     } finally {
@@ -162,26 +184,83 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
 
   const handleVerifyPhone = async () => {
     if (phoneCode.length === 6) {
-      setIsLoading(true);
-      try {
-        handleSendPhoneCode();
-
-        // setValue("phoneVerified", true);
-        // setValue("phoneVerificationId", "firebase-verified");
-        // setCurrentSubStep("email");
-      } catch (error) {
-        console.error("Failed to verify phone code:", error);
+      if (!confirmationResult) {
         toast({
-          title: "Verification Failed",
-          description:
-            "An error occurred during verification. Please try again.",
+          title: "Error",
+          description: "Please send verification code first",
           status: "error",
           duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        console.log("Verifying phone code:", phoneCode);
+
+        await confirmationResult.confirm(phoneCode);
+
+        console.log("Phone verification successful");
+
+        toast({
+          title: "Phone Verified Successfully!",
+          description:
+            "Phone number has been verified. Proceeding to email verification.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+
+        setValue("phoneVerified", true);
+        setValue("phoneVerificationId", "firebase-verified");
+
+        setCurrentSubStep("email");
+      } catch (error) {
+        console.error("Failed to verify phone code:", error);
+        let errorMessage = "Invalid verification code";
+
+        if (error.code === "auth/invalid-verification-code") {
+          errorMessage = "Invalid verification code";
+        } else if (error.code === "auth/code-expired") {
+          errorMessage = "Verification code expired. Please request a new one";
+        } else if (error.code === "auth/session-expired") {
+          errorMessage = "Session expired. Please request a new code";
+        }
+
+        toast({
+          title: "Verification Failed",
+          description: errorMessage,
+          status: "error",
+          duration: 5000,
           isClosable: true,
         });
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+
+  const handleResendPhoneCode = async () => {
+    setIsLoading(true);
+    try {
+      // Reset the phone code and confirmation result
+      setPhoneCode("");
+      setConfirmationResult(null);
+
+      // Call the same function to send a new code
+      await handleSendPhoneCode();
+    } catch (error) {
+      console.error("Failed to resend phone code:", error);
+      toast({
+        title: "Failed to Resend Code",
+        description: "Please try again later",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -429,7 +508,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           _hover={{bg: "#EF6820"}}
           borderRadius="8px"
           onClick={handleVerifyPhone}
-          // isLoading={isLoading}
+          isLoading={isLoading}
           loadingText="Verifying..."
           isDisabled={phoneCode.length !== 6}>
           Verify phone number
@@ -438,7 +517,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         <VStack spacing={2} w="100%">
           <Text fontSize="16px" color="#6B7280" textAlign="center">
             Code didn't send?{" "}
-            <Link color="#EF6820" onClick={handleSendPhoneCode}>
+            <Link color="#EF6820" onClick={handleResendPhoneCode}>
               Click to resend
             </Link>
           </Text>
@@ -454,14 +533,13 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           </Flex>
         </VStack>
 
-        {/* reCAPTCHA container - visible for user interaction */}
         <div
           id="recaptcha-container"
           style={{
             margin: "20px 0",
-            display: "none",
+            display: "flex",
             justifyContent: "center",
-            minHeight: "28px",
+            minHeight: "78px",
             width: "100%",
           }}></div>
       </Box>

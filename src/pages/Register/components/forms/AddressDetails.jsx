@@ -95,7 +95,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
       try {
         console.log("Verifying phone code:", phoneCode);
 
-        await authService.verifyPhoneCode("", {
+        await authService.verifyPhoneCode("Balto", {
           otp: phoneCode,
           session_info: sessionInfo,
         });

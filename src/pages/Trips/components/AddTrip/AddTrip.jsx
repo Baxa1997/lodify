@@ -13,6 +13,7 @@ import AddressSection from "./AddressSection";
 import tripsService from "../../../../services/tripsService";
 import {useSelector} from "react-redux";
 import {generateID} from "@utils/generateID";
+import {transformTripData, transformFileData} from "./hooks/transforData";
 
 function AddTrip({tripData = {}}) {
   const {id} = useParams();
@@ -35,44 +36,7 @@ function AddTrip({tripData = {}}) {
     formState: {errors},
     watch,
   } = useForm();
-
-  const transformTripData = (data) => {
-    if (!data || Object.keys(data).length === 0) return {};
-
-    return {
-      ...data,
-      rate_confirmation: data.rate_confirmation ? [data.rate_confirmation] : [],
-      bold_pod: data.bol_pod ? [data.bol_pod] : [],
-      other_files: data.other_files ? [data.other_files] : [],
-
-      shippers_id: data.shipper?.guid || data.shippers_id,
-      companies_id_2: data.created_by?.guid || data.companies_id_2,
-
-      driver_type: Array.isArray(data.driver_type)
-        ? data.driver_type
-        : data.driver_type
-        ? [data.driver_type]
-        : [],
-      trip_type: Array.isArray(data.trip_type)
-        ? data.trip_type
-        : data.trip_type
-        ? [data.trip_type]
-        : [],
-      status: Array.isArray(data.status)
-        ? data.status
-        : data.status
-        ? [data.status]
-        : [],
-
-      lodify_fees_id: data.lodify_fee?.guid || data.lodify_fees_id,
-      service_fee: data.lodify_fee?.amount || data.service_fee,
-
-      trip_pickups: Array.isArray(data.pickups) ? data.pickups : [],
-
-      accessorials: Array.isArray(data.accessorials) ? data.accessorials : [],
-    };
-  };
-
+  console.log("rocFileDatarcFileData", watch());
   const {data: rocFileData = {}, isLoading: isRocFileLoading} = useQuery({
     queryKey: ["TRIP_BY_ID", csvFile],
     queryFn: () =>
@@ -102,7 +66,7 @@ function AddTrip({tripData = {}}) {
 
   useEffect(() => {
     if (rocFileData?.guid) {
-      const transformedData = transformTripData(rocFileData);
+      const transformedData = transformFileData(rocFileData);
       reset(transformedData);
     }
   }, [rocFileData]);

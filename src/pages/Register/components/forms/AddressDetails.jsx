@@ -98,6 +98,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         await authService.verifyPhoneCode("Balto", {
           otp: phoneCode,
           session_info: sessionInfo,
+          provider: "firebase",
         });
 
         console.log("Phone verification successful");

@@ -57,7 +57,7 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
   }, [isLocal, toast]);
 
   const getPhone = useCallback(() => {
-    const raw = "+998900119989";
+    const raw = "+998900216662";
 
     return String(raw || "").trim();
   }, [formData]);

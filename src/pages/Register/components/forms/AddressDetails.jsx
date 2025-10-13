@@ -13,10 +13,8 @@ import {
 import OtpInput from "react-otp-input";
 import HFTextField from "../../../../components/HFTextField";
 import styles from "../../MultiStepRegister.module.scss";
-import HFPhoneInput from "../../../../components/HFPhoneInput";
 import authService from "../../../../services/auth/authService";
-import {RecaptchaVerifier, signInWithPhoneNumber} from "firebase/auth";
-import {auth} from "../../../../config/firebase";
+import PhoneSendCode from "./PhoneSendCode";
 
 const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   const [currentSubStep, setCurrentSubStep] = useState("form");
@@ -39,101 +37,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
     setValue("emailCode", value);
   };
 
-  const handleSendPhoneCode = async () => {
-    const phoneNumber = formData?.phone;
-
-    if (!phoneNumber) {
-      toast({
-        title: "Error",
-        description: "Please enter a phone number",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    // Format phone number properly
-    const cleanPhone = phoneNumber.replace(/\D/g, "");
-    const formattedPhone = cleanPhone.startsWith("1")
-      ? `+${cleanPhone}`
-      : `+1${cleanPhone}`;
-
-    setIsLoading(true);
-
-    try {
-      // Clear existing reCAPTCHA container
-      const container = document.getElementById("recaptcha-container");
-      if (container) container.innerHTML = "";
-
-      // Create new reCAPTCHA verifier
-      const recaptchaVerifier = new RecaptchaVerifier(
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: (response) => {
-            console.log("reCAPTCHA solved:", response);
-          },
-          "expired-callback": () => {
-            toast({
-              title: "reCAPTCHA expired",
-              description: "Please try again.",
-              status: "warning",
-              duration: 3000,
-              isClosable: true,
-            });
-          },
-        },
-        auth
-      );
-
-      // Send verification code
-      const result = await signInWithPhoneNumber(
-        auth,
-        formattedPhone,
-        recaptchaVerifier
-      );
-
-      console.log("Verification code sent successfully:", result);
-
-      // Store the confirmation result for later verification
-      setConfirmationResult(result);
-      setValue("firebaseToken", result.verificationId);
-      setValue("formType", "FIREBASEOTP");
-      setCurrentSubStep("phone-verify");
-
-      toast({
-        title: "Success",
-        description: "Verification code sent successfully!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } catch (error) {
-      console.error("Error sending verification code:", error);
-      let errorMessage = "Failed to send verification code";
-
-      if (error.code === "auth/invalid-phone-number") {
-        errorMessage = "Invalid phone number format";
-      } else if (error.code === "auth/too-many-requests") {
-        errorMessage = "Too many requests. Please try again later";
-      } else if (error.code === "auth/quota-exceeded") {
-        errorMessage = "SMS quota exceeded. Please try again later";
-      } else if (error.code === "auth/captcha-check-failed") {
-        errorMessage = "reCAPTCHA verification failed. Please try again";
-      }
-
-      toast({
-        title: "Error",
-        description: errorMessage,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleSendPhoneCode = () => {};
 
   const handleSendEmailCode = async () => {
     setIsLoading(true);
@@ -244,11 +148,8 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   const handleResendPhoneCode = async () => {
     setIsLoading(true);
     try {
-      // Reset the phone code and confirmation result
       setPhoneCode("");
       setConfirmationResult(null);
-
-      // Call the same function to send a new code
       await handleSendPhoneCode();
     } catch (error) {
       console.error("Failed to resend phone code:", error);
@@ -365,49 +266,12 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
 
   if (currentSubStep === "phone") {
     return (
-      <Box borderRadius="12px" bg="white">
-        <VStack align="start" spacing={2}>
-          <Text maxW="360px" fontSize="18px" fontWeight="600" color="#111827">
-            Enter Mobile Number
-          </Text>
-          <Text fontSize="16px" maxW="360px" color="#6B7280">
-            To ensure the security of your account, we require verification of
-            your FMCSA linked phone number
-          </Text>
-
-          <Box w="100%" mt="16px">
-            <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
-              Phone number <span style={{color: "#EF6820"}}>*</span>
-            </Text>
-            <HFPhoneInput disabled name="phone" control={control} />
-          </Box>
-
-          <Button
-            mt="10px"
-            w="100%"
-            h="44px"
-            bg="#EF6820"
-            color="white"
-            _hover={{bg: "#EF6820"}}
-            borderRadius="8px"
-            onClick={handleSendPhoneCode}
-            isLoading={isLoading}
-            loadingText="Sending...">
-            Send Code
-          </Button>
-
-          <Flex align="center" gap="8px" justify="center" w="100%" mt={4}>
-            <img src="/img/backArrow.svg" alt="arrow-left" />
-            <Text
-              fontSize="16px"
-              color="#6B7280"
-              cursor="pointer"
-              onClick={() => setCurrentSubStep("form")}>
-              Back to Verify Identity
-            </Text>
-          </Flex>
-        </VStack>
-      </Box>
+      <PhoneSendCode
+        control={control}
+        formData={formData}
+        handleSendPhoneCode={handleSendPhoneCode}
+        setCurrentSubStep={setCurrentSubStep}
+      />
     );
   }
 
@@ -532,16 +396,6 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
             </Text>
           </Flex>
         </VStack>
-
-        <div
-          id="recaptcha-container"
-          style={{
-            margin: "20px 0",
-            display: "flex",
-            justifyContent: "center",
-            minHeight: "78px",
-            width: "100%",
-          }}></div>
       </Box>
     );
   }

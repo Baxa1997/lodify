@@ -1,37 +1,106 @@
-import React, {useState} from "react";
-import {Box, VStack, Text, Button, Flex} from "@chakra-ui/react";
+import React, {useState, useEffect} from "react";
+import {Box, VStack, Text, Button, Flex, useToast} from "@chakra-ui/react";
 import HFPhoneInput from "@components/HFPhoneInput";
-import {RecaptchaVerifier, signInWithPhoneNumber} from "firebase/auth";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  connectAuthEmulator,
+} from "firebase/auth";
 import {auth} from "../../../../config/firebase";
 
 function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
 
-  const generateRecaptcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: (response) => {},
+  useEffect(() => {
+    if (window.location.hostname === "localhost") {
+      try {
+        connectAuthEmulator(auth, "http://localhost:9099");
+        auth.settings.appVerificationDisabledForTesting = true;
+        console.log("⚙️ Firebase Auth Emulator enabled (reCAPTCHA bypassed)");
+      } catch (err) {
+        console.log("⚙️ Emulator already connected");
       }
-    );
+    }
+
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            console.log("✅ reCAPTCHA solved");
+          },
+          "expired-callback": () => {
+            toast({
+              title: "reCAPTCHA expired",
+              description: "Please try again.",
+              status: "warning",
+              duration: 3000,
+              isClosable: true,
+            });
+          },
+        }
+      );
+
+      window.recaptchaVerifier.render().then((widgetId) => {
+        window.recaptchaWidgetId = widgetId;
+        console.log("🔐 reCAPTCHA ready with ID:", widgetId);
+      });
+    }
+  }, [toast]);
+
+  const handleSendPhoneCode = async (event) => {
+    event.preventDefault();
+    const phone = formData.phone;
+
+    if (!phone || !phone.match(/^\+\d{10,15}$/)) {
+      toast({
+        title: "Invalid Phone",
+        description: "Please enter number with + and country code.",
+        status: "error",
+        duration: 3000,
+      });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const appVerifier = window.recaptchaVerifier;
+      if (!appVerifier) throw new Error("RecaptchaVerifier not ready.");
+
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phone,
+        appVerifier
+      );
+
+      window.confirmationResult = confirmationResult;
+
+      toast({
+        title: "SMS Sent!",
+        description: "Verification code sent successfully.",
+        status: "success",
+        duration: 3000,
+      });
+
+      setCurrentSubStep("phone-verify");
+    } catch (error) {
+      console.error("Error sending code:", error);
+      toast({
+        title: "Verification Failed",
+        description:
+          error.message || "Unable to send code. Check reCAPTCHA setup.",
+        status: "error",
+        duration: 4000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSendPhoneCode = (event) => {
-    event.preventDefault();
-    generateRecaptcha();
-    console.log("recaptchaVerifier", window.recaptchaVerifier);
-    let appVerifier = window.recaptchaVerifier;
-    const phone = formData.phone;
-    signInWithPhoneNumber(auth, phone, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   return (
     <Box borderRadius="12px" bg="white">
       <VStack align="start" spacing={2}>
@@ -40,7 +109,7 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
         </Text>
         <Text fontSize="16px" maxW="360px" color="#6B7280">
           To ensure the security of your account, we require verification of
-          your FMCSA linked phone number
+          your FMCSA linked phone number.
         </Text>
 
         <Box w="100%" mt="16px">

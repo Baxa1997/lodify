@@ -20,7 +20,6 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
   }, []);
 
   useEffect(() => {
-    // 2) Create reCAPTCHA once
     if (!recaptchaRef.current) {
       const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
         size: "invisible",
@@ -49,7 +48,6 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
         .catch((e) => console.error("reCAPTCHA render error:", e));
     }
 
-    // 3) Cleanup to avoid “already rendered” issues in StrictMode
     return () => {
       try {
         recaptchaRef.current && recaptchaRef.current.clear();
@@ -59,9 +57,8 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
   }, [isLocal, toast]);
 
   const getPhone = useCallback(() => {
-    // Adjust to your form shape if needed
     const raw = "+998900119989";
-    //   formData?.phone ?? formData?.values?.phone ?? formData?.data?.phone ?? "";
+
     return String(raw || "").trim();
   }, [formData]);
 
@@ -136,7 +133,7 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
           <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
             Phone number <span style={{color: "#EF6820"}}>*</span>
           </Text>
-          {/* Let the user edit the phone; bind via react-hook-form in the parent */}
+
           <HFPhoneInput name="phone" control={control} />
         </Box>
 

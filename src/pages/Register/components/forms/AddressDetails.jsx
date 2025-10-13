@@ -24,11 +24,14 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   const [isResending, setIsResending] = useState(false);
   const [emailSmsId, setEmailSmsId] = useState(null);
   const [confirmationResult, setConfirmationResult] = useState(null);
+  const [otp, setOtp] = useState(null);
+  const [sessionInfo, setSessionInfo] = useState(null);
   const toast = useToast();
 
   const formData = watch();
 
   const handlePhoneCodeChange = (value) => {
+    console.log("phoneCodephoneCode", phoneCode);
     setPhoneCode(value);
   };
 
@@ -98,12 +101,16 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         });
         return;
       }
-
+      console.log("confirmationResult", confirmationResult, phoneCode);
       setIsLoading(true);
       try {
         console.log("Verifying phone code:", phoneCode);
 
-        await confirmationResult.confirm(phoneCode);
+        await authService.verifyPhoneCode(confirmationResult.verificationId, {
+          code: phoneCode,
+          otp,
+          session_info: sessionInfo,
+        });
 
         console.log("Phone verification successful");
 
@@ -269,6 +276,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
       <PhoneSendCode
         control={control}
         formData={formData}
+        setSessionInfo={setSessionInfo}
         handleSendPhoneCode={handleSendPhoneCode}
         setCurrentSubStep={setCurrentSubStep}
       />

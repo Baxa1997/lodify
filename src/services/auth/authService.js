@@ -5,7 +5,7 @@ import httpRequest from "../../utils/httpRequest";
 const authService = {
   login: (data) =>
     requestV2.post("v2/login", data, {
-      headers: { "environment-id": data.environment_id },
+      headers: {"environment-id": data.environment_id},
     }),
   register: (data) => {
     const payload = {
@@ -27,22 +27,23 @@ const authService = {
     });
   },
   multiCompanyLogin: (data, params) =>
-    requestAuth.post("v2/multi-company/login", data, { params }),
-  refreshToken: (data, params) => requestV2.put("v2/refresh", data, { params }),
-  updateToken: (data, params) => requestV2.put("v2/refresh", data, { params }),
+    requestAuth.post("v2/multi-company/login", data, {params}),
+  refreshToken: (data, params) => requestV2.put("v2/refresh", data, {params}),
+  updateToken: (data, params) => requestV2.put("v2/refresh", data, {params}),
   verifyCode: (sms_id, data, params) =>
-    requestAuth.post(`v2/auth/verify/${sms_id}`, data, { params }),
+    requestAuth.post(`v2/auth/verify/${sms_id}`, data, {params}),
   sendAccessToken: (data) => requestAuth.post("v2/auth/logout", data),
-  sendCode: (data, params) => requestAuth.post("v2/send-code", data, { params }),
-
-  getRoles: (params, headers) => requestAuth.get("v2/role", { params, headers }),
+  sendCode: (data, params) => requestAuth.post("v2/send-code", data, {params}),
+  verifyPhoneCode: (verify_id, data, params) =>
+    requestAuth.post(`v2/auth/verify/${verify_id}`, data, {params}),
+  getRoles: (params, headers) => requestAuth.get("v2/role", {params, headers}),
   getRoleById: (projectId, roleId, params) =>
     requestAuth.get(`v2/role-permission/detailed/${projectId}/${roleId}`, {
       params,
     }),
   updatePermissions: (data, params) =>
-    requestAuth.put("v2/role-permission/detailed", { data }, { params }),
-  roleCreate: (data, params) => requestAuth.post("v2/role", data, { params }),
+    requestAuth.put("v2/role-permission/detailed", {data}, {params}),
+  roleCreate: (data, params) => requestAuth.post("v2/role", data, {params}),
 };
 
 export default authService;

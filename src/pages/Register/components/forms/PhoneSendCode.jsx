@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useRef, useMemo, useCallback, useState} from "react";
 import {Box, VStack, Text, Button, Flex, useToast} from "@chakra-ui/react";
 import HFPhoneInput from "@components/HFPhoneInput";
 import {
@@ -9,97 +9,115 @@ import {
 import {auth} from "../../../../config/firebase";
 
 function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
-  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const recaptchaRef = useRef(null);
+
+  const isLocal = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    const h = window.location.hostname;
+    return h === "localhost" || h === "127.0.0.1";
+  }, []);
 
   useEffect(() => {
-    if (window.location.hostname === "localhost") {
+    // 2) Create reCAPTCHA once
+    if (!recaptchaRef.current) {
+      const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+        size: "invisible",
+        callback: () => {
+          console.log("reCAPTCHA solved ✅");
+        },
+        "expired-callback": () => {
+          toast({
+            title: "reCAPTCHA expired",
+            description: "Please try again.",
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+          });
+        },
+      });
+
+      recaptchaRef.current = verifier;
+
+      verifier
+        .render()
+        .then((widgetId) => {
+          window.recaptchaWidgetId = widgetId;
+          console.log("reCAPTCHA ready with ID:", widgetId);
+        })
+        .catch((e) => console.error("reCAPTCHA render error:", e));
+    }
+
+    // 3) Cleanup to avoid “already rendered” issues in StrictMode
+    return () => {
       try {
-        connectAuthEmulator(auth, "http://localhost:9099");
-        auth.settings.appVerificationDisabledForTesting = true;
-        console.log("⚙️ Firebase Auth Emulator enabled (reCAPTCHA bypassed)");
-      } catch (err) {
-        console.log("⚙️ Emulator already connected");
+        recaptchaRef.current && recaptchaRef.current.clear();
+      } catch (_) {}
+      recaptchaRef.current = null;
+    };
+  }, [isLocal, toast]);
+
+  const getPhone = useCallback(() => {
+    const raw = "+16289002850";
+    return String(raw || "").trim();
+  }, [formData]);
+
+  const handleSendPhoneCode = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      const phone = getPhone();
+      if (!phone || !/^\+\d{10,15}$/.test(phone)) {
+        toast({
+          title: "Invalid phone",
+          description: "Please enter a number with + and country code.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
       }
-    }
 
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: (response) => {
-            console.log("✅ reCAPTCHA solved");
-          },
-          "expired-callback": () => {
-            toast({
-              title: "reCAPTCHA expired",
-              description: "Please try again.",
-              status: "warning",
-              duration: 3000,
-              isClosable: true,
-            });
-          },
-        }
-      );
+      try {
+        setIsLoading(true);
 
-      window.recaptchaVerifier.render().then((widgetId) => {
-        window.recaptchaWidgetId = widgetId;
-        console.log("🔐 reCAPTCHA ready with ID:", widgetId);
-      });
-    }
-  }, [toast]);
+        const appVerifier = recaptchaRef.current;
+        if (!appVerifier)
+          throw new Error("reCAPTCHA not ready yet. Try again.");
 
-  const handleSendPhoneCode = async (event) => {
-    event.preventDefault();
-    const phone = formData.phone;
+        const confirmationResult = await signInWithPhoneNumber(
+          auth,
+          phone,
+          appVerifier
+        );
+        window.confirmationResult = confirmationResult;
 
-    if (!phone || !phone.match(/^\+\d{10,15}$/)) {
-      toast({
-        title: "Invalid Phone",
-        description: "Please enter number with + and country code.",
-        status: "error",
-        duration: 3000,
-      });
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-
-      const appVerifier = window.recaptchaVerifier;
-      if (!appVerifier) throw new Error("RecaptchaVerifier not ready.");
-
-      const confirmationResult = await signInWithPhoneNumber(
-        auth,
-        phone,
-        appVerifier
-      );
-
-      window.confirmationResult = confirmationResult;
-
-      toast({
-        title: "SMS Sent!",
-        description: "Verification code sent successfully.",
-        status: "success",
-        duration: 3000,
-      });
-
-      setCurrentSubStep("phone-verify");
-    } catch (error) {
-      console.error("Error sending code:", error);
-      toast({
-        title: "Verification Failed",
-        description:
-          error.message || "Unable to send code. Check reCAPTCHA setup.",
-        status: "error",
-        duration: 4000,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        toast({
+          title: "SMS sent!",
+          description: "Verification code sent successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setCurrentSubStep("phone-verify");
+      } catch (error) {
+        console.error("Error sending code:", error);
+        toast({
+          title: "Verification failed",
+          description:
+            (error && error.message) ||
+            "Unable to send code. Check Phone provider, Authorized domains, and reCAPTCHA setup.",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [getPhone, toast, setCurrentSubStep]
+  );
 
   return (
     <Box borderRadius="12px" bg="white">
@@ -116,7 +134,8 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
           <Text fontSize="14px" fontWeight="500" color="#414651" mb={2}>
             Phone number <span style={{color: "#EF6820"}}>*</span>
           </Text>
-          <HFPhoneInput disabled name="phone" control={control} />
+          {/* Let the user edit the phone; bind via react-hook-form in the parent */}
+          <HFPhoneInput name="phone" control={control} />
         </Box>
 
         <Button
@@ -145,6 +164,7 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
         </Flex>
       </VStack>
 
+      {/* Must exist in the DOM before RecaptchaVerifier is constructed */}
       <div
         id="recaptcha-container"
         style={{
@@ -153,7 +173,8 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
           justifyContent: "center",
           height: "30px",
           width: "100%",
-        }}></div>
+        }}
+      />
     </Box>
   );
 }

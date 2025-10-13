@@ -24,7 +24,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   const [isResending, setIsResending] = useState(false);
   const [emailSmsId, setEmailSmsId] = useState(null);
   const [confirmationResult, setConfirmationResult] = useState(null);
-  const [otp, setOtp] = useState(null);
+
   const [sessionInfo, setSessionInfo] = useState(null);
   const toast = useToast();
 
@@ -370,7 +370,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           onClick={handleVerifyPhone}
           isLoading={isLoading}
           loadingText="Verifying..."
-          isDisabled={phoneCode.length >= 4}>
+          isDisabled={phoneCode.length === 4}>
           Verify phone number
         </Button>
 

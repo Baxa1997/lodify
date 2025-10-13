@@ -60,8 +60,8 @@ function PhoneSendCode({control, setCurrentSubStep = () => {}, formData = {}}) {
 
   const getPhone = useCallback(() => {
     // Adjust to your form shape if needed
-    const raw =
-      formData?.phone ?? formData?.values?.phone ?? formData?.data?.phone ?? "";
+    const raw = "+998900119989";
+    //   formData?.phone ?? formData?.values?.phone ?? formData?.data?.phone ?? "";
     return String(raw || "").trim();
   }, [formData]);
 

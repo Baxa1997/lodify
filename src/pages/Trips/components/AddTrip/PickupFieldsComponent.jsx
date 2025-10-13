@@ -10,7 +10,6 @@ import HFDatePicker from "@components/HFDatePicker";
 import HFDateTimePicker from "@components/HFDateTimePicker";
 
 function PickupFieldsComponent({control, field, index}) {
-  // Helper function to normalize field type for case-insensitive comparison
   const normalizeFieldType = (type) => {
     return Array.isArray(type) && type.length > 0 ? type[0]?.toLowerCase() : "";
   };

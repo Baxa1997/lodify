@@ -36,7 +36,6 @@ function AddTrip({tripData = {}}) {
     formState: {errors},
     watch,
   } = useForm();
-  console.log("rocFileDatarcFileData", watch());
   const {data: rocFileData = {}, isLoading: isRocFileLoading} = useQuery({
     queryKey: ["TRIP_BY_ID", csvFile],
     queryFn: () =>

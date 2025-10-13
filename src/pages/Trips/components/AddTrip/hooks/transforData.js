@@ -65,8 +65,18 @@ export const transformFileData = (data) => {
 
     lodify_fees_id: data.lodify_fee?.guid || data.lodify_fees_id,
     service_fee: data.lodify_fee?.amount || data.service_fee,
-
-    trip_pickups: Array.isArray(data.stops) ? data.stops : [],
+    reference: data?.rate_con_ref,
+    driver_type: Boolean(data?.driver2_name) ? ["Team"] : ["Solo"],
+    trip_pickups: data?.stops?.map((stop) => ({
+      ...stop,
+      shipper: stop?.facility_name,
+      zip_code: stop?.postal_code,
+      address: stop?.address_line,
+      country: stop?.country === "USA" ? "United States" : stop?.country,
+      equipment_type:
+        data?.equipment_type === "53' Van" ? "Dry Van 53" : "Dry Van 48",
+      field_type: stop?.stop_type,
+    })),
 
     accessorials: Array.isArray(data.accessorials) ? data.accessorials : [],
   };

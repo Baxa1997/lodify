@@ -96,7 +96,7 @@ function PhoneSendCode({
           appVerifier
         );
         window.confirmationResult = confirmationResult;
-
+        console.log("confirmationResult", confirmationResult);
         toast({
           title: "SMS sent!",
           description: "Verification code sent successfully.",

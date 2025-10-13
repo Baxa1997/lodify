@@ -17,7 +17,6 @@ import HFPhoneInput from "../../../../components/HFPhoneInput";
 import authService from "../../../../services/auth/authService";
 import {RecaptchaVerifier, signInWithPhoneNumber} from "firebase/auth";
 import {auth} from "../../../../config/firebase";
-import {FiDivide} from "react-icons/fi";
 
 const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   const [currentSubStep, setCurrentSubStep] = useState("form");
@@ -39,14 +38,13 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
     setValue("emailCode", value);
   };
 
-  const handleSendPhoneCode = async (values) => {
-    setValue("formType", "FIREBASEOTP");
-    setCurrentSubStep("phone-verify");
+  const handleSendPhoneCode = async () => {
     const phoneNumber = formData?.phone;
+
     if (!phoneNumber) {
       toast({
         title: "Error",
-        description: "Please enter a phone number",
+        description: "Please enter a valid phone number",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -59,50 +57,40 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
       ? `+${cleanPhone}`
       : `+1${cleanPhone}`;
 
-    console.log("Original phone:", phoneNumber);
-    console.log("Formatted phone:", formattedPhone);
-
     setIsLoading(true);
 
     try {
-      const existingContainer = document.getElementById("recaptcha-container");
-      if (existingContainer) {
-        existingContainer.innerHTML = "";
-      }
+      const container = document.getElementById("recaptcha-container");
+      if (container) container.innerHTML = "";
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const recaptchaVerifier = new RecaptchaVerifier(
+      window.recaptchaVerifier = new RecaptchaVerifier(
         "recaptcha-container",
         {
-          size: "normal",
-          callback: (response) => {
-            console.log("reCAPTCHA solved:", response);
-          },
-          "expired-callback": () => {
-            console.log("reCAPTCHA expired");
-          },
+          size: "invisible",
+          callback: (response) => console.log("Recaptcha solved ✅", response),
+          "expired-callback": () =>
+            toast({
+              title: "ReCAPTCHA expired",
+              description: "Please try again.",
+              status: "warning",
+              duration: 3000,
+              isClosable: true,
+            }),
         },
         auth
       );
 
-      console.log("Rendering reCAPTCHA...");
-      await recaptchaVerifier.render();
-      console.log("reCAPTCHA rendered successfully");
+      const appVerifier = window.recaptchaVerifier;
 
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      console.log("Sending verification code...");
-      const result = await signInWithPhoneNumber(
+      const confirmationResult = await signInWithPhoneNumber(
         auth,
         formattedPhone,
-        recaptchaVerifier
+        appVerifier
       );
 
-      console.log("Verification code sent successfully:", result);
-
-      setValue("firebaseToken", result?.verificationId);
+      setValue("firebaseToken", confirmationResult.verificationId);
       setValue("formType", "FIREBASEOTP");
+      setCurrentSubStep("phone-verify");
 
       toast({
         title: "Success",
@@ -111,9 +99,18 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
         duration: 3000,
         isClosable: true,
       });
-
-      setCurrentSubStep("phone-verify");
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error sending code:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send verification code.",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSendEmailCode = async () => {
@@ -167,20 +164,11 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
     if (phoneCode.length === 6) {
       setIsLoading(true);
       try {
-        console.log("Verifying phone code:", phoneCode);
+        handleSendPhoneCode();
 
-        toast({
-          title: "Phone Verified Successfully!",
-          description: "Phone number has been verified",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-
-        setValue("phoneVerified", true);
-        setValue("phoneVerificationId", "firebase-verified");
-
-        setCurrentSubStep("email");
+        // setValue("phoneVerified", true);
+        // setValue("phoneVerificationId", "firebase-verified");
+        // setCurrentSubStep("email");
       } catch (error) {
         console.error("Failed to verify phone code:", error);
         toast({
@@ -293,8 +281,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   };
 
   const handleConfirmAndContinue = () => {
-    // Skip phone validation and go directly to email
-    setCurrentSubStep("email");
+    setCurrentSubStep("phone");
   };
 
   if (currentSubStep === "phone") {
@@ -360,7 +347,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           Please input the code we just sent to your FMCSA linked phone number
         </Text>
 
-        <Box display="flex" w="356px" mt="30px">
+        <Box display="flex" w="556px" mt="30px">
           <OtpInput
             value={phoneCode}
             onChange={handlePhoneCodeChange}
@@ -442,7 +429,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           _hover={{bg: "#EF6820"}}
           borderRadius="8px"
           onClick={handleVerifyPhone}
-          isLoading={isLoading}
+          // isLoading={isLoading}
           loadingText="Verifying..."
           isDisabled={phoneCode.length !== 6}>
           Verify phone number
@@ -472,9 +459,9 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           id="recaptcha-container"
           style={{
             margin: "20px 0",
-            display: "flex",
+            display: "none",
             justifyContent: "center",
-            minHeight: "78px",
+            minHeight: "28px",
             width: "100%",
           }}></div>
       </Box>

@@ -370,7 +370,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           onClick={handleVerifyPhone}
           isLoading={isLoading}
           loadingText="Verifying..."
-          isDisabled={phoneCode.length === 4}>
+          isDisabled={phoneCode.length < 4}>
           Verify phone number
         </Button>
 

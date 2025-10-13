@@ -91,17 +91,6 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
 
   const handleVerifyPhone = async () => {
     if (phoneCode.length === 6) {
-      if (!confirmationResult) {
-        toast({
-          title: "Error",
-          description: "Please send verification code first",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-        return;
-      }
-      console.log("confirmationResult", confirmationResult, phoneCode);
       setIsLoading(true);
       try {
         console.log("Verifying phone code:", phoneCode);

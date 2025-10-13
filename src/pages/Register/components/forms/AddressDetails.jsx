@@ -90,7 +90,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   };
 
   const handleVerifyPhone = async () => {
-    if (phoneCode.length === 6) {
+    if (phoneCode.length >= 4) {
       setIsLoading(true);
       try {
         console.log("Verifying phone code:", phoneCode);

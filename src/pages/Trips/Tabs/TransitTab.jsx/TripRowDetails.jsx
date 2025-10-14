@@ -352,7 +352,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                         <Text>{item?.tractors?.external_id}</Text>
                       </Flex>
 
-                      <Flex alignItems={"center"} gap={"8px"}>
+                      <Flex alignItems={"center"} gap={"24px"}>
                         <Text color={"#414651"} fontWeight={"500"}>
                           53' Reefer
                         </Text>

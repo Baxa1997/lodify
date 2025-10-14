@@ -64,7 +64,7 @@ function RouteInfoComponent({tripData = {}}) {
         setLoading(false);
       });
   };
-  console.log("tripData", tripData);
+
   return (
     <>
       {tripData?.pickups?.map((pickup, index) => (

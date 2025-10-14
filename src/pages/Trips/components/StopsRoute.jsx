@@ -6,7 +6,7 @@ import FileViewer from "../../../components/FileViewer";
 import {getHoursMinutesDifference} from "../../../utils/getHoursDifference";
 import FilesReader from "../../../components/FileViewer/FilesReader";
 
-function StopsRoute({stop, index, initialStops}) {
+function StopsRoute({stop, index, initialStops, displayIndex}) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileReaderOpen, setIsFileReaderOpen] = useState(false);
   const lastElement = index === initialStops?.length - 1;
@@ -15,7 +15,6 @@ function StopsRoute({stop, index, initialStops}) {
   }
   const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-
   return (
     <Box key={index} margin="0 20px 0">
       <Flex gap="12px">
@@ -76,7 +75,7 @@ function StopsRoute({stop, index, initialStops}) {
               fontSize="12px"
               justifyContent="center"
               alignItems="center">
-              {index + 1}
+              {displayIndex || index + 1}
             </Flex>
           )}
           {!lastElement && (

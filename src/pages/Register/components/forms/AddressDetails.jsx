@@ -90,11 +90,9 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
   };
 
   const handleVerifyPhone = async () => {
-    if (phoneCode.length >= 4) {
+    if (phoneCode.length === 4) {
       setIsLoading(true);
       try {
-        console.log("Verifying phone code:", phoneCode);
-
         await authService.verifyPhoneCode("Balto", {
           otp: phoneCode,
           session_info: sessionInfo,
@@ -371,7 +369,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
           onClick={handleVerifyPhone}
           isLoading={isLoading}
           loadingText="Verifying..."
-          isDisabled={phoneCode.length < 4}>
+          isDisabled={phoneCode.length !== 6}>
           Verify phone number
         </Button>
 

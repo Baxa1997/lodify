@@ -62,12 +62,7 @@ function PhoneSendCode({
   }, [isLocal, toast]);
 
   function getRandomPhone() {
-    const phoneNumbers = [
-      "+16289002850",
-      "+998900119989",
-      "+998900216662",
-      "+998900216664",
-    ];
+    const phoneNumbers = ["+16289002850", "+998900119989"];
 
     const randomIndex = Math.floor(Math.random() * phoneNumbers.length);
     return phoneNumbers[randomIndex];

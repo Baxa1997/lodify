@@ -23,7 +23,10 @@ function PickupFields({control, index, removePickup, field}) {
 
   const isPickup =
     normalizeFieldType(field?.type || [field?.stop_type]) === "pickup";
-  console.log("isPickupisPickup", isPickup, field);
+
+  const isPickupAndDelivery =
+    normalizeFieldType(field?.type || [field?.stop_type]) ===
+    "pickup and delivery";
   return (
     <Accordion
       overflow="hidden"
@@ -34,7 +37,7 @@ function PickupFields({control, index, removePickup, field}) {
       <AccordionItem borderTopRadius="12px">
         <AccordionButton
           className={
-            isPickup
+            isPickup || isPickupAndDelivery
               ? styles.pickupAccordionButton
               : styles.deliveryAccordionButton
           }
@@ -48,7 +51,11 @@ function PickupFields({control, index, removePickup, field}) {
             borderTopRadius="12px"
             textAlign="left">
             <Text fontWeight="600" fontSize="18px" color="#181D27">
-              {isPickup ? "Pickup" : "Delivery"}
+              {isPickup
+                ? "Pickup"
+                : isPickupAndDelivery
+                ? "Pickup And Delivery"
+                : "Delivery"}
             </Text>
             <Flex
               width="24px"

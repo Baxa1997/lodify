@@ -15,11 +15,13 @@ function PickupFieldsComponent({control, field, index}) {
   };
 
   const isPickup = normalizeFieldType(field?.type) === "pickup";
+  const isPickupAndDelivery =
+    normalizeFieldType(field?.type) === "pickup and delivery";
 
   return (
     <>
       <Flex p="20px" borderRadius="12px" gap="12px" bg={"#FAFAFA"}>
-        <Box w={isPickup ? "100%" : "30%"}>
+        <Box w={isPickup || isPickupAndDelivery ? "100%" : "30%"}>
           <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
             Appointment # <span style={{color: "#414651"}}>*</span>
           </Text>
@@ -31,7 +33,7 @@ function PickupFieldsComponent({control, field, index}) {
             name={`trip_pickups.${index}.appointment`}
           />
         </Box>
-        <Box w={isPickup ? "100%" : "30%"}>
+        <Box w={isPickup || isPickupAndDelivery ? "100%" : "30%"}>
           <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
             BOL # <span style={{color: "#414651"}}>*</span>
           </Text>
@@ -43,7 +45,7 @@ function PickupFieldsComponent({control, field, index}) {
             name={`trip_pickups.${index}.bol`}
           />
         </Box>
-        {isPickup && (
+        {Boolean(isPickup || isPickupAndDelivery) && (
           <>
             {" "}
             <Box w="100%">
@@ -214,7 +216,11 @@ function PickupFieldsComponent({control, field, index}) {
 
             <Flex w="33%" flexDirection="column">
               <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
-                {isPickup ? "Pickup Arrive By" : "Delivery Arrive By"}
+                {isPickup
+                  ? "Pickup Arrive By"
+                  : isPickupAndDelivery
+                  ? "Pickup And Delivery Arrive By"
+                  : "Delivery Arrive By"}
               </Text>
               <HFDateTimePicker
                 width="100%"
@@ -226,7 +232,11 @@ function PickupFieldsComponent({control, field, index}) {
             </Flex>
             <Flex w="33%" flexDirection="column">
               <Text mb="6px" fontWeight="500" fontSize="14px" color="#181D27">
-                {isPickup ? "Pickup Depart At" : "Delivery Depart At"}
+                {isPickup
+                  ? "Pickup Depart At"
+                  : isPickupAndDelivery
+                  ? "Pickup And Delivery Depart At"
+                  : "Delivery Depart At"}
               </Text>
               <HFDateTimePicker
                 width="100%"

@@ -39,6 +39,7 @@ function ActionsNeeded() {
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
+  const userId = useSelector((state) => state.auth.userId);
   const envId = useSelector((state) => state.auth.environmentId);
   const clientType = useSelector((state) => state.auth.clientType);
   const brokersId = useSelector((state) => state.auth.user_data?.brokers_id);
@@ -79,6 +80,10 @@ function ActionsNeeded() {
             clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
               ? brokersId
               : undefined,
+          carriers_id:
+            clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
+              ? brokersId
+              : userId,
           client_type:
             clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
               ? "broker"
@@ -239,7 +244,7 @@ function ActionsNeeded() {
                             cursor="pointer"
                             _hover={{textDecoration: "underline"}}
                             color="#181D27">
-                            {trip.customer?.name || ""}
+                            {trip.customer?.name || trip?.shipper?.name || ""}
                           </Text>
                         </Tooltip>
                       </CTableTd>

@@ -322,7 +322,7 @@ function TenderInvitations({tripType = ""}) {
                             cursor="pointer"
                             _hover={{textDecoration: "underline"}}
                             color="#181D27">
-                            {trip.customer?.name || ""}
+                            {trip.customer?.name || trip?.shipper?.name || ""}
                           </Text>
                         </Tooltip>
                       </CTableTd>
@@ -472,13 +472,15 @@ function TenderInvitations({tripType = ""}) {
                                   color="#181D27"
                                   cursor="pointer"
                                   _hover={{textDecoration: "underline"}}>
-                                  {`${trip.stop?.[0]?.address ?? ""} / ${
-                                    trip?.stop?.[0]?.address_2 ?? ""
+                                  {`${trip.last_stop?.[0]?.address ?? ""} / ${
+                                    trip?.last_stop?.[0]?.address_2 ?? ""
                                   }` || ""}
                                 </Text>
                               </Tooltip>
                               <Text h="20px">
-                                {formatDate(trip?.stop?.[0]?.arrive_by ?? "")}
+                                {formatDate(
+                                  trip?.last_stop?.[0]?.arrive_by ?? ""
+                                )}
                               </Text>
                             </Box>
                           </Flex>
@@ -695,7 +697,7 @@ function TenderInvitations({tripType = ""}) {
                               color="#535862"
                               cursor="pointer"
                               _hover={{textDecoration: "underline"}}>
-                              {trip?.origin?.[0]?.equipment_type ?? "ss"}
+                              {trip?.origin?.[0]?.equipment_type ?? ""}
                             </Text>
 
                             <Flex
@@ -874,12 +876,12 @@ const TripProgress = ({total_trips = 0, current_trips = 0}) => {
 };
 
 const TripDriverVerification = ({trip = {}}) => {
-  const stop = trip?.stop?.[0];
+  const stop = trip?.origin?.[0];
 
   return (
     <Flex gap="24px" alignItems="center">
       <Box w="22px" h="22px">
-        {stop?.equipment_type === "Power Only" ? (
+        {stop?.equipment_availability?.[0] === "Required" ? (
           trip?.is_truck_verified ? (
             <img
               src="/img/verifiedFullTruck.svg"

@@ -28,11 +28,11 @@ const Trips = () => {
             color={"#181D27"}
             fontWeight={"600"}
             fontSize={"24px"}>
-            Trips
+            All Loads
           </Text>
         )}
 
-        {clientType?.id !== "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
+        {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
           <AddTripMenu setIsAutomatedAddTrip={setIsAutomatedAddTrip} />
         )}
 

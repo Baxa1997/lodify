@@ -34,13 +34,9 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
       });
     },
     enabled: !!trip.guid && !!envId && isExpanded,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000,
-    retry: 1,
-    retryDelay: 1000,
+    staleTime: 0,
     select: (res) => res?.data?.response?.[0] || {},
   });
 
@@ -107,8 +103,8 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
   const getTableHeads = (sectionType) => [
     {
       index: 0,
-      label: sectionType === "pickup" ? "Pick Up" : "Delivery",
-      key: sectionType === "pickup" ? "pick_up" : "delivery",
+      label: sectionType === "Pickup" ? "Pick Up" : "Delivery",
+      key: sectionType === "Pickup" ? "Pick Up" : "delivery",
     },
     {
       index: 1,
@@ -122,7 +118,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
     },
     {
       index: 3,
-      label: sectionType === "pickup" ? "Arrival" : "Arrival",
+      label: sectionType === "Pickup" ? "Arrival" : "Arrival",
       key: "schedule",
     },
     {
@@ -140,11 +136,6 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
 
     return `${baseHeight + minRows * rowHeight + padding}px`;
   };
-
-  const pickupItems =
-    tripData?.pickups?.filter((item) => item?.type?.includes("Pickup")) || [];
-  const deliveryItems =
-    tripData?.pickups?.filter((item) => item?.type?.includes("Delivery")) || [];
 
   return (
     <Box bg="#fff" minHeight="200px" position="relative">
@@ -168,8 +159,8 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
             background: "#a8a8a8",
           },
         }}>
-        {pickupItems.length > 0 && (
-          <Box mb={6}>
+        {(tripData?.pickups || []).map((item, index) => (
+          <Box key={item?.guid || index} mb={6}>
             <CTable
               minHeight={getMinHeight()}
               isPagination={false}
@@ -180,12 +171,11 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
               bg="white">
               <CTableHead borderRadius="8px 8px 0 0" bg="#fff">
                 <CTableRow>
-                  {getTableHeads("pickup")?.map((head) => (
+                  {getTableHeads(item?.type?.[0])?.map((head) => (
                     <CTableTh
                       zIndex={-1}
                       maxW="334px"
                       width="334px"
-                      //   minW="334px"
                       key={head.index}
                       bg="#fff"
                       py="6px"
@@ -200,216 +190,136 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {pickupItems.map((item, index) => (
-                  <CTableRow key={item?.guid} hover={false}>
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <Box>
-                        <TripStatus status={item?.index} />
-                        <Text
-                          wordBreak="break-word"
-                          whiteSpace="normal"
-                          my="8px"
-                          fontSize="16px"
-                          fontWeight="400"
-                          color="#181d27">
-                          {`${item?.address}, ${item?.state}, ${item?.zip_code}`}
-                        </Text>
-                        <Text fontSize="12px" color="#6b7280">
-                          {formatScheduleDate(item?.arrive_by)}
-                        </Text>
-                      </Box>
-                    </CTableTd>
-
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <Flex mb={"8px"} fontSize="16px" color="#181d27">
-                        <Text color={"#414651"} fontWeight={"500"}>
-                          Tractor Unit #
-                        </Text>
-                        <Text>{item?.tractors?.plate_number}</Text>
-                      </Flex>
-
-                      <Flex mb={"8px"} fontSize="14px" color="#181d27">
-                        <Text color={"#414651"} fontWeight={"500"}>
-                          Tractor ID
-                        </Text>
-                        <Text>{item?.tractors?.external_id}</Text>
-                      </Flex>
-
-                      <Flex alignItems={"center"} gap={"8px"}>
-                        <Text color={"#414651"} fontWeight={"500"}>
-                          53' Reefer
-                        </Text>
-                        <TripDriverVerification trip={item} />
-                      </Flex>
-                    </CTableTd>
-
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <Box>
-                        <Badge
-                          bg={getLoadTypeColor(item?.load_type?.[0])}
-                          color="white"
-                          px={3}
-                          py={1}
-                          borderRadius="full"
-                          fontSize="12px"
-                          fontWeight="500">
-                          {item?.load_type?.[0] || "N/A"}
-                        </Badge>
-                      </Box>
-                    </CTableTd>
-
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <Box>
-                        <Text
-                          fontSize="14px"
-                          fontWeight="400"
-                          color="#181d27"
-                          mb={1}>
-                          {`${item?.address}, ${item?.state}, ${item?.zip_code}`}
-                        </Text>
-                        <Text fontSize="12px" color="#6b7280">
-                          {formatScheduleDate(item?.arrive_by)}
-                        </Text>
-                      </Box>
-                    </CTableTd>
-
-                    <CTableTd py="12px" px="20px">
-                      <Text fontSize="14px" color="#181d27">
-                        {tripData?.duration}
+                <CTableRow hover={false}>
+                  <CTableTd py="12px" px="20px">
+                    <Box>
+                      <TripStatus status={item?.index} />
+                      <Text
+                        wordBreak="break-word"
+                        whiteSpace="normal"
+                        my="8px"
+                        fontSize="16px"
+                        fontWeight="400"
+                        color="#181d27">
+                        {`${item?.address}, ${item?.state}, ${item?.zip_code}`}
                       </Text>
-                    </CTableTd>
-                  </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
-          </Box>
-        )}
-
-        {deliveryItems.length > 0 && (
-          <Box>
-            <CTable
-              minHeight={getMinHeight()}
-              isPagination={false}
-              width="100%"
-              overflow="visible"
-              borderColor="#fff"
-              borderRadius="8px"
-              bg="white">
-              <CTableHead borderRadius="8px 8px 0 0" bg="#fff">
-                <CTableRow>
-                  {getTableHeads("delivery")?.map((head) => (
-                    <CTableTh
-                      zIndex={-1}
-                      maxW="334px"
-                      width="334px"
-                      minW="334px"
-                      key={head.index}
-                      bg="#fff"
-                      py="6px"
-                      px="20px"
-                      fontSize="16px"
-                      fontWeight="600"
-                      color="#181d27"
-                      borderBottom="1px solid #e5e7eb">
-                      {head.label}
-                    </CTableTh>
-                  ))}
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {deliveryItems.map((item) => (
-                  <CTableRow key={item?.guid} hover={false}>
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <Box>
-                        <TripStatus status={item?.index} />
-                        <Text
-                          wordBreak="break-word"
-                          whiteSpace="normal"
-                          my="8px"
-                          fontSize="16px"
-                          fontWeight="400"
-                          color="#181d27">
-                          {`${item?.address}, ${item?.state}, ${item?.zip_code}`}
-                        </Text>
-                        <Text fontSize="12px" color="#6b7280">
-                          {formatScheduleDate(item?.arrive_by)}
-                        </Text>
-                      </Box>
-                    </CTableTd>
-
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <Flex mb={"8px"} fontSize="14px" color="#181d27">
-                        <Text color={"#414651"} fontWeight={"500"}>
-                          Tractor Unit #
-                        </Text>
-                        <Text>{item?.tractors?.plate_number}</Text>
-                      </Flex>
-
-                      <Flex mb={"8px"} fontSize="14px" color="#181d27">
-                        <Text color={"#414651"} fontWeight={"500"}>
-                          Tractor ID
-                        </Text>
-                        <Text>{item?.tractors?.external_id}</Text>
-                      </Flex>
-
-                      <Flex alignItems={"center"} gap={"24px"}>
-                        <Text color={"#414651"} fontWeight={"500"}>
-                          53' Reefer
-                        </Text>
-                        <TripDriverVerification trip={item} />
-                      </Flex>
-                    </CTableTd>
-
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <Box>
-                        <Badge
-                          bg={getLoadTypeColor(item?.load_type?.[0])}
-                          color="white"
-                          px={3}
-                          py={1}
-                          borderRadius="full"
-                          fontSize="12px"
-                          fontWeight="500">
-                          {item?.load_type?.[0] || "N/A"}
-                        </Badge>
-                      </Box>
-                    </CTableTd>
-
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <>
-                        {" "}
-                        <Box mb="24px">
-                          <Text fontSize="12px" color="#181D27">
-                            Check in:
-                          </Text>
-                          <Text fontSize="12px" color="#6b7280">
-                            {formatScheduleDate(item?.check_in)}
-                          </Text>
-                        </Box>
-                        <Box>
-                          <Text fontSize="12px" color="#181D27">
-                            Check out:
-                          </Text>
-                          <Text fontSize="12px" color="#6b7280">
-                            {formatScheduleDate(item?.check_out)}
-                          </Text>
-                        </Box>
-                      </>
-                    </CTableTd>
-
-                    <CTableTd py="12px" px="20px" verticalAlign="top">
-                      <Text fontSize="14px" color="#181d27">
+                      <Text fontSize="12px" color="#6b7280">
                         {formatScheduleDate(item?.arrive_by)}
                       </Text>
-                    </CTableTd>
-                  </CTableRow>
-                ))}
+                    </Box>
+                  </CTableTd>
+
+                  <CTableTd py="12px" px="20px">
+                    <Flex mb={"8px"} fontSize="14px" color="#181d27" gap="8px">
+                      <Text color={"#414651"} fontWeight={"500"}>
+                        Tractor Unit #
+                      </Text>
+                      <Text>{trip?.tractors?.plate_number}</Text>
+                    </Flex>
+
+                    <Flex mb={"8px"} fontSize="14px" color="#181d27" gap="8px">
+                      <Text color={"#414651"} fontWeight={"500"}>
+                        Tractor ID
+                      </Text>
+                      <Text>{trip?.tractors?.external_id}</Text>
+                    </Flex>
+
+                    <Flex mb={"8px"} fontSize="14px" color="#181d27" gap="8px">
+                      <Text color={"#414651"} fontWeight={"500"}>
+                        Trailer Unit
+                      </Text>
+                      <Text>{trip?.trailers?.plate_number}</Text>
+                    </Flex>
+
+                    <Flex mb={"8px"} fontSize="14px" color="#181d27" gap="8px">
+                      <Text color={"#414651"} fontWeight={"500"}>
+                        Trailer ID
+                      </Text>
+                      <Text>{trip?.trailers?.external_id}</Text>
+                    </Flex>
+
+                    <Flex
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      gap={"8px"}>
+                      <Text color={"#414651"} fontWeight={"500"}>
+                        {trip?.trailers?.trailer_type?.[0]}
+                      </Text>
+                      <TripDriverVerification
+                        tripData={tripData}
+                        trip={item}
+                        pickUpindex={index}
+                      />
+                    </Flex>
+                  </CTableTd>
+
+                  <CTableTd py="12px" px="20px">
+                    <Box>
+                      <Badge
+                        bg={getLoadTypeColor(item?.load_type?.[0])}
+                        color="white"
+                        px={3}
+                        py={1}
+                        borderRadius="full"
+                        fontSize="12px"
+                        fontWeight="500">
+                        {item?.load_type?.[0] || "N/A"}
+                      </Badge>
+                    </Box>
+                  </CTableTd>
+
+                  <CTableTd py="12px" px="20px">
+                    <Box mb="24px">
+                      <Text fontSize="12px" color="#181D27">
+                        Check in:
+                      </Text>
+                      <Flex alignItems="center" gap="8px">
+                        <Text fontSize="12px" color="#181D27">
+                          {formatScheduleDate(item?.check_in)}
+                        </Text>
+                        {Boolean(item?.check_in) && (
+                          <Text
+                            fontSize="14px"
+                            fontWeight="700"
+                            color="#175CD3">
+                            M
+                          </Text>
+                        )}
+                      </Flex>
+                    </Box>
+                    <Box>
+                      <Text fontSize="12px" color="#181D27">
+                        Check out:
+                      </Text>
+
+                      <Flex alignItems="center" gap="8px">
+                        <Text fontSize="12px" color="#181D27">
+                          {formatScheduleDate(item?.check_out)}
+                        </Text>
+                        {Boolean(item?.check_out) && (
+                          <Text
+                            fontSize="14px"
+                            fontWeight="700"
+                            color="#175CD3">
+                            M
+                          </Text>
+                        )}
+                      </Flex>
+                    </Box>
+                  </CTableTd>
+
+                  <CTableTd py="12px" px="20px">
+                    <Text fontSize="14px" color="#181d27">
+                      {formatScheduleDate(item?.arrive_by)}
+                    </Text>
+                  </CTableTd>
+                </CTableRow>
               </CTableBody>
             </CTable>
           </Box>
-        )}
+        ))}
 
-        {pickupItems.length === 0 && deliveryItems.length === 0 && (
+        {(!tripData?.pickups || tripData?.pickups?.length === 0) && (
           <Box p="20px" textAlign="center">
             <Text fontSize="14px" color="#6b7280">
               No pickup or delivery data available
@@ -508,49 +418,55 @@ const TripStatus = ({
   );
 };
 
-const TripDriverVerification = ({trip = {}}) => {
+const TripDriverVerification = ({
+  trip = {},
+  tripData = {},
+  pickUpindex = 0,
+}) => {
+  const getTruckImage = () => {
+    let isVerified = false;
+
+    if (tripData?.current_index === pickUpindex) {
+      isVerified = trip?.is_truck_verified;
+    } else if (tripData?.current_index > pickUpindex) {
+      isVerified = true;
+    } else {
+      isVerified = false;
+    }
+
+    const isRequired = trip?.equipment_availability?.[0] === "Required";
+
+    if (isRequired) {
+      return isVerified
+        ? "/img/verifiedFullTruck.svg"
+        : "/img/unverifiedFullTruck.svg";
+    } else {
+      return isVerified
+        ? "/img/verifiedEmptyTruck.svg"
+        : "/img/unverifiedEmptyTruck.svg";
+    }
+  };
+
+  const getDriverVerifiedStatus = () => {
+    if (tripData?.current_index === pickUpindex) {
+      return trip?.is_driver_verified;
+    } else if (tripData?.current_index > pickUpindex) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const isDriverVerified = getDriverVerifiedStatus();
+
   return (
     <Flex gap="24px" alignItems="center">
       <Box w="22px" h="22px">
-        {trip?.equipment_type === "Power Only" ? (
-          trip?.is_truck_verified ? (
-            <img
-              src="/img/verifiedFullTruck.svg"
-              alt="powerOnly"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          ) : (
-            <img
-              src="/img/unverifiedFullTruck.svg"
-              alt="powerOnly"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          )
-        ) : trip?.is_truck_verified ? (
-          <img
-            src="/img/verifiedEmptyTruck.svg"
-            alt="truck"
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
-        ) : (
-          <img
-            src="/img/unverifiedEmptyTruck.svg"
-            alt="truck"
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
-        )}
+        <img
+          src={getTruckImage()}
+          alt="truck"
+          style={{width: "100%", height: "100%"}}
+        />
       </Box>
 
       <Flex
@@ -560,50 +476,35 @@ const TripDriverVerification = ({trip = {}}) => {
         h="27px"
         p="5px"
         gap="4px"
-        bg={trip?.is_driver_verified ? "#DEFFEE" : "#EDEDED"}
+        bg={isDriverVerified ? "#DEFFEE" : "#EDEDED"}
         borderRadius="16px">
         <Box w="17px" h="17px">
           {trip?.driver_type?.[0] === "Team" &&
-            (trip?.is_driver_verified ? (
+            (isDriverVerified ? (
               <img
                 src="/img/unverifiedSecondDriver.svg"
                 alt="driver"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
+                style={{width: "100%", height: "100%"}}
               />
             ) : (
               <img
                 src="/img/unvSecondDriver.svg"
                 alt="driver"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
+                style={{width: "100%", height: "100%"}}
               />
             ))}
         </Box>
+
         <Box w="17px" h="17px">
-          {trip?.is_driver_verified ? (
-            <img
-              src="/img/driverVerified.svg"
-              alt="driver"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          ) : (
-            <img
-              src="/img/unverifiedDriver.svg"
-              alt="driver"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          )}
+          <img
+            src={
+              isDriverVerified
+                ? "/img/driverVerified.svg"
+                : "/img/unverifiedDriver.svg"
+            }
+            alt="driver"
+            style={{width: "100%", height: "100%"}}
+          />
         </Box>
       </Flex>
     </Flex>

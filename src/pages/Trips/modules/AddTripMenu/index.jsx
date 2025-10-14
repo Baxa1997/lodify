@@ -17,7 +17,7 @@ const AddTripMenu = ({setIsAutomatedAddTrip = false}) => {
     <>
       <Flex alignItems={"center"} justifyContent={"space-between"} h={"32px"}>
         <Text h={"32px"} color={"#181D27"} fontWeight={"600"} fontSize={"24px"}>
-          Trips
+          All Loads
         </Text>
 
         <Menu>

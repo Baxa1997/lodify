@@ -751,7 +751,7 @@ const TripDriverVerification = ({trip = {}}) => {
   return (
     <Flex gap="24px" alignItems="center">
       <Box w="22px" h="22px">
-        {stop?.equipment_type === "Power Only" ? (
+        {stop?.equipment_availability?.[0] === "Required" ? (
           trip?.is_truck_verified ? (
             <img
               src="/img/verifiedFullTruck.svg"
@@ -802,40 +802,9 @@ const TripDriverVerification = ({trip = {}}) => {
         bg={trip?.is_driver_verified ? "#DEFFEE" : "#EDEDED"}
         borderRadius="16px">
         <Box w="17px" h="17px">
-          {trip?.driver_type?.[0] === "Team" &&
-            (trip?.is_driver_verified ? (
-              <img
-                src="/img/unverifiedSecondDriver.svg"
-                alt="driver"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            ) : (
-              <img
-                src="/img/unvSecondDriver.svg"
-                alt="driver"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            ))}
-        </Box>
-        <Box w="17px" h="17px">
-          {trip?.is_driver_verified ? (
+          {trip?.driver_type?.[0] === "Team" && (
             <img
-              src="/img/driverVerified.svg"
-              alt="driver"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          ) : (
-            <img
-              src="/img/unverifiedDriver.svg"
+              src="/img/unverifiedSecondDriver.svg"
               alt="driver"
               style={{
                 width: "100%",
@@ -843,6 +812,16 @@ const TripDriverVerification = ({trip = {}}) => {
               }}
             />
           )}
+        </Box>
+        <Box w="17px" h="17px">
+          <img
+            src="/img/driverVerified.svg"
+            alt="driver"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
         </Box>
       </Flex>
     </Flex>

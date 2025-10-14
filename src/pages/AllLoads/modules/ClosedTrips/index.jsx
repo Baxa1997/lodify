@@ -855,7 +855,7 @@ const TripDriverVerification = ({trip = {}}) => {
   return (
     <Flex gap="24px" alignItems="center">
       <Box w="22px" h="22px">
-        {stop?.equipment_type === "Power Only" ? (
+        {stop?.equipment_availability?.[0] === "Required" ? (
           trip?.is_truck_verified ? (
             <img
               src="/img/verifiedFullTruck.svg"

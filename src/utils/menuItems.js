@@ -18,13 +18,13 @@ export const menuItems = [
     path: "#",
     children: [
       {
-        id: "trips",
-        label: "Trips",
+        id: "all_loads",
+        label: "All Loads",
         path: "trips",
       },
       {
-        id: "all-loads",
-        label: "All Loads",
+        id: "load_details",
+        label: "Load Details",
         path: "all-loads",
       },
       {
@@ -155,14 +155,14 @@ export const brokerMenuItems = [
     children: [
       {
         id: "trips",
-        label: "Trips",
+        label: "All Loads",
         path: "trips",
       },
-      {
-        id: "all-loads",
-        label: "All Loads",
-        path: "all-loads",
-      },
+      // {
+      //   id: "all-loads",
+      //   label: "All Loads",
+      //   path: "all-loads",
+      // },
     ],
   },
 

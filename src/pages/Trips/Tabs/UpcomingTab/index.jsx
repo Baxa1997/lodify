@@ -657,18 +657,32 @@ function UpcomingTab({tripType = ""}) {
                               {trip?.drivers?.first_name}
                             </Text>
                           ) : (
-                            <Button
-                              bg="none"
-                              border="none"
-                              color="#EF6820"
-                              fontWeight="600"
-                              px="0"
-                              _hover={{bg: "none"}}
-                              onClick={(e) => e.stopPropagation()}>
-                              Assign
-                            </Button>
+                            clientType?.id !==
+                              "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
+                              <Button
+                                bg="none"
+                                border="none"
+                                color="#EF6820"
+                                fontWeight="600"
+                                px="0"
+                                _hover={{bg: "none"}}
+                                onClick={(e) => e.stopPropagation()}>
+                                Assign
+                              </Button>
+                            )
                           )}
                         </Flex>
+                      </CTableTd>
+
+                      <CTableTd>
+                        <Box>
+                          <Text fontWeight="600" color="#181D27">
+                            ${trip?.total_rates}
+                          </Text>
+                          <Text fontWeight={400} color="#535862">
+                            {"$2.50/mi"}
+                          </Text>
+                        </Box>
                       </CTableTd>
                     </CTableRow>
 
@@ -715,6 +729,7 @@ const TripStatus = ({
       borderRadius="100px"
       border="1px solid #B2DDFF"
       cursor="pointer">
+      {status === 0 && <img src="/img/statusArrow.svg" alt="" />}
       <Text fontSize="12px" fontWeight="500" color="#175CD3">
         {status || 1}
       </Text>
@@ -751,7 +766,7 @@ const TripDriverVerification = ({trip = {}}) => {
   return (
     <Flex gap="24px" alignItems="center">
       <Box w="22px" h="22px">
-        {stop?.equipment_type === "Power Only" ? (
+        {stop?.equipment_availability?.[0] === "Required" ? (
           trip?.is_truck_verified ? (
             <img
               src="/img/verifiedFullTruck.svg"

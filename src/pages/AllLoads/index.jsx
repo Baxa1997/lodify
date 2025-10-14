@@ -16,7 +16,7 @@ const AllLoads = () => {
         <HeadBreadCrumb />
 
         <Text h={"32px"} color={"#181D27"} fontWeight={"600"} fontSize={"24px"}>
-          Tender Invitations
+          All Loads
         </Text>
 
         <Tabs className={tabsStyles.tabsContainer}>

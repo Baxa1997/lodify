@@ -55,9 +55,16 @@ export const tableElements = [
   },
   {
     id: 10,
-    name: "",
+    name: "Driver",
     key: "actions",
-    sortable: false,
+    sortable: true,
+  },
+
+  {
+    id: 11,
+    name: "Rate",
+    key: "rate",
+    sortable: true,
   },
 ];
 

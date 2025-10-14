@@ -14,6 +14,7 @@ function StopsRoute({stop, index, initialStops}) {
     return format(dateObj, "HH:mm");
   }
   const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   return (
     <Box key={index} margin="0 20px 0">
@@ -126,14 +127,16 @@ function StopsRoute({stop, index, initialStops}) {
                   background: "#a8a8a8",
                 },
               }}>
-              {stop?.images?.map((image) => (
+              {stop?.images?.map((image, imageIndex) => (
                 <Box
+                  key={imageIndex}
                   cursor="pointer"
                   width="40px"
                   height="60px"
                   borderRadius="8px"
                   overflow="hidden"
                   onClick={() => {
+                    setSelectedImageIndex(imageIndex);
                     setIsFileViewerOpen(true);
                   }}>
                   <img
@@ -211,6 +214,7 @@ function StopsRoute({stop, index, initialStops}) {
       <FileViewer
         isOpen={isFileViewerOpen}
         onClose={() => setIsFileViewerOpen(false)}
+        startIndex={selectedImageIndex}
         images={stop?.images}
       />
     </Box>

@@ -1,14 +1,18 @@
-import React, { useState } from "react";
-import { menuItems } from "../utils/menuItems";
+import React, {useState} from "react";
+import {brokerMenuItems, menuItems} from "../utils/menuItems";
 import styles from "./AdminLayout.module.scss";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Tooltip } from "@chakra-ui/react";
+import {useNavigate, useLocation} from "react-router-dom";
+import {Tooltip} from "@chakra-ui/react";
 import SidebarFooter from "./SidebarFooter";
+import {useSelector} from "react-redux";
 
-const Sidebar = ({ sidebarOpen = false, searchValue = "" }) => {
+const Sidebar = ({sidebarOpen = false, searchValue = ""}) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const clientType = useSelector((state) => state.auth.clientType);
   const [expandedItems, setExpandedItems] = useState(new Set());
+
+  const isBroker = clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf";
 
   const isActiveRoute = (path) => {
     const lastPath = location.pathname.split("/").pop();
@@ -27,8 +31,8 @@ const Sidebar = ({ sidebarOpen = false, searchValue = "" }) => {
     });
   };
 
-  const filteredMenuItems = menuItems.filter((item) =>
-    item?.label.toLowerCase().includes(searchValue.toLowerCase()),
+  const filteredMenuItems = (isBroker ? brokerMenuItems : menuItems).filter(
+    (item) => item?.label.toLowerCase().includes(searchValue.toLowerCase())
   );
   return (
     <>
@@ -43,14 +47,9 @@ const Sidebar = ({ sidebarOpen = false, searchValue = "" }) => {
                 item.children.some((child) => isActiveRoute(child.path)));
 
             return (
-              <li
-                key={item.id}
-                className={styles.navItem}>
+              <li key={item.id} className={styles.navItem}>
                 {!sidebarOpen ? (
-                  <Tooltip
-                    placement="right"
-                    label={item?.label || ""}
-                    hasArrow>
+                  <Tooltip placement="right" label={item?.label || ""} hasArrow>
                     <button
                       className={`${styles.navLink} ${
                         isActive ? styles.active : ""
@@ -63,9 +62,7 @@ const Sidebar = ({ sidebarOpen = false, searchValue = "" }) => {
                         }
                       }}>
                       <span className={styles.navIcon}>
-                        <img
-                          src={item.icon}
-                          alt="" />
+                        <img src={item.icon} alt="" />
                       </span>
                     </button>
                   </Tooltip>
@@ -82,9 +79,7 @@ const Sidebar = ({ sidebarOpen = false, searchValue = "" }) => {
                       }
                     }}>
                     <span className={styles.navIcon}>
-                      <img
-                        src={item.icon}
-                        alt="" />
+                      <img src={item.icon} alt="" />
                     </span>
                     <span className={styles.navLabel}>{item.label}</span>
                     {hasChildren && (
@@ -92,9 +87,7 @@ const Sidebar = ({ sidebarOpen = false, searchValue = "" }) => {
                         className={`${styles.accordionIcon} ${
                           isExpanded ? styles.expanded : ""
                         }`}>
-                        <img
-                          src="/img/iconDown.svg"
-                          alt="" />
+                        <img src="/img/iconDown.svg" alt="" />
                       </span>
                     )}
                   </button>
@@ -106,9 +99,7 @@ const Sidebar = ({ sidebarOpen = false, searchValue = "" }) => {
                       isExpanded ? styles.expanded : ""
                     }`}>
                     {item.children.map((child) => (
-                      <li
-                        key={child.id}
-                        className={styles.subNavItem}>
+                      <li key={child.id} className={styles.subNavItem}>
                         <button
                           className={`${styles.navLink} ${styles.subNavLink} ${
                             isActiveRoute(child.path) ? styles.active : ""

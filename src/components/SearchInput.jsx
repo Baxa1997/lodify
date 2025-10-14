@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { Box, Input, Kbd, IconButton } from "@chakra-ui/react";
-import { LuSearch, LuX } from "react-icons/lu";
+import {useState, useEffect} from "react";
+import {Box, Input, Kbd, IconButton} from "@chakra-ui/react";
+import {LuSearch, LuX} from "react-icons/lu";
 
 const SearchInput = ({
   placeholder = "Search",
@@ -54,9 +54,7 @@ const SearchInput = ({
   };
 
   return (
-    <Box
-      position="relative"
-      {...props}>
+    <Box position="relative" {...props}>
       <Box position="relative">
         <Box
           position="absolute"
@@ -81,7 +79,7 @@ const SearchInput = ({
           border="1px solid"
           borderColor={isFocused ? focusBorderColor : borderColor}
           color={color}
-          _placeholder={{ ...placeholderStyle }}
+          _placeholder={{...placeholderStyle}}
           _hover={_hover}
           _focus={
             _focus || {
@@ -107,7 +105,7 @@ const SearchInput = ({
               size="xs"
               variant="ghost"
               color="gray.400"
-              _hover={{ color: "white", bg: "gray.700" }}
+              _hover={{color: "white", bg: "gray.700"}}
               onClick={handleClear}
               aria-label="Clear search">
               <LuX size={12} />
@@ -115,7 +113,7 @@ const SearchInput = ({
           ) : showKeyboardShortcut ? (
             <Kbd
               fontSize="xs"
-              bg="gray.700"
+              bg="transparent"
               color="gray.300"
               border="1px solid"
               borderColor="gray.600"

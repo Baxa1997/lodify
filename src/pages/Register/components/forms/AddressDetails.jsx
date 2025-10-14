@@ -93,7 +93,7 @@ const AddressDetails = ({control, errors, watch, onNext, setValue}) => {
     if (phoneCode.length === 6) {
       setIsLoading(true);
       try {
-        await authService.verifyPhoneCode("Balto", {
+        await authService.verifyPhoneCode("verify_otp", {
           otp: phoneCode,
           session_info: sessionInfo,
           provider: "firebase",

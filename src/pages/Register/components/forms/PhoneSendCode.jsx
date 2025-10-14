@@ -69,8 +69,7 @@ function PhoneSendCode({
   }
 
   const getPhone = useCallback(() => {
-    console.log("getPhone", getRandomPhone(), formData);
-    const raw = getRandomPhone();
+    const raw = formData?.phone;
 
     return String(raw || "").trim();
   }, [formData]);

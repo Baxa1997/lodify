@@ -12,6 +12,7 @@ import {
 import CTableRow from "@components/tableElements/CTableRow";
 import tripsService from "@services/tripsService";
 import {parseISO, format} from "date-fns";
+import {calculateTimeDifference} from "@utils/timeUtils";
 
 const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
   const envId = useSelector((state) => state.auth.environmentId);
@@ -42,9 +43,14 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
 
   function formatScheduleDate(isoString) {
     try {
+      if (!isoString) return "";
+
       const date = parseISO(isoString);
+      date.setHours(date.getHours() + 5);
+
       return `${format(date, "dd MMM, HH:mm")}`;
     } catch (error) {
+      console.error("Error formatting schedule date:", error);
       return "";
     }
   }
@@ -137,10 +143,24 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
     return `${baseHeight + minRows * rowHeight + padding}px`;
   };
 
+  const getRowStatusColor = (arriveBy, index, currentIndex) => {
+    if (index <= currentIndex) {
+      return "#fff";
+    } else {
+      if (Boolean(arriveBy)) {
+        const timeDifference = calculateTimeDifference(arriveBy);
+        if (timeDifference > 0) {
+          return "#fff";
+        } else {
+          return "#FEF3F2";
+        }
+      }
+    }
+  };
+
   return (
     <Box bg="#fff" minHeight="200px" position="relative">
       <Box
-        p="8px 20px"
         pb="0px"
         overflowX="auto"
         sx={{
@@ -160,16 +180,27 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
           },
         }}>
         {(tripData?.pickups || []).map((item, index) => (
-          <Box key={item?.guid || index} mb={6}>
+          <Box
+            bg={getRowStatusColor(
+              item?.arrive_by,
+              index + 1,
+              tripData?.current_index
+            )}
+            p="8px 20px"
+            key={item?.guid || index}>
             <CTable
               minHeight={getMinHeight()}
               isPagination={false}
               width="100%"
               overflow="visible"
-              borderColor="#fff"
+              borderColor={getRowStatusColor(
+                item?.arrive_by,
+                index + 1,
+                tripData?.current_index
+              )}
               borderRadius="8px"
               bg="white">
-              <CTableHead borderRadius="8px 8px 0 0" bg="#fff">
+              <CTableHead borderRadius="8px 8px 0 0">
                 <CTableRow>
                   {getTableHeads(item?.type?.[0])?.map((head) => (
                     <CTableTh
@@ -177,20 +208,34 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                       maxW="334px"
                       width="334px"
                       key={head.index}
-                      bg="#fff"
+                      bg={getRowStatusColor(
+                        item?.arrive_by,
+                        index + 1,
+                        tripData?.current_index
+                      )}
                       py="6px"
                       px="20px"
                       fontSize="16px"
                       fontWeight="600"
                       color="#181d27"
-                      borderBottom="1px solid #e5e7eb">
+                      borderColor={
+                        calculateTimeDifference(item?.arrive_by) > 0
+                          ? "#FEF3F2"
+                          : "#F04438"
+                      }>
                       {head.label}
                     </CTableTh>
                   ))}
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow hover={false}>
+                <CTableRow
+                  bg={getRowStatusColor(
+                    item?.arrive_by,
+                    index + 1,
+                    tripData?.current_index
+                  )}
+                  hover={false}>
                   <CTableTd py="12px" px="20px">
                     <Box>
                       <TripStatus status={item?.index} />

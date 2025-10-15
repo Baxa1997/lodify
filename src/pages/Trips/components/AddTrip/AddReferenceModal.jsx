@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   Modal,
   ModalOverlay,
@@ -13,11 +13,10 @@ import {
   VStack,
   HStack,
 } from "@chakra-ui/react";
-import { Controller } from "react-hook-form";
 import HFSelect from "../../../../components/HFSelect";
 import HFTextField from "../../../../components/HFTextField";
 
-const AddReferenceModal = ({ isOpen, onClose, control, onAddReference }) => {
+const AddReferenceModal = ({isOpen, onClose, control, onAddReference}) => {
   const [formData, setFormData] = useState({
     stop: "",
     referenceType: "PU #",
@@ -25,16 +24,16 @@ const AddReferenceModal = ({ isOpen, onClose, control, onAddReference }) => {
   });
 
   const stopOptions = [
-    { label: "Select Stop", value: "" },
-    { label: "Stop 1", value: "stop1" },
-    { label: "Stop 2", value: "stop2" },
-    { label: "Stop 3", value: "stop3" },
+    {label: "Select Stop", value: ""},
+    {label: "Stop 1", value: "stop1"},
+    {label: "Stop 2", value: "stop2"},
+    {label: "Stop 3", value: "stop3"},
   ];
 
   const referenceTypeOptions = [
-    { label: "PU #", value: "PU #" },
-    { label: "PO #", value: "PO #" },
-    { label: "Other #", value: "Other #" },
+    {label: "PU #", value: "PU #"},
+    {label: "PO #", value: "PO #"},
+    {label: "Other #", value: "Other #"},
   ];
 
   const handleAdd = () => {
@@ -59,32 +58,18 @@ const AddReferenceModal = ({ isOpen, onClose, control, onAddReference }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      size="md"
-      isCentered>
+    <Modal isOpen={isOpen} onClose={handleClose} size="md" isCentered>
       <ModalOverlay />
       <ModalContent borderRadius="12px">
-        <ModalHeader
-          fontSize="18px"
-          fontWeight="600"
-          color="#181D27"
-          pb="16px">
+        <ModalHeader fontSize="18px" fontWeight="600" color="#181D27" pb="16px">
           Add Reference Number
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb="24px">
-          <VStack
-            spacing="20px"
-            align="stretch">
+          <VStack spacing="20px" align="stretch">
             <Box>
-              <Text
-                mb="6px"
-                fontSize="14px"
-                fontWeight="500"
-                color="#414651">
-                Stop <span style={{ color: "#FF6B35" }}>*</span>
+              <Text mb="6px" fontSize="14px" fontWeight="500" color="#414651">
+                Stop <span style={{color: "#FF6B35"}}>*</span>
               </Text>
               <HFSelect
                 control={control}
@@ -94,18 +79,14 @@ const AddReferenceModal = ({ isOpen, onClose, control, onAddReference }) => {
                 border="1px solid #D5D7DA"
                 borderRadius="8px"
                 onChange={(value) =>
-                  setFormData((prev) => ({ ...prev, stop: value }))
+                  setFormData((prev) => ({...prev, stop: value}))
                 }
               />
             </Box>
 
             <Box>
-              <Text
-                mb="6px"
-                fontSize="14px"
-                fontWeight="500"
-                color="#414651">
-                Reference Type <span style={{ color: "#FF6B35" }}>*</span>
+              <Text mb="6px" fontSize="14px" fontWeight="500" color="#414651">
+                Reference Type <span style={{color: "#FF6B35"}}>*</span>
               </Text>
               <HFSelect
                 control={control}
@@ -115,17 +96,13 @@ const AddReferenceModal = ({ isOpen, onClose, control, onAddReference }) => {
                 border="1px solid #D5D7DA"
                 borderRadius="8px"
                 onChange={(value) =>
-                  setFormData((prev) => ({ ...prev, referenceType: value }))
+                  setFormData((prev) => ({...prev, referenceType: value}))
                 }
               />
             </Box>
 
             <Box>
-              <Text
-                mb="6px"
-                fontSize="14px"
-                fontWeight="500"
-                color="#414651">
+              <Text mb="6px" fontSize="14px" fontWeight="500" color="#414651">
                 Reference Number
               </Text>
               <HFTextField
@@ -152,14 +129,14 @@ const AddReferenceModal = ({ isOpen, onClose, control, onAddReference }) => {
               border="1px solid #D5D7DA"
               color="#414651"
               bg="white"
-              _hover={{ bg: "#F8F9FA" }}
+              _hover={{bg: "#F8F9FA"}}
               onClick={handleClose}>
               Close
             </Button>
             <Button
               bg="#FF6B35"
               color="white"
-              _hover={{ bg: "#E55A2B" }}
+              _hover={{bg: "#E55A2B"}}
               onClick={handleAdd}
               isDisabled={!formData.stop || !formData.referenceNumber}>
               Add

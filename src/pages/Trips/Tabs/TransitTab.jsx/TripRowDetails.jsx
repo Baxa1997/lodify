@@ -219,7 +219,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                       fontWeight="600"
                       color="#181d27"
                       borderColor={
-                        calculateTimeDifference(item?.arrive_by) > 0
+                        calculateTimeDifference(item?.arrive_by) <= 0
                           ? "#FEF3F2"
                           : "#F04438"
                       }>
@@ -236,7 +236,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                     tripData?.current_index
                   )}
                   hover={false}>
-                  <CTableTd py="12px" px="20px">
+                  <CTableTd py="12px" px="20px" verticalAlign="top">
                     <Box>
                       <TripStatus status={item?.index} />
                       <Text
@@ -254,7 +254,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                     </Box>
                   </CTableTd>
 
-                  <CTableTd py="12px" px="20px">
+                  <CTableTd py="12px" px="20px" verticalAlign="top">
                     <Flex mb={"8px"} fontSize="14px" color="#181d27" gap="8px">
                       <Text color={"#414651"} fontWeight={"500"}>
                         Tractor Unit #
@@ -298,7 +298,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                     </Flex>
                   </CTableTd>
 
-                  <CTableTd py="12px" px="20px">
+                  <CTableTd py="12px" px="20px" verticalAlign="top">
                     <Box>
                       <Badge
                         bg={getLoadTypeColor(item?.load_type?.[0])}
@@ -313,7 +313,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                     </Box>
                   </CTableTd>
 
-                  <CTableTd py="12px" px="20px">
+                  <CTableTd py="12px" px="20px" verticalAlign="top">
                     <Box mb="24px">
                       <Text fontSize="12px" color="#181D27">
                         Check in:
@@ -353,10 +353,29 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                     </Box>
                   </CTableTd>
 
-                  <CTableTd py="12px" px="20px">
-                    <Text fontSize="14px" color="#181d27">
-                      {formatScheduleDate(item?.arrive_by)}
-                    </Text>
+                  <CTableTd py="12px" px="20px" verticalAlign="top">
+                    <Box>
+                      <Flex alignItems="center" gap="6px">
+                        <Text fontSize="14px" color="#181d27">
+                          {formatScheduleDate(item?.arrive_by)}
+                        </Text>
+                        {calculateTimeDifference(item?.arrive_by) <= 0 && (
+                          <img src="/img/delayIcon.svg" alt="" />
+                        )}
+                      </Flex>
+                      <Button
+                        mt="8px"
+                        h="20px"
+                        p="0"
+                        bg="none"
+                        color="#EF6820"
+                        borderRadius="8px"
+                        fontSize="14px"
+                        fontWeight="600"
+                        _hover={{bg: "none"}}>
+                        Report delay
+                      </Button>
+                    </Box>
                   </CTableTd>
                 </CTableRow>
               </CTableBody>

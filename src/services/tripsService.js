@@ -23,6 +23,7 @@ const tripsService = {
   getSelectOptions: (table_slug) => httpRequest.get(`v2/items/${table_slug}`),
   acceptTrip: (data) => httpRequest.put("v2/items/orders", data),
   rejectTrip: (data) => httpRequest.post("v2/items/rejected_trips", data),
+  assignDriver: (data) => httpRequest.put("v2/items/orders", data),
 };
 
 export default tripsService;

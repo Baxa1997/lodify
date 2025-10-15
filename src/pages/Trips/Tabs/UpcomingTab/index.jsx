@@ -15,8 +15,6 @@ import {useQuery} from "@tanstack/react-query";
 import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {sidebarActions} from "@store/sidebar";
-import {format, isValid} from "date-fns";
-import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
 import tripsService from "@services/tripsService";
 import tableElements from "../../components/mockElements";
 import {
@@ -30,6 +28,7 @@ import CTableRow from "@components/tableElements/CTableRow";
 import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
 import {formatDate} from "@utils/dateFormats";
 import TripRowDetails from "./TripRowDetails";
+import AssignDriver from "./components/AssignDriver";
 
 function UpcomingTab({tripType = ""}) {
   const navigate = useNavigate();
@@ -38,7 +37,9 @@ function UpcomingTab({tripType = ""}) {
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAssignDriverModalOpen, setIsAssignDriverModalOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState(new Set());
+  const [selectedRow, setSelectedRow] = useState(null);
   const envId = useSelector((state) => state.auth.environmentId);
   const clientType = useSelector((state) => state.auth.clientType);
   const brokersId = useSelector((state) => state.auth.user_data?.brokers_id);
@@ -105,6 +106,7 @@ function UpcomingTab({tripType = ""}) {
         trip_type: tripType,
       }),
     select: (data) => data?.data?.response || [],
+
     enabled: true,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
@@ -180,11 +182,11 @@ function UpcomingTab({tripType = ""}) {
           pageSize={pageSize}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}>
-          <CTableHead zIndex={999999}>
+          <CTableHead zIndex={1}>
             <Box as={"tr"}>
               {tableElements.map((element) => (
                 <CTableTh
-                  zIndex={999999}
+                  zIndex={-1}
                   maxW="334px"
                   sortable={element.sortable}
                   sortDirection={
@@ -666,7 +668,11 @@ function UpcomingTab({tripType = ""}) {
                                 fontWeight="600"
                                 px="0"
                                 _hover={{bg: "none"}}
-                                onClick={(e) => e.stopPropagation()}>
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setIsAssignDriverModalOpen(true);
+                                  setSelectedRow(trip);
+                                }}>
                                 Assign
                               </Button>
                             )
@@ -704,6 +710,12 @@ function UpcomingTab({tripType = ""}) {
           </CTableBody>
         </CTable>
       </Box>
+
+      <AssignDriver
+        isOpen={isAssignDriverModalOpen}
+        onClose={() => setIsAssignDriverModalOpen(false)}
+        selectedRow={selectedRow}
+      />
     </Box>
   );
 }

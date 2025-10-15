@@ -30,6 +30,7 @@ import CTableRow from "@components/tableElements/CTableRow";
 import TripsFiltersComponent from "../../modules/TripsFiltersComponent";
 import {formatDate} from "@utils/dateFormats";
 import TripRowDetails from "./TripRowDetails";
+import AssignDriver from "./components/AssignDriver";
 
 function TransitTab({tripType = ""}) {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function TransitTab({tripType = ""}) {
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({key: "name", direction: "asc"});
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAssignDriverModalOpen, setIsAssignDriverModalOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState(new Set());
   const envId = useSelector((state) => state.auth.environmentId);
   const clientType = useSelector((state) => state.auth.clientType);
@@ -663,8 +665,7 @@ function TransitTab({tripType = ""}) {
                               color="#EF6820"
                               fontWeight="600"
                               px="0"
-                              _hover={{bg: "none"}}
-                              onClick={(e) => e.stopPropagation()}>
+                              _hover={{bg: "none"}}>
                               Assign
                             </Button>
                           )}

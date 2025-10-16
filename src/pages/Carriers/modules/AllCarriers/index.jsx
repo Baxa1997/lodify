@@ -1,6 +1,6 @@
 import React from "react";
 import CarrierElement from "../../components/CarrierElement";
-import {Box} from "@chakra-ui/react";
+import {Box, Flex, Spinner} from "@chakra-ui/react";
 import {useQuery} from "@tanstack/react-query";
 import tripsService from "@services/tripsService";
 import {useSelector} from "react-redux";
@@ -27,6 +27,20 @@ const AllCarriers = () => {
     refetchOnWindowFocus: false,
     staleTime: 0,
   });
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" align="center" h="calc(100vh - 100px)">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="#fff"
+          color="#EF6820"
+          size="xl"
+        />
+      </Flex>
+    );
+  }
 
   return (
     <Box

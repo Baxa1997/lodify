@@ -1,6 +1,6 @@
 import React from "react";
 import CarrierElement from "../../components/CarrierElement";
-import {Box, Flex, Spinner} from "@chakra-ui/react";
+import {Box, Flex, Spinner, Text} from "@chakra-ui/react";
 import {useQuery} from "@tanstack/react-query";
 import tripsService from "@services/tripsService";
 import {useSelector} from "react-redux";
@@ -46,7 +46,7 @@ const MyCarriers = () => {
     );
   }
 
-  return (
+  return carriersData.length > 0 ? (
     <Box
       display="grid"
       gridTemplateColumns="repeat(3, 1fr)"
@@ -56,6 +56,12 @@ const MyCarriers = () => {
         <CarrierElement key={carrier.guid} carrier={carrier} />
       ))}
     </Box>
+  ) : (
+    <Flex justify="center" align="center" h="calc(100vh - 100px)">
+      <Text fontSize="16px" fontWeight="600" color="#EF6820">
+        No carriers found
+      </Text>
+    </Flex>
   );
 };
 

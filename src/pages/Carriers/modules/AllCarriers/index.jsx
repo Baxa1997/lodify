@@ -1,20 +1,16 @@
 import React from "react";
 import CarrierElement from "../../components/CarrierElement";
-import {Box, Flex} from "@chakra-ui/react";
+import {Box} from "@chakra-ui/react";
 import {useQuery} from "@tanstack/react-query";
 import tripsService from "@services/tripsService";
 import {useSelector} from "react-redux";
 
-const MyCarriers = () => {
+const AllCarriers = () => {
   const envId = useSelector((state) => state.auth.environmentId);
   const brokersId = useSelector((state) => state.auth.user_data?.brokers_id);
-  const {
-    data: carriersData = [],
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["MY_CARRIERS"],
+
+  const {data: carriersData = [], isLoading} = useQuery({
+    queryKey: ["ALL_CARRIERS"],
     queryFn: () =>
       tripsService.getList({
         app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
@@ -22,7 +18,7 @@ const MyCarriers = () => {
         method: "list",
         object_data: {
           broker_id: brokersId,
-          own_carriers: true,
+          own_carriers: false,
         },
         table: "carriers",
       }),
@@ -39,10 +35,14 @@ const MyCarriers = () => {
       mt="30px"
       gap={"20px"}>
       {carriersData.map((carrier) => (
-        <CarrierElement key={carrier.guid} carrier={carrier} />
+        <CarrierElement
+          allCarriers={true}
+          key={carrier.guid}
+          carrier={carrier}
+        />
       ))}
     </Box>
   );
 };
 
-export default MyCarriers;
+export default AllCarriers;

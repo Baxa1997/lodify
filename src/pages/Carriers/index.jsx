@@ -5,6 +5,7 @@ import styles from "../../styles/tabs.module.scss";
 import {useState} from "react";
 import HeadBreadCrumb from "@components/HeadBreadCrumb";
 import MyCarriers from "./modules/MyCarriers";
+import AllCarriers from "./modules/AllCarriers";
 
 const Carriers = () => {
   const [isAutomatedAddTrip, setIsAutomatedAddTrip] = useState(false);
@@ -26,6 +27,12 @@ const Carriers = () => {
           <TabPanel>
             <MyCarriers />
           </TabPanel>
+          <TabPanel>
+            <AllCarriers />
+          </TabPanel>
+          {/* <TabPanel>
+            <Invitations />
+          </TabPanel> */}
         </Tabs>
       </Flex>
     </>

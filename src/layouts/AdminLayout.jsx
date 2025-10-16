@@ -12,6 +12,8 @@ import {sidebarActions} from "../store/sidebar";
 const AdminLayout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
   const sidebarOpen = useSelector((state) => state.sidebar.sidebar);
   const [searchValue, setSearchValue] = useState("");
   const [showSearchInput, setShowSearchInput] = useState(false);
@@ -135,7 +137,14 @@ const AdminLayout = () => {
       )}
 
       <div className={styles.mainContent}>
-        <main className={styles.pageContent} style={{position: "relative"}}>
+        <main
+          className={styles.pageContent}
+          style={{
+            position: "relative",
+            padding: `${
+              pathname === "/admin/collabrations" ? "0" : "22px 24px"
+            }`,
+          }}>
           <Suspense fallback={<ContentLoader />}>
             <Outlet />
           </Suspense>

@@ -1,0 +1,79 @@
+.messageInput {
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.form {
+  width: 100%;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 8px 16px;
+  transition: border-color 0.2s ease;
+
+  &:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.emojiButton,
+.attachButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: #e5e7eb;
+  }
+}
+
+.input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 14px;
+  color: #111827;
+  padding: 4px 0;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.sendButton {
+  background-color: #f59e0b;
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) {
+    background-color: #d97706;
+  }
+
+  &:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+  }
+}

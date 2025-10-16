@@ -124,6 +124,11 @@ export const menuItems = [
     path: "#",
     children: [
       {
+        id: "collabrations",
+        label: "Collabrations",
+        path: "collabrations",
+      },
+      {
         id: "discussion",
         label: "Discussion",
         path: "discussion",
@@ -240,6 +245,11 @@ export const brokerMenuItems = [
     icon: "/img/menuDiscussion.svg",
     path: "#",
     children: [
+      {
+        id: "collabrations",
+        label: "Collabrations",
+        path: "collabrations",
+      },
       {
         id: "discussion",
         label: "Discussion",

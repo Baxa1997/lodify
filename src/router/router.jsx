@@ -13,6 +13,7 @@ import AddTrip from "../pages/Trips/components/AddTrip/AddTrip";
 import Shipper from "../pages/Shipper";
 import Representative from "../pages/Representative";
 import Carriers from "../pages/Carriers";
+import GoReadyTrucks from "../pages/GoReadyTrucks";
 
 const Login = lazy(() => import("../pages/Login/Login"));
 const RoleSelection = lazy(() =>
@@ -122,6 +123,7 @@ const Router = () => {
         <Route path="shipper" element={<Shipper />} />
         <Route path="representative" element={<Representative />} />
         <Route path="carriers" element={<Carriers />} />
+        <Route path="go-ready-trucks" element={<GoReadyTrucks />} />
       </Route>
 
       <Route

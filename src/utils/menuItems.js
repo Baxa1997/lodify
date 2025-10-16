@@ -38,7 +38,7 @@ export const menuItems = [
     id: "goReadyTrucks",
     label: "Go Ready™  Trucks",
     icon: "/img/menuTruck.svg",
-    path: "#",
+    path: "go-ready-trucks",
   },
   {
     id: "brokers",
@@ -170,7 +170,7 @@ export const brokerMenuItems = [
     id: "goReadyTrucks",
     label: "Go Ready™  Trucks",
     icon: "/img/menuTruck.svg",
-    path: "#",
+    path: "go-ready-trucks",
   },
   {
     id: "carriers",

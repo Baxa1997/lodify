@@ -12,6 +12,7 @@ import UpcomingTabSinglePage from "../pages/Trips/UpcomingTabSinglePage";
 import AddTrip from "../pages/Trips/components/AddTrip/AddTrip";
 import Shipper from "../pages/Shipper";
 import Representative from "../pages/Representative";
+import Carriers from "../pages/Carriers";
 
 const Login = lazy(() => import("../pages/Login/Login"));
 const RoleSelection = lazy(() =>
@@ -114,13 +115,13 @@ const Router = () => {
         <Route path="assets" element={<AssetsPage />} />
         <Route path="assets/:id" element={<SingleAssets />} />
         <Route path="settings" element={<Settings />} />
-        <Route path="carriers" element={<CompanyProfile />} />
         <Route path="trips" element={<Trips />} />
         <Route path="trips/:id" element={<UpcomingTabSinglePage />} />
         <Route path="all-loads" element={<AllLoads />} />
         <Route path="trips/add-trip" element={<AddTrip />} />
         <Route path="shipper" element={<Shipper />} />
         <Route path="representative" element={<Representative />} />
+        <Route path="carriers" element={<Carriers />} />
       </Route>
 
       <Route

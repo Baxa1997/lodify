@@ -43,6 +43,9 @@ function ActionsNeeded() {
   const envId = useSelector((state) => state.auth.environmentId);
   const clientType = useSelector((state) => state.auth.clientType);
   const brokersId = useSelector((state) => state.auth.user_data?.brokers_id);
+  const companiesId = useSelector(
+    (state) => state.auth.user_data?.companies_id
+  );
 
   const getCustomerInfo = (trip) => {
     return {
@@ -83,7 +86,7 @@ function ActionsNeeded() {
           carriers_id:
             clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
               ? brokersId
-              : userId,
+              : companiesId,
           client_type:
             clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf"
               ? "broker"

@@ -5,13 +5,8 @@ import MessagesList from "../MessagesList/MessagesList";
 import MessageInput from "../MessageInput/MessageInput";
 import styles from "./ChatArea.module.scss";
 
-const ChatArea = () => {
-  const {getCurrentConversation, getCurrentMessages} = useChat();
-
-  const currentConversation = getCurrentConversation();
-  const messages = getCurrentMessages();
-
-  if (!currentConversation) {
+const ChatArea = ({conversation}) => {
+  if (!conversation?.id) {
     return (
       <div className={styles.emptyState}>
         <div className={styles.emptyContent}>
@@ -41,8 +36,8 @@ const ChatArea = () => {
 
   return (
     <div className={styles.chatArea}>
-      <ChatHeader conversation={currentConversation} />
-      <MessagesList messages={messages} />
+      <ChatHeader conversation={conversation} />
+      <MessagesList conversation={conversation} />
       <MessageInput />
     </div>
   );

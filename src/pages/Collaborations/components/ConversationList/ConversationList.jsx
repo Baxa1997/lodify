@@ -4,7 +4,7 @@ import ConversationItem from "../ConversationItem/ConversationItem";
 import SearchBar from "../SearchBar/SearchBar";
 import styles from "./ConversationList.module.scss";
 
-const ConversationList = ({rooms = [], setConversationId}) => {
+const ConversationList = ({rooms = [], setConversation}) => {
   const {
     selectedConversationId,
     selectConversation,
@@ -23,8 +23,7 @@ const ConversationList = ({rooms = [], setConversationId}) => {
   };
 
   const filteredRooms = getFilteredRooms();
-  console.log("filteredRoomsfilteredRooms", filteredRooms);
-  console.log("roomsrooms", rooms);
+
   return (
     <div className={styles.conversationList}>
       <div className={styles.header}>
@@ -45,7 +44,10 @@ const ConversationList = ({rooms = [], setConversationId}) => {
             key={conversation.id}
             conversation={conversation}
             isSelected={conversation.id === selectedConversationId}
-            onClick={() => selectConversation(conversation.id)}
+            onClick={() => {
+              selectConversation(conversation.id);
+              setConversation(conversation);
+            }}
             isEditing={isEditing}
           />
         ))}

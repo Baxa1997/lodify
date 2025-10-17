@@ -1,13 +1,20 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useChat} from "../../context/ChatContext";
 import MessageBubble from "../MessageBubble/MessageBubble";
 import TypingIndicator from "../TypingIndicator/TypingIndicator";
 import DateSeparator from "../DateSeparator/DateSeparator";
 import styles from "./MessagesList.module.scss";
+import {useSocket} from "@hooks/useSocket";
 
-const MessagesList = ({messages}) => {
-  const {currentUser, typingUsers} = useChat();
+const MessagesList = ({conversation}) => {
+  const {getCurrentMessages} = useChat();
   const messagesEndRef = useRef(null);
+  const [messages, setMessages] = useState([]);
+  const socket = useSocket();
+
+  useEffect(() => {
+    setMessages(getCurrentMessages(conversation?.id));
+  }, [conversation?.id]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
@@ -15,7 +22,18 @@ const MessagesList = ({messages}) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, typingUsers]);
+  }, [messages]);
+
+  console.log("socket", socket);
+  useEffect(() => {
+    socket.on("join_room", (data) => {
+      console.log("join_room", data);
+    });
+
+    return () => {
+      socket.off("join_room");
+    };
+  }, [conversation?.id]);
 
   const groupMessagesByDate = (messages) => {
     const groups = [];
@@ -71,7 +89,7 @@ const MessagesList = ({messages}) => {
           </div>
         ))}
 
-        {typingUsers.length > 0 && <TypingIndicator users={typingUsers} />}
+        {/* {typingUsers.length > 0 && <TypingIndicator users={typingUsers} />} */}
 
         <div ref={messagesEndRef} />
       </div>

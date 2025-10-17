@@ -6,23 +6,26 @@ import styles from "./Chat.module.scss";
 import {io} from "socket.io-client";
 import {useSelector} from "react-redux";
 import axios from "axios";
+import {useSocket} from "@hooks/useSocket";
 
 const Chat = () => {
-  const socket = io("https://chat-service.u-code.io", {
-    transports: ["websocket"],
-    reconnection: true,
-    reconnectionAttempts: Infinity,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000,
-    timeout: 20000,
-    autoConnect: true,
-    withCredentials: true,
-  });
+  // const socket = io("https://chat-service.u-code.io", {
+  //   transports: ["websocket"],
+  //   reconnection: true,
+  //   reconnectionAttempts: Infinity,
+  //   reconnectionDelay: 1000,
+  //   reconnectionDelayMax: 5000,
+  //   timeout: 20000,
+  //   autoConnect: true,
+  //   withCredentials: true,
+  // });
+  const socket = useSocket();
   const [rooms, setRooms] = useState([]);
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
   const [lastPong, setLastPong] = useState(null);
   const userId = useSelector((state) => state.auth.userId);
+  const [conversation, setConversation] = useState(null);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -71,8 +74,8 @@ const Chat = () => {
   return (
     <ChatProvider>
       <div className={styles.chatContainer}>
-        <ConversationList rooms={rooms} />
-        <ChatArea />
+        <ConversationList rooms={rooms} setConversation={setConversation} />
+        <ChatArea conversation={conversation} />
       </div>
     </ChatProvider>
   );

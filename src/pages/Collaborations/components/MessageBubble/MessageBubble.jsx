@@ -2,6 +2,7 @@ import React from "react";
 import {useChat} from "../../context/ChatContext";
 import {mockUsers} from "../../data/mockData";
 import styles from "./MessageBubble.module.scss";
+import {Flex, Box, Text} from "@chakra-ui/react";
 
 const MessageBubble = ({message, isOwn, showAvatar}) => {
   const {addReaction} = useChat();
@@ -53,50 +54,58 @@ const MessageBubble = ({message, isOwn, showAvatar}) => {
     return <div className={styles.textContent}>{content}</div>;
   };
 
-  return (
-    <div
-      className={`${styles.messageContainer} ${
-        isOwn ? styles.ownMessage : styles.otherMessage
-      }`}>
-      {!isOwn && showAvatar && (
-        <img src={sender.avatar} alt={sender.name} className={styles.avatar} />
-      )}
+  return isOwn ? (
+    <>
+      <Flex justifyContent="flex-end" p="12px 0" gap={"12px"}>
+        <Box w="500px">
+          <Flex justifyContent="space-between" alignItems="center">
+            <Text fontWeight="500" color="#181D27" fontSize="14px">
+              You
+            </Text>
+            <Text fontWeight={400} color="#535862" fontSize="12px">
+              Thursday 11:44am
+            </Text>
+          </Flex>
 
-      <div className={styles.messageWrapper}>
-        <div
-          className={`${styles.messageBubble} ${
-            isOwn ? styles.ownBubble : styles.otherBubble
-          }`}>
+          <Box
+            bg="#EF6820"
+            mt="6px"
+            color="#fff"
+            borderRadius="8px"
+            borderTopRightRadius="0"
+            border="1px solid #E9EAEB"
+            p="10px 14px">
+            {renderMessageContent()}
+          </Box>
+        </Box>
+      </Flex>
+    </>
+  ) : (
+    <Flex p="12px 0" gap={"12px"}>
+      <Box w="40px" h="40px" borderRadius="50%" overflow="hidden">
+        <img src={"/img/chatAvatar.svg"} alt={sender.name} />
+      </Box>
+
+      <Box w="500px">
+        <Flex justifyContent="space-between" alignItems="center">
+          <Text fontWeight="500" color="#181D27">
+            {sender?.name}
+          </Text>
+          <Text fontWeight={400} color="#535862" fontSize="12px">
+            Thursday 11:44am
+          </Text>
+        </Flex>
+
+        <Box
+          mt="6px"
+          borderRadius="8px"
+          borderTopLeftRadius="0"
+          border="1px solid #E9EAEB"
+          p="10px 14px">
           {renderMessageContent()}
-
-          {reactions && reactions.length > 0 && (
-            <div className={styles.reactions}>
-              {reactions.map((reaction) => (
-                <span key={reaction.id} className={styles.reaction}>
-                  {reaction.emoji}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className={styles.messageActions}>
-          <button
-            className={styles.reactionButton}
-            onClick={() => handleReaction("❤️")}
-            title="Add reaction">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M8 14.5C8 14.5 1 9.5 1 5.5C1 3.5 2.5 2 4.5 2C5.5 2 6.5 2.5 7 3.5C7.5 2.5 8.5 2 9.5 2C11.5 2 13 3.5 13 5.5C13 9.5 8 14.5 8 14.5Z"
-                fill="#6B7280"
-              />
-            </svg>
-          </button>
-
-          <span className={styles.timestamp}>{messageTime}</span>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Flex>
   );
 };
 

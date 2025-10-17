@@ -1,6 +1,7 @@
 import React, {useState, useRef} from "react";
 import {useChat} from "../../context/ChatContext";
 import styles from "./MessageInput.module.scss";
+import {Input} from "@chakra-ui/react";
 
 const MessageInput = () => {
   const [message, setMessage] = useState("");
@@ -21,16 +22,13 @@ const MessageInput = () => {
     const value = e.target.value;
     setMessage(value);
 
-    // Clear existing timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
 
-    // Set typing indicator
     if (value.trim()) {
       setTyping(currentUser.id, true);
 
-      // Clear typing indicator after 2 seconds of no typing
       typingTimeoutRef.current = setTimeout(() => {
         setTyping(currentUser.id, false);
       }, 2000);
@@ -115,7 +113,7 @@ const MessageInput = () => {
             </svg>
           </button>
 
-          <input
+          <Input
             ref={inputRef}
             type="text"
             value={message}

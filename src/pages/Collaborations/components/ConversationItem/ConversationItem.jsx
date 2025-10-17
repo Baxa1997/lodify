@@ -2,7 +2,13 @@ import React from "react";
 import styles from "./ConversationItem.module.scss";
 import {Box, Flex, Text} from "@chakra-ui/react";
 
-const ConversationItem = ({conversation, isSelected, onClick, isEditing}) => {
+const ConversationItem = ({
+  conversation,
+  isSelected,
+  onClick,
+  isEditing,
+  isConnected,
+}) => {
   const {
     name,
     username,
@@ -56,8 +62,7 @@ const ConversationItem = ({conversation, isSelected, onClick, isEditing}) => {
           fontSize="12px"
           fontWeight="400"
           color="#535862">
-          I’ve just published the site again. Looks like it fixed it. How weird!
-          I’ll keep an eye on it...
+          {lastMessage || "No messages yet"}
         </Text>
       </Box>
     </Box>

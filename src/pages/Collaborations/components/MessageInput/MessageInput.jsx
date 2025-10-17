@@ -2,19 +2,25 @@ import React, {useState, useRef} from "react";
 import {useChat} from "../../context/ChatContext";
 import styles from "./MessageInput.module.scss";
 import {Box, Button, Flex, Textarea} from "@chakra-ui/react";
+import {useSocket} from "@hooks/useSocket";
 
-const MessageInput = () => {
+const MessageInput = ({
+  onSendMessage = () => {},
+  isConnected = false,
+  disabled = false,
+}) => {
   const [message, setMessage] = useState("");
-  const {sendMessage, setTyping, currentUser} = useChat();
+  const {setTyping, currentUser} = useChat();
   const inputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("message", message);
     if (message.trim()) {
-      sendMessage(message.trim());
+      onSendMessage(message.trim());
       setMessage("");
-      setTyping(currentUser.id, false);
+      setTyping(currentUser?.id, false);
     }
   };
 
@@ -26,14 +32,14 @@ const MessageInput = () => {
       clearTimeout(typingTimeoutRef.current);
     }
 
-    if (value.trim()) {
-      setTyping(currentUser.id, true);
+    if (value.trim() && isConnected) {
+      setTyping(currentUser?.id, true);
 
       typingTimeoutRef.current = setTimeout(() => {
-        setTyping(currentUser.id, false);
+        setTyping(currentUser?.id, false);
       }, 2000);
     } else {
-      setTyping(currentUser.id, false);
+      setTyping(currentUser?.id, false);
     }
   };
 
@@ -54,9 +60,10 @@ const MessageInput = () => {
             value={message}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
-            placeholder="Send a message"
+            placeholder={isConnected ? "Send a message" : "Connecting..."}
             border="none"
             h="40px"
+            disabled={disabled || !isConnected}
             _focus={{
               outline: "none",
               boxShadow: "none",
@@ -66,16 +73,16 @@ const MessageInput = () => {
           <Flex justifyContent="flex-end" alignItems="center" gap="12px">
             <Button
               _hover={{
-                bg: "#EF6820",
+                bg: isConnected ? "#EF6820" : "#9CA3AF",
               }}
               mb="12px"
               mr="12px"
-              bg="#EF6820"
+              bg={isConnected ? "#EF6820" : "#9CA3AF"}
               color="#fff"
               borderRadius="8px"
               onClick={handleSubmit}
-              disabled={!message.trim()}>
-              Send
+              disabled={!message.trim() || !isConnected || disabled}>
+              {isConnected ? "Send" : "Connecting..."}
             </Button>
           </Flex>
         </Box>

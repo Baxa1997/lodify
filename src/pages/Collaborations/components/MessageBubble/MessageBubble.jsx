@@ -6,13 +6,20 @@ import {Flex, Box, Text} from "@chakra-ui/react";
 
 const MessageBubble = ({message, isOwn, showAvatar}) => {
   const {addReaction} = useChat();
-  const {content, timestamp, type, fileInfo, reactions, senderId} = message;
-
+  const {
+    message: content,
+    created_at,
+    type,
+    fileInfo,
+    reactions,
+    senderId,
+  } = message;
+  console.log("messagemessage", message);
   const sender = mockUsers[senderId] || {
     name: "Unknown",
     avatar: "/img/avatars/default.jpg",
   };
-  const messageTime = new Date(timestamp).toLocaleTimeString([], {
+  const messageTime = new Date(created_at).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -63,7 +70,7 @@ const MessageBubble = ({message, isOwn, showAvatar}) => {
               You
             </Text>
             <Text fontWeight={400} color="#535862" fontSize="12px">
-              Thursday 11:44am
+              {created_at}
             </Text>
           </Flex>
 
@@ -92,7 +99,7 @@ const MessageBubble = ({message, isOwn, showAvatar}) => {
             {sender?.name}
           </Text>
           <Text fontWeight={400} color="#535862" fontSize="12px">
-            Thursday 11:44am
+            {messageTime}
           </Text>
         </Flex>
 

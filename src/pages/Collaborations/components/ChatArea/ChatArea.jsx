@@ -1,11 +1,16 @@
 import React from "react";
-import {useChat} from "../../context/ChatContext";
 import ChatHeader from "../ChatHeader/ChatHeader";
 import MessagesList from "../MessagesList/MessagesList";
 import MessageInput from "../MessageInput/MessageInput";
 import styles from "./ChatArea.module.scss";
 
-const ChatArea = ({conversation}) => {
+const ChatArea = ({
+  conversation,
+  messages = [],
+  onSendMessage = () => {},
+  isConnected,
+  currentRoom,
+}) => {
   if (!conversation?.id) {
     return (
       <div className={styles.emptyState}>
@@ -34,11 +39,39 @@ const ChatArea = ({conversation}) => {
     );
   }
 
+  if (!isConnected) {
+    return (
+      <div className={styles.emptyState}>
+        <div className={styles.emptyContent}>
+          <div className={styles.connectionError}>
+            <div className={styles.errorIcon}>⚠️</div>
+            <h3 className={styles.emptyTitle}>Connection Lost</h3>
+            <p className={styles.emptyDescription}>
+              Unable to connect to chat service. Please check your connection.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.chatArea}>
-      <ChatHeader conversation={conversation} />
-      <MessagesList conversation={conversation} />
-      <MessageInput />
+      <ChatHeader
+        conversation={conversation}
+        isConnected={isConnected}
+        currentRoom={currentRoom}
+      />
+      <MessagesList
+        conversation={conversation}
+        messages={messages}
+        isConnected={isConnected}
+      />
+      <MessageInput
+        onSendMessage={onSendMessage}
+        isConnected={isConnected}
+        disabled={!isConnected}
+      />
     </div>
   );
 };

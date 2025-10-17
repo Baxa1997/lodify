@@ -3,57 +3,39 @@ import {ChatProvider} from "../../context/ChatContext";
 import ConversationList from "../ConversationList/ConversationList";
 import ChatArea from "../ChatArea/ChatArea";
 import styles from "./Chat.module.scss";
-import {io} from "socket.io-client";
 import {useSelector} from "react-redux";
 import axios from "axios";
 import {useSocket} from "@hooks/useSocket";
 
 const Chat = () => {
-  // const socket = io("https://chat-service.u-code.io", {
-  //   transports: ["websocket"],
-  //   reconnection: true,
-  //   reconnectionAttempts: Infinity,
-  //   reconnectionDelay: 1000,
-  //   reconnectionDelayMax: 5000,
-  //   timeout: 20000,
-  //   autoConnect: true,
-  //   withCredentials: true,
-  // });
   const socket = useSocket();
   const [rooms, setRooms] = useState([]);
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
-  const [lastPong, setLastPong] = useState(null);
-  const userId = useSelector((state) => state.auth.userId);
+  const [currentRoom, setCurrentRoom] = useState(null);
   const [conversation, setConversation] = useState(null);
+  const userId = useSelector((state) => state.auth.userId);
+  const loginUser = useSelector((state) => state.auth.user_data?.login);
 
   useEffect(() => {
     socket.on("connect", () => {
+      console.log("✅ Connected to socket:", socket.id);
       setIsConnected(true);
     });
 
-    return () => {
-      socket.off("connect");
-    };
-  }, []);
-
-  useEffect(() => {
-    socket.on("disconnect", () => {
+    socket.on("disconnect", (reason) => {
+      console.warn("⚠️ Socket disconnected:", reason);
       setIsConnected(false);
     });
-  }, []);
 
-  useEffect(() => {
-    socket.on("message", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-  }, []);
+    socket.on("connect_error", (err) => {});
 
-  useEffect(() => {
-    socket.on("pong", (pong) => {
-      setLastPong(pong);
-    });
-  }, []);
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("connect_error");
+    };
+  }, [socket]);
 
   const getRooms = async () => {
     try {
@@ -61,10 +43,25 @@ const Chat = () => {
         `https://chat-service.u-code.io/v1/room?row_id=${userId}&offset=0&limit=100`
       );
       setRooms(response.data.body?.rooms);
-      console.log("response", response);
+      console.log("Rooms fetched:", response.data.body?.rooms);
     } catch (error) {
-      console.log("error", error);
+      console.error("Error fetching rooms:", error);
     }
+  };
+
+  const sendMessage = (content) => {
+    const messageData = {
+      room_id: conversation?.id,
+      content: content,
+      from: loginUser,
+      type: "text",
+    };
+    console.log("messageDatamessageData", messageData);
+    socket.emit("chat message", messageData);
+  };
+
+  const handleConversationSelect = (selectedConversation) => {
+    setConversation(selectedConversation);
   };
 
   useEffect(() => {
@@ -74,8 +71,18 @@ const Chat = () => {
   return (
     <ChatProvider>
       <div className={styles.chatContainer}>
-        <ConversationList rooms={rooms} setConversation={setConversation} />
-        <ChatArea conversation={conversation} />
+        <ConversationList
+          rooms={rooms}
+          setConversation={handleConversationSelect}
+          isConnected={isConnected}
+        />
+        <ChatArea
+          conversation={conversation}
+          messages={messages}
+          onSendMessage={sendMessage}
+          isConnected={isConnected}
+          currentRoom={currentRoom}
+        />
       </div>
     </ChatProvider>
   );

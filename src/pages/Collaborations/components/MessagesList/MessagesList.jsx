@@ -1,20 +1,26 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useChat} from "../../context/ChatContext";
 import MessageBubble from "../MessageBubble/MessageBubble";
-import TypingIndicator from "../TypingIndicator/TypingIndicator";
 import DateSeparator from "../DateSeparator/DateSeparator";
 import styles from "./MessagesList.module.scss";
 import {useSocket} from "@hooks/useSocket";
+import {useSelector} from "react-redux";
 
-const MessagesList = ({conversation}) => {
-  const {getCurrentMessages} = useChat();
+const MessagesList = ({conversation, messages = [], isConnected}) => {
+  const {getCurrentMessages, currentUser} = useChat();
   const messagesEndRef = useRef(null);
-  const [messages, setMessages] = useState([]);
+  const [localMessages, setLocalMessages] = useState([]);
   const socket = useSocket();
+  const userId = useSelector((state) => state.auth.userId);
+  const loggedInUser = useSelector((state) => state.auth.user_data?.login);
 
   useEffect(() => {
-    setMessages(getCurrentMessages(conversation?.id));
-  }, [conversation?.id]);
+    if (messages && messages.length > 0) {
+      setLocalMessages(messages);
+    } else {
+      setLocalMessages(getCurrentMessages(conversation?.id));
+    }
+  }, [conversation?.id, messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
@@ -22,18 +28,7 @@ const MessagesList = ({conversation}) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
-
-  console.log("socket", socket);
-  useEffect(() => {
-    socket.on("join_room", (data) => {
-      console.log("join_room", data);
-    });
-
-    return () => {
-      socket.off("join_room");
-    };
-  }, [conversation?.id]);
+  }, [localMessages]);
 
   const groupMessagesByDate = (messages) => {
     const groups = [];
@@ -67,7 +62,34 @@ const MessagesList = ({conversation}) => {
     return groups;
   };
 
-  const messageGroups = groupMessagesByDate(messages);
+  const messageGroups = groupMessagesByDate(localMessages);
+
+  useEffect(() => {
+    if (!conversation?.id || !userId) return;
+
+    socket.emit("join room", {room_id: conversation.id, row_id: userId});
+
+    socket.on("room history", (messages) => {
+      console.log("📜 Room history:", messages);
+      setLocalMessages(messages);
+    });
+
+    socket.on("receive message", (message) => {
+      console.log("📨 New live message:", message);
+
+      if (message.room_id === conversation.id) {
+        setLocalMessages((prev) => [...prev, message]);
+      }
+    });
+
+    socket.onAny((event, data) => console.log("⚡ Event:", event, data));
+
+    return () => {
+      socket.off("room history");
+      socket.off("receive message");
+      socket.offAny();
+    };
+  }, [conversation?.id, userId]);
 
   return (
     <div className={styles.messagesList}>
@@ -77,9 +99,9 @@ const MessagesList = ({conversation}) => {
             <DateSeparator date={group.date} />
             {group.messages.map((message, messageIndex) => (
               <MessageBubble
-                key={message.id}
+                key={message.id || messageIndex}
                 message={message}
-                isOwn={message.senderId === currentUser.id}
+                isOwn={message.from === loggedInUser}
                 showAvatar={
                   messageIndex === 0 ||
                   group.messages[messageIndex - 1].senderId !== message.senderId

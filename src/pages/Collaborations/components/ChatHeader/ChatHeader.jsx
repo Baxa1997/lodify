@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./ChatHeader.module.scss";
 import {Flex, Box, Text, Button} from "@chakra-ui/react";
 
-const ChatHeader = ({conversation}) => {
+const ChatHeader = ({conversation, isConnected, currentRoom}) => {
   const {name, username, avatar, isOnline, isGroup} = conversation;
 
   return (
@@ -116,9 +116,9 @@ const ChatHeader = ({conversation}) => {
                 w="6px"
                 h="6px"
                 borderRadius="50%"
-                bg={isOnline ? "#10B981" : "#D5D7DA"}></Box>
+                bg={isConnected ? "#10B981" : "#D5D7DA"}></Box>
               <Text fontSize="12px" fontWeight="400" color={"#535862"}>
-                {isOnline ? "Online" : "Offline"}
+                {isConnected ? "Connected" : "Disconnected"}
               </Text>
             </Flex>
           </Flex>

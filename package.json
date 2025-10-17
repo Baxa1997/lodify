@@ -43,6 +43,7 @@
     "react-tabs": "^6.1.0",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.8.1",
     "use-mask-input": "^3.5.1",
     "yet-another-react-lightbox": "^3.25.0"
   },

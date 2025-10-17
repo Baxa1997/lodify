@@ -4,9 +4,8 @@ import ConversationItem from "../ConversationItem/ConversationItem";
 import SearchBar from "../SearchBar/SearchBar";
 import styles from "./ConversationList.module.scss";
 
-const ConversationList = () => {
+const ConversationList = ({rooms = [], setConversationId}) => {
   const {
-    getFilteredConversations,
     selectedConversationId,
     selectConversation,
     searchQuery,
@@ -15,8 +14,17 @@ const ConversationList = () => {
     toggleEditMode,
   } = useChat();
 
-  const conversations = getFilteredConversations();
+  const getFilteredRooms = () => {
+    return (
+      rooms?.filter((room) =>
+        room?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+      ) || []
+    );
+  };
 
+  const filteredRooms = getFilteredRooms();
+  console.log("filteredRoomsfilteredRooms", filteredRooms);
+  console.log("roomsrooms", rooms);
   return (
     <div className={styles.conversationList}>
       <div className={styles.header}>
@@ -32,7 +40,7 @@ const ConversationList = () => {
       <SearchBar value={searchQuery} onSearch={setSearchQuery} bg="#fff" />
 
       <div className={styles.conversations}>
-        {conversations.map((conversation) => (
+        {filteredRooms?.map((conversation) => (
           <ConversationItem
             key={conversation.id}
             conversation={conversation}

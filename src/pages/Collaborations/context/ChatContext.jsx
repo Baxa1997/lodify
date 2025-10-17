@@ -51,26 +51,6 @@ const chatReducer = (state, action) => {
         ),
       };
 
-    case "ADD_REACTION":
-      return {
-        ...state,
-        messages: state.messages.map((msg) =>
-          msg.id === action.payload.messageId
-            ? {
-                ...msg,
-                reactions: [
-                  ...(msg.reactions || []),
-                  {
-                    id: Date.now().toString(),
-                    userId: state.currentUser.id,
-                    emoji: action.payload.emoji,
-                  },
-                ],
-              }
-            : msg
-        ),
-      };
-
     case "SET_TYPING":
       return {
         ...state,
@@ -103,6 +83,7 @@ export const ChatProvider = ({children}) => {
   const [state, dispatch] = useReducer(chatReducer, initialState);
 
   const selectConversation = (conversationId) => {
+    console.log("conversationIdconversationId", conversationId);
     dispatch({type: "SELECT_CONVERSATION", payload: {conversationId}});
   };
 

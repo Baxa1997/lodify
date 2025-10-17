@@ -16,6 +16,9 @@ const ChatArea = () => {
       <div className={styles.emptyState}>
         <div className={styles.emptyContent}>
           <svg
+            style={{
+              margin: "0 auto",
+            }}
             className={styles.emptyIcon}
             width="64"
             height="64"

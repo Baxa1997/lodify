@@ -4,13 +4,7 @@ import MessagesList from "../MessagesList/MessagesList";
 import MessageInput from "../MessageInput/MessageInput";
 import styles from "./ChatArea.module.scss";
 
-const ChatArea = ({
-  conversation,
-  messages = [],
-  onSendMessage = () => {},
-  isConnected,
-  currentRoom,
-}) => {
+const ChatArea = ({conversation, onSendMessage = () => {}, isConnected}) => {
   if (!conversation?.id) {
     return (
       <div className={styles.emptyState}>
@@ -57,16 +51,8 @@ const ChatArea = ({
 
   return (
     <div className={styles.chatArea}>
-      <ChatHeader
-        conversation={conversation}
-        isConnected={isConnected}
-        currentRoom={currentRoom}
-      />
-      <MessagesList
-        conversation={conversation}
-        messages={messages}
-        isConnected={isConnected}
-      />
+      <ChatHeader conversation={conversation} isConnected={isConnected} />
+      <MessagesList conversation={conversation} isConnected={isConnected} />
       <MessageInput
         onSendMessage={onSendMessage}
         isConnected={isConnected}

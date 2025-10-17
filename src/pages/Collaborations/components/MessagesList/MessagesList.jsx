@@ -6,29 +6,112 @@ import styles from "./MessagesList.module.scss";
 import {useSocket} from "@hooks/useSocket";
 import {useSelector} from "react-redux";
 
-const MessagesList = ({conversation, messages = [], isConnected}) => {
-  const {getCurrentMessages, currentUser} = useChat();
+const MessagesList = ({conversation, isConnected}) => {
+  const {currentUser} = useChat();
+  const socket = useSocket();
   const messagesEndRef = useRef(null);
   const [localMessages, setLocalMessages] = useState([]);
-  const socket = useSocket();
-  const userId = useSelector((state) => state.auth.userId);
+  const [isNewMessage, setIsNewMessage] = useState(false);
   const loggedInUser = useSelector((state) => state.auth.user_data?.login);
+  const userId = useSelector((state) => state.auth.userId);
+  const prevMessageCountRef = useRef(0);
 
-  useEffect(() => {
-    if (messages && messages.length > 0) {
-      setLocalMessages(messages);
-    } else {
-      setLocalMessages(getCurrentMessages(conversation?.id));
-    }
-  }, [conversation?.id, messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
+  const scrollToBottom = (behavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({behavior});
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (localMessages.length > prevMessageCountRef.current) {
+      setIsNewMessage(true);
+      scrollToBottom("smooth");
+
+      setTimeout(() => setIsNewMessage(false), 1000);
+    }
+    prevMessageCountRef.current = localMessages.length;
   }, [localMessages]);
+
+  useEffect(() => {
+    scrollToBottom("auto");
+  }, [conversation?.id]);
+
+  // Set up socket listeners FIRST (only once)
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleRoomHistory = (messages) => {
+      console.log("📜 Room history received:", messages);
+
+      if (Array.isArray(messages)) {
+        setLocalMessages(messages);
+        console.log("💬 Loaded", messages.length, "messages from history");
+      } else if (messages?.data && Array.isArray(messages.data)) {
+        setLocalMessages(messages.data);
+      } else {
+        console.warn("⚠️ Unexpected room history format:", messages);
+      }
+    };
+
+    const handleReceiveMessage = (message) => {
+      console.log("📨 LIVE MESSAGE RECEIVED:", message);
+
+      setLocalMessages((prevMessages) => {
+        // Check if message already exists
+        const messageExists = prevMessages.some(
+          (msg) =>
+            msg.id === message.id ||
+            msg._id === message._id ||
+            (msg.content === message.content &&
+              msg.from === message.from &&
+              Math.abs(
+                new Date(msg.timestamp || msg.created_at || Date.now()) -
+                  new Date(
+                    message.timestamp || message.created_at || Date.now()
+                  )
+              ) < 2000)
+        );
+
+        if (messageExists) {
+          console.log("⚠️ Duplicate message, skipping");
+          return prevMessages;
+        }
+
+        console.log("✅ Adding NEW LIVE message to chat!");
+        return [...prevMessages, message];
+      });
+    };
+
+    // Register listeners
+    socket.on("room history", handleRoomHistory);
+    socket.on("receive message", handleReceiveMessage);
+
+    console.log("✅ Socket listeners registered");
+
+    return () => {
+      socket.off("room history", handleRoomHistory);
+      socket.off("receive message", handleReceiveMessage);
+    };
+  }, [socket]);
+
+  // Join room when conversation changes
+  useEffect(() => {
+    if (!socket || !conversation?.id || !userId) return;
+
+    console.log("🚪 Joining room:", conversation.id, "with user:", userId);
+
+    // Clear messages when switching rooms
+    setLocalMessages([]);
+
+    // Join the room
+    socket.emit("join room", {
+      room_id: conversation.id,
+      row_id: userId,
+    });
+
+    return () => {
+      console.log("👋 Leaving room:", conversation.id);
+      socket.emit("leave room", {room_id: conversation.id});
+    };
+  }, [socket, conversation?.id, userId]);
 
   const groupMessagesByDate = (messages) => {
     const groups = [];
@@ -63,33 +146,42 @@ const MessagesList = ({conversation, messages = [], isConnected}) => {
   };
 
   const messageGroups = groupMessagesByDate(localMessages);
+  console.log("messageGroups:", messageGroups);
 
-  useEffect(() => {
-    if (!conversation?.id || !userId) return;
+  if (!isConnected) {
+    return (
+      <div className={styles.messagesList}>
+        <div className={styles.connectionStatus}>
+          <div className={styles.statusIcon}>⚠️</div>
+          <p>Connecting to chat server...</p>
+        </div>
+      </div>
+    );
+  }
 
-    socket.emit("join room", {room_id: conversation.id, row_id: userId});
+  if (!conversation?.id) {
+    return (
+      <div className={styles.messagesList}>
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>💬</div>
+          <h3>Select a conversation</h3>
+          <p>Choose a room to start chatting</p>
+        </div>
+      </div>
+    );
+  }
 
-    socket.on("room history", (messages) => {
-      console.log("📜 Room history:", messages);
-      setLocalMessages(messages);
-    });
-
-    socket.on("receive message", (message) => {
-      console.log("📨 New live message:", message);
-
-      if (message.room_id === conversation.id) {
-        setLocalMessages((prev) => [...prev, message]);
-      }
-    });
-
-    socket.onAny((event, data) => console.log("⚡ Event:", event, data));
-
-    return () => {
-      socket.off("room history");
-      socket.off("receive message");
-      socket.offAny();
-    };
-  }, [conversation?.id, userId]);
+  if (localMessages.length === 0) {
+    return (
+      <div className={styles.messagesList}>
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>💬</div>
+          <h3>No messages yet</h3>
+          <p>Start the conversation by sending a message</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.messagesList}>

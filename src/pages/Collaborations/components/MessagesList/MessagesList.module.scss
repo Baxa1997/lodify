@@ -2,6 +2,7 @@
   flex: 1;
   overflow-y: auto;
   background-color: #f9fafb;
+  position: relative;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -18,6 +19,48 @@
 
   &::-webkit-scrollbar-thumb:hover {
     background: #9ca3af;
+  }
+}
+
+.connectionStatus,
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: #6b7280;
+}
+
+.statusIcon,
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.emptyState h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.emptyState p,
+.connectionStatus p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }
 

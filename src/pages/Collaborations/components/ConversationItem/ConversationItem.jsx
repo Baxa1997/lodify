@@ -11,6 +11,7 @@ const ConversationItem = ({
 }) => {
   const {
     name,
+    to_name,
     username,
     avatar,
     lastMessage,
@@ -18,6 +19,7 @@ const ConversationItem = ({
     unreadCount,
     isOnline,
     isGroup,
+    type,
   } = conversation;
 
   return (
@@ -41,7 +43,7 @@ const ConversationItem = ({
           </Box>
           <Flex h="40px" flexDir="column">
             <Text fontSize="14px" h="20px" fontWeight="600" color="#181D27">
-              {name}
+              {type === "single" ? to_name : name}
             </Text>
             <Text fontSize="12px" h="20px" fontWeight="400" color="#535862">
               @phoenix

@@ -10,9 +10,7 @@ import {useSocket} from "@hooks/useSocket";
 const Chat = () => {
   const socket = useSocket();
   const [rooms, setRooms] = useState([]);
-  const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
-  const [currentRoom, setCurrentRoom] = useState(null);
   const [conversation, setConversation] = useState(null);
   const userId = useSelector((state) => state.auth.userId);
   const loginUser = useSelector((state) => state.auth.user_data?.login);
@@ -50,13 +48,20 @@ const Chat = () => {
   };
 
   const sendMessage = (content) => {
+    if (!conversation?.id || !loginUser) {
+      console.error("Cannot send message: missing conversation or user");
+      return;
+    }
+
     const messageData = {
-      room_id: conversation?.id,
+      room_id: conversation.id,
       content: content,
       from: loginUser,
       type: "text",
+      timestamp: new Date().toISOString(),
     };
-    console.log("messageDatamessageData", messageData);
+
+    console.log("📤 Sending message:", messageData);
     socket.emit("chat message", messageData);
   };
 
@@ -78,10 +83,8 @@ const Chat = () => {
         />
         <ChatArea
           conversation={conversation}
-          messages={messages}
           onSendMessage={sendMessage}
           isConnected={isConnected}
-          currentRoom={currentRoom}
         />
       </div>
     </ChatProvider>

@@ -2,7 +2,7 @@ import React, {useState, useRef} from "react";
 import {useChat} from "../../context/ChatContext";
 import styles from "./MessageInput.module.scss";
 import {Box, Button, Flex, Textarea} from "@chakra-ui/react";
-import {useSocket} from "@hooks/useSocket";
+import {useSocket} from "@context/SocketProvider";
 
 const MessageInput = ({
   onSendMessage = () => {},

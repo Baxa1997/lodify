@@ -5,35 +5,24 @@ import ChatArea from "../ChatArea/ChatArea";
 import styles from "./Chat.module.scss";
 import {useSelector} from "react-redux";
 import axios from "axios";
-import {useSocket} from "@hooks/useSocket";
+import {useSocket, useSocketConnection} from "@context/SocketProvider";
 
 const Chat = () => {
   const socket = useSocket();
+  const {isConnected, connectionError} = useSocketConnection();
   const [rooms, setRooms] = useState([]);
-  const [isConnected, setIsConnected] = useState(false);
   const [conversation, setConversation] = useState(null);
   const userId = useSelector((state) => state.auth.userId);
   const loginUser = useSelector((state) => state.auth.user_data?.login);
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("✅ Connected to socket:", socket.id);
-      setIsConnected(true);
-    });
-
-    socket.on("disconnect", (reason) => {
-      console.warn("⚠️ Socket disconnected:", reason);
-      setIsConnected(false);
-    });
-
-    socket.on("connect_error", (err) => {});
-
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-      socket.off("connect_error");
-    };
-  }, [socket]);
+  // Debug logging
+  console.log("🔍 Chat Debug:", {
+    socket: socket ? "✅ Socket exists" : "❌ Socket is null",
+    isConnected,
+    connectionError,
+    userId,
+    loginUser,
+  });
 
   const getRooms = async () => {
     try {
@@ -50,6 +39,11 @@ const Chat = () => {
   const sendMessage = (content) => {
     if (!conversation?.id || !loginUser) {
       console.error("Cannot send message: missing conversation or user");
+      return;
+    }
+
+    if (!isConnected) {
+      console.error("Cannot send message: socket not connected");
       return;
     }
 
@@ -72,6 +66,17 @@ const Chat = () => {
   useEffect(() => {
     getRooms();
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      console.log("🧪 Testing socket connection...");
+      socket.emit("test", {message: "Hello from client"});
+
+      socket.on("test_response", (data) => {
+        console.log("✅ Socket test response:", data);
+      });
+    }
+  }, [socket]);
 
   return (
     <ChatProvider>

@@ -3,11 +3,10 @@ import {useChat} from "../../context/ChatContext";
 import MessageBubble from "../MessageBubble/MessageBubble";
 import DateSeparator from "../DateSeparator/DateSeparator";
 import styles from "./MessagesList.module.scss";
-import {useSocket} from "@hooks/useSocket";
+import {useSocket} from "@context/SocketProvider";
 import {useSelector} from "react-redux";
 
 const MessagesList = ({conversation, isConnected}) => {
-  const {currentUser} = useChat();
   const socket = useSocket();
   const messagesEndRef = useRef(null);
   const [localMessages, setLocalMessages] = useState([]);
@@ -34,7 +33,6 @@ const MessagesList = ({conversation, isConnected}) => {
     scrollToBottom("auto");
   }, [conversation?.id]);
 
-  // Set up socket listeners FIRST (only once)
   useEffect(() => {
     if (!socket) return;
 
@@ -54,63 +52,31 @@ const MessagesList = ({conversation, isConnected}) => {
     const handleReceiveMessage = (message) => {
       console.log("📨 LIVE MESSAGE RECEIVED:", message);
 
-      setLocalMessages((prevMessages) => {
-        // Check if message already exists
-        const messageExists = prevMessages.some(
-          (msg) =>
-            msg.id === message.id ||
-            msg._id === message._id ||
-            (msg.content === message.content &&
-              msg.from === message.from &&
-              Math.abs(
-                new Date(msg.timestamp || msg.created_at || Date.now()) -
-                  new Date(
-                    message.timestamp || message.created_at || Date.now()
-                  )
-              ) < 2000)
-        );
-
-        if (messageExists) {
-          console.log("⚠️ Duplicate message, skipping");
-          return prevMessages;
-        }
-
-        console.log("✅ Adding NEW LIVE message to chat!");
-        return [...prevMessages, message];
-      });
+      setLocalMessages((prevMessages) => [...prevMessages, message]);
     };
 
-    // Register listeners
     socket.on("room history", handleRoomHistory);
-    socket.on("receive message", handleReceiveMessage);
+    socket.on("chat message", handleReceiveMessage);
 
     console.log("✅ Socket listeners registered");
 
     return () => {
       socket.off("room history", handleRoomHistory);
-      socket.off("receive message", handleReceiveMessage);
+      socket.off("chat message", handleReceiveMessage);
     };
   }, [socket]);
 
-  // Join room when conversation changes
   useEffect(() => {
     if (!socket || !conversation?.id || !userId) return;
 
     console.log("🚪 Joining room:", conversation.id, "with user:", userId);
 
-    // Clear messages when switching rooms
     setLocalMessages([]);
 
-    // Join the room
     socket.emit("join room", {
       room_id: conversation.id,
       row_id: userId,
     });
-
-    return () => {
-      console.log("👋 Leaving room:", conversation.id);
-      socket.emit("leave room", {room_id: conversation.id});
-    };
   }, [socket, conversation?.id, userId]);
 
   const groupMessagesByDate = (messages) => {
@@ -146,7 +112,6 @@ const MessagesList = ({conversation, isConnected}) => {
   };
 
   const messageGroups = groupMessagesByDate(localMessages);
-  console.log("messageGroups:", messageGroups);
 
   if (!isConnected) {
     return (

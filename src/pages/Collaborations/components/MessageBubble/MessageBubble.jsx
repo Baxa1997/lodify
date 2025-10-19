@@ -14,7 +14,7 @@ const MessageBubble = ({message, isOwn, showAvatar}) => {
     reactions,
     senderId,
   } = message;
-  console.log("messagemessage", message);
+
   const sender = mockUsers[senderId] || {
     name: "Unknown",
     avatar: "/img/avatars/default.jpg",

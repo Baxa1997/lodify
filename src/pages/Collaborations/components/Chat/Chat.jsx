@@ -14,7 +14,7 @@ const Chat = () => {
   const [rooms, setRooms] = useState([]);
   const [conversation, setConversation] = useState(null);
 
-  const userId = useSelector((state) => state.auth.userId);
+  const userId = useSelector((state) => state.auth.userInfo?.id);
   const loginUser = useSelector((state) => state.auth.user_data?.login);
 
   console.log("🔍 Chat Debug:", {
@@ -24,7 +24,7 @@ const Chat = () => {
     userId,
     loginUser,
   });
-
+  console.log("userIduserIduserIduserId GET ROOMS LIST", userId);
   useEffect(() => {
     console.log("ENTERED !!!!!");
     if (!socket || !isConnected || !userId) return;

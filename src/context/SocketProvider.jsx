@@ -50,8 +50,6 @@ export const SocketProvider = ({children}) => {
       });
 
       newSocket.on("connect_error", (err) => {
-        console.error("❌ Connection error:", err.message);
-        console.error("🔍 Error details:", err);
         setConnectionError(err.message);
         setIsConnected(false);
       });
@@ -69,17 +67,10 @@ export const SocketProvider = ({children}) => {
         console.error("❌ Reconnection error:", err.message);
       });
 
-      // Listen for any errors
       newSocket.on("error", (err) => {
         console.error("❌ Socket error:", err);
       });
 
-      // Debug: Listen to all outgoing events
-      newSocket.onAnyOutgoing((event, ...args) => {
-        console.log("📤 Outgoing event:", event, args);
-      });
-
-      // Debug: Listen to all incoming events
       newSocket.onAny((event, ...args) => {
         console.log("📥 Incoming event:", event, args);
       });

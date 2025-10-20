@@ -30,7 +30,7 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
   const projectId = useSelector((state) => state.auth.projectId);
   const clientTypeId = useSelector((state) => state.auth.clientType?.id);
   const [filteredContacts, setFilteredContacts] = useState([]);
-  const userId = useSelector((state) => state.auth.userId);
+  const userId = useSelector((state) => state.auth.userInfo?.id);
   const loginName = useSelector((state) => state.auth.user_data?.login);
   const socket = useSocket();
 
@@ -68,13 +68,12 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
       setFilteredContacts(filtered ?? []);
     }
   }, [searchQuery]);
-
+  console.log("userIduserId", userId);
   const handleContactClick = async (contact) => {
     if (!socket) {
       console.error("Socket not available");
       return;
     }
-
     const roomData = {
       name: "",
       type: "single",
@@ -86,9 +85,8 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
     };
 
     try {
-      await axios.post("https://chat-service.u-code.io/v1/room", roomData);
-      socket.emit("rooms list", {row_id: userId});
-
+      console.log("create room data=======>", roomData);
+      socket.emit("create room", {...roomData});
       onClose();
     } catch (httpError) {
       socket.emit("create room", roomData);
@@ -101,7 +99,7 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
       setFilteredContacts(users ?? []);
     }
   }, [users]);
-
+  console.log("userssss=======>", users);
   const ContactItem = ({contact}) => (
     <HStack
       spacing={1}

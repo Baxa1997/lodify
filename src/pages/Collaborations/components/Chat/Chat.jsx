@@ -28,7 +28,7 @@ const Chat = () => {
   useEffect(() => {
     console.log("ENTERED !!!!!");
     if (!socket || !isConnected || !userId) return;
-    console.log("ENTERED !!!!! @@@@@@");
+
     socket.emit("rooms list", {row_id: userId});
 
     const handleRoomsList = (data) => {

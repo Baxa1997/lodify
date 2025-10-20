@@ -22,6 +22,7 @@ import styles from "./AddRoom.module.scss";
 import chatService from "@services/chatService";
 import {useSelector} from "react-redux";
 import {useQuery} from "@tanstack/react-query";
+import {useSocket, useSocketConnection} from "@context/SocketProvider";
 import axios from "axios";
 
 const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
@@ -31,14 +32,24 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const userId = useSelector((state) => state.auth.userId);
   const loginName = useSelector((state) => state.auth.user_data?.login);
+  const socket = useSocket();
 
   const {data: users, isLoading} = useQuery({
     queryKey: ["contacts"],
     queryFn: () => {
-      return chatService.getContacts(clientTypeId, projectId);
+      return axios.get(
+        `https://api.auth.u-code.io/v2/user?client-type-id=706337d3-80dc-4aca-80b3-67fad16cd0d6&project-id=7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1&limit=10&offset=0`,
+        {
+          headers: {
+            authorization: "API-KEY",
+            "X-API-KEY": "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
+            "Content-Type": "application/json",
+          },
+        }
+      );
     },
     enabled: Boolean(isOpen),
-    select: (res) => res?.users || [],
+    select: (res) => res?.data?.data?.users || [],
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     staleTime: 0,
@@ -59,8 +70,10 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
   }, [searchQuery]);
 
   const handleContactClick = (contact) => {
-    axios
-      .post(`https://chat-service.u-code.io/v1/room`, {
+    if (socket) {
+      console.log("Creating room with:", contact.login);
+
+      socket.emit("create room", {
         name: "",
         type: "single",
         project_id: projectId,
@@ -68,13 +81,12 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
         to_name: contact.login,
         to_row_id: contact.id,
         from_name: loginName,
-      })
-      .then((res) => {
-        onClose();
-      })
-      .catch((err) => {
-        console.log("err=======>", err);
       });
+
+      onClose();
+    } else {
+      console.error("Socket not available");
+    }
   };
 
   useEffect(() => {

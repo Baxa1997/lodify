@@ -12,7 +12,7 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   const [localMessages, setLocalMessages] = useState([]);
   const [isNewMessage, setIsNewMessage] = useState(false);
   const loggedInUser = useSelector((state) => state.auth.user_data?.login);
-  const userId = useSelector((state) => state.auth.userId);
+  const userId = useSelector((state) => state.auth.userInfo?.id);
   const prevMessageCountRef = useRef(0);
 
   const scrollToBottom = (behavior = "smooth") => {

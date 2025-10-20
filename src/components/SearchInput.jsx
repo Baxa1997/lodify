@@ -13,6 +13,8 @@ const SearchInput = ({
   borderColor = "gray.600",
   color = "#fff",
   height = "40px",
+  kbdBg = "transparent",
+  kbdColor = "gray.300",
   placeholderStyle = {
     color: "#85888E",
     fontSize: "16px",
@@ -113,8 +115,8 @@ const SearchInput = ({
           ) : showKeyboardShortcut ? (
             <Kbd
               fontSize="xs"
-              bg="transparent"
-              color="gray.300"
+              bg={kbdBg}
+              color={kbdColor}
               border="1px solid"
               borderColor="gray.600"
               px={2}

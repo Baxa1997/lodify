@@ -5,9 +5,11 @@ import ChatArea from "../ChatArea/ChatArea";
 import styles from "./Chat.module.scss";
 import {useSelector} from "react-redux";
 import {useSocket, useSocketConnection} from "@context/SocketProvider";
+import AddRoom from "../AddRoom";
 
 const Chat = () => {
   const socket = useSocket();
+  const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
   const {isConnected, connectionError} = useSocketConnection();
   const [rooms, setRooms] = useState([]);
   const [conversation, setConversation] = useState(null);
@@ -24,7 +26,9 @@ const Chat = () => {
   });
 
   useEffect(() => {
+    console.log("ENTERED !!!!!");
     if (!socket || !isConnected || !userId) return;
+    console.log("ENTERED !!!!! @@@@@@");
     socket.emit("rooms list", {row_id: userId});
 
     const handleRoomsList = (data) => {
@@ -68,14 +72,22 @@ const Chat = () => {
     <ChatProvider>
       <div className={styles.chatContainer}>
         <ConversationList
+          setIsAddRoomOpen={setIsAddRoomOpen}
           rooms={rooms}
           setConversation={handleConversationSelect}
           isConnected={isConnected}
         />
         <ChatArea
+          setIsAddRoomOpen={setIsAddRoomOpen}
           conversation={conversation}
           onSendMessage={sendMessage}
           isConnected={isConnected}
+        />
+
+        <AddRoom
+          isOpen={isAddRoomOpen}
+          onClose={() => setIsAddRoomOpen(false)}
+          text="Add Chat"
         />
       </div>
     </ChatProvider>

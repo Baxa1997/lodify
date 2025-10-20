@@ -4,7 +4,12 @@ import ConversationItem from "../ConversationItem/ConversationItem";
 import SearchBar from "../SearchBar/SearchBar";
 import styles from "./ConversationList.module.scss";
 
-const ConversationList = ({rooms = [], setConversation, isConnected}) => {
+const ConversationList = ({
+  rooms = [],
+  setConversation,
+  isConnected,
+  setIsAddRoomOpen = () => {},
+}) => {
   const {
     selectedConversationId,
     selectConversation,
@@ -37,7 +42,11 @@ const ConversationList = ({rooms = [], setConversation, isConnected}) => {
             </div>
           )}
         </div>
-        <button className={styles.editButton} onClick={toggleEditMode}>
+        <button
+          className={styles.editButton}
+          onClick={() => {
+            setIsAddRoomOpen(true);
+          }}>
           <img src="/img/chatNewChat.svg" alt="" />
         </button>
       </div>

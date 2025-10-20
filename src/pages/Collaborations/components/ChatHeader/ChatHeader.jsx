@@ -2,7 +2,11 @@ import React from "react";
 import styles from "./ChatHeader.module.scss";
 import {Flex, Box, Text, Button} from "@chakra-ui/react";
 
-const ChatHeader = ({conversation, isConnected}) => {
+const ChatHeader = ({
+  conversation,
+  isConnected,
+  setIsAddRoomOpen = () => {},
+}) => {
   const {name, to_name, type, username, avatar, isOnline, isGroup} =
     conversation;
 

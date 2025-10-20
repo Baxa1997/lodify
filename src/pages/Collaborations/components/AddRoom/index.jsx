@@ -69,23 +69,30 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
     }
   }, [searchQuery]);
 
-  const handleContactClick = (contact) => {
-    if (socket) {
-      console.log("Creating room with:", contact.login);
+  const handleContactClick = async (contact) => {
+    if (!socket) {
+      console.error("Socket not available");
+      return;
+    }
 
-      socket.emit("create room", {
-        name: "",
-        type: "single",
-        project_id: projectId,
-        row_id: userId,
-        to_name: contact.login,
-        to_row_id: contact.id,
-        from_name: loginName,
-      });
+    const roomData = {
+      name: "",
+      type: "single",
+      project_id: projectId,
+      row_id: userId,
+      to_name: contact.login,
+      to_row_id: contact.id,
+      from_name: loginName,
+    };
+
+    try {
+      await axios.post("https://chat-service.u-code.io/v1/room", roomData);
+      socket.emit("rooms list", {row_id: userId});
 
       onClose();
-    } else {
-      console.error("Socket not available");
+    } catch (httpError) {
+      socket.emit("create room", roomData);
+      onClose();
     }
   };
 

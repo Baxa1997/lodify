@@ -89,8 +89,17 @@ const MessageBubble = ({message, isOwn, showAvatar}) => {
     </>
   ) : (
     <Flex p="12px 0" gap={"12px"}>
-      <Box w="40px" h="40px" borderRadius="50%" overflow="hidden">
-        <img src={"/img/chatAvatar.svg"} alt={sender.name} />
+      <Box
+        w="40px"
+        h="40px"
+        borderRadius="50%"
+        border="1px solid #E9EAEB"
+        color="#fff"
+        bg="#F79009"
+        display="flex"
+        alignItems="center"
+        justifyContent="center">
+        {sender?.name?.[0]}
       </Box>
 
       <Box w="500px">

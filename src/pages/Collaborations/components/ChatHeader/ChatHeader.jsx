@@ -13,14 +13,18 @@ const ChatHeader = ({
   return (
     <Flex p="20px 24px" alignItems="center" justifyContent="space-between">
       <Flex gap="12px" alignItems="center">
-        <Box w="56px" h="56px" borderRadius="50%">
-          <img
-            src={"/img/chatAvatar.svg"}
-            alt={name}
-            w="100%"
-            h="100%"
-            objectFit="contain"
-          />
+        <Box
+          w="56px"
+          h="56px"
+          borderRadius="50%"
+          border="1px solid #E9EAEB"
+          color="#fff"
+          display="flex"
+          alignItems="center"
+          bg="#F79009"
+          fontSize="18px"
+          justifyContent="center">
+          {to_name?.[0]}
         </Box>
         <Box>
           <Flex alignItems="center" gap="8px">

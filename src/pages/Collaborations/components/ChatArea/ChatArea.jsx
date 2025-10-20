@@ -5,6 +5,7 @@ import MessageInput from "../MessageInput/MessageInput";
 import styles from "./ChatArea.module.scss";
 
 const ChatArea = ({
+  rooms = [],
   conversation,
   onSendMessage = () => {},
   isConnected,
@@ -61,7 +62,11 @@ const ChatArea = ({
         isConnected={isConnected}
         setIsAddRoomOpen={setIsAddRoomOpen}
       />
-      <MessagesList conversation={conversation} isConnected={isConnected} />
+      <MessagesList
+        rooms={rooms}
+        conversation={conversation}
+        isConnected={isConnected}
+      />
       <MessageInput
         onSendMessage={onSendMessage}
         isConnected={isConnected}

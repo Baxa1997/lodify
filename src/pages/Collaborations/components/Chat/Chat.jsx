@@ -24,7 +24,7 @@ const Chat = () => {
     userId,
     loginUser,
   });
-  console.log("userIduserIduserIduserId GET ROOMS LIST", userId);
+
   useEffect(() => {
     console.log("ENTERED !!!!!");
     if (!socket || !isConnected || !userId) return;
@@ -78,6 +78,7 @@ const Chat = () => {
           isConnected={isConnected}
         />
         <ChatArea
+          rooms={rooms}
           setIsAddRoomOpen={setIsAddRoomOpen}
           conversation={conversation}
           onSendMessage={sendMessage}

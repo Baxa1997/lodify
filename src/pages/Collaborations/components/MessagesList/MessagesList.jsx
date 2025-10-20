@@ -6,7 +6,7 @@ import styles from "./MessagesList.module.scss";
 import {useSocket} from "@context/SocketProvider";
 import {useSelector} from "react-redux";
 
-const MessagesList = ({conversation, isConnected}) => {
+const MessagesList = ({rooms = [], conversation, isConnected}) => {
   const socket = useSocket();
   const messagesEndRef = useRef(null);
   const [localMessages, setLocalMessages] = useState([]);
@@ -146,6 +146,7 @@ const MessagesList = ({conversation, isConnected}) => {
             <DateSeparator date={group.date} />
             {group.messages.map((message, messageIndex) => (
               <MessageBubble
+                rooms={rooms}
                 key={message.id || messageIndex}
                 message={message}
                 isOwn={message.from === loggedInUser}

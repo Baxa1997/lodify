@@ -18,7 +18,7 @@ const ConversationList = ({
     isEditing,
     toggleEditMode,
   } = useChat();
-  console.log("roomsrooms", rooms);
+
   const getFilteredRooms = () => {
     return (
       rooms?.filter((room) =>

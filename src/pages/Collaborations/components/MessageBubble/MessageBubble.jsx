@@ -4,7 +4,7 @@ import {mockUsers} from "../../data/mockData";
 import styles from "./MessageBubble.module.scss";
 import {Flex, Box, Text} from "@chakra-ui/react";
 
-const MessageBubble = ({message, isOwn, showAvatar}) => {
+const MessageBubble = ({rooms = [], message, isOwn, showAvatar}) => {
   const {addReaction} = useChat();
   const {
     message: content,
@@ -15,10 +15,10 @@ const MessageBubble = ({message, isOwn, showAvatar}) => {
     senderId,
   } = message;
 
-  const sender = mockUsers[senderId] || {
-    name: "Unknown",
-    avatar: "/img/avatars/default.jpg",
+  const sender = rooms?.find((room) => room.room_id === message?.id) || {
+    to_name: "Unknown",
   };
+  console.log("messagemessage", message, rooms);
   const messageTime = new Date(created_at).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -60,7 +60,7 @@ const MessageBubble = ({message, isOwn, showAvatar}) => {
 
     return <div className={styles.textContent}>{content}</div>;
   };
-
+  console.log("sendersender", sender);
   return isOwn ? (
     <>
       <Flex justifyContent="flex-end" p="12px 0" gap={"12px"}>
@@ -105,7 +105,7 @@ const MessageBubble = ({message, isOwn, showAvatar}) => {
       <Box w="500px">
         <Flex justifyContent="space-between" alignItems="center">
           <Text fontWeight="500" color="#181D27">
-            {sender?.name}
+            {sender?.to_name}
           </Text>
           <Text fontWeight={400} color="#535862" fontSize="12px">
             {messageTime}

@@ -15,10 +15,12 @@ const MessageBubble = ({rooms = [], message, isOwn, showAvatar}) => {
     senderId,
   } = message;
 
-  const sender = rooms?.find((room) => room.room_id === message?.id) || {
+  const sender = rooms?.find((room) => room.id === message?.room_id) || {
     to_name: "Unknown",
   };
-  console.log("messagemessage", message, rooms);
+
+  console.log("sendersender", rooms, message);
+
   const messageTime = new Date(created_at).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",

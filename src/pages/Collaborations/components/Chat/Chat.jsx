@@ -4,7 +4,6 @@ import ConversationList from "../ConversationList/ConversationList";
 import ChatArea from "../ChatArea/ChatArea";
 import styles from "./Chat.module.scss";
 import {useSelector} from "react-redux";
-import axios from "axios";
 import {useSocket, useSocketConnection} from "@context/SocketProvider";
 
 const Chat = () => {
@@ -12,28 +11,32 @@ const Chat = () => {
   const {isConnected, connectionError} = useSocketConnection();
   const [rooms, setRooms] = useState([]);
   const [conversation, setConversation] = useState(null);
+
   const userId = useSelector((state) => state.auth.userId);
   const loginUser = useSelector((state) => state.auth.user_data?.login);
 
   console.log("🔍 Chat Debug:", {
-    socket: socket ? "✅ Socket exists" : "❌ Socket is null",
+    socket: socket ? "Socket exists" : "❌ Socket is null",
     isConnected,
     connectionError,
     userId,
     loginUser,
   });
 
-  const getRooms = async () => {
-    try {
-      const response = await axios.get(
-        `https://chat-service.u-code.io/v1/room?row_id=${userId}&offset=0&limit=100`
-      );
-      setRooms(response.data.body?.rooms);
-      console.log("Rooms fetched:", response.data.body?.rooms);
-    } catch (error) {
-      console.error("Error fetching rooms:", error);
-    }
-  };
+  useEffect(() => {
+    if (!socket || !isConnected || !userId) return;
+    socket.emit("rooms list", {row_id: userId});
+
+    const handleRoomsList = (data) => {
+      setRooms(data || []);
+    };
+
+    socket.on("rooms list", handleRoomsList);
+
+    return () => {
+      socket.off("rooms list", handleRoomsList);
+    };
+  }, [socket, isConnected, userId]);
 
   const sendMessage = (content) => {
     if (!conversation?.id || !loginUser) {
@@ -48,33 +51,18 @@ const Chat = () => {
 
     const messageData = {
       room_id: conversation.id,
-      content: content,
+      content,
       from: loginUser,
       type: "text",
       timestamp: new Date().toISOString(),
     };
 
-    console.log("📤 Sending message:", messageData);
     socket.emit("chat message", messageData);
   };
 
   const handleConversationSelect = (selectedConversation) => {
     setConversation(selectedConversation);
   };
-
-  useEffect(() => {
-    getRooms();
-  }, []);
-
-  useEffect(() => {
-    if (socket) {
-      socket.emit("test", {message: "Hello from client"});
-
-      socket.on("test_response", (data) => {
-        console.log("✅ Socket test response:", data);
-      });
-    }
-  }, [socket]);
 
   return (
     <ChatProvider>

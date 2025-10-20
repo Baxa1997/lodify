@@ -28,7 +28,6 @@ import axios from "axios";
 const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const projectId = useSelector((state) => state.auth.projectId);
-  const clientTypeId = useSelector((state) => state.auth.clientType?.id);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const loginName = useSelector((state) => state.auth.user_data?.login);
@@ -68,7 +67,7 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
       setFilteredContacts(filtered ?? []);
     }
   }, [searchQuery]);
-  console.log("userIduserId", userId);
+
   const handleContactClick = async (contact) => {
     if (!socket) {
       console.error("Socket not available");
@@ -85,7 +84,6 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
     };
 
     try {
-      console.log("create room data=======>", roomData);
       socket.emit("create room", {...roomData});
       onClose();
     } catch (httpError) {
@@ -99,7 +97,7 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
       setFilteredContacts(users ?? []);
     }
   }, [users]);
-  console.log("userssss=======>", users);
+
   const ContactItem = ({contact}) => (
     <HStack
       spacing={1}
@@ -235,9 +233,11 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
             <Box w="full" maxH="400px" overflowY="auto">
               <VStack spacing={0} align="stretch" p={2}>
                 {filteredContacts?.length > 0 ? (
-                  filteredContacts?.map((contact) => (
-                    <ContactItem key={contact.id} contact={contact} />
-                  ))
+                  filteredContacts
+                    ?.filter((contact) => contact.id !== userId)
+                    ?.map((contact) => (
+                      <ContactItem key={contact.id} contact={contact} />
+                    ))
                 ) : (
                   <Box p={8} textAlign="center">
                     <Text color="gray.500" fontSize="sm">

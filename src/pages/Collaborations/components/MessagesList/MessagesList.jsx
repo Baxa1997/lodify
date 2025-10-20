@@ -37,11 +37,8 @@ const MessagesList = ({conversation, isConnected}) => {
     if (!socket) return;
 
     const handleRoomHistory = (messages) => {
-      console.log("📜 Room history received:", messages);
-
       if (Array.isArray(messages)) {
         setLocalMessages(messages);
-        console.log("💬 Loaded", messages.length, "messages from history");
       } else if (messages?.data && Array.isArray(messages.data)) {
         setLocalMessages(messages.data);
       } else {
@@ -50,15 +47,10 @@ const MessagesList = ({conversation, isConnected}) => {
     };
 
     const handleReceiveMessage = (message) => {
-      console.log("📨 LIVE MESSAGE RECEIVED:", message);
-
       setLocalMessages((prevMessages) => [...prevMessages, message]);
     };
-
     socket.on("room history", handleRoomHistory);
     socket.on("chat message", handleReceiveMessage);
-
-    console.log("✅ Socket listeners registered");
 
     return () => {
       socket.off("room history", handleRoomHistory);
@@ -68,8 +60,6 @@ const MessagesList = ({conversation, isConnected}) => {
 
   useEffect(() => {
     if (!socket || !conversation?.id || !userId) return;
-
-    console.log("🚪 Joining room:", conversation.id, "with user:", userId);
 
     setLocalMessages([]);
 

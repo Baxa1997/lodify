@@ -15,7 +15,6 @@ const Chat = () => {
   const userId = useSelector((state) => state.auth.userId);
   const loginUser = useSelector((state) => state.auth.user_data?.login);
 
-  // Debug logging
   console.log("🔍 Chat Debug:", {
     socket: socket ? "✅ Socket exists" : "❌ Socket is null",
     isConnected,
@@ -69,7 +68,6 @@ const Chat = () => {
 
   useEffect(() => {
     if (socket) {
-      console.log("🧪 Testing socket connection...");
       socket.emit("test", {message: "Hello from client"});
 
       socket.on("test_response", (data) => {

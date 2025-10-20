@@ -19,8 +19,6 @@ export const SocketProvider = ({children}) => {
 
   useEffect(() => {
     if (!socketRef.current) {
-      console.log("🔌 Initializing socket connection...");
-
       const newSocket = io(SOCKET_URL, {
         transports: ["websocket"],
         reconnection: true,
@@ -35,25 +33,22 @@ export const SocketProvider = ({children}) => {
       socketRef.current = newSocket;
       setSocket(newSocket);
 
-      newSocket.on("connect", () => {
-        console.log("✅ Socket connected:", newSocket.id);
+      newSocket.on("connect", (data) => {
+        console.log("connection", data);
         setIsConnected(true);
         setConnectionError(null);
       });
 
       newSocket.on("disconnect", (reason) => {
-        console.warn("⚠️ Socket disconnected:", reason);
         setIsConnected(false);
       });
 
       newSocket.on("connect_error", (err) => {
-        console.error("❌ Socket connection error:", err.message);
         setConnectionError(err.message);
         setIsConnected(false);
       });
 
       newSocket.on("reconnect", (attemptNumber) => {
-        console.log("🔄 Socket reconnected after", attemptNumber, "attempts");
         setIsConnected(true);
         setConnectionError(null);
       });

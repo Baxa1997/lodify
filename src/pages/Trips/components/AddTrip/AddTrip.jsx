@@ -27,6 +27,9 @@ function AddTrip({tripData = {}}) {
   const userData = useSelector((state) => state?.auth?.user_data);
   const userId = useSelector((state) => state.auth.userId);
   const envId = useSelector((state) => state.auth.environmentId);
+  const companiesId = useSelector(
+    (state) => state.auth.user_data?.companies_id
+  );
 
   const {
     reset,
@@ -45,7 +48,7 @@ function AddTrip({tripData = {}}) {
         method: "extract",
         object_data: {
           file_url: csvFile,
-          companies_id: userId,
+          companies_id: companiesId,
         },
         table: "roc_file",
       }),

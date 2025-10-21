@@ -22,7 +22,7 @@ const Trips = () => {
       <Flex flexDir={"column"} gap={"20px"}>
         <HeadBreadCrumb />
 
-        {clientType?.id !== "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
+        {/* {clientType?.id !== "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
           <Text
             h={"32px"}
             color={"#181D27"}
@@ -30,11 +30,11 @@ const Trips = () => {
             fontSize={"24px"}>
             All Loads
           </Text>
-        )}
+        )} */}
 
-        {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
-          <AddTripMenu setIsAutomatedAddTrip={setIsAutomatedAddTrip} />
-        )}
+        {/* {clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && ( */}
+        <AddTripMenu setIsAutomatedAddTrip={setIsAutomatedAddTrip} />
+        {/* )} */}
 
         <Tabs className={styles.tabsContainer}>
           <TabList>

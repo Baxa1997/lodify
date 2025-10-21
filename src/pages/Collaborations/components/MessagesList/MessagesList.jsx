@@ -159,8 +159,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
           </div>
         ))}
 
-        {/* {typingUsers.length > 0 && <TypingIndicator users={typingUsers} />} */}
-
         <div ref={messagesEndRef} />
       </div>
     </div>

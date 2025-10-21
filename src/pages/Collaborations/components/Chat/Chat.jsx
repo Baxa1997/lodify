@@ -17,26 +17,13 @@ const Chat = () => {
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const loginUser = useSelector((state) => state.auth.user_data?.login);
 
-  console.log("🔍 Chat Debug:", {
-    socket: socket ? "Socket exists" : "❌ Socket is null",
-    isConnected,
-    connectionError,
-    userId,
-    loginUser,
-  });
-
   useEffect(() => {
-    console.log("ENTERED !!!!!");
     if (!socket || !isConnected || !userId) return;
-
     socket.emit("rooms list", {row_id: userId});
-
     const handleRoomsList = (data) => {
       setRooms(data || []);
     };
-
     socket.on("rooms list", handleRoomsList);
-
     return () => {
       socket.off("rooms list", handleRoomsList);
     };

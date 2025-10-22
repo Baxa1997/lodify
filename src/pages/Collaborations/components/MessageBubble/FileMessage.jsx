@@ -17,21 +17,21 @@ function FileMessage({isOwn, content, fileInfo}) {
     return `${mb.toFixed(1)} MB`;
   };
 
-  const getFileIcon = (filename) => {
-    const ext = filename?.split(".").pop()?.toLowerCase();
-    const iconMap = {
-      pdf: "📄",
-      doc: "📝",
-      docx: "📝",
-      xls: "📊",
-      xlsx: "📊",
-      txt: "📃",
-      zip: "🗜️",
-      rar: "🗜️",
-      default: "📎",
-    };
-    return iconMap[ext] || iconMap.default;
-  };
+  // const getFileIcon = (filename) => {
+  //   const ext = filename?.split(".").pop()?.toLowerCase();
+  //   const iconMap = {
+  //     pdf: "📄",
+  //     doc: "📝",
+  //     docx: "📝",
+  //     xls: "📊",
+  //     xlsx: "📊",
+  //     txt: "📃",
+  //     zip: "🗜️",
+  //     rar: "🗜️",
+  //     default: "📎",
+  //   };
+  //   return iconMap[ext] || iconMap.default;
+  // };
 
   const isViewableFile = (filename) => {
     const ext = filename?.split(".").pop()?.toLowerCase();
@@ -61,47 +61,40 @@ function FileMessage({isOwn, content, fileInfo}) {
 
   return (
     <>
-      <Flex
-        gap="12px"
+      <Box
         p="10px 14px"
-        alignItems="center"
+        borderRadius="8px"
+        bg={isOwn ? "transparent" : "#fff"}
+        color={isOwn ? "#fff" : "#181D27"}
+        maxW="80%"
         cursor="pointer"
-        onClick={handleFileClick}
-        transition="all 0.2s"
-        _hover={{
-          bg: isOwn ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.05)",
-          borderRadius: "6px",
-        }}>
-        <Box
-          w="44px"
-          h="44px"
-          borderRadius="6px"
-          border={
-            isOwn ? "1px solid rgba(255,255,255,0.2)" : "1px solid #E9EAEB"
-          }
-          bg={isOwn ? "rgba(255,255,255,0.1)" : "#FEF3E9"}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          fontSize="20px">
-          {getFileIcon(fileName)}
-        </Box>
-        <Box flex="1" minW="0">
-          <Text
-            color={isOwn ? "#fff" : "#181D27"}
-            fontWeight="500"
-            fontSize="14px"
-            noOfLines={1}>
-            {fileName}
-          </Text>
-          <Text
-            color={isOwn ? "rgba(255,255,255,0.8)" : "#535862"}
-            fontSize="12px">
-            {formatFileSize(fileInfo?.size)}
-          </Text>
-        </Box>
-        <DownloadIcon color={isOwn ? "#fff" : "#535862"} />
-      </Flex>
+        onClick={handleFileClick}>
+        <Flex gap="12px" alignItems="center">
+          <Box
+            w="44px"
+            h="44px"
+            borderRadius="6px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            fontSize="20px"
+            flexShrink={0}>
+            <img src={"/img/messagePdf.svg"} alt="" />
+          </Box>
+          <Box flex="1" minW="0">
+            <Text
+              color={isOwn ? "#fff" : "#181D27"}
+              fontWeight="500"
+              fontSize="14px"
+              noOfLines={1}>
+              {fileName}
+            </Text>
+            <Text color={isOwn ? "#fff" : "#535862"} fontSize="12px">
+              {formatFileSize(fileInfo?.size)}
+            </Text>
+          </Box>
+        </Flex>
+      </Box>
 
       <FilesReader
         isOpen={isFileReaderOpen}

@@ -16,7 +16,6 @@ const ConversationList = ({
     searchQuery,
     setSearchQuery,
     isEditing,
-    toggleEditMode,
   } = useChat();
 
   const getFilteredRooms = () => {

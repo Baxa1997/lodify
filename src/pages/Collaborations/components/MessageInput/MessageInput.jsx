@@ -10,9 +10,9 @@ import {
   IconButton,
   useToast,
 } from "@chakra-ui/react";
-import {useSocket} from "@context/SocketProvider";
 import {AttachmentIcon} from "@chakra-ui/icons";
 import fileService from "@services/fileService";
+import {FaMicrophone} from "react-icons/fa";
 
 const MessageInput = ({
   onSendMessage = () => {},
@@ -28,7 +28,6 @@ const MessageInput = ({
   const typingTimeoutRef = useRef(null);
   const toast = useToast();
 
-  // Determine file type based on MIME type
   const getFileType = (file) => {
     const mimeType = file.type;
 
@@ -100,7 +99,6 @@ const MessageInput = ({
 
       const maxSize = 10 * 1024 * 1024;
       if (file.size > maxSize) {
-        console.warn("File too large:", file.size);
         toast({
           title: "File too large",
           description: "Maximum file size is 10MB",
@@ -140,8 +138,6 @@ const MessageInput = ({
         folder_name: "chat",
       });
 
-      console.log("Upload response:", response);
-
       if (!response?.link) {
         throw new Error("Invalid response from upload service");
       }
@@ -149,13 +145,6 @@ const MessageInput = ({
       const fileUrl = `https://cdn.u-code.io/${response.link}`;
       const fileType = getFileType(selectedFile);
 
-      console.log("File uploaded successfully:", {
-        fileUrl,
-        fileType,
-        fileName: selectedFile.name,
-      });
-
-      console.log("Sending message via socket...");
       onSendMessage(fileUrl, fileType, {
         name: selectedFile.name,
         size: selectedFile.size,
@@ -178,11 +167,6 @@ const MessageInput = ({
       });
     } catch (error) {
       console.error("File upload error:", error);
-      console.error("Error details:", {
-        message: error?.message,
-        response: error?.response,
-        stack: error?.stack,
-      });
 
       toast({
         title: "Upload failed",
@@ -238,6 +222,22 @@ const MessageInput = ({
               onChange={handleFileSelect}
               display="none"
               accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
+            />
+
+            <IconButton
+              type="button"
+              // onClick={() => fileInputRef.current?.click()}
+              aria-label="Attach file"
+              icon={<FaMicrophone fontSize="20px" />}
+              _hover={{
+                bg: "transparent",
+              }}
+              mb="12px"
+              mr="0px"
+              bg="transparent"
+              color="#535862"
+              borderRadius="8px"
+              disabled={!isConnected || disabled || isUploading}
             />
 
             <IconButton

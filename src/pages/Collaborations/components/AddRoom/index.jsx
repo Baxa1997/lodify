@@ -19,10 +19,9 @@ import React, {useState, useEffect} from "react";
 import SearchInput from "@components/SearchInput";
 import {LuX, LuMessageCircle} from "react-icons/lu";
 import styles from "./AddRoom.module.scss";
-import chatService from "@services/chatService";
 import {useSelector} from "react-redux";
 import {useQuery} from "@tanstack/react-query";
-import {useSocket, useSocketConnection} from "@context/SocketProvider";
+import {useSocket} from "@context/SocketProvider";
 import axios from "axios";
 
 const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {

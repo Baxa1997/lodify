@@ -1,27 +1,11 @@
 import React from "react";
 import styles from "./ConversationItem.module.scss";
 import {Box, Flex, Text} from "@chakra-ui/react";
+import {checkValidUrl} from "@utils/checkValidUrl";
 
-const ConversationItem = ({
-  conversation,
-  isSelected,
-  onClick,
-  isEditing,
-  isConnected,
-}) => {
-  const {
-    name,
-    to_name,
-    username,
-    avatar,
-    last_message,
-    timestamp,
-    unreadCount,
-    isOnline,
-    isGroup,
-    type,
-  } = conversation;
-  console.log("to_nameto_name", conversation, to_name);
+const ConversationItem = ({conversation, isSelected, onClick}) => {
+  const {name, to_name, last_message, timestamp, isOnline, type} = conversation;
+
   return (
     <Box
       p="12px 16px"
@@ -56,7 +40,7 @@ const ConversationItem = ({
               {type === "single" ? to_name : name}
             </Text>
             <Text fontSize="12px" h="20px" fontWeight="400" color="#535862">
-              {/* @phoenix */} No username
+              No username
             </Text>
           </Flex>
         </Flex>
@@ -74,7 +58,11 @@ const ConversationItem = ({
           fontSize="12px"
           fontWeight="400"
           color="#535862">
-          {last_message || "No messages yet"}
+          {checkValidUrl(last_message) ? (
+            <Text>File attached</Text>
+          ) : (
+            last_message || "No messages yet"
+          )}
         </Text>
       </Box>
     </Box>

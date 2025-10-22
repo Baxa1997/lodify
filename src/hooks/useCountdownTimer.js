@@ -5,7 +5,6 @@ const useCountdownTimer = (apiTime = 0, autoStart = true) => {
   const [isRunning, setIsRunning] = useState(autoStart);
   const [lastApiTime, setLastApiTime] = useState(apiTime);
 
-  // Update timer when API time changes
   useEffect(() => {
     if (apiTime !== lastApiTime) {
       setTimeLeft(apiTime);
@@ -14,17 +13,14 @@ const useCountdownTimer = (apiTime = 0, autoStart = true) => {
     }
   }, [apiTime, lastApiTime, autoStart]);
 
-  // Start timer
   const startTimer = useCallback(() => {
     setIsRunning(true);
   }, []);
 
-  // Stop timer
   const stopTimer = useCallback(() => {
     setIsRunning(false);
   }, []);
 
-  // Reset timer with new time
   const resetTimer = useCallback(
     (newTime) => {
       setTimeLeft(newTime);
@@ -34,7 +30,6 @@ const useCountdownTimer = (apiTime = 0, autoStart = true) => {
     [autoStart]
   );
 
-  // Update time left (called by timer component)
   const updateTimeLeft = useCallback((newTime) => {
     setTimeLeft(newTime);
   }, []);

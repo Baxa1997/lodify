@@ -3,6 +3,7 @@ import {useChat} from "../../context/ChatContext";
 import styles from "./MessageInput.module.scss";
 import {Box, Button, Flex, Textarea} from "@chakra-ui/react";
 import {useSocket} from "@context/SocketProvider";
+import {LinkIcon} from "@chakra-ui/icons";
 
 const MessageInput = ({
   onSendMessage = () => {},
@@ -70,7 +71,20 @@ const MessageInput = ({
             }}
           />
 
-          <Flex justifyContent="flex-end" alignItems="center" gap="12px">
+          <Flex justifyContent="flex-end" alignItems="center" gap="6px">
+            <Button
+              type="button"
+              _hover={{
+                bg: "transparent",
+              }}
+              mb="12px"
+              mr="0px"
+              bg="transparent"
+              color="#fff"
+              borderRadius="8px"
+              disabled={!message.trim() || !isConnected || disabled}>
+              <LinkIcon fontSize="22px" color="#535862" />
+            </Button>
             <Button
               _hover={{
                 bg: isConnected ? "#EF6820" : "#9CA3AF",

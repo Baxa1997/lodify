@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {Flex, Box, Text} from "@chakra-ui/react";
 import TextMessage from "./TextMessage";
 import FileMessage from "./FileMessage";
@@ -8,15 +8,24 @@ import VideoMessage from "./VideoMessage";
 
 const MessageBubble = ({rooms = [], message, isOwn}) => {
   const {message: content, created_at, type, fileInfo} = message;
-  console.log("typetypetypetype", type);
-  const sender = rooms?.find((room) => room.id === message?.room_id) || {
-    to_name: "Unknown",
-  };
 
-  const messageTime = new Date(created_at).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const normalizedType = type ? String(type).toLowerCase().trim() : "text";
+  const sender = useMemo(
+    () =>
+      rooms?.find((room) => room.id === message?.room_id) || {
+        to_name: "Unknown",
+      },
+    [rooms, message?.room_id]
+  );
+
+  const messageTime = useMemo(
+    () =>
+      new Date(created_at).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    [created_at]
+  );
 
   const messageComponents = {
     text: TextMessage,
@@ -26,7 +35,7 @@ const MessageBubble = ({rooms = [], message, isOwn}) => {
     video: VideoMessage,
   };
 
-  const MessageComponent = messageComponents[type] || TextMessage;
+  const MessageComponent = messageComponents[normalizedType] || TextMessage;
 
   return isOwn ? (
     <Flex justifyContent="flex-end" p="12px 0" gap="12px">
@@ -44,10 +53,12 @@ const MessageBubble = ({rooms = [], message, isOwn}) => {
           bg="#EF6820"
           color="#fff"
           borderRadius="8px"
-          borderTopRightRadius="0"
-          border="1px solid #E9EAEB"
-          p="10px 14px">
-          {content}
+          borderTopRightRadius="0">
+          <MessageComponent
+            isOwn={isOwn}
+            content={content}
+            fileInfo={fileInfo}
+          />
         </Box>
       </Box>
     </Flex>
@@ -89,4 +100,15 @@ const MessageBubble = ({rooms = [], message, isOwn}) => {
   );
 };
 
-export default MessageBubble;
+export default React.memo(MessageBubble, (prevProps, nextProps) => {
+  const isSame =
+    prevProps.message?.type === nextProps.message?.type &&
+    prevProps.message?.message === nextProps.message?.message &&
+    prevProps.message?.id === nextProps.message?.id &&
+    prevProps.message?.created_at === nextProps.message?.created_at &&
+    prevProps.isOwn === nextProps.isOwn &&
+    JSON.stringify(prevProps.message?.fileInfo) ===
+      JSON.stringify(nextProps.message?.fileInfo);
+
+  return isSame;
+});

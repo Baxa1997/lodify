@@ -142,12 +142,14 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     <div className={styles.messagesList}>
       <div className={styles.messagesContainer}>
         {messageGroups.map((group, groupIndex) => (
-          <div key={groupIndex}>
+          <div key={`${group.date}-${groupIndex}`}>
             <DateSeparator date={group.date} />
             {group.messages.map((message, messageIndex) => (
               <MessageBubble
                 rooms={rooms}
-                key={message.id || messageIndex}
+                key={`${message.id || message._id || messageIndex}-${
+                  message.type || "text"
+                }-${message.timestamp}`}
                 message={message}
                 isOwn={message.from === loggedInUser}
                 showAvatar={

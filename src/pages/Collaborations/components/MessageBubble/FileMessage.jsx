@@ -55,7 +55,6 @@ function FileMessage({isOwn, content, fileInfo}) {
     if (isViewableFile(fileName)) {
       setIsFileReaderOpen(true);
     } else {
-      // For non-viewable files, open in new tab
       window.open(fileUrl, "_blank");
     }
   };
@@ -104,7 +103,6 @@ function FileMessage({isOwn, content, fileInfo}) {
         <DownloadIcon color={isOwn ? "#fff" : "#535862"} />
       </Flex>
 
-      {/* File Reader Modal */}
       <FilesReader
         isOpen={isFileReaderOpen}
         onClose={() => setIsFileReaderOpen(false)}

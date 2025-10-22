@@ -70,7 +70,6 @@ function ImageMessage({isOwn, content, fileInfo}) {
         </Box>
       </Flex>
 
-      {/* Image Viewer Modal */}
       <FileViewer
         isOpen={isImageViewerOpen}
         onClose={() => setIsImageViewerOpen(false)}
@@ -81,7 +80,6 @@ function ImageMessage({isOwn, content, fileInfo}) {
   );
 }
 
-// Helper function to format file size
 const formatFileSize = (bytes) => {
   if (!bytes || isNaN(bytes)) return "Unknown size";
   const kb = bytes / 1024;

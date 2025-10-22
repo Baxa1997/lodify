@@ -2,9 +2,18 @@ import React from "react";
 import styles from "./ConversationItem.module.scss";
 import {Box, Flex, Text} from "@chakra-ui/react";
 import {checkValidUrl} from "@utils/checkValidUrl";
+import {calculateTimeHoursDifferenceInTimeZone} from "@utils/dateFormats";
 
 const ConversationItem = ({conversation, isSelected, onClick}) => {
-  const {name, to_name, last_message, timestamp, isOnline, type} = conversation;
+  const {
+    name,
+    to_name,
+    last_message,
+    timestamp,
+    isOnline,
+    type,
+    last_message_created_at,
+  } = conversation;
 
   return (
     <Box
@@ -47,7 +56,8 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
 
         <Box>
           <Text fontSize="12px" fontWeight="400" color="#535862">
-            {timestamp}
+            {calculateTimeHoursDifferenceInTimeZone(last_message_created_at) ??
+              "Online"}
           </Text>
         </Box>
       </Flex>

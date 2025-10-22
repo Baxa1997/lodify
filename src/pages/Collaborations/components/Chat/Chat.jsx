@@ -29,7 +29,7 @@ const Chat = () => {
     };
   }, [socket, isConnected, userId]);
 
-  const sendMessage = (content) => {
+  const sendMessage = (content, type = "text", fileInfo = null) => {
     if (!conversation?.id || !loginUser) {
       console.error("Cannot send message: missing conversation or user");
       return;
@@ -44,10 +44,12 @@ const Chat = () => {
       room_id: conversation.id,
       content,
       from: loginUser,
-      type: "text",
+      type: type,
       timestamp: new Date().toISOString(),
+      ...(fileInfo && {fileInfo}), // Add fileInfo if it exists
     };
 
+    console.log("Sending message with type:", type, messageData);
     socket.emit("chat message", messageData);
   };
 

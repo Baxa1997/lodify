@@ -1,8 +1,10 @@
-import React from "react";
-import {Flex, Box, Text, Link, Icon} from "@chakra-ui/react";
+import React, {useState} from "react";
+import {Flex, Box, Text} from "@chakra-ui/react";
 import {DownloadIcon} from "@chakra-ui/icons";
+import FilesReader from "../../../../components/FileViewer/FilesReader";
 
 function FileMessage({isOwn, content, fileInfo}) {
+  const [isFileReaderOpen, setIsFileReaderOpen] = useState(false);
   const fileName = fileInfo?.name || content || "File attachment";
   const fileSize = fileInfo?.size || "Unknown size";
   const fileUrl = fileInfo?.url || content;
@@ -31,13 +33,41 @@ function FileMessage({isOwn, content, fileInfo}) {
     return iconMap[ext] || iconMap.default;
   };
 
+  const isViewableFile = (filename) => {
+    const ext = filename?.split(".").pop()?.toLowerCase();
+    const viewableExtensions = [
+      "pdf",
+      "doc",
+      "docx",
+      "xls",
+      "xlsx",
+      "jpg",
+      "jpeg",
+      "png",
+      "gif",
+      "bmp",
+      "webp",
+    ];
+    return viewableExtensions.includes(ext);
+  };
+
+  const handleFileClick = () => {
+    if (isViewableFile(fileName)) {
+      setIsFileReaderOpen(true);
+    } else {
+      // For non-viewable files, open in new tab
+      window.open(fileUrl, "_blank");
+    }
+  };
+
   return (
-    <Link href={fileUrl} isExternal _hover={{textDecoration: "none"}}>
+    <>
       <Flex
         gap="12px"
         p="10px 14px"
         alignItems="center"
         cursor="pointer"
+        onClick={handleFileClick}
         transition="all 0.2s"
         _hover={{
           bg: isOwn ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.05)",
@@ -46,17 +76,16 @@ function FileMessage({isOwn, content, fileInfo}) {
         <Box
           w="44px"
           h="44px"
-          borderRadius="8px"
+          borderRadius="6px"
+          border={
+            isOwn ? "1px solid rgba(255,255,255,0.2)" : "1px solid #E9EAEB"
+          }
+          bg={isOwn ? "rgba(255,255,255,0.1)" : "#FEF3E9"}
           display="flex"
           alignItems="center"
           justifyContent="center"
-          fontSize="22px">
-          <img
-            src="/img/messagePdf.svg"
-            alt="file"
-            width="100%"
-            height="100%"
-          />
+          fontSize="20px">
+          {getFileIcon(fileName)}
         </Box>
         <Box flex="1" minW="0">
           <Text
@@ -74,7 +103,14 @@ function FileMessage({isOwn, content, fileInfo}) {
         </Box>
         <DownloadIcon color={isOwn ? "#fff" : "#535862"} />
       </Flex>
-    </Link>
+
+      {/* File Reader Modal */}
+      <FilesReader
+        isOpen={isFileReaderOpen}
+        onClose={() => setIsFileReaderOpen(false)}
+        file={fileUrl}
+      />
+    </>
   );
 }
 

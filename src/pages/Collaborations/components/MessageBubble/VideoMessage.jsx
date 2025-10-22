@@ -45,13 +45,12 @@ function VideoMessage({isOwn, content, fileInfo}) {
             h="44px"
             borderRadius="6px"
             border="1px solid #E9EAEB"
-            bg={isOwn ? "#fff" : "#000"}
+            bg={isOwn ? "transparent" : "#FEF3E9"}
+            color={isOwn ? "#fff" : "#181D27"}
             display="flex"
-            color={isOwn ? "#000" : "#fff"}
             alignItems="center"
             justifyContent="center"
-            fontSize="20px"
-            flexShrink={0}>
+            fontSize="20px">
             ▶
           </Box>
 

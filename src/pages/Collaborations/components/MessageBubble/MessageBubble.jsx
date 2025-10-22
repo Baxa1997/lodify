@@ -31,7 +31,7 @@ const MessageBubble = ({rooms = [], message, isOwn}) => {
     text: TextMessage,
     file: FileMessage,
     image: ImageMessage,
-    audio: AudioMessage,
+    voice: AudioMessage,
     video: VideoMessage,
   };
 

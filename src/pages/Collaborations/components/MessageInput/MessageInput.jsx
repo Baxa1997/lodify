@@ -36,7 +36,7 @@ const MessageInput = ({
     } else if (mimeType.startsWith("video/")) {
       return "video";
     } else if (mimeType.startsWith("audio/")) {
-      return "audio";
+      return "voice";
     } else {
       return "file";
     }

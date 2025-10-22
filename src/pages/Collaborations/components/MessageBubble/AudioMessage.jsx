@@ -33,27 +33,40 @@ function AudioMessage({isOwn, content, fileInfo}) {
       <Box
         p="10px 14px"
         borderRadius="8px"
-        bg={isOwn ? "#007AFF" : "#F5F5F5"}
+        bg={isOwn ? "transparent" : "#F5F5F5"}
         color={isOwn ? "#fff" : "#181D27"}
         maxW="80%"
         cursor="pointer"
         onClick={handleAudioClick}>
         <Flex gap="12px" alignItems="center">
-          <Box
+          {/* <Box
             w="44px"
             h="44px"
             borderRadius="6px"
             border="1px solid #E9EAEB"
-            bg="#FEF3E9"
+            bg={isOwn ? "transparent" : "#FEF3E9"}
+            color={isOwn ? "#fff" : "#181D27"}
             display="flex"
             alignItems="center"
             justifyContent="center"
             fontSize="20px"
             flexShrink={0}>
-            ▶️
-          </Box>
+            ▶
+          </Box> */}
+          <audio
+            controls
+            style={{
+              width: "100%",
+              height: "50px",
+              outline: "none",
+            }}>
+            <source src={audioUrl} type="audio/mpeg" />
+            <source src={audioUrl} type="audio/ogg" />
+            <source src={audioUrl} type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
 
-          <Box flex="1" minW="0">
+          {/* <Box flex="1" minW="0">
             <Text
               color="#181D27"
               fontWeight="500"
@@ -64,11 +77,10 @@ function AudioMessage({isOwn, content, fileInfo}) {
             <Text color="#535862" fontSize="12px">
               {fileInfo?.size ? formatFileSize(fileInfo.size) : "Audio file"}
             </Text>
-          </Box>
+          </Box> */}
         </Flex>
       </Box>
 
-      {/* Audio Player Modal */}
       <Modal
         isOpen={isAudioPlayerOpen}
         onClose={() => setIsAudioPlayerOpen(false)}

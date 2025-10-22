@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {
   Flex,
   Box,
@@ -9,12 +9,92 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  IconButton,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
+// import {PlayIcon, PauseIcon, DownloadIcon} from "@chakra-ui/icons";
+import {FaPlay, FaPause, FaDownload} from "react-icons/fa";
 
 function AudioMessage({isOwn, content, fileInfo}) {
   const [isAudioPlayerOpen, setIsAudioPlayerOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const audioRef = useRef(null);
   const audioUrl = fileInfo?.url || content;
   const fileName = fileInfo?.name || "Audio";
+  const audioDuration = fileInfo?.duration || 0;
+
+  // Audio event handlers
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+      setIsLoading(false);
+    };
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
+    };
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
+
+    return () => {
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
+    };
+  }, [audioUrl]);
+
+  const togglePlayPause = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+  };
+
+  const handleSeek = (e) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const newTime = (clickX / width) * duration;
+
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const formatTime = (time) => {
+    if (!time || isNaN(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
 
   if (!audioUrl) {
     return (
@@ -31,103 +111,208 @@ function AudioMessage({isOwn, content, fileInfo}) {
   return (
     <>
       <Box
-        p="10px 14px"
-        borderRadius="8px"
-        bg={isOwn ? "transparent" : "#F5F5F5"}
+        p="12px 16px"
+        borderRadius="12px"
+        bg={isOwn ? "transparent" : "#F8F9FA"}
         color={isOwn ? "#fff" : "#181D27"}
-        maxW="80%"
+        maxW="100%"
+        minW="100%"
         cursor="pointer"
-        onClick={handleAudioClick}>
+        onClick={handleAudioClick}
+        transition="all 0.2s ease">
         <Flex gap="12px" alignItems="center">
-          {/* <Box
-            w="44px"
-            h="44px"
-            borderRadius="6px"
-            border="1px solid #E9EAEB"
-            bg={isOwn ? "transparent" : "#FEF3E9"}
-            color={isOwn ? "#fff" : "#181D27"}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            fontSize="20px"
-            flexShrink={0}>
-            ▶
-          </Box> */}
-          <audio
-            controls
-            style={{
-              width: "100%",
-              height: "50px",
-              outline: "none",
-            }}>
-            <source src={audioUrl} type="audio/mpeg" />
-            <source src={audioUrl} type="audio/ogg" />
-            <source src={audioUrl} type="audio/wav" />
-            Your browser does not support the audio element.
-          </audio>
+          {/* Play/Pause Button */}
+          <IconButton
+            size="sm"
+            icon={isPlaying ? <FaPause /> : <FaPlay />}
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePlayPause();
+            }}
+            bg={isOwn ? "rgba(255, 255, 255, 0.2)" : "#007AFF"}
+            color={isOwn ? "#fff" : "#fff"}
+            borderRadius="50%"
+            w="36px"
+            h="36px"
+            _hover={{
+              bg: isOwn ? "rgba(255, 255, 255, 0.3)" : "#0056CC",
+            }}
+            _active={{
+              transform: "scale(0.95)",
+            }}
+            disabled={isLoading}
+          />
 
-          {/* <Box flex="1" minW="0">
-            <Text
-              color="#181D27"
-              fontWeight="500"
-              fontSize="14px"
-              noOfLines={1}>
-              {fileName}
-            </Text>
-            <Text color="#535862" fontSize="12px">
-              {fileInfo?.size ? formatFileSize(fileInfo.size) : "Audio file"}
-            </Text>
-          </Box> */}
+          {/* Audio Waveform/Info */}
+          <Box flex="1" minW="0">
+            <HStack justify="space-between" mb="4px">
+              <Text
+                color={isOwn ? "#fff" : "#181D27"}
+                fontWeight="600"
+                fontSize="14px"
+                noOfLines={1}>
+                {fileName.includes("Voice Message")
+                  ? "🎤 Voice Message"
+                  : fileName}
+              </Text>
+              <Text
+                color={isOwn ? "rgba(255, 255, 255, 0.8)" : "#535862"}
+                fontSize="12px"
+                fontWeight="500">
+                {formatTime(duration || audioDuration)}
+              </Text>
+            </HStack>
+
+            {/* Progress Bar */}
+            <Box position="relative" onClick={handleSeek} cursor="pointer">
+              <Box
+                h="4px"
+                bg={isOwn ? "rgba(255, 255, 255, 0.3)" : "#E5E7EB"}
+                borderRadius="2px"
+                overflow="hidden">
+                <Box
+                  h="100%"
+                  bg={isOwn ? "#fff" : "#007AFF"}
+                  borderRadius="2px"
+                  width={`${duration ? (currentTime / duration) * 100 : 0}%`}
+                  transition="width 0.1s ease"
+                />
+              </Box>
+            </Box>
+
+            {/* Time Display */}
+            <HStack justify="space-between" mt="4px">
+              <Text
+                color={isOwn ? "rgba(255, 255, 255, 0.7)" : "#9CA3AF"}
+                fontSize="11px">
+                {formatTime(currentTime)}
+              </Text>
+              <Text
+                color={isOwn ? "rgba(255, 255, 255, 0.7)" : "#9CA3AF"}
+                fontSize="11px">
+                {formatTime(duration || audioDuration)}
+              </Text>
+            </HStack>
+          </Box>
         </Flex>
+
+        {/* Hidden Audio Element */}
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          preload="metadata"
+          onLoadStart={() => setIsLoading(true)}
+        />
       </Box>
 
+      {/* Professional Audio Player Modal */}
       <Modal
         isOpen={isAudioPlayerOpen}
         onClose={() => setIsAudioPlayerOpen(false)}
-        size="md"
+        size="lg"
         isCentered>
-        <ModalOverlay bg="rgba(0, 0, 0, 0.8)" />
-        <ModalContent maxW="500px" borderRadius="12px" overflow="hidden">
+        <ModalOverlay bg="rgba(0, 0, 0, 0.8)" backdropFilter="blur(4px)" />
+        <ModalContent
+          maxW="600px"
+          borderRadius="16px"
+          overflow="hidden"
+          bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+          color="white">
           <ModalHeader
-            bg="#f7fafc"
-            borderBottom="1px solid #e2e8f0"
-            fontSize="18px"
-            fontWeight="600">
-            {fileName}
+            bg="rgba(255, 255, 255, 0.1)"
+            borderBottom="1px solid rgba(255, 255, 255, 0.2)"
+            fontSize="20px"
+            fontWeight="600"
+            textAlign="center">
+            {fileName.includes("Voice Message")
+              ? "🎤 Voice Message"
+              : "🎵 Audio Player"}
           </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              gap="24px"
-              py="32px">
+          <ModalCloseButton color="white" />
+          <ModalBody pb={8}>
+            <VStack spacing={8} py={8}>
+              {/* Large Play Button */}
               <Box
-                w="100px"
-                h="100px"
+                w="120px"
+                h="120px"
                 borderRadius="50%"
-                bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                bg="rgba(255, 255, 255, 0.2)"
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                fontSize="48px"
-                boxShadow="0 8px 32px rgba(102, 126, 234, 0.3)">
-                🎵
+                cursor="pointer"
+                onClick={togglePlayPause}
+                transition="all 0.3s ease"
+                _hover={{
+                  bg: "rgba(255, 255, 255, 0.3)",
+                  transform: "scale(1.05)",
+                }}
+                _active={{
+                  transform: "scale(0.95)",
+                }}
+                boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)">
+                {isPlaying ? (
+                  <FaPause boxSize="48px" />
+                ) : (
+                  <FaPlay boxSize="48px" ml="4px" />
+                )}
               </Box>
-              <audio
-                controls
-                style={{
-                  width: "100%",
-                  height: "50px",
-                  outline: "none",
-                }}>
-                <source src={audioUrl} type="audio/mpeg" />
-                <source src={audioUrl} type="audio/ogg" />
-                <source src={audioUrl} type="audio/wav" />
-                Your browser does not support the audio element.
-              </audio>
-            </Box>
+
+              {/* Progress Section */}
+              <VStack spacing={4} w="100%">
+                {/* Progress Bar */}
+                <Box w="100%" position="relative">
+                  <Box
+                    h="6px"
+                    bg="rgba(255, 255, 255, 0.3)"
+                    borderRadius="3px"
+                    cursor="pointer"
+                    onClick={handleSeek}>
+                    <Box
+                      h="100%"
+                      bg="white"
+                      borderRadius="3px"
+                      width={`${
+                        duration ? (currentTime / duration) * 100 : 0
+                      }%`}
+                      transition="width 0.1s ease"
+                    />
+                  </Box>
+                </Box>
+
+                {/* Time Display */}
+                <HStack
+                  justify="space-between"
+                  w="100%"
+                  fontSize="14px"
+                  fontWeight="500">
+                  <Text color="rgba(255, 255, 255, 0.8)">
+                    {formatTime(currentTime)}
+                  </Text>
+                  <Text color="rgba(255, 255, 255, 0.8)">
+                    {formatTime(duration || audioDuration)}
+                  </Text>
+                </HStack>
+              </VStack>
+
+              {/* Controls */}
+              <HStack spacing={6}>
+                <IconButton
+                  // icon={<DownloadIcon />}
+                  aria-label="Download audio"
+                  bg="rgba(255, 255, 255, 0.2)"
+                  color="white"
+                  borderRadius="50%"
+                  _hover={{bg: "rgba(255, 255, 255, 0.3)"}}
+                  onClick={() => {
+                    const link = document.createElement("a");
+                    link.href = audioUrl;
+                    link.download = fileName;
+                    link.click();
+                  }}
+                />
+              </HStack>
+            </VStack>
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -23,13 +23,15 @@ function AddTrip({tripData = {}}) {
   const {state} = location;
   const csvFile = state?.csv ?? "";
 
+  const clientType = useSelector((state) => state.auth.clientType);
   const addTrip = location?.pathname?.includes("add-trip");
   const userData = useSelector((state) => state?.auth?.user_data);
-  const userId = useSelector((state) => state.auth.userId);
   const envId = useSelector((state) => state.auth.environmentId);
   const companiesId = useSelector(
     (state) => state.auth.user_data?.companies_id
   );
+
+  const isBroker = clientType?.id === "96ef3734-3778-4f91-a4fb-d8b9ffb17acf";
 
   const {
     reset,
@@ -141,8 +143,8 @@ function AddTrip({tripData = {}}) {
         object_data: {
           main_trip: {
             ...data,
-            brokers_id: userData?.brokers_id,
-            broker_users_id: userData?.guid,
+            brokers_id: isBroker ? userData?.brokers_id : undefined,
+            broker_users_id: isBroker ? userData?.guid : undefined,
             bold_pod: data.bold_pod?.[0],
             rate_confirmation: data.rate_confirmation?.[0],
             ...(isUpdate && {trip_id: id}),

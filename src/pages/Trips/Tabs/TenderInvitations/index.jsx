@@ -769,6 +769,28 @@ function TenderInvitations({tripType = ""}) {
                         />
                       </CTableTd>
 
+                      <CTableTd>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/admin/collabrations`, {
+                              state: {
+                                tripId: trip.guid,
+                                tripName: trip.id,
+                              },
+                            });
+                          }}
+                          fontSize="14px"
+                          bg="none"
+                          border="none"
+                          color="#EF6820"
+                          fontWeight="600"
+                          px="0"
+                          _hover={{bg: "none"}}>
+                          Send Message
+                        </Button>
+                      </CTableTd>
+
                       {clientType?.id !==
                         "96ef3734-3778-4f91-a4fb-d8b9ffb17acf" && (
                         <CTableTd>

@@ -56,6 +56,11 @@ export const tableElements = [
   },
   {
     key: "actions",
+    name: "Contact",
+    sortable: false,
+  },
+  {
+    key: "actions",
     name: "Action",
     sortable: false,
   },

@@ -670,6 +670,32 @@ function TransitTab({tripType = ""}) {
                           )}
                         </Flex>
                       </CTableTd>
+
+                      <CTableTd>
+                        <Text>${trip?.total_rates}</Text>
+                      </CTableTd>
+
+                      <CTableTd>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/admin/collabrations`, {
+                              state: {
+                                tripId: trip.guid,
+                                tripName: trip.id,
+                              },
+                            });
+                          }}
+                          fontSize="14px"
+                          bg="none"
+                          border="none"
+                          color="#EF6820"
+                          fontWeight="600"
+                          px="0"
+                          _hover={{bg: "none"}}>
+                          Send Message
+                        </Button>
+                      </CTableTd>
                     </CTableRow>
 
                     <CTableRow>

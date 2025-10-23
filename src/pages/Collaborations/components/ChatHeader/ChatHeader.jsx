@@ -29,7 +29,8 @@ const ChatHeader = ({
         <Box>
           <Flex alignItems="center" gap="8px">
             <Text fontSize="16px" fontWeight="600" color="#181D27">
-              {type === "single" ? to_name : name}
+              {/* {type === "single" ? to_name : name} */}
+              {to_name}
             </Text>
             <Flex
               alignItems="center"

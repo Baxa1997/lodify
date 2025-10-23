@@ -59,11 +59,15 @@ const Chat = () => {
 
   useEffect(() => {
     const existingRoom = rooms.find((room) => room.item_id === tripId);
-
+    console.log("socketsocket", socket);
     if (existingRoom) {
       setConversation(existingRoom);
       setHasProcessedTripId(true);
-    } else if (Boolean(tripId && tripName) && Boolean(!conversation?.id)) {
+    } else if (
+      Boolean(tripId && tripName) &&
+      Boolean(socket) &&
+      Boolean(!conversation?.id)
+    ) {
       setIsInitializing(true);
       setHasProcessedTripId(true);
 

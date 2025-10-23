@@ -46,7 +46,8 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
           </Box>
           <Flex h="40px" flexDir="column">
             <Text fontSize="14px" h="20px" fontWeight="600" color="#000">
-              {type === "single" ? to_name : name}
+              {/* {type === "single" ? to_name : name} */}
+              {to_name}
             </Text>
             <Text fontSize="12px" h="20px" fontWeight="400" color="#535862">
               No username

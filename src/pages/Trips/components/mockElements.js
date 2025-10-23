@@ -66,6 +66,13 @@ export const tableElements = [
     key: "rate",
     sortable: true,
   },
+
+  {
+    id: 12,
+    name: "Actions",
+    key: "actions",
+    sortable: false,
+  },
 ];
 
 export default tableElements;

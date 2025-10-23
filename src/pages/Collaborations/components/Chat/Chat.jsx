@@ -6,8 +6,10 @@ import styles from "./Chat.module.scss";
 import {useSelector} from "react-redux";
 import {useSocket, useSocketConnection} from "@context/SocketProvider";
 import AddRoom from "../AddRoom";
+import {useLocation} from "react-router-dom";
 
 const Chat = () => {
+  const {state: locationState} = useLocation();
   const socket = useSocket();
   const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
   const {isConnected, connectionError} = useSocketConnection();
@@ -16,7 +18,7 @@ const Chat = () => {
 
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const loginUser = useSelector((state) => state.auth.user_data?.login);
-
+  console.log("locationlocation", locationState);
   useEffect(() => {
     if (!socket || !isConnected || !userId) return;
     socket.emit("rooms list", {row_id: userId});
@@ -45,14 +47,6 @@ const Chat = () => {
   }, [socket, isConnected, userId]);
 
   const sendMessage = (content, type = "text", fileInfo = null) => {
-    console.log("=== SEND MESSAGE DEBUG ===");
-    console.log("1. Content:", content);
-    console.log("2. Type:", type);
-    console.log("3. FileInfo:", fileInfo);
-    console.log("4. Conversation ID:", conversation?.id);
-    console.log("5. Login User:", loginUser);
-    console.log("6. Is Connected:", isConnected);
-
     if (!conversation?.id || !loginUser) {
       console.error("Cannot send message: missing conversation or user");
       return;
@@ -72,10 +66,6 @@ const Chat = () => {
       file: fileInfo?.url,
     };
 
-    console.log("7. Final message data:", messageData);
-    console.log("8. Emitting 'chat message' event...");
-
-    // Add callback to handle server response
     socket.emit("chat message", messageData, (response) => {
       if (response && response.error) {
         console.error("Server error response:", response.error);

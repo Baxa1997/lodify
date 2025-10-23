@@ -693,6 +693,27 @@ function UpcomingTab({tripType = ""}) {
                           </Text>
                         </Box>
                       </CTableTd>
+
+                      <CTableTd>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/admin/collabrations`, {
+                              state: {
+                                tripId: trip.guid,
+                              },
+                            });
+                          }}
+                          fontSize="14px"
+                          bg="none"
+                          border="none"
+                          color="#EF6820"
+                          fontWeight="600"
+                          px="0"
+                          _hover={{bg: "none"}}>
+                          Send Message
+                        </Button>
+                      </CTableTd>
                     </CTableRow>
 
                     <CTableRow>

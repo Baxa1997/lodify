@@ -15,7 +15,15 @@ import {
 } from "@chakra-ui/react";
 import {AttachmentIcon, CloseIcon} from "@chakra-ui/icons";
 import fileService from "@services/fileService";
-import {FaMicrophone, FaStop, FaTrash} from "react-icons/fa";
+import {FaMicrophone, FaStop, FaTrash, FaCheck} from "react-icons/fa";
+
+// Add CSS for waveform animation
+const waveformStyle = `
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+`;
 
 const MessageInput = ({
   onSendMessage = () => {},
@@ -341,90 +349,116 @@ const MessageInput = ({
 
   return (
     <Box px="20px" mb="10px">
+      <style>{waveformStyle}</style>
       {(isRecording || audioUrl) && (
         <Box
           mb="10px"
-          p="12px 16px"
-          bg={isRecording ? "#FFF5F5" : "#F7FAFC"}
-          borderRadius="8px"
-          border="1px solid"
-          borderColor={isRecording ? "#FC8181" : "#E2E8F0"}>
-          <Flex alignItems="center" gap="12px">
-            <Box
-              w="40px"
-              h="40px"
-              borderRadius="50%"
-              bg={isRecording ? "#E53E3E" : "#3182CE"}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              color="white"
-              fontSize="18px">
-              {isRecording ? <FaMicrophone /> : "🎵"}
-            </Box>
+          p="16px 20px"
+          bg="white"
+          borderRadius="12px"
+          border="1px solid #E2E8F0"
+          boxShadow="0 2px 8px rgba(0, 0, 0, 0.1)">
+          <Flex alignItems="center" gap="16px">
+            {/* Trash/Delete Button */}
+            <IconButton
+              size="sm"
+              icon={<FaTrash />}
+              onClick={cancelRecording}
+              variant="ghost"
+              colorScheme="gray"
+              aria-label="Delete recording"
+              color="#6B7280"
+              _hover={{bg: "#F3F4F6"}}
+            />
 
-            <Box flex="1">
-              <HStack justify="space-between" mb="4px">
-                <Text fontWeight="600" fontSize="14px" color="#181D27">
-                  {isRecording ? "Recording..." : "Voice Message"}
-                </Text>
-                <Text fontWeight="500" fontSize="14px" color="#535862">
-                  {formatRecordingTime(recordingTime)}
-                </Text>
-              </HStack>
+            {/* Timer */}
+            <Text fontWeight="600" fontSize="16px" color="#181D27" minW="50px">
+              {formatRecordingTime(recordingTime)}
+            </Text>
 
-              {isRecording && (
-                <Progress
-                  size="xs"
-                  isIndeterminate
-                  colorScheme="red"
-                  borderRadius="2px"
-                />
-              )}
-
-              {audioUrl && !isRecording && (
+            {/* Waveform Visualization */}
+            <Box flex="1" position="relative">
+              {isRecording ? (
+                <Box
+                  h="24px"
+                  display="flex"
+                  alignItems="center"
+                  gap="2px"
+                  justifyContent="center">
+                  {Array.from({length: 20}, (_, i) => {
+                    const height = Math.sin(i * 0.5) * 8 + 12;
+                    return (
+                      <Box
+                        key={i}
+                        w="3px"
+                        h={`${height}px`}
+                        bg="#9CA3AF"
+                        borderRadius="1.5px"
+                        animation="pulse 1s ease-in-out infinite"
+                        style={{
+                          animationDelay: `${i * 0.1}s`,
+                        }}
+                      />
+                    );
+                  })}
+                </Box>
+              ) : (
                 <audio
                   controls
                   src={audioUrl}
                   style={{
                     width: "100%",
                     height: "32px",
-                    marginTop: "4px",
                   }}
                 />
               )}
             </Box>
 
-            <HStack spacing="4px">
+            {/* Control Buttons */}
+            <HStack spacing="8px">
               {isRecording ? (
-                <>
-                  <IconButton
-                    size="sm"
-                    icon={<FaStop />}
-                    onClick={stopRecording}
-                    colorScheme="red"
-                    aria-label="Stop recording"
-                  />
-                  <IconButton
-                    size="sm"
-                    icon={<FaTrash />}
-                    onClick={cancelRecording}
-                    variant="ghost"
-                    colorScheme="red"
-                    aria-label="Cancel recording"
-                  />
-                </>
+                <IconButton
+                  size="md"
+                  icon={<FaStop />}
+                  onClick={stopRecording}
+                  bg="#EF4444"
+                  color="white"
+                  borderRadius="50%"
+                  w="40px"
+                  h="40px"
+                  _hover={{bg: "#DC2626"}}
+                  aria-label="Stop recording"
+                />
               ) : (
-                <>
-                  <IconButton
-                    size="sm"
-                    icon={<FaTrash />}
-                    onClick={cancelRecording}
-                    variant="ghost"
-                    colorScheme="red"
-                    aria-label="Delete recording"
-                  />
-                </>
+                <IconButton
+                  size="md"
+                  icon={<FaMicrophone />}
+                  onClick={startRecording}
+                  bg="#3B82F6"
+                  color="white"
+                  borderRadius="50%"
+                  w="40px"
+                  h="40px"
+                  _hover={{bg: "#2563EB"}}
+                  aria-label="Start recording"
+                />
+              )}
+
+              {audioUrl && !isRecording && (
+                <IconButton
+                  size="md"
+                  icon={<FaCheck />}
+                  onClick={sendAudioRecording}
+                  bg="#10B981"
+                  color="white"
+                  borderRadius="50%"
+                  w="40px"
+                  h="40px"
+                  _hover={{bg: "#059669"}}
+                  isLoading={isUploading}
+                  disabled={isUploading}
+                  aria-label="Send recording"
+                />
               )}
             </HStack>
           </Flex>

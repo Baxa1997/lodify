@@ -10,7 +10,27 @@ const ChatArea = ({
   onSendMessage = () => {},
   isConnected,
   setIsAddRoomOpen = () => {},
+  isInitializing = false,
+  tripId = null,
 }) => {
+  // if (isInitializing) {
+  //   return (
+  //     <div className={styles.emptyState}>
+  //       <div className={styles.emptyContent}>
+  //         <div className={styles.loadingSpinner}>
+  //           <div className={styles.spinner}></div>
+  //         </div>
+  //         <h3 className={styles.emptyTitle}>Setting up trip chat...</h3>
+  //         <p className={styles.emptyDescription}>
+  //           {tripId
+  //             ? `Creating chat for trip ${tripId}`
+  //             : "Initializing chat room"}
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   if (!conversation?.id) {
     return (
       <div className={styles.emptyState}>

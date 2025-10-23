@@ -15,10 +15,21 @@ const Chat = () => {
   const {isConnected, connectionError} = useSocketConnection();
   const [rooms, setRooms] = useState([]);
   const [conversation, setConversation] = useState(null);
+  const [isInitializing, setIsInitializing] = useState(false);
+  const [hasProcessedTripId, setHasProcessedTripId] = useState(false);
+  const loginName = useSelector((state) => state.auth.user_data?.login);
+  const projectId = useSelector((state) => state.auth.projectId);
 
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const loginUser = useSelector((state) => state.auth.user_data?.login);
-  console.log("locationlocation", locationState);
+  const tripId = locationState?.tripId;
+  const tripName = locationState?.tripName;
+
+  console.log("conversationconversation", conversation);
+  useEffect(() => {
+    setHasProcessedTripId(false);
+  }, [tripId]);
+
   useEffect(() => {
     if (!socket || !isConnected || !userId) return;
     socket.emit("rooms list", {row_id: userId});
@@ -45,6 +56,53 @@ const Chat = () => {
       socket.off("message sent", handleMessageSent);
     };
   }, [socket, isConnected, userId]);
+
+  useEffect(() => {
+    const existingRoom = rooms.find((room) => room.item_id === tripId);
+
+    if (existingRoom) {
+      setConversation(existingRoom);
+      setHasProcessedTripId(true);
+    } else if (Boolean(tripId && tripName) && Boolean(!conversation?.id)) {
+      setIsInitializing(true);
+      setHasProcessedTripId(true);
+
+      socket.emit(
+        "create room",
+        {
+          name: "",
+          type: "group",
+          row_id: userId,
+          item_id: tripId,
+          from_name: loginName,
+          project_id: projectId,
+          to_name: tripName,
+        },
+        (response) => {
+          if (response && response.room) {
+            setConversation(response.room);
+            setRooms((prevRooms) => [...prevRooms, response.room]);
+            setIsInitializing(false);
+          } else if (response && response.error) {
+            console.error("Error creating room:", response.error);
+            setIsInitializing(false);
+          }
+        }
+      );
+    } else {
+      setIsInitializing(false);
+      setConversation(existingRoom);
+    }
+  }, [
+    tripId,
+    rooms.length,
+    socket,
+    userId,
+    isInitializing,
+    loginName,
+    projectId,
+    hasProcessedTripId,
+  ]);
 
   const sendMessage = (content, type = "text", fileInfo = null) => {
     if (!conversation?.id || !loginUser) {
@@ -73,8 +131,6 @@ const Chat = () => {
         console.log("Server success response:", response);
       }
     });
-
-    console.log("9. Socket emit completed");
   };
 
   const handleConversationSelect = (selectedConversation) => {
@@ -96,6 +152,8 @@ const Chat = () => {
           conversation={conversation}
           onSendMessage={sendMessage}
           isConnected={isConnected}
+          isInitializing={isInitializing}
+          tripId={tripId}
         />
 
         <AddRoom

@@ -701,6 +701,7 @@ function UpcomingTab({tripType = ""}) {
                             navigate(`/admin/collabrations`, {
                               state: {
                                 tripId: trip.guid,
+                                tripName: trip.id,
                               },
                             });
                           }}

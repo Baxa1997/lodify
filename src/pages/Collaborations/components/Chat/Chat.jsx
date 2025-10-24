@@ -17,6 +17,7 @@ const Chat = () => {
   const [conversation, setConversation] = useState(null);
   const [isInitializing, setIsInitializing] = useState(false);
   const [hasProcessedTripId, setHasProcessedTripId] = useState(false);
+  const [lastMessage, setLastMessage] = useState(null);
   const loginName = useSelector((state) => state.auth.user_data?.login);
   const projectId = useSelector((state) => state.auth.projectId);
 
@@ -31,10 +32,87 @@ const Chat = () => {
 
   useEffect(() => {
     if (!socket || !isConnected || !userId) return;
+
+    console.log("Setting up socket listeners for user:", userId);
     socket.emit("rooms list", {row_id: userId});
 
     const handleRoomsList = (data) => {
       setRooms(data || []);
+    };
+
+    const handleRoomsUpdate = (data) => {
+      console.log("Rooms update received:", data);
+
+      // Handle different possible data structures
+      let roomId = null;
+      let messageData = null;
+
+      if (data && data.room_id) {
+        // Format: { room_id: "123", message: "Hello", created_at: "..." }
+        roomId = data.room_id;
+        messageData = {
+          last_message: data.message || data.content,
+          last_message_created_at: data.created_at || data.timestamp,
+          unread_count: data.unread_count,
+        };
+      } else if (data && data.room && data.room.id) {
+        // Format: { room: { id: "123", last_message: "Hello", ... } }
+        roomId = data.room.id;
+        messageData = {
+          last_message: data.room.last_message || data.room.message,
+          last_message_created_at:
+            data.room.last_message_created_at || data.room.created_at,
+          unread_count: data.room.unread_count,
+        };
+      } else if (data && data.id) {
+        // Format: { id: "123", last_message: "Hello", ... }
+        roomId = data.id;
+        messageData = {
+          last_message: data.last_message || data.message,
+          last_message_created_at:
+            data.last_message_created_at || data.created_at,
+          unread_count: data.unread_count,
+        };
+      }
+
+      if (roomId && messageData) {
+        console.log(
+          "Updating room ID:",
+          roomId,
+          "with message:",
+          messageData.last_message
+        );
+
+        setRooms((prevRooms) => {
+          const roomIndex = prevRooms.findIndex((room) => room.id === roomId);
+
+          if (roomIndex !== -1) {
+            const updatedRooms = [...prevRooms];
+            updatedRooms[roomIndex] = {
+              ...updatedRooms[roomIndex],
+              last_message: messageData.last_message,
+              last_message_created_at: messageData.last_message_created_at,
+              unread_count:
+                messageData.unread_count ||
+                updatedRooms[roomIndex].unread_count,
+            };
+
+            console.log(
+              "Successfully updated room:",
+              updatedRooms[roomIndex].to_name
+            );
+            return updatedRooms;
+          } else {
+            console.warn("Room not found with ID:", roomId);
+            return prevRooms;
+          }
+        });
+
+        // Also set the last message for any other use
+        setLastMessage(messageData.last_message);
+      } else {
+        console.warn("Invalid room update data structure:", data);
+      }
     };
 
     const handleError = (error) => {
@@ -45,14 +123,25 @@ const Chat = () => {
       console.log("Message sent confirmation:", data);
     };
 
+    // Debug: Listen to all socket events
+    const handleAllEvents = (eventName, ...args) => {
+      console.log("Socket event received:", eventName, args);
+    };
+
     socket.on("rooms list", handleRoomsList);
+    socket.on("rooms update", handleRoomsUpdate);
     socket.on("error", handleError);
     socket.on("message sent", handleMessageSent);
 
+    // Add debug listener for all events
+    socket.onAny(handleAllEvents);
+
     return () => {
       socket.off("rooms list", handleRoomsList);
+      socket.off("rooms update", handleRoomsUpdate);
       socket.off("error", handleError);
       socket.off("message sent", handleMessageSent);
+      socket.offAny(handleAllEvents);
     };
   }, [socket, isConnected, userId]);
 

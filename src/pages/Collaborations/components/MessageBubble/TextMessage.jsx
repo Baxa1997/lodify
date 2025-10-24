@@ -8,9 +8,17 @@ const TextMessage = ({isOwn, content}) => {
       borderRadius="8px"
       bg={isOwn ? "transparent" : "#fff"}
       color={isOwn ? "#fff" : "#181D27"}
-      maxW="80%"
-      wordBreak="break-word">
-      <Text fontSize="14px" lineHeight="1.4" color={isOwn ? "#fff" : "#181D27"}>
+      maxW="100%"
+      whiteSpace="pre-wrap"
+      wordBreak="normal"
+      overflowWrap="break-word">
+      <Text
+        fontSize="14px"
+        lineHeight="1.4"
+        color={isOwn ? "#fff" : "#181D27"}
+        whiteSpace="pre-wrap"
+        wordBreak="normal"
+        overflowWrap="break-word">
         {content}
       </Text>
     </Box>

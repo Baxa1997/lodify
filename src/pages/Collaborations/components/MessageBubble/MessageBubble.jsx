@@ -37,9 +37,20 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
 
   const MessageComponent = messageComponents[normalizedType] || TextMessage;
 
+  // Determine message width based on type
+  const getMessageWidth = () => {
+    if (normalizedType === "text") {
+      return "fit-content";
+    } else {
+      return "500px";
+    }
+  };
+
+  const messageWidth = getMessageWidth();
+
   return isOwn ? (
     <Flex ml="auto" justifyContent="flex-end" p="12px 0" gap="12px">
-      <Box>
+      <Box maxW="500px" w={messageWidth}>
         <Flex justifyContent="space-between" alignItems="center">
           <Text fontWeight="500" color="#181D27" fontSize="14px">
             You
@@ -53,8 +64,8 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
           bg="#EF6820"
           color="#fff"
           borderRadius="8px"
-          w={message?.type !== "text" ? "500px" : "content"}
-          borderBottomRightRadius="0">
+          borderBottomRightRadius="0"
+          w="100%">
           <MessageComponent
             isOwn={isOwn}
             content={content}
@@ -80,7 +91,7 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
           : sender?.to_name?.[0]}
       </Box>
 
-      <Box w="100%" maxW="500px">
+      <Box maxW="500px" w={messageWidth}>
         <Flex justifyContent="space-between" alignItems="center">
           <Text fontWeight="500" color="#181D27" fontSize="14px">
             {conversation?.type === "group" ? message?.from : sender?.to_name}

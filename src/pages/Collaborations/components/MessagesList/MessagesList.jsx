@@ -46,7 +46,17 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     };
 
     const handleReceiveMessage = (message) => {
-      setLocalMessages((prevMessages) => [...prevMessages, message]);
+      console.log("messagemessage", message);
+      if (message.room_id === conversation?.id) {
+        console.log("Received message for current room:", message);
+        setLocalMessages((prevMessages) => [...prevMessages, message]);
+      } else {
+        console.log("Received message for different room, ignoring:", {
+          messageRoomId: message.room_id,
+          currentRoomId: conversation?.id,
+          message: message,
+        });
+      }
     };
     socket.on("room history", handleRoomHistory);
     socket.on("chat message", handleReceiveMessage);
@@ -55,10 +65,16 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
       socket.off("room history", handleRoomHistory);
       socket.off("chat message", handleReceiveMessage);
     };
-  }, [socket]);
+  }, [socket, conversation?.id]);
 
   useEffect(() => {
     if (!socket || !conversation?.id || !userId) return;
+
+    console.log("Joining room:", {
+      roomId: conversation.id,
+      userId: userId,
+      conversation: conversation,
+    });
 
     setLocalMessages([]);
 

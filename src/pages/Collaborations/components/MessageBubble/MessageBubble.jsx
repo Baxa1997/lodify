@@ -38,8 +38,8 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
   const MessageComponent = messageComponents[normalizedType] || TextMessage;
 
   return isOwn ? (
-    <Flex justifyContent="flex-end" p="12px 0" gap="12px">
-      <Box width={message?.type !== "text" ? "500px" : "50%"}>
+    <Flex w="500px" ml="auto" justifyContent="flex-end" p="12px 0" gap="12px">
+      <Box>
         <Flex justifyContent="space-between" alignItems="center">
           <Text fontWeight="500" color="#181D27" fontSize="14px">
             You
@@ -79,7 +79,7 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
           : sender?.to_name?.[0]}
       </Box>
 
-      <Box w="500px">
+      <Box w="100%" maxW="500px">
         <Flex justifyContent="space-between" alignItems="center">
           <Text fontWeight="500" color="#181D27" fontSize="14px">
             {conversation?.type === "group" ? message?.from : sender?.to_name}
@@ -94,7 +94,8 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
           color="#181D27"
           borderRadius="8px"
           borderTopLeftRadius="0"
-          border="1px solid #E9EAEB">
+          border="1px solid #E9EAEB"
+          w="100%">
           <MessageComponent content={content} fileInfo={fileInfo} />
         </Box>
       </Box>

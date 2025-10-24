@@ -25,7 +25,6 @@ const Chat = () => {
   const tripId = locationState?.tripId;
   const tripName = locationState?.tripName;
 
-  console.log("conversationconversation", conversation);
   useEffect(() => {
     setHasProcessedTripId(false);
   }, [tripId]);

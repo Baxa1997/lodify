@@ -5,13 +5,21 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .header {
-  padding: 20px 16px 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0;
+}
+
+.headerTop {
+  padding: 16px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .titleContainer {
@@ -21,46 +29,59 @@
 }
 
 .title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
-  color: #111827;
+  color: #000000;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
-.count {
-  display: block;
-  color: #414651;
-  font-size: 12px;
-  font-weight: 500;
-  width: 28px;
-  height: 22px;
-  border: 1px solid #d5d7da;
-  border-radius: 6px;
-  text-align: center;
+.connectionStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
 }
 
-.editButton {
-  width: 40px;
-  height: 40px;
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #00c851;
+  animation: pulse 2s infinite;
+}
+
+.addButton {
+  width: 36px;
+  height: 36px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 8px;
-  border: 1px solid #d5d7da;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  color: #0088cc;
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #f3f4f6;
+    background-color: #f0f0f0;
   }
+
+  &:active {
+    background-color: #e0e0e0;
+  }
+}
+
+.searchContainer {
+  padding: 12px 20px;
+  background-color: #f8f9fa;
 }
 
 .conversations {
   flex: 1;
   overflow-y: auto;
+  background-color: #ffffff;
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -82,34 +103,32 @@
 
 .emptyState {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
   text-align: center;
+  background-color: #ffffff;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
 }
 
 .emptyMessage {
+  font-size: 16px;
+  color: #000000;
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.emptySubMessage {
   font-size: 14px;
-  color: #6b7280;
+  color: #8e8e93;
   margin: 0;
-  line-height: 1.5;
-}
-
-.connectionStatus {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 8px;
-  font-size: 12px;
-  color: #10b981;
-}
-
-.statusDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #10b981;
-  animation: pulse 2s infinite;
+  line-height: 1.4;
 }
 
 @keyframes pulse {

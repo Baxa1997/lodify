@@ -31,26 +31,31 @@ const ConversationList = ({
   return (
     <div className={styles.conversationList}>
       <div className={styles.header}>
-        <div className={styles.titleContainer}>
-          <h2 className={styles.title}>Collabration</h2>
-          <div className={styles.count}>{filteredRooms.length}</div>
-          {isConnected && (
-            <div className={styles.connectionStatus}>
-              <div className={styles.statusDot}></div>
-              <span>Connected</span>
-            </div>
-          )}
+        <div className={styles.headerTop}>
+          <div className={styles.titleContainer}>
+            <h2 className={styles.title}>Chats</h2>
+            {isConnected && (
+              <div className={styles.connectionStatus}>
+                <div className={styles.statusDot}></div>
+              </div>
+            )}
+          </div>
+          <button
+            className={styles.addButton}
+            onClick={() => {
+              setIsAddRoomOpen(true);
+            }}
+            title="New Chat">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+          </button>
         </div>
-        <button
-          className={styles.editButton}
-          onClick={() => {
-            setIsAddRoomOpen(true);
-          }}>
-          <img src="/img/chatNewChat.svg" alt="" />
-        </button>
-      </div>
 
-      <SearchBar value={searchQuery} onSearch={setSearchQuery} bg="#fff" />
+        <div className={styles.searchContainer}>
+          <SearchBar value={searchQuery} onSearch={setSearchQuery} />
+        </div>
+      </div>
 
       <div className={styles.conversations}>
         {filteredRooms?.length > 0 ? (
@@ -69,10 +74,14 @@ const ConversationList = ({
           ))
         ) : (
           <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>💬</div>
             <p className={styles.emptyMessage}>
+              {searchQuery ? "No chats found" : "No chats yet"}
+            </p>
+            <p className={styles.emptySubMessage}>
               {searchQuery
-                ? "No rooms found matching your search"
-                : "No rooms available"}
+                ? "Try a different search term"
+                : "Start a new conversation"}
             </p>
           </div>
         )}

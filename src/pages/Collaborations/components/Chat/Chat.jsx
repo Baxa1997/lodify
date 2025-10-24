@@ -34,6 +34,7 @@ const Chat = () => {
     socket.emit("rooms list", {row_id: userId});
 
     const handleRoomsList = (data) => {
+      console.log("DATA=====>", data);
       setRooms(data || []);
     };
 
@@ -44,7 +45,7 @@ const Chat = () => {
     const handleMessageSent = (data) => {
       console.log("Message sent confirmation:", data);
     };
-
+    console.log("SOCKET=====> ROOM LIST");
     socket.on("rooms list", handleRoomsList);
     socket.on("error", handleError);
     socket.on("message sent", handleMessageSent);
@@ -142,69 +143,69 @@ const Chat = () => {
     });
   };
 
-  // useEffect(() => {
-  //   if (!socket || !userId) return;
+  useEffect(() => {
+    if (!socket || !userId) return;
 
-  //   const handleChatMessage = (message) => {
-  //     console.log("📨 Received chat message:", message);
+    const handleChatMessage = (message) => {
+      console.log("📨 Received chat message:", message);
 
-  //     if (message && message.room_id) {
-  //       console.log("🔄 Updating room with message:", message.room_id);
+      if (message && message.room_id) {
+        console.log("🔄 Updating room with message:", message.room_id);
 
-  //       setRooms((prevRooms) => {
-  //         const roomIndex = prevRooms.findIndex(
-  //           (room) => room.id === message.room_id
-  //         );
+        setRooms((prevRooms) => {
+          const roomIndex = prevRooms.findIndex(
+            (room) => room.id === message.room_id
+          );
 
-  //         if (roomIndex !== -1) {
-  //           const updatedRooms = [...prevRooms];
-  //           const oldRoom = updatedRooms[roomIndex];
+          if (roomIndex !== -1) {
+            const updatedRooms = [...prevRooms];
+            const oldRoom = updatedRooms[roomIndex];
 
-  //           updatedRooms[roomIndex] = {
-  //             ...oldRoom,
-  //             last_message: message.message,
-  //             last_message_created_at: message.created_at,
-  //             unread_count:
-  //               message.from !== loginUser
-  //                 ? (oldRoom.unread_count || 0) + 1
-  //                 : oldRoom.unread_count,
-  //           };
+            updatedRooms[roomIndex] = {
+              ...oldRoom,
+              last_message: message.message,
+              last_message_created_at: message.created_at,
+              unread_count:
+                message.from !== loginUser
+                  ? (oldRoom.unread_count || 0) + 1
+                  : oldRoom.unread_count,
+            };
 
-  //           console.log("✅ Room updated successfully:", {
-  //             roomName: updatedRooms[roomIndex].to_name,
-  //             newMessage: updatedRooms[roomIndex].last_message,
-  //             from: message.from,
-  //             isOwnMessage: message.from === loginUser,
-  //           });
+            console.log("✅ Room updated successfully:", {
+              roomName: updatedRooms[roomIndex].to_name,
+              newMessage: updatedRooms[roomIndex].last_message,
+              from: message.from,
+              isOwnMessage: message.from === loginUser,
+            });
 
-  //           return updatedRooms;
-  //         } else {
-  //           console.warn(
-  //             "❌ Room not found for message:",
-  //             message.room_id,
-  //             "Available rooms:",
-  //             prevRooms.map((r) => r.id)
-  //           );
-  //           return prevRooms;
-  //         }
-  //       });
-  //     } else {
-  //       console.warn("❌ Invalid message data:", message);
-  //     }
-  //   };
+            return updatedRooms;
+          } else {
+            console.warn(
+              "❌ Room not found for message:",
+              message.room_id,
+              "Available rooms:",
+              prevRooms.map((r) => r.id)
+            );
+            return prevRooms;
+          }
+        });
+      } else {
+        console.warn("❌ Invalid message data:", message);
+      }
+    };
 
-  //   const handleAllEvents = (eventName, ...args) => {
-  //     console.log("🔌 Socket event:", eventName, args);
-  //   };
+    const handleAllEvents = (eventName, ...args) => {
+      console.log("🔌 Socket event:", eventName, args);
+    };
 
-  //   socket.on("chat message", handleChatMessage);
-  //   socket.onAny(handleAllEvents);
+    socket.on("chat message", handleChatMessage);
+    socket.onAny(handleAllEvents);
 
-  //   return () => {
-  //     socket.off("chat message", handleChatMessage);
-  //     socket.offAny(handleAllEvents);
-  //   };
-  // }, [socket, userId, loginUser]);
+    return () => {
+      socket.off("chat message", handleChatMessage);
+      socket.offAny(handleAllEvents);
+    };
+  }, [socket, userId, loginUser]);
 
   const handleConversationSelect = (selectedConversation) => {
     setConversation(selectedConversation);

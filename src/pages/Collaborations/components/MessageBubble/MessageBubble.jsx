@@ -6,7 +6,7 @@ import ImageMessage from "./ImageMessage";
 import AudioMessage from "./AudioMessage";
 import VideoMessage from "./VideoMessage";
 
-const MessageBubble = ({rooms = [], message, isOwn}) => {
+const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
   const {message: content, created_at, type, fileInfo} = message;
 
   const normalizedType = type ? String(type).toLowerCase().trim() : "text";
@@ -74,13 +74,15 @@ const MessageBubble = ({rooms = [], message, isOwn}) => {
         display="flex"
         alignItems="center"
         justifyContent="center">
-        {sender?.to_name?.[0]}
+        {conversation?.type === "group"
+          ? message?.from?.[0]
+          : sender?.to_name?.[0]}
       </Box>
 
       <Box w="500px">
         <Flex justifyContent="space-between" alignItems="center">
           <Text fontWeight="500" color="#181D27" fontSize="14px">
-            {sender?.to_name}
+            {conversation?.type === "group" ? message?.from : sender?.to_name}
           </Text>
           <Text fontWeight="400" color="#535862" fontSize="12px">
             {messageTime}

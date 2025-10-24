@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useChat} from "../../context/ChatContext";
 import MessageBubble from "../MessageBubble/MessageBubble";
 import DateSeparator from "../DateSeparator/DateSeparator";
 import styles from "./MessagesList.module.scss";
@@ -146,6 +145,7 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
             <DateSeparator date={group.date} />
             {group.messages.map((message, messageIndex) => (
               <MessageBubble
+                conversation={conversation}
                 rooms={rooms}
                 key={`${message.id || message._id || messageIndex}-${
                   message.type || "text"

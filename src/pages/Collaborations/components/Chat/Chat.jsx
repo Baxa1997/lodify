@@ -125,6 +125,7 @@ const Chat = () => {
       from: loginUser,
       type: type,
       timestamp: new Date().toISOString(),
+      row_id: userId,
       file: fileInfo?.url,
     };
 

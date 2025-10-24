@@ -38,7 +38,7 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
   const MessageComponent = messageComponents[normalizedType] || TextMessage;
 
   return isOwn ? (
-    <Flex w="500px" ml="auto" justifyContent="flex-end" p="12px 0" gap="12px">
+    <Flex ml="auto" justifyContent="flex-end" p="12px 0" gap="12px">
       <Box>
         <Flex justifyContent="space-between" alignItems="center">
           <Text fontWeight="500" color="#181D27" fontSize="14px">
@@ -53,6 +53,7 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
           bg="#EF6820"
           color="#fff"
           borderRadius="8px"
+          w={message?.type !== "text" ? "500px" : "content"}
           borderBottomRightRadius="0">
           <MessageComponent
             isOwn={isOwn}

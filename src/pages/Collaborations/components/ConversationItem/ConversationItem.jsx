@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styles from "./ConversationItem.module.scss";
 import {checkValidUrl} from "@utils/checkValidUrl";
 import {calculateTimeHoursDifferenceInTimeZone} from "@utils/dateFormats";
+import {useSocket} from "@context/SocketProvider";
 
 const ConversationItem = ({conversation, isSelected, onClick}) => {
   const {
@@ -14,6 +15,7 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
     last_message_created_at,
     unread_count = 0,
   } = conversation;
+  const socket = useSocket();
 
   const getMessagePreview = () => {
     if (checkValidUrl(last_message)) {
@@ -50,6 +52,16 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
     }
     return "U";
   };
+  console.log("socketsocketsocket", socket);
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("rooms update", {row_id: conversation.id}, (response) => {
+      console.log("response=====>", response);
+    });
+    return () => {
+      socket.off("rooms update");
+    };
+  }, [socket, conversation?.id]);
 
   return (
     <div

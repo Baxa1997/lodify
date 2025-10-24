@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useChat} from "../../context/ChatContext";
 import ConversationItem from "../ConversationItem/ConversationItem";
 import SearchBar from "../SearchBar/SearchBar";

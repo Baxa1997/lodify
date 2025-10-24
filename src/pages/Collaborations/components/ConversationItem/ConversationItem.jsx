@@ -52,7 +52,7 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
     }
     return "U";
   };
-  console.log("socketsocketsocket", socket);
+
   useEffect(() => {
     if (!socket) return;
     socket.on("rooms update", {row_id: conversation.id}, (response) => {

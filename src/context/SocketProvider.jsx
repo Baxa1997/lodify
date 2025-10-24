@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import {io} from "socket.io-client";
+import {useSelector} from "react-redux";
 
 const SocketContext = createContext(null);
 
@@ -16,6 +17,8 @@ export const SocketProvider = ({children}) => {
   const [isConnected, setIsConnected] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
   const [socket, setSocket] = useState(null);
+  const userId = useSelector((state) => state.auth.userInfo?.id);
+  const loginUser = useSelector((state) => state.auth.user_data?.login);
 
   useEffect(() => {
     if (!socketRef.current) {
@@ -32,11 +35,12 @@ export const SocketProvider = ({children}) => {
 
       socketRef.current = newSocket;
       setSocket(newSocket);
-
+      console.log("userId=====>", userId);
       newSocket.on("connect", (data) => {
         console.log("connection", data);
         setIsConnected(true);
         setConnectionError(null);
+        newSocket.emit("connected", {row_id: userId});
       });
 
       newSocket.on("disconnect", (reason) => {

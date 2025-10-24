@@ -37,7 +37,6 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
 
   const MessageComponent = messageComponents[normalizedType] || TextMessage;
 
-  // Determine message width based on type
   const getMessageWidth = () => {
     if (normalizedType === "text") {
       return "fit-content";

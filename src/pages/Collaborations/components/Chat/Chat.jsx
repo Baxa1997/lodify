@@ -32,16 +32,46 @@ const Chat = () => {
 
   useEffect(() => {
     if (!socket || !userId || !isConnected) return;
-    socket.emit("connected", {
-      row_id: userId,
-    });
 
-    return () => {
+    socket.emit("presence:ping", {row_id: userId});
+
+    const pingInterval = setInterval(() => {
+      if (socket && socket.connected) {
+        console.log("💓 Sending heartbeat ping");
+        socket.emit("presence:ping", {row_id: userId});
+      }
+    }, 30000);
+
+    const handleBeforeUnload = () => {
+      clearInterval(pingInterval);
       if (socket && socket.connected) {
         socket.emit("disconnected", {
           row_id: userId,
         });
       }
+    };
+
+    const cleanup = () => {
+      clearInterval(pingInterval);
+      if (socket && socket.connected) {
+        socket.emit("disconnected", {
+          row_id: userId,
+        });
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    const handleSocketDisconnect = (reason) => {
+      console.log("🔴 Socket disconnected:", reason);
+    };
+
+    socket.on("disconnect", handleSocketDisconnect);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      socket.off("disconnect", handleSocketDisconnect);
+      cleanup();
     };
   }, [socket, userId, isConnected]);
 

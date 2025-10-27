@@ -1,12 +1,12 @@
 import React from "react";
-import styles from "./ChatHeader.module.scss";
+
 import {Flex, Box, Text, Button} from "@chakra-ui/react";
 import {format} from "date-fns";
 
 const ChatHeader = ({conversation, isConnected, presence = {}}) => {
   const {name, to_name, type, username, avatar, isOnline, isGroup} =
     conversation;
-  console.log("PRESENCE=====>", presence);
+
   return (
     <Flex p="20px 24px" alignItems="center" justifyContent="space-between">
       <Flex gap="12px" alignItems="center">

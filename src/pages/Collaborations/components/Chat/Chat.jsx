@@ -15,6 +15,7 @@ const Chat = () => {
   const {isConnected, connectionError} = useSocketConnection();
   const [rooms, setRooms] = useState([]);
   const [conversation, setConversation] = useState(null);
+  const [presence, setPresence] = useState(null);
   const [isInitializing, setIsInitializing] = useState(false);
   const [hasProcessedTripId, setHasProcessedTripId] = useState(false);
   const loginName = useSelector((state) => state.auth.user_data?.login);
@@ -217,6 +218,18 @@ const Chat = () => {
     }
   };
 
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("presence.result", (response) => {
+      setPresence(response);
+    });
+
+    return () => {
+      socket.off("presence.result");
+    };
+  }, [socket, conversation?.id]);
+
   return (
     <ChatProvider>
       <div className={styles.chatContainer}>
@@ -234,6 +247,7 @@ const Chat = () => {
           isConnected={isConnected}
           isInitializing={isInitializing}
           tripId={tripId}
+          presence={presence}
         />
 
         <AddRoom

@@ -75,6 +75,7 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
       room_id: conversation.id,
       row_id: userId,
     });
+    socket.emit("presence:get", {row_id: conversation.to_row_id});
   }, [socket, conversation?.id, userId]);
 
   const groupMessagesByDate = (messages) => {

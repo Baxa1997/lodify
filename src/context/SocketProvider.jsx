@@ -29,9 +29,7 @@ export const SocketProvider = ({children}) => {
         reconnectionAttempts: Infinity,
         reconnectionDelay: 500,
         reconnectionDelayMax: 3000,
-        timeout: 500,
-        disconnectOnDestroy: true,
-        destroySocketOnUnload: true,
+        timeout: 20000,
         autoConnect: true,
         withCredentials: true,
       });

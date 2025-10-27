@@ -15,20 +15,11 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
     last_message_created_at,
     unread_count = 0,
   } = conversation;
-  const socket = useSocket();
 
+  const socket = useSocket();
   const getMessagePreview = () => {
     if (checkValidUrl(last_message)) {
       return "📎 File";
-    }
-    if (last_message?.includes("Voice Message")) {
-      return "🎤 Voice Message";
-    }
-    if (last_message?.includes("image")) {
-      return "🖼️ Photo";
-    }
-    if (last_message?.includes("video")) {
-      return "🎥 Video";
     }
     return last_message || "No messages yet";
   };
@@ -55,9 +46,7 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("rooms update", {row_id: conversation.id}, (response) => {
-      console.log("response=====>", response);
-    });
+    socket.on("rooms update", {row_id: conversation.id}, (response) => {});
     return () => {
       socket.off("rooms update");
     };

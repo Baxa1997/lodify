@@ -10,8 +10,7 @@ const ChatArea = ({
   onSendMessage = () => {},
   isConnected,
   setIsAddRoomOpen = () => {},
-  isInitializing = false,
-  tripId = null,
+  presence = {},
 }) => {
   // if (isInitializing) {
   //   return (
@@ -78,6 +77,7 @@ const ChatArea = ({
   return (
     <div className={styles.chatArea}>
       <ChatHeader
+        presence={presence}
         conversation={conversation}
         isConnected={isConnected}
         setIsAddRoomOpen={setIsAddRoomOpen}

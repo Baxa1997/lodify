@@ -2,14 +2,10 @@ import React from "react";
 import styles from "./ChatHeader.module.scss";
 import {Flex, Box, Text, Button} from "@chakra-ui/react";
 
-const ChatHeader = ({
-  conversation,
-  isConnected,
-  setIsAddRoomOpen = () => {},
-}) => {
+const ChatHeader = ({conversation, isConnected, presence = {}}) => {
   const {name, to_name, type, username, avatar, isOnline, isGroup} =
     conversation;
-
+  console.log("PRESENCE=====>", presence);
   return (
     <Flex p="20px 24px" alignItems="center" justifyContent="space-between">
       <Flex gap="12px" alignItems="center">
@@ -43,9 +39,9 @@ const ChatHeader = ({
                 w="6px"
                 h="6px"
                 borderRadius="50%"
-                bg={isConnected ? "#10B981" : "#D5D7DA"}></Box>
+                bg={presence?.status === "online" ? "#10B981" : "red"}></Box>
               <Text fontSize="12px" fontWeight="400" color={"#535862"}>
-                {isConnected ? "Connected" : "Disconnected"}
+                {presence?.status === "online" ? "Online" : "Offline"}
               </Text>
             </Flex>
           </Flex>

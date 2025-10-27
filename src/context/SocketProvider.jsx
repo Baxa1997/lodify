@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import {io} from "socket.io-client";
 import {useSelector} from "react-redux";
+import {useLocation} from "react-router-dom";
 
 const SocketContext = createContext(null);
 
@@ -14,11 +15,11 @@ const SOCKET_URL = "https://chat-service.u-code.io";
 
 export const SocketProvider = ({children}) => {
   const socketRef = useRef(null);
+  const location = useLocation();
   const [isConnected, setIsConnected] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
   const [socket, setSocket] = useState(null);
   const userId = useSelector((state) => state.auth.userInfo?.id);
-  const loginUser = useSelector((state) => state.auth.user_data?.login);
 
   useEffect(() => {
     if (!socketRef.current) {
@@ -26,9 +27,11 @@ export const SocketProvider = ({children}) => {
         transports: ["websocket"],
         reconnection: true,
         reconnectionAttempts: Infinity,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-        timeout: 20000,
+        reconnectionDelay: 500,
+        reconnectionDelayMax: 3000,
+        timeout: 500,
+        disconnectOnDestroy: true,
+        destroySocketOnUnload: true,
         autoConnect: true,
         withCredentials: true,
       });
@@ -43,12 +46,6 @@ export const SocketProvider = ({children}) => {
       });
 
       newSocket.on("disconnect", (reason) => {
-        console.log("🔌 Socket disconnected. Reason:", reason);
-        console.log("🔍 Disconnect details:", {
-          reason,
-          connected: newSocket.connected,
-          id: newSocket.id,
-        });
         setIsConnected(false);
       });
 
@@ -85,6 +82,7 @@ export const SocketProvider = ({children}) => {
     }
 
     return () => {
+      console.log("UNMOUNTING SOCKET");
       if (socketRef.current) {
         socketRef.current.off("connect");
         socketRef.current.off("disconnect");

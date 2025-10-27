@@ -31,10 +31,9 @@ const Chat = () => {
 
   useEffect(() => {
     if (!socket || !isConnected || !userId) return;
-    // socket.emit("rooms list", {row_id: userId});
+    socket.emit("rooms list", {row_id: userId});
 
     const handleRoomsList = (data) => {
-      console.log("DATA=====>", data);
       setRooms(data || []);
     };
 

@@ -238,7 +238,6 @@ const Chat = () => {
 
     socket.on("presence.updated", (response) => {
       setPresence(response);
-      console.log("PRESENCE UPDATED", response);
     });
 
     return () => {

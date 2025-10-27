@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./ChatHeader.module.scss";
 import {Flex, Box, Text, Button} from "@chakra-ui/react";
+import {format} from "date-fns";
 
 const ChatHeader = ({conversation, isConnected, presence = {}}) => {
   const {name, to_name, type, username, avatar, isOnline, isGroup} =
@@ -23,25 +24,18 @@ const ChatHeader = ({conversation, isConnected, presence = {}}) => {
           {to_name?.[0]}
         </Box>
         <Box>
-          <Flex alignItems="center" gap="8px">
+          <Flex flexDirection="column" gap="4px">
             <Text fontSize="16px" fontWeight="600" color="#181D27">
-              {/* {type === "single" ? to_name : name} */}
               {to_name}
             </Text>
-            <Flex
-              alignItems="center"
-              gap="4px"
-              h="20px"
-              border="1px solid #D5D7DA"
-              borderRadius="4px"
-              p="4px">
-              <Box
-                w="6px"
-                h="6px"
-                borderRadius="50%"
-                bg={presence?.status === "online" ? "#10B981" : "red"}></Box>
-              <Text fontSize="12px" fontWeight="400" color={"#535862"}>
-                {presence?.status === "online" ? "Online" : "Offline"}
+            <Flex alignItems="center" gap="4px" h="20px" borderRadius="4px">
+              <Text fontSize="14px" fontWeight="400" color={"#535862"}>
+                {presence?.status === "online"
+                  ? "Online"
+                  : `Last seen ${format(
+                      presence?.last_seen_at,
+                      "MM/dd/yyyy HH:mm"
+                    )}`}
               </Text>
             </Flex>
           </Flex>

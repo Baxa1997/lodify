@@ -31,7 +31,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (!socket || !isConnected || !userId) return;
-    socket.emit("rooms list", {row_id: userId});
+    // socket.emit("rooms list", {row_id: userId});
 
     const handleRoomsList = (data) => {
       console.log("DATA=====>", data);
@@ -45,7 +45,7 @@ const Chat = () => {
     const handleMessageSent = (data) => {
       console.log("Message sent confirmation:", data);
     };
-    console.log("SOCKET=====> ROOM LIST");
+
     socket.on("rooms list", handleRoomsList);
     socket.on("error", handleError);
     socket.on("message sent", handleMessageSent);
@@ -129,11 +129,10 @@ const Chat = () => {
       content: content,
       from: loginUser,
       type: type,
-      row_id: userId,
+      author_row_id: userId,
       file: fileInfo?.url || "",
     };
 
-    console.log("SENDING MESSAGE EMIT");
     socket.emit("chat message", messageData, (response) => {
       if (response && response.error) {
         console.error("❌ Server error response:", response.error);
@@ -147,8 +146,6 @@ const Chat = () => {
     if (!socket || !userId) return;
 
     const handleChatMessage = (message) => {
-      console.log("📨 Received chat message:", message);
-
       if (message && message.room_id) {
         console.log("🔄 Updating room with message:", message.room_id);
 
@@ -170,13 +167,6 @@ const Chat = () => {
                   ? (oldRoom.unread_count || 0) + 1
                   : oldRoom.unread_count,
             };
-
-            console.log("✅ Room updated successfully:", {
-              roomName: updatedRooms[roomIndex].to_name,
-              newMessage: updatedRooms[roomIndex].last_message,
-              from: message.from,
-              isOwnMessage: message.from === loginUser,
-            });
 
             return updatedRooms;
           } else {

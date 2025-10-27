@@ -35,12 +35,11 @@ export const SocketProvider = ({children}) => {
 
       socketRef.current = newSocket;
       setSocket(newSocket);
-      console.log("userId=====>", userId);
+
       newSocket.on("connect", (data) => {
-        console.log("connection", data);
+        newSocket.emit("connected", {row_id: userId});
         setIsConnected(true);
         setConnectionError(null);
-        newSocket.emit("connected", {row_id: userId});
       });
 
       newSocket.on("disconnect", (reason) => {

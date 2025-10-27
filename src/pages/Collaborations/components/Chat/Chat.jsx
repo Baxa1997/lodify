@@ -37,7 +37,6 @@ const Chat = () => {
 
     const pingInterval = setInterval(() => {
       if (socket && socket.connected) {
-        console.log("💓 Sending heartbeat ping");
         socket.emit("presence:ping", {row_id: userId});
       }
     }, 30000);

@@ -31,6 +31,21 @@ const Chat = () => {
   }, [tripId]);
 
   useEffect(() => {
+    if (!socket || !userId || !isConnected) return;
+    socket.emit("connected", {
+      row_id: userId,
+    });
+
+    return () => {
+      if (socket && socket.connected) {
+        socket.emit("disconnected", {
+          row_id: userId,
+        });
+      }
+    };
+  }, [socket, userId, isConnected]);
+
+  useEffect(() => {
     if (!socket || !isConnected || !userId) return;
     socket.emit("rooms list", {row_id: userId});
 

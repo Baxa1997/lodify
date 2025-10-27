@@ -22,8 +22,6 @@ const SidebarFooter = ({sidebarOpen = true}) => {
   const profileRef = useRef(null);
   const userData = useSelector((state) => state.auth.user_data);
 
-  console.log("userDatauserData", userData);
-
   const handleLogout = () => {
     dispatch(authActions.logout());
     localStorage.removeItem("authToken");

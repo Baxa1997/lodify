@@ -38,7 +38,6 @@ export const SocketProvider = ({children}) => {
       setSocket(newSocket);
 
       newSocket.on("connect", (data) => {
-        newSocket.emit("connected", {row_id: userId});
         setIsConnected(true);
         setConnectionError(null);
       });
@@ -53,6 +52,7 @@ export const SocketProvider = ({children}) => {
       });
 
       newSocket.on("reconnect", (attemptNumber) => {
+        console.log("✅ Socket reconnected");
         setIsConnected(true);
         setConnectionError(null);
       });
@@ -95,6 +95,12 @@ export const SocketProvider = ({children}) => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (socket && isConnected && userId) {
+      socket.emit("connected", {row_id: userId});
+    }
+  }, [socket, isConnected, userId]);
 
   const value = {
     socket,

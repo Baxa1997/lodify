@@ -14,7 +14,7 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   const loggedInUser = useSelector((state) => state.auth.user_data?.login);
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const prevMessageCountRef = useRef(0);
-  console.log("CONVERSATION=======>", localMessages);
+
   const [pagination, setPagination] = useState({
     limit: 10,
     offset: 0,
@@ -141,7 +141,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     };
 
     const handleReceiveMessage = (message) => {
-      console.log("RECEIVED MESSAGE EMIT");
       if (message.room_id === conversation?.id) {
         setLocalMessages((prevMessages) => {
           const existingMessage = prevMessages.find(
@@ -162,7 +161,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     };
 
     const handleMoreMessages = (response) => {
-      console.log("Received more messages:", response);
       setPagination((prev) => ({...prev, isLoadingMore: false}));
 
       if (response && Array.isArray(response)) {
@@ -270,6 +268,32 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
   const messageGroups = groupMessagesByDate(localMessages);
 
+  useEffect(() => {
+    if (!socket || !conversation?.id || !userId) {
+      return;
+    }
+
+    const sendMessageRead = () => {
+      if (socket && socket.connected && conversation?.id && userId) {
+        console.log("READDDDDDD");
+        socket.emit("message:read", {
+          row_id: userId,
+          room_id: conversation.id,
+        });
+      }
+    };
+
+    sendMessageRead();
+
+    const messageReadInterval = setInterval(() => {
+      sendMessageRead();
+    }, 30000);
+
+    return () => {
+      clearInterval(messageReadInterval);
+    };
+  }, [socket, conversation?.id, userId, isConnected]);
+
   if (!isConnected) {
     return (
       <div className={styles.messagesList}>
@@ -311,7 +335,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
       ref={messagesContainerRef}
       onScroll={handleScroll}>
       <div className={styles.messagesContainer}>
-        {/* Loading indicator for pagination */}
         {pagination.isLoadingMore && (
           <div className={styles.loadingMore}>
             <div className={styles.loadingSpinner}>⏳</div>

@@ -4,7 +4,7 @@ import {Box, Text} from "@chakra-ui/react";
 const TextMessage = ({isOwn, content}) => {
   return (
     <Box
-      p={isOwn ? "6px 0px 6px 14px" : "6px 14px 6px 6px"}
+      p={isOwn ? "6px 0px 6px 14px" : "6px 14px 6px 14px"}
       borderRadius="8px"
       bg={isOwn ? "transparent" : "#fff"}
       color={isOwn ? "#fff" : "#181D27"}

@@ -311,7 +311,7 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
     const messageReadInterval = setInterval(() => {
       sendMessageRead();
-    }, 30000);
+    }, 3000);
 
     return () => {
       clearInterval(messageReadInterval);

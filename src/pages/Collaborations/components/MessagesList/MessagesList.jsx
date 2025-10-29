@@ -204,16 +204,41 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
       }
     };
 
+    const handleMessageRead = (response) => {
+      if (response && response.room_id) {
+        const roomId = response.room_id;
+
+        setLocalMessages((prevMessages) => {
+          return prevMessages.map((msg) => {
+            if (msg.room_id === roomId && msg.from === loggedInUser) {
+              return {
+                ...msg,
+                read: Array.isArray(msg.read)
+                  ? [...new Set([...msg.read, roomId])]
+                  : typeof msg.read === "object" && msg.read !== null
+                  ? {...msg.read, [roomId]: true}
+                  : [roomId],
+                read_at: msg.read_at || new Date().toISOString(),
+              };
+            }
+            return msg;
+          });
+        });
+      }
+    };
+
     socket.on("room history", handleRoomHistory);
     socket.on("chat message", handleReceiveMessage);
     socket.on("more messages", handleMoreMessages);
+    socket.on("message.read", handleMessageRead);
 
     return () => {
       socket.off("room history", handleRoomHistory);
       socket.off("chat message", handleReceiveMessage);
       socket.off("more messages", handleMoreMessages);
+      socket.off("message.read", handleMessageRead);
     };
-  }, [socket, conversation?.id, deduplicateMessages]);
+  }, [socket, conversation?.id, deduplicateMessages, loggedInUser]);
 
   useEffect(() => {
     if (!socket || !conversation?.id || !userId) return;
@@ -275,7 +300,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
     const sendMessageRead = () => {
       if (socket && socket.connected && conversation?.id && userId) {
-        console.log("READDDDDDD");
         socket.emit("message:read", {
           row_id: userId,
           room_id: conversation.id,

@@ -32,7 +32,7 @@ function VideoMessage({isOwn, content, fileInfo}) {
   return (
     <>
       <Box
-        p="6px 0px 6px 14px"
+        p={isOwn ? "6px 0px 6px 14px" : "6px 14px 6px 6px"}
         borderRadius="8px"
         bg={isOwn ? "transparent" : "#fff"}
         color={isOwn ? "#fff" : "#181D27"}

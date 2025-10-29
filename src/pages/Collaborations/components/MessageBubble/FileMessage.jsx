@@ -62,7 +62,7 @@ function FileMessage({isOwn, content, fileInfo}) {
   return (
     <>
       <Box
-        p="10px 14px"
+        p="6px 0px 6px 14px"
         borderRadius="8px"
         bg={isOwn ? "transparent" : "#fff"}
         color={isOwn ? "#fff" : "#181D27"}

@@ -7,7 +7,12 @@ import AudioMessage from "./AudioMessage";
 import VideoMessage from "./VideoMessage";
 
 const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
-  const {message: content, created_at, type, fileInfo} = message;
+  const {message: content, created_at, type, fileInfo, read_at} = message;
+
+  const isRead = useMemo(() => {
+    if (!isOwn) return false;
+    return !!read_at;
+  }, [isOwn, read_at]);
 
   const normalizedType = type ? String(type).toLowerCase().trim() : "text";
   const sender = useMemo(
@@ -50,26 +55,74 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
   return isOwn ? (
     <Flex ml="auto" justifyContent="flex-end" p="12px 0" gap="12px">
       <Box maxW="500px" w={messageWidth}>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Text fontWeight="500" color="#181D27" fontSize="14px">
-            You
-          </Text>
-          <Text fontWeight="400" color="#535862" fontSize="12px">
-            {messageTime}
-          </Text>
-        </Flex>
-
         <Box
           bg="#EF6820"
           color="#fff"
           borderRadius="8px"
           borderBottomRightRadius="0"
           w="100%">
-          <MessageComponent
-            isOwn={isOwn}
-            content={content}
-            fileInfo={fileInfo}
-          />
+          <Flex
+            gap="8px"
+            alignItems="flex-end"
+            position="relative"
+            pr="8px"
+            pb="4px">
+            <Box flex="1">
+              <MessageComponent
+                isOwn={isOwn}
+                content={content}
+                fileInfo={fileInfo}
+              />
+            </Box>
+            <Flex
+              gap="2px"
+              alignItems="center"
+              fontSize="14px"
+              color="#fff"
+              ml="4px">
+              <Text fontSize="12px" color="#fff" opacity={0.9} mr="4px">
+                {messageTime}
+              </Text>
+              {isRead ? (
+                <svg
+                  width="26"
+                  height="14"
+                  viewBox="0 0 16 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M0 6L5 11L11 1"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6 6L11 11L16 1"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  width="16"
+                  height="12"
+                  viewBox="0 0 16 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M0 6L5 11L11 1"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </Flex>
+          </Flex>
         </Box>
       </Box>
     </Flex>
@@ -120,6 +173,7 @@ export default React.memo(MessageBubble, (prevProps, nextProps) => {
     prevProps.message?.message === nextProps.message?.message &&
     prevProps.message?.id === nextProps.message?.id &&
     prevProps.message?.created_at === nextProps.message?.created_at &&
+    prevProps.message?.read_at === nextProps.message?.read_at &&
     prevProps.isOwn === nextProps.isOwn &&
     JSON.stringify(prevProps.message?.fileInfo) ===
       JSON.stringify(nextProps.message?.fileInfo);

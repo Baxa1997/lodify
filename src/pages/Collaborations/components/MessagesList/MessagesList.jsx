@@ -56,19 +56,13 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
     const nextOffset = pagination.offset + pagination.limit;
 
-    console.log("Emitting chat message for more messages:", {
-      room_id: conversation.id,
-      limit: pagination.limit,
-      offset: nextOffset,
-      action: "get_messages",
-    });
-
-    socket.emit("chat message", {
-      room_id: conversation.id,
-      limit: pagination.limit,
-      offset: nextOffset,
-      action: "get_messages",
-    });
+    // socket.emit("chat message", {
+    //   author_row_id: userId,
+    //   from: loggedInUser,
+    //   room_id: conversation.id,
+    //   limit: pagination.limit,
+    //   offset: nextOffset,
+    // });
   }, [
     socket,
     conversation?.id,
@@ -127,20 +121,20 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
       if (Array.isArray(messages)) {
         setLocalMessages(messages);
 
-        setPagination((prev) => ({
-          ...prev,
-          offset: 0,
-          hasMoreMessages: messages.length >= prev.limit,
-          isLoadingMore: false,
-        }));
+        // setPagination((prev) => ({
+        //   ...prev,
+        //   offset: 0,
+        //   hasMoreMessages: messages.length >= prev.limit,
+        //   isLoadingMore: false,
+        // }));
       } else if (messages?.data && Array.isArray(messages.data)) {
         setLocalMessages(messages.data);
-        setPagination((prev) => ({
-          ...prev,
-          offset: 0,
-          hasMoreMessages: messages.data.length >= prev.limit,
-          isLoadingMore: false,
-        }));
+        // setPagination((prev) => ({
+        //   ...prev,
+        //   offset: 0,
+        //   hasMoreMessages: messages.data.length >= prev.limit,
+        //   isLoadingMore: false,
+        // }));
       } else {
         console.warn("⚠️ Unexpected room history format:", messages);
       }
@@ -204,11 +198,11 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
           return deduplicatedMessages;
         });
 
-        setPagination((prev) => ({
-          ...prev,
-          offset: prev.offset + prev.limit,
-          hasMoreMessages: response.data.length >= prev.limit,
-        }));
+        // setPagination((prev) => ({
+        //   ...prev,
+        //   offset: prev.offset + prev.limit,
+        //   hasMoreMessages: response.data.length >= prev.limit,
+        // }));
       }
     };
 

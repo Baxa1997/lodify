@@ -91,7 +91,7 @@ function AudioMessage({isOwn, content, fileInfo}) {
   return (
     <>
       <Box
-        p="12px 16px"
+        p="6px 0px 6px 14px"
         borderRadius="12px"
         bg={isOwn ? "transparent" : "#F8F9FA"}
         color={isOwn ? "#fff" : "#181D27"}

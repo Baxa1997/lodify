@@ -244,6 +244,31 @@ const Chat = () => {
   };
 
   useEffect(() => {
+    if (!socket || !conversation?.id || !userId || !isConnected) {
+      return;
+    }
+
+    const sendMessageRead = () => {
+      if (socket && socket.connected && conversation?.id && userId) {
+        socket.emit("message:read", {
+          row_id: userId,
+          room_id: conversation.id,
+        });
+      }
+    };
+
+    sendMessageRead();
+
+    const messageReadInterval = setInterval(() => {
+      sendMessageRead();
+    }, 30000);
+
+    return () => {
+      clearInterval(messageReadInterval);
+    };
+  }, [socket, conversation?.id, userId, isConnected]);
+
+  useEffect(() => {
     if (!socket) return;
 
     socket.on("presence.updated", (response) => {

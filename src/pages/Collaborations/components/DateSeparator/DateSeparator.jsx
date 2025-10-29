@@ -3,7 +3,17 @@ import styles from "./DateSeparator.module.scss";
 
 const DateSeparator = ({date}) => {
   const formatDate = (dateString) => {
+    if (!dateString) {
+      return "Unknown Date";
+    }
+
     const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+      console.warn("Invalid date string:", dateString);
+      return "Invalid Date";
+    }
+
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);

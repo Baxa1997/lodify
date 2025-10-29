@@ -13,7 +13,7 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
     isOnline,
     type,
     last_message_created_at,
-    unread_count = 0,
+    unread_message_count = 0,
   } = conversation;
 
   const socket = useSocket();
@@ -74,9 +74,9 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
 
         <div className={styles.messageContainer}>
           <div className={styles.messagePreview}>{getMessagePreview()}</div>
-          {unread_count > 0 && (
+          {unread_message_count > 0 && (
             <div className={styles.unreadBadge}>
-              {unread_count > 99 ? "99+" : unread_count}
+              {unread_message_count > 99 ? "99+" : unread_message_count}
             </div>
           )}
         </div>

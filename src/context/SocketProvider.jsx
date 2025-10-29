@@ -44,7 +44,7 @@ export const SocketProvider = ({children}) => {
 
       newSocket.on("disconnect", (reason) => {
         console.log("🔌 Socket disconnected, reason:", reason);
-        // Try to notify backend of disconnect before connection is fully closed
+
         if (userId && newSocket.active) {
           try {
             newSocket.emit("disconnected", {row_id: userId});

@@ -1,11 +1,22 @@
-import React from "react";
-
+import React, {useMemo} from "react";
 import {Flex, Box, Text, Button} from "@chakra-ui/react";
 import {format} from "date-fns";
 
 const ChatHeader = ({conversation, isConnected, presence = {}}) => {
-  const {name, to_name, type, username, avatar, isOnline, isGroup} =
-    conversation;
+  const {name, to_name, type, username, avatar, isGroup} = conversation;
+
+  const activeLast = useMemo(() => {
+    const userPresence = presence[conversation?.to_row_id];
+
+    if (userPresence) {
+      return userPresence;
+    } else {
+      return {
+        status: "offline",
+        last_seen_at: null,
+      };
+    }
+  }, [presence, conversation?.to_row_id]);
 
   return (
     <Flex p="20px 24px" alignItems="center" justifyContent="space-between">
@@ -30,12 +41,14 @@ const ChatHeader = ({conversation, isConnected, presence = {}}) => {
             </Text>
             <Flex alignItems="center" gap="4px" h="20px" borderRadius="4px">
               <Text fontSize="14px" fontWeight="400" color={"#535862"}>
-                {presence?.status === "online"
-                  ? "Online"
-                  : `Last seen ${format(
-                      presence?.last_seen_at,
+                {activeLast?.status === "online"
+                  ? "online"
+                  : activeLast?.last_seen_at
+                  ? `last seen ${format(
+                      new Date(activeLast.last_seen_at),
                       "MM/dd/yyyy HH:mm"
-                    )}`}
+                    )}`
+                  : "offline"}
               </Text>
             </Flex>
           </Flex>

@@ -15,7 +15,7 @@ const Chat = () => {
   const {isConnected, connectionError} = useSocketConnection();
   const [rooms, setRooms] = useState([]);
   const [conversation, setConversation] = useState(null);
-  const [presence, setPresence] = useState(null);
+  const [presence, setPresence] = useState({});
   const [isInitializing, setIsInitializing] = useState(false);
   const [hasProcessedTripId, setHasProcessedTripId] = useState(false);
   const loginName = useSelector((state) => state.auth.user_data?.login);
@@ -25,15 +25,14 @@ const Chat = () => {
   const loginUser = useSelector((state) => state.auth.user_data?.login);
   const tripId = locationState?.tripId;
   const tripName = locationState?.tripName;
-
+  console.log("roomsroomsroomsroomsroomsrooms", rooms);
   useEffect(() => {
     setHasProcessedTripId(false);
   }, [tripId]);
 
   useEffect(() => {
     if (!socket || !userId || !isConnected) return;
-
-    socket.emit("presence:ping", {row_id: userId});
+    // socket.emit("presence:ping", {row_id: userId});
 
     const pingInterval = setInterval(() => {
       if (socket && socket.connected) {
@@ -154,17 +153,9 @@ const Chat = () => {
 
   const sendMessage = (content, type = "text", fileInfo = null) => {
     if (!conversation?.id || !loginUser) {
-      console.error("❌ Cannot send message: missing conversation or user", {
-        conversationId: conversation?.id,
-        loginUser,
-      });
       return;
     }
-
     if (!isConnected) {
-      console.error("❌ Cannot send message: socket not connected", {
-        isConnected,
-      });
       return;
     }
 
@@ -186,74 +177,64 @@ const Chat = () => {
     });
   };
 
-  useEffect(() => {
-    if (!socket || !userId) return;
+  // useEffect(() => {
+  //   if (!socket || !userId) return;
 
-    const handleChatMessage = (message) => {
-      if (message && message.room_id) {
-        console.log("🔄 Updating room with message:", message.room_id);
+  //   const handleChatMessage = (message) => {
+  //     if (message && message.room_id) {
+  //       setRooms((prevRooms) => {
+  //         const roomIndex = prevRooms.findIndex(
+  //           (room) => room.id === message.room_id
+  //         );
 
-        setRooms((prevRooms) => {
-          const roomIndex = prevRooms.findIndex(
-            (room) => room.id === message.room_id
-          );
+  //         if (roomIndex !== -1) {
+  //           console.log("EEEEEEEEEEEEEEEEEEEE", message);
+  //           const updatedRooms = [...prevRooms];
+  //           const oldRoom = updatedRooms[roomIndex];
 
-          if (roomIndex !== -1) {
-            const updatedRooms = [...prevRooms];
-            const oldRoom = updatedRooms[roomIndex];
+  //           updatedRooms[roomIndex] = {
+  //             ...oldRoom,
+  //             last_message: message.message,
+  //             last_message_created_at: message.created_at,
+  //             // unread_count:
+  //             //   message.from !== loginUser
+  //             //     ? (oldRoom.unread_count || 0) + 1
+  //             //     : oldRoom.unread_count,
+  //           };
 
-            updatedRooms[roomIndex] = {
-              ...oldRoom,
-              last_message: message.message,
-              last_message_created_at: message.created_at,
-              unread_count:
-                message.from !== loginUser
-                  ? (oldRoom.unread_count || 0) + 1
-                  : oldRoom.unread_count,
-            };
+  //           return updatedRooms;
+  //         } else {
+  //           return prevRooms;
+  //         }
+  //       });
+  //     }
+  //   };
 
-            return updatedRooms;
-          } else {
-            console.warn(
-              "❌ Room not found for message:",
-              message.room_id,
-              "Available rooms:",
-              prevRooms.map((r) => r.id)
-            );
-            return prevRooms;
-          }
-        });
-      } else {
-        console.warn("❌ Invalid message data:", message);
-      }
-    };
+  //   const handleAllEvents = (eventName, ...args) => {
+  //     console.log("🔌 Socket event:", eventName, args);
+  //   };
 
-    const handleAllEvents = (eventName, ...args) => {
-      console.log("🔌 Socket event:", eventName, args);
-    };
+  //   socket.on("chat message", handleChatMessage);
+  //   socket.onAny(handleAllEvents);
 
-    socket.on("chat message", handleChatMessage);
-    socket.onAny(handleAllEvents);
-
-    return () => {
-      socket.off("chat message", handleChatMessage);
-      socket.offAny(handleAllEvents);
-    };
-  }, [socket, userId, loginUser]);
+  //   return () => {
+  //     socket.off("chat message", handleChatMessage);
+  //     socket.offAny(handleAllEvents);
+  //   };
+  // }, [socket, userId, loginUser]);
 
   const handleConversationSelect = (selectedConversation) => {
     setConversation(selectedConversation);
-
     if (selectedConversation && selectedConversation.id) {
       setRooms((prevRooms) => {
         const roomIndex = prevRooms.findIndex(
           (room) => room.id === selectedConversation.id
         );
         if (roomIndex !== -1) {
+          console.log("FFFFFFFFFFFFFFFFFFFFFFFFF", selectedConversation);
           const updatedRooms = [...prevRooms];
           updatedRooms[roomIndex] = {
             ...updatedRooms[roomIndex],
-            unread_count: 0,
           };
           return updatedRooms;
         }
@@ -266,11 +247,48 @@ const Chat = () => {
     if (!socket) return;
 
     socket.on("presence.updated", (response) => {
-      setPresence(response);
+      if (response && response.row_id) {
+        setPresence((prevPresence) => ({
+          ...prevPresence,
+          [response.row_id]: {
+            status: response.status,
+            last_seen_at: response.last_seen_at,
+            updated_at: response.updated_at || new Date().toISOString(),
+          },
+        }));
+      } else if (Array.isArray(response)) {
+        setPresence((prevPresence) => {
+          const updatedPresence = {...prevPresence};
+          response.forEach((presenceUpdate) => {
+            if (presenceUpdate.row_id) {
+              updatedPresence[presenceUpdate.row_id] = {
+                status: presenceUpdate.status,
+                last_seen_at: presenceUpdate.last_seen_at,
+                updated_at:
+                  presenceUpdate.updated_at || new Date().toISOString(),
+              };
+            }
+          });
+          return updatedPresence;
+        });
+      } else if (response && typeof response === "object") {
+        setPresence((prevPresence) => {
+          const updatedPresence = {...prevPresence};
+          Object.keys(response).forEach((userId) => {
+            const presenceData = response[userId];
+            updatedPresence[userId] = {
+              status: presenceData.status,
+              last_seen_at: presenceData.last_seen_at,
+              updated_at: presenceData.updated_at || new Date().toISOString(),
+            };
+          });
+          return updatedPresence;
+        });
+      }
     });
 
     return () => {
-      socket.off("presence.result");
+      socket.off("presence.updated");
     };
   }, [socket, conversation?.id]);
 

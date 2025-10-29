@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState, useCallback} from "react";
 import MessageBubble from "../MessageBubble/MessageBubble";
 import DateSeparator from "../DateSeparator/DateSeparator";
 import styles from "./MessagesList.module.scss";
@@ -8,15 +8,103 @@ import {useSelector} from "react-redux";
 const MessagesList = ({rooms = [], conversation, isConnected}) => {
   const socket = useSocket();
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const [localMessages, setLocalMessages] = useState([]);
   const [isNewMessage, setIsNewMessage] = useState(false);
   const loggedInUser = useSelector((state) => state.auth.user_data?.login);
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const prevMessageCountRef = useRef(0);
 
+  const [pagination, setPagination] = useState({
+    limit: 10,
+    offset: 0,
+    hasMoreMessages: true,
+    isLoadingMore: false,
+  });
+
   const scrollToBottom = (behavior = "smooth") => {
     messagesEndRef.current?.scrollIntoView({behavior});
   };
+
+  const deduplicateMessages = useCallback((existingMessages, newMessages) => {
+    const existingIds = new Set(
+      existingMessages.map((msg) => msg.id || msg._id)
+    );
+    const uniqueNewMessages = newMessages.filter(
+      (msg) => !existingIds.has(msg.id || msg._id)
+    );
+    return [...uniqueNewMessages, ...existingMessages];
+  }, []);
+
+  const loadMoreMessages = useCallback(() => {
+    if (
+      !socket ||
+      !conversation?.id ||
+      pagination.isLoadingMore ||
+      !pagination.hasMoreMessages
+    ) {
+      console.log("loadMoreMessages blocked:", {
+        noSocket: !socket,
+        noConversation: !conversation?.id,
+        isLoading: pagination.isLoadingMore,
+        noMoreMessages: !pagination.hasMoreMessages,
+      });
+      return;
+    }
+
+    setPagination((prev) => ({...prev, isLoadingMore: true}));
+
+    const nextOffset = pagination.offset + pagination.limit;
+
+    console.log("Emitting chat message for more messages:", {
+      room_id: conversation.id,
+      limit: pagination.limit,
+      offset: nextOffset,
+      action: "get_messages",
+    });
+
+    socket.emit("chat message", {
+      room_id: conversation.id,
+      limit: pagination.limit,
+      offset: nextOffset,
+      action: "get_messages",
+    });
+  }, [
+    socket,
+    conversation?.id,
+    pagination.isLoadingMore,
+    pagination.hasMoreMessages,
+    pagination.offset,
+    pagination.limit,
+  ]);
+
+  const handleScroll = useCallback(
+    (e) => {
+      const {scrollTop, scrollHeight, clientHeight} = e.target;
+
+      // console.log("Scroll event:", {
+      //   scrollTop,
+      //   scrollHeight,
+      //   clientHeight,
+      //   hasMoreMessages: pagination.hasMoreMessages,
+      //   isLoadingMore: pagination.isLoadingMore,
+      //   shouldLoad:
+      //     scrollTop <= 10 &&
+      //     pagination.hasMoreMessages &&
+      //     !pagination.isLoadingMore,
+      // });
+
+      if (
+        scrollTop <= 10 &&
+        pagination.hasMoreMessages &&
+        !pagination.isLoadingMore
+      ) {
+        console.log("Loading more messages...");
+        loadMoreMessages();
+      }
+    },
+    [loadMoreMessages, pagination.hasMoreMessages, pagination.isLoadingMore]
+  );
 
   useEffect(() => {
     if (localMessages.length > prevMessageCountRef.current) {
@@ -38,8 +126,21 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     const handleRoomHistory = (messages) => {
       if (Array.isArray(messages)) {
         setLocalMessages(messages);
+
+        setPagination((prev) => ({
+          ...prev,
+          offset: 0,
+          hasMoreMessages: messages.length >= prev.limit,
+          isLoadingMore: false,
+        }));
       } else if (messages?.data && Array.isArray(messages.data)) {
         setLocalMessages(messages.data);
+        setPagination((prev) => ({
+          ...prev,
+          offset: 0,
+          hasMoreMessages: messages.data.length >= prev.limit,
+          isLoadingMore: false,
+        }));
       } else {
         console.warn("⚠️ Unexpected room history format:", messages);
       }
@@ -48,7 +149,15 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     const handleReceiveMessage = (message) => {
       console.log("RECEIVED MESSAGE EMIT");
       if (message.room_id === conversation?.id) {
-        setLocalMessages((prevMessages) => [...prevMessages, message]);
+        setLocalMessages((prevMessages) => {
+          const existingMessage = prevMessages.find(
+            (msg) => (msg.id || msg._id) === (message.id || message._id)
+          );
+          if (existingMessage) {
+            return prevMessages;
+          }
+          return [...prevMessages, message];
+        });
       } else {
         console.log("Received message for different room, ignoring:", {
           messageRoomId: message.room_id,
@@ -57,19 +166,74 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
         });
       }
     };
+
+    const handleMoreMessages = (response) => {
+      console.log("Received more messages:", response);
+      setPagination((prev) => ({...prev, isLoadingMore: false}));
+
+      if (response && Array.isArray(response)) {
+        if (response.length === 0) {
+          setPagination((prev) => ({...prev, hasMoreMessages: false}));
+          return;
+        }
+
+        setLocalMessages((prevMessages) => {
+          const deduplicatedMessages = deduplicateMessages(
+            prevMessages,
+            response
+          );
+          return deduplicatedMessages;
+        });
+
+        setPagination((prev) => ({
+          ...prev,
+          offset: prev.offset + prev.limit,
+          hasMoreMessages: response.length >= prev.limit,
+        }));
+      } else if (response?.data && Array.isArray(response.data)) {
+        if (response.data.length === 0) {
+          setPagination((prev) => ({...prev, hasMoreMessages: false}));
+          return;
+        }
+
+        setLocalMessages((prevMessages) => {
+          const deduplicatedMessages = deduplicateMessages(
+            prevMessages,
+            response.data
+          );
+          return deduplicatedMessages;
+        });
+
+        setPagination((prev) => ({
+          ...prev,
+          offset: prev.offset + prev.limit,
+          hasMoreMessages: response.data.length >= prev.limit,
+        }));
+      }
+    };
+
     socket.on("room history", handleRoomHistory);
     socket.on("chat message", handleReceiveMessage);
+    socket.on("more messages", handleMoreMessages);
 
     return () => {
       socket.off("room history", handleRoomHistory);
       socket.off("chat message", handleReceiveMessage);
+      socket.off("more messages", handleMoreMessages);
     };
-  }, [socket, conversation?.id]);
+  }, [socket, conversation?.id, deduplicateMessages]);
 
   useEffect(() => {
     if (!socket || !conversation?.id || !userId) return;
 
     setLocalMessages([]);
+
+    setPagination({
+      limit: 10,
+      offset: 0,
+      hasMoreMessages: true,
+      isLoadingMore: false,
+    });
 
     socket.emit("join room", {
       room_id: conversation.id,
@@ -148,8 +312,19 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   }
 
   return (
-    <div className={styles.messagesList}>
+    <div
+      className={styles.messagesList}
+      ref={messagesContainerRef}
+      onScroll={handleScroll}>
       <div className={styles.messagesContainer}>
+        {/* Loading indicator for pagination */}
+        {pagination.isLoadingMore && (
+          <div className={styles.loadingMore}>
+            <div className={styles.loadingSpinner}>⏳</div>
+            <span>Loading more messages...</span>
+          </div>
+        )}
+
         {messageGroups.map((group, groupIndex) => (
           <div key={`${group.date}-${groupIndex}`}>
             <DateSeparator date={group.date} />

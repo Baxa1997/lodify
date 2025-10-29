@@ -78,7 +78,21 @@ const Chat = () => {
     socket.emit("rooms list", {row_id: userId});
 
     const handleRoomsList = (data) => {
-      setRooms(data || []);
+      const roomsData = data || [];
+      if (conversation?.id) {
+        const updatedRooms = roomsData.map((room) => {
+          if (room.id === conversation.id) {
+            return {
+              ...room,
+              unread_message_count: 0,
+            };
+          }
+          return room;
+        });
+        setRooms(updatedRooms);
+      } else {
+        setRooms(roomsData);
+      }
     };
 
     const handleError = (error) => {
@@ -98,7 +112,7 @@ const Chat = () => {
       socket.off("error", handleError);
       socket.off("message sent", handleMessageSent);
     };
-  }, [socket, isConnected, userId]);
+  }, [socket, isConnected, userId, conversation?.id]);
 
   useEffect(() => {
     const existingRoom = rooms.find((room) => room.item_id === tripId);

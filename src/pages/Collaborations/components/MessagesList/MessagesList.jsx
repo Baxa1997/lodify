@@ -142,6 +142,18 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
     const handleReceiveMessage = (message) => {
       if (message.room_id === conversation?.id) {
+        if (
+          socket &&
+          socket.connected &&
+          userId &&
+          message.from !== loggedInUser
+        ) {
+          socket.emit("message:read", {
+            row_id: userId,
+            room_id: conversation.id,
+          });
+        }
+
         setLocalMessages((prevMessages) => {
           const existingMessage = prevMessages.find(
             (msg) => (msg.id || msg._id) === (message.id || message._id)
@@ -238,7 +250,7 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
       socket.off("more messages", handleMoreMessages);
       socket.off("message.read", handleMessageRead);
     };
-  }, [socket, conversation?.id, deduplicateMessages, loggedInUser]);
+  }, [socket, conversation?.id, deduplicateMessages, loggedInUser, userId]);
 
   useEffect(() => {
     if (!socket || !conversation?.id || !userId) return;

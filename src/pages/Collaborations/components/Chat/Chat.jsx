@@ -32,13 +32,14 @@ const Chat = () => {
 
   useEffect(() => {
     if (!socket || !userId || !isConnected) return;
-    // socket.emit("presence:ping", {row_id: userId});
+    console.log("WORKED A LOT");
+    socket.emit("presence:ping", {row_id: userId});
 
     const pingInterval = setInterval(() => {
       if (socket && socket.connected) {
         socket.emit("presence:ping", {row_id: userId});
       }
-    }, 30000);
+    }, 10000);
 
     const handleBeforeUnload = () => {
       clearInterval(pingInterval);
@@ -253,7 +254,6 @@ const Chat = () => {
           (room) => room.id === selectedConversation.id
         );
         if (roomIndex !== -1) {
-          console.log("FFFFFFFFFFFFFFFFFFFFFFFFF", selectedConversation);
           const updatedRooms = [...prevRooms];
           updatedRooms[roomIndex] = {
             ...updatedRooms[roomIndex],

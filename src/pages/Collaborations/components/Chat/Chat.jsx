@@ -32,11 +32,11 @@ const Chat = () => {
 
   useEffect(() => {
     if (!socket || !userId || !isConnected) return;
-    console.log("WORKED A LOT");
     socket.emit("presence:ping", {row_id: userId});
 
     const pingInterval = setInterval(() => {
       if (socket && socket.connected) {
+        console.log("PRESENCE PING", userId);
         socket.emit("presence:ping", {row_id: userId});
       }
     }, 10000);

@@ -16,14 +16,14 @@ const AddingChat = ({setIsAddRoomOpen = () => {}}) => {
       index: 1,
       label: "Mentions",
       icon: "/img/mailChat.svg",
-      action: () => {
-        setIsAddRoomOpen(true);
-      },
     },
     {
       index: 2,
       label: "New Direct Message",
       icon: "/img/edit.svg",
+      action: () => {
+        setIsAddRoomOpen(true);
+      },
     },
     {
       index: 3,

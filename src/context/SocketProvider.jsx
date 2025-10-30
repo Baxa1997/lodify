@@ -36,7 +36,6 @@ export const SocketProvider = ({children}) => {
 
       socketRef.current = newSocket;
       setSocket(newSocket);
-
       newSocket.on("connect", (data) => {
         setIsConnected(true);
         setConnectionError(null);
@@ -107,6 +106,7 @@ export const SocketProvider = ({children}) => {
 
   useEffect(() => {
     if (socket && isConnected && userId) {
+      console.log("Connection 2");
       socket.emit("connected", {row_id: userId});
     }
   }, [socket, isConnected, userId]);

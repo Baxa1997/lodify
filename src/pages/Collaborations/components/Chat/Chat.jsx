@@ -25,7 +25,7 @@ const Chat = () => {
   const loginUser = useSelector((state) => state.auth.user_data?.login);
   const tripId = locationState?.tripId;
   const tripName = locationState?.tripName;
-  console.log("roomsroomsroomsroomsroomsrooms", rooms);
+
   useEffect(() => {
     setHasProcessedTripId(false);
   }, [tripId]);

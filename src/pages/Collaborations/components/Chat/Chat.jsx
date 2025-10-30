@@ -127,7 +127,15 @@ const Chat = () => {
     ) {
       setIsInitializing(true);
       setHasProcessedTripId(true);
-
+      console.log("CREATING ROOM", {
+        name: "",
+        type: "group",
+        row_id: userId,
+        item_id: tripId,
+        from_name: loginName,
+        project_id: projectId,
+        to_name: tripName,
+      });
       socket.emit(
         "create room",
         {

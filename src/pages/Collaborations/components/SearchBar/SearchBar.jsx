@@ -17,6 +17,8 @@ const SearchBar = ({
     color: "#717680",
     fontSize: "16px",
   },
+  p = "0px 16px 12px",
+  inputBorderRadius = "lg",
   _hover,
   _focus,
   ...props
@@ -54,7 +56,7 @@ const SearchBar = ({
   };
 
   return (
-    <Box p="0px 16px 12px" position="relative" {...props}>
+    <Box p={p} position="relative" {...props}>
       <Box position="relative">
         <Box
           position="absolute"
@@ -64,7 +66,7 @@ const SearchBar = ({
           color="gray.400"
           zIndex={1}
           pointerEvents="none">
-          <LuSearch size={20} />
+          <LuSearch color="#667085" size={20} />
         </Box>
 
         <Input
@@ -85,7 +87,7 @@ const SearchBar = ({
               boxShadow: "0 0 0 1px var(--chakra-colors-blue-400)",
             }
           }
-          borderRadius="lg"
+          borderRadius={inputBorderRadius}
           pl="40px"
           pr={showKeyboardShortcut ? "80px" : "30px"}
           size={size}

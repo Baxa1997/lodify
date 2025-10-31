@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Flex, Box, Text} from "@chakra-ui/react";
+import {Box, Text} from "@chakra-ui/react";
 import FileViewer from "../../../../components/FileViewer";
 
 function ImageMessage({isOwn, content, fileInfo}) {
@@ -22,47 +22,23 @@ function ImageMessage({isOwn, content, fileInfo}) {
   return (
     <>
       <Box
-        p={isOwn ? "6px 0px 6px 14px" : "6px 14px 6px 14px"}
+        p="0"
         borderRadius="8px"
-        bg={isOwn ? "transparent" : "#fff"}
-        color={isOwn ? "#fff" : "#181D27"}
-        maxW="80%"
         cursor="pointer"
-        onClick={handleImageClick}>
-        <Flex gap="12px" alignItems="center">
-          <Box
-            w="44px"
-            h="44px"
-            borderRadius="6px"
-            border="1px solid #E9EAEB"
-            bg={isOwn ? "#fff" : "#fff"}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            overflow="hidden"
-            flexShrink={0}>
-            <img
-              src={imageUrl}
-              alt=""
-              width="100%"
-              height="100%"
-              style={{objectFit: "cover"}}
-            />
-          </Box>
-
-          <Box flex="1" minW="0">
-            <Text
-              color={isOwn ? "#fff" : "#181D27"}
-              fontWeight="500"
-              fontSize="14px"
-              noOfLines={1}>
-              {fileName}
-            </Text>
-            <Text color={isOwn ? "#fff" : "#535862"} fontSize="12px">
-              {fileInfo?.size ? formatFileSize(fileInfo.size) : "Image file"}
-            </Text>
-          </Box>
-        </Flex>
+        onClick={handleImageClick}
+        overflow="hidden"
+        maxW="100%">
+        <img
+          src={imageUrl}
+          alt={fileName}
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            objectFit: "cover",
+            maxHeight: "400px",
+          }}
+        />
       </Box>
 
       <FileViewer
@@ -74,13 +50,5 @@ function ImageMessage({isOwn, content, fileInfo}) {
     </>
   );
 }
-
-const formatFileSize = (bytes) => {
-  if (!bytes || isNaN(bytes)) return "Unknown size";
-  const kb = bytes / 1024;
-  if (kb < 1024) return `${kb.toFixed(1)} KB`;
-  const mb = kb / 1024;
-  return `${mb.toFixed(1)} MB`;
-};
 
 export default ImageMessage;

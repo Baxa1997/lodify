@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useMemo} from "react";
 import {useChat} from "../../context/ChatContext";
 import styles from "./MessageInput.module.scss";
 import {
@@ -12,6 +12,12 @@ import {
   HStack,
   InputGroup,
   InputRightElement,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import fileService from "@services/fileService";
 import {FaMicrophone, FaStop, FaTrash, FaCheck} from "react-icons/fa";
@@ -35,6 +41,8 @@ const MessageInput = ({
   const [recordingTime, setRecordingTime] = useState(0);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [filePreviewUrl, setFilePreviewUrl] = useState(null);
 
   const {setTyping, currentUser} = useChat();
   const inputRef = useRef(null);
@@ -57,6 +65,14 @@ const MessageInput = ({
     } else {
       return "file";
     }
+  };
+
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   };
 
   const handleSubmit = async (e) => {
@@ -106,8 +122,14 @@ const MessageInput = ({
 
     if (file) {
       setSelectedFile(file);
-      setMessage(file.name);
-      console.log("File ready for upload");
+
+      const previewUrl = URL.createObjectURL(file);
+      setFilePreviewUrl(previewUrl);
+
+      const fileType = getFileType(file);
+      if (fileType === "image" || fileType === "video" || fileType === "file") {
+        setIsPreviewOpen(true);
+      }
     }
   };
 
@@ -143,17 +165,16 @@ const MessageInput = ({
 
       setSelectedFile(null);
       setMessage("");
+      setIsPreviewOpen(false);
+
+      if (filePreviewUrl) {
+        URL.revokeObjectURL(filePreviewUrl);
+        setFilePreviewUrl(null);
+      }
 
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
-
-      // toast({
-      //   title: "File sent successfully",
-      //   status: "success",
-      //   duration: 2000,
-      //   isClosable: true,
-      // });
     } catch (error) {
       console.error("File upload error:", error);
     } finally {
@@ -165,6 +186,13 @@ const MessageInput = ({
   const handleClearFile = () => {
     setSelectedFile(null);
     setMessage("");
+    setIsPreviewOpen(false);
+
+    if (filePreviewUrl) {
+      URL.revokeObjectURL(filePreviewUrl);
+      setFilePreviewUrl(null);
+    }
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -304,6 +332,10 @@ const MessageInput = ({
       console.log("=== AUDIO UPLOAD COMPLETED ===");
     }
   };
+
+  const currentFileType = useMemo(() => {
+    return selectedFile ? getFileType(selectedFile) : null;
+  }, [selectedFile]);
 
   return (
     <Box>
@@ -489,107 +521,123 @@ const MessageInput = ({
             display="none"
             accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
           />
-
-          {/* <Flex justifyContent="flex-end" alignItems="center" gap="6px">
-            <Input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileSelect}
-              display="none"
-              accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
-            />
-
-            <IconButton
-              type="button"
-              onClick={isRecording ? stopRecording : startRecording}
-              aria-label={isRecording ? "Stop recording" : "Start recording"}
-              icon={
-                isRecording ? (
-                  <FaStop fontSize="20px" />
-                ) : (
-                  <FaMicrophone fontSize="20px" />
-                )
-              }
-              _hover={{
-                bg: isRecording ? "#FEE" : "transparent",
-              }}
-              mb="12px"
-              mr="0px"
-              bg={isRecording ? "#FEE" : "transparent"}
-              color={isRecording ? "#E53E3E" : "#535862"}
-              borderRadius="8px"
-              disabled={
-                !isConnected || disabled || isUploading || audioUrl !== null
-              }
-            />
-
-            <IconButton
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              aria-label="Attach file"
-              icon={<AttachmentIcon fontSize="20px" />}
-              _hover={{
-                bg: "transparent",
-              }}
-              mb="12px"
-              mr="0px"
-              bg="transparent"
-              color="#535862"
-              borderRadius="8px"
-              disabled={
-                !isConnected ||
-                disabled ||
-                isUploading ||
-                isRecording ||
-                audioUrl !== null
-              }
-            />
-
-            {selectedFile && (
-              <Button
-                type="button"
-                onClick={handleClearFile}
-                _hover={{
-                  bg: "transparent",
-                }}
-                mb="12px"
-                mr="0px"
-                bg="transparent"
-                color="#DC2626"
-                borderRadius="8px"
-                size="sm">
-                Clear
-              </Button>
-            )}
-
-            <Button
-              type="submit"
-              _hover={{
-                bg: isConnected ? "#EF6820" : "#9CA3AF",
-              }}
-              mb="12px"
-              mr="12px"
-              bg={isConnected ? "#EF6820" : "#9CA3AF"}
-              color="#fff"
-              borderRadius="8px"
-              isLoading={isUploading}
-              disabled={
-                (!message.trim() && !selectedFile) ||
-                !isConnected ||
-                disabled ||
-                isUploading ||
-                isRecording ||
-                audioUrl !== null
-              }>
-              {isUploading
-                ? "Uploading..."
-                : isConnected
-                ? "Send"
-                : "Connecting..."}
-            </Button>
-          </Flex> */}
         </Flex>
       </form>
+
+      <Modal
+        isOpen={isPreviewOpen}
+        onClose={handleClearFile}
+        size="xl"
+        isCentered>
+        <ModalOverlay bg="rgba(0, 0, 0, 0.8)" />
+        <ModalContent borderRadius="16px" overflow="hidden" maxW="520px">
+          <ModalHeader
+            borderBottom="1px solid #E9EAEB"
+            pb="0px"
+            fontSize="18px"
+            fontWeight="600">
+            {currentFileType === "image"
+              ? "Preview Image"
+              : currentFileType === "video"
+              ? "Preview Video"
+              : "File Preview"}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody p="6px">
+            {selectedFile && (
+              <Box>
+                {currentFileType === "image" && filePreviewUrl && (
+                  <Box mb="20px" display="flex" justifyContent="center">
+                    <img
+                      src={filePreviewUrl}
+                      alt={selectedFile.name}
+                      style={{
+                        width: "500px",
+                        height: "250px",
+                        objectFit: "contain",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {currentFileType === "video" && filePreviewUrl && (
+                  <Box mb="20px" display="flex" justifyContent="center">
+                    <video
+                      src={filePreviewUrl}
+                      controls
+                      style={{
+                        width: "500px",
+                        height: "250px",
+                        borderRadius: "12px",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {currentFileType === "file" && (
+                  <Flex
+                    alignItems="center"
+                    gap="16px"
+                    p="20px"
+                    bg="#F9FAFB"
+                    borderRadius="12px"
+                    mb="20px">
+                    <Box
+                      w="60px"
+                      h="60px"
+                      bg="#E9EAED"
+                      borderRadius="12px"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center">
+                      <img
+                        src="/img/attach.svg"
+                        alt="file"
+                        style={{width: "30px", height: "30px"}}
+                      />
+                    </Box>
+                    <Box flex="1">
+                      <Text
+                        fontSize="16px"
+                        fontWeight="600"
+                        color="#181D27"
+                        mb="4px"
+                        wordBreak="break-word">
+                        {selectedFile.name}
+                      </Text>
+                      <Text fontSize="14px" color="#535862">
+                        {formatFileSize(selectedFile.size)}
+                      </Text>
+                    </Box>
+                  </Flex>
+                )}
+
+                <Flex gap="12px" justifyContent="flex-end" mx="20px">
+                  <Button
+                    onClick={handleClearFile}
+                    variant="ghost"
+                    colorScheme="gray"
+                    size="md">
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleFileSend}
+                    bg="#EF6820"
+                    color="white"
+                    size="md"
+                    isLoading={isUploading}
+                    disabled={isUploading}
+                    _hover={{bg: "#DC5E1C"}}>
+                    Send
+                  </Button>
+                </Flex>
+              </Box>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

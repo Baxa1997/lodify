@@ -45,8 +45,8 @@ function VideoMessage({isOwn, content, fileInfo}) {
             h="44px"
             borderRadius="6px"
             border="1px solid #E9EAEB"
-            bg={isOwn ? "transparent" : "#FEF3E9"}
-            color={isOwn ? "#fff" : "#181D27"}
+            bg={isOwn ? "#fff" : "#FEF3E9"}
+            color={isOwn ? "#080707" : "#181D27"}
             display="flex"
             alignItems="center"
             justifyContent="center"
@@ -56,13 +56,13 @@ function VideoMessage({isOwn, content, fileInfo}) {
 
           <Box flex="1" minW="0">
             <Text
-              color={isOwn ? "#fff" : "#181D27"}
+              color={isOwn ? "#080707" : "#181D27"}
               fontWeight="500"
               fontSize="14px"
               noOfLines={1}>
               {fileName}
             </Text>
-            <Text color={isOwn ? "#fff" : "#535862"} fontSize="12px">
+            <Text color={isOwn ? "#080707" : "#535862"} fontSize="12px">
               {fileInfo?.size ? formatFileSize(fileInfo.size) : "Video file"}
             </Text>
           </Box>

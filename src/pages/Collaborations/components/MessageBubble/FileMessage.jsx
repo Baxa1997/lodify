@@ -17,22 +17,6 @@ function FileMessage({isOwn, content, fileInfo}) {
     return `${mb.toFixed(1)} MB`;
   };
 
-  // const getFileIcon = (filename) => {
-  //   const ext = filename?.split(".").pop()?.toLowerCase();
-  //   const iconMap = {
-  //     pdf: "📄",
-  //     doc: "📝",
-  //     docx: "📝",
-  //     xls: "📊",
-  //     xlsx: "📊",
-  //     txt: "📃",
-  //     zip: "🗜️",
-  //     rar: "🗜️",
-  //     default: "📎",
-  //   };
-  //   return iconMap[ext] || iconMap.default;
-  // };
-
   const isViewableFile = (filename) => {
     const ext = filename?.split(".").pop()?.toLowerCase();
     const viewableExtensions = [

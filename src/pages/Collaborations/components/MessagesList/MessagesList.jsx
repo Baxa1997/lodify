@@ -55,14 +55,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     setPagination((prev) => ({...prev, isLoadingMore: true}));
 
     const nextOffset = pagination.offset + pagination.limit;
-
-    // socket.emit("chat message", {
-    //   author_row_id: userId,
-    //   from: loggedInUser,
-    //   room_id: conversation.id,
-    //   limit: pagination.limit,
-    //   offset: nextOffset,
-    // });
   }, [
     socket,
     conversation?.id,
@@ -75,18 +67,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   const handleScroll = useCallback(
     (e) => {
       const {scrollTop, scrollHeight, clientHeight} = e.target;
-
-      // console.log("Scroll event:", {
-      //   scrollTop,
-      //   scrollHeight,
-      //   clientHeight,
-      //   hasMoreMessages: pagination.hasMoreMessages,
-      //   isLoadingMore: pagination.isLoadingMore,
-      //   shouldLoad:
-      //     scrollTop <= 10 &&
-      //     pagination.hasMoreMessages &&
-      //     !pagination.isLoadingMore,
-      // });
 
       if (
         scrollTop <= 10 &&
@@ -162,12 +142,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
             return prevMessages;
           }
           return [...prevMessages, message];
-        });
-      } else {
-        console.log("Received message for different room, ignoring:", {
-          messageRoomId: message.room_id,
-          currentRoomId: conversation?.id,
-          message: message,
         });
       }
     };
@@ -380,7 +354,7 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
         {messageGroups.map((group, groupIndex) => (
           <div key={`${group.date}-${groupIndex}`}>
-            <DateSeparator date={group.date} />
+            {/* <DateSeparator date={group.date} /> */}
             {group.messages.map((message, messageIndex) => (
               <MessageBubble
                 conversation={conversation}

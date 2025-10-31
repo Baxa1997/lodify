@@ -19,11 +19,11 @@ const ChatHeader = ({conversation, isConnected, presence = {}}) => {
   }, [presence, conversation?.to_row_id]);
 
   return (
-    <Flex p="20px 24px" alignItems="center" justifyContent="space-between">
+    <Flex p="10px 8px" alignItems="center" justifyContent="space-between">
       <Flex gap="12px" alignItems="center">
         <Box
-          w="56px"
-          h="56px"
+          w="40px"
+          h="40px"
           borderRadius="50%"
           border="1px solid #E9EAEB"
           color="#fff"
@@ -32,10 +32,10 @@ const ChatHeader = ({conversation, isConnected, presence = {}}) => {
           bg="#F79009"
           fontSize="18px"
           justifyContent="center">
-          {to_name?.[0]}
+          {to_name?.[0].toUpperCase()}
         </Box>
         <Box>
-          <Flex flexDirection="column" gap="4px">
+          <Flex flexDirection="column" gap="0px">
             <Text fontSize="16px" fontWeight="600" color="#181D27">
               {to_name}
             </Text>
@@ -57,17 +57,6 @@ const ChatHeader = ({conversation, isConnected, presence = {}}) => {
           </Text>
         </Box>
       </Flex>
-
-      <Button
-        bg="#EF6820"
-        color="#fff"
-        borderRadius="8px"
-        p="10px 16px"
-        fontSize="14px"
-        fontWeight="600"
-        _hover={{bg: "#EF6820"}}>
-        View Profile
-      </Button>
     </Flex>
   );
 };

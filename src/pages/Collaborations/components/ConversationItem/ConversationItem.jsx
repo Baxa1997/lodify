@@ -67,18 +67,20 @@ const ConversationItem = ({conversation, isSelected, onClick}) => {
         <div className={styles.header}>
           <div className={styles.nameContainer}>
             <span className={styles.name}>{to_name || "Unknown"}</span>
-            {type === "group" && <span className={styles.groupIcon}>✏️</span>}
           </div>
-          <div className={styles.timestamp}>{getTimeDisplay()}</div>
-        </div>
-
-        <div className={styles.messageContainer}>
-          <div className={styles.messagePreview}>{getMessagePreview()}</div>
           {unread_message_count > 0 && (
             <div className={styles.unreadBadge}>
               {unread_message_count > 99 ? "99+" : unread_message_count}
             </div>
           )}
+        </div>
+
+        <div className={styles.messageContainer}>
+          <div className={styles.messagePreview}>
+            <span>You:</span> {getMessagePreview()}
+          </div>
+
+          <div className={styles.timestamp}>{getTimeDisplay()}</div>
         </div>
       </div>
     </div>

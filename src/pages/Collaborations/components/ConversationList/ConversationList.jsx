@@ -32,37 +32,11 @@ const ConversationList = ({
 
   return (
     <div className={styles.conversationList}>
-      {/* <div className={styles.header}>
-        <div className={styles.headerTop}>
-          <div className={styles.titleContainer}>
-            <h2 className={styles.title}>Chats</h2>
-            {isConnected && (
-              <div className={styles.connectionStatus}>
-                <div className={styles.statusDot}></div>
-              </div>
-            )}
-          </div>
-          <button
-            className={styles.addButton}
-            onClick={() => {
-              setIsAddRoomOpen(true);
-            }}
-            title="New Chat">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-            </svg>
-          </button>
-        </div>
-
-        <div className={styles.searchContainer}>
-          <SearchBar value={searchQuery} onSearch={setSearchQuery} />
-        </div>
-      </div> */}
-
       <Flex p="9px 16px 9px 11px" gap="8px">
         <AddingChat setIsAddRoomOpen={setIsAddRoomOpen} />
         <SearchBar
           p="0"
+          width="100%"
           value={searchQuery}
           onSearch={setSearchQuery}
           inputBorderRadius="25px"

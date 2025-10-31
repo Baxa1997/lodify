@@ -53,20 +53,15 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
   const messageWidth = getMessageWidth();
 
   return isOwn ? (
-    <Flex ml="auto" justifyContent="flex-end" p="12px 0" gap="12px">
+    <Flex ml="auto" justifyContent="flex-end" p="6px 0" gap="12px">
       <Box maxW="500px" w={messageWidth}>
         <Box
-          bg="#EF6820"
-          color="#fff"
+          bg="#E0F0FF"
+          color="#080707"
           borderRadius="8px"
           borderBottomRightRadius="0"
           w="100%">
-          <Flex
-            gap="8px"
-            alignItems="flex-end"
-            position="relative"
-            pr="8px"
-            pb="4px">
+          <Flex gap="8px" alignItems="flex-end" position="relative">
             <Box flex="1">
               <MessageComponent
                 isOwn={isOwn}
@@ -74,13 +69,14 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
                 fileInfo={fileInfo}
               />
             </Box>
-            <Flex
+
+            {/* <Flex
               gap="2px"
               alignItems="center"
               fontSize="14px"
-              color="#fff"
+              color="#080707"
               ml="4px">
-              <Text fontSize="12px" color="#fff" opacity={0.9} mr="4px">
+              <Text fontSize="12px" color="#080707" opacity={0.9} mr="4px">
                 {messageTime}
               </Text>
               {isRead ? (
@@ -121,13 +117,23 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
                   />
                 </svg>
               )}
-            </Flex>
+            </Flex> */}
           </Flex>
         </Box>
+        <Flex
+          width="100%"
+          justifyContent="flex-end"
+          alignItems="center"
+          gap="4px">
+          {isRead && <img src="/img/doublecheck.svg" alt="read" />}
+          <Text fontWeight="400" color="#535862" fontSize="12px">
+            {messageTime}
+          </Text>
+        </Flex>
       </Box>
     </Flex>
   ) : (
-    <Flex p="12px 0" gap="12px">
+    <Flex p="6px 0" gap="12px">
       <Box
         w="40px"
         h="40px"
@@ -144,24 +150,20 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
       </Box>
 
       <Box maxW="500px" w={messageWidth}>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Text fontWeight="500" color="#181D27" fontSize="14px">
-            {conversation?.type === "group" ? message?.from : sender?.to_name}
-          </Text>
-          <Text fontWeight="400" color="#535862" fontSize="12px">
-            {messageTime}
-          </Text>
-        </Flex>
+        <Flex justifyContent="space-between" alignItems="center"></Flex>
 
         <Box
-          bg="#fff"
+          bg="#E9EAED"
           color="#181D27"
-          borderRadius="8px"
-          borderTopLeftRadius="0"
+          borderRadius="20px"
+          borderBottomLeftRadius="4px"
           border="1px solid #E9EAEB"
           w="100%">
           <MessageComponent content={content} fileInfo={fileInfo} />
         </Box>
+        <Text mt="2px" fontWeight="400" color="#535862" fontSize="12px">
+          {messageTime}
+        </Text>
       </Box>
     </Flex>
   );

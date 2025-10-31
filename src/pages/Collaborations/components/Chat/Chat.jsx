@@ -36,7 +36,6 @@ const Chat = () => {
 
     const pingInterval = setInterval(() => {
       if (socket && socket.connected) {
-        console.log("PRESENCE PING", userId);
         socket.emit("presence:ping", {row_id: userId});
       }
     }, 10000);
@@ -199,52 +198,6 @@ const Chat = () => {
       }
     });
   };
-
-  // useEffect(() => {
-  //   if (!socket || !userId) return;
-
-  //   const handleChatMessage = (message) => {
-  //     if (message && message.room_id) {
-  //       setRooms((prevRooms) => {
-  //         const roomIndex = prevRooms.findIndex(
-  //           (room) => room.id === message.room_id
-  //         );
-
-  //         if (roomIndex !== -1) {
-  //           console.log("EEEEEEEEEEEEEEEEEEEE", message);
-  //           const updatedRooms = [...prevRooms];
-  //           const oldRoom = updatedRooms[roomIndex];
-
-  //           updatedRooms[roomIndex] = {
-  //             ...oldRoom,
-  //             last_message: message.message,
-  //             last_message_created_at: message.created_at,
-  //             // unread_count:
-  //             //   message.from !== loginUser
-  //             //     ? (oldRoom.unread_count || 0) + 1
-  //             //     : oldRoom.unread_count,
-  //           };
-
-  //           return updatedRooms;
-  //         } else {
-  //           return prevRooms;
-  //         }
-  //       });
-  //     }
-  //   };
-
-  //   const handleAllEvents = (eventName, ...args) => {
-  //     console.log("🔌 Socket event:", eventName, args);
-  //   };
-
-  //   socket.on("chat message", handleChatMessage);
-  //   socket.onAny(handleAllEvents);
-
-  //   return () => {
-  //     socket.off("chat message", handleChatMessage);
-  //     socket.offAny(handleAllEvents);
-  //   };
-  // }, [socket, userId, loginUser]);
 
   const handleConversationSelect = (selectedConversation) => {
     setConversation(selectedConversation);

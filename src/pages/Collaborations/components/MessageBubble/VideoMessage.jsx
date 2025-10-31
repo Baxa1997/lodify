@@ -1,6 +1,5 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import {
-  Flex,
   Box,
   Text,
   Modal,
@@ -16,6 +15,7 @@ function VideoMessage({isOwn, content, fileInfo}) {
   const [isVideoPlayerOpen, setIsVideoPlayerOpen] = useState(false);
   const videoUrl = fileInfo?.url || content;
   const fileName = fileInfo?.name || "Video";
+  const videoRef = useRef(null);
 
   if (!videoUrl) {
     return (
@@ -32,41 +32,55 @@ function VideoMessage({isOwn, content, fileInfo}) {
   return (
     <>
       <Box
-        p={isOwn ? "6px 0px 6px 14px" : "6px 14px 6px 14px"}
+        p="0"
         borderRadius="8px"
-        bg={isOwn ? "transparent" : "#fff"}
-        color={isOwn ? "#fff" : "#181D27"}
-        maxW="80%"
         cursor="pointer"
-        onClick={handleVideoClick}>
-        <Flex gap="12px" alignItems="center">
+        onClick={handleVideoClick}
+        overflow="hidden"
+        position="relative"
+        maxW="100%"
+        bg="black">
+        <video
+          ref={videoRef}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "block",
+            objectFit: "cover",
+          }}
+          muted>
+          <source src={videoUrl} />
+          Your browser does not support the video tag.
+        </video>
+
+        <Box
+          position="absolute"
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          w="50px"
+          h="50px"
+          borderRadius="50%"
+          bg="rgba(0, 0, 0, 0.6)"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          cursor="pointer"
+          transition="all 0.3s ease"
+          _hover={{
+            bg: "rgba(0, 0, 0, 0.8)",
+            transform: "translate(-50%, -50%) scale(1.1)",
+          }}>
           <Box
-            w="44px"
-            h="44px"
-            borderRadius="6px"
-            border="1px solid #E9EAEB"
-            bg={isOwn ? "#fff" : "#FEF3E9"}
-            color={isOwn ? "#080707" : "#181D27"}
+            color="white"
+            fontSize="26px"
+            ml="4px"
             display="flex"
             alignItems="center"
-            justifyContent="center"
-            fontSize="20px">
+            justifyContent="center">
             ▶
           </Box>
-
-          <Box flex="1" minW="0">
-            <Text
-              color={isOwn ? "#080707" : "#181D27"}
-              fontWeight="500"
-              fontSize="14px"
-              noOfLines={1}>
-              {fileName}
-            </Text>
-            <Text color={isOwn ? "#080707" : "#535862"} fontSize="12px">
-              {fileInfo?.size ? formatFileSize(fileInfo.size) : "Video file"}
-            </Text>
-          </Box>
-        </Flex>
+        </Box>
       </Box>
 
       <Modal
@@ -108,14 +122,5 @@ function VideoMessage({isOwn, content, fileInfo}) {
     </>
   );
 }
-
-// Helper function to format file size
-const formatFileSize = (bytes) => {
-  if (!bytes || isNaN(bytes)) return "Unknown size";
-  const kb = bytes / 1024;
-  if (kb < 1024) return `${kb.toFixed(1)} KB`;
-  const mb = kb / 1024;
-  return `${mb.toFixed(1)} MB`;
-};
 
 export default VideoMessage;

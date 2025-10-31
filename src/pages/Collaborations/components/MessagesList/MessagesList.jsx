@@ -354,7 +354,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
         {messageGroups.map((group, groupIndex) => (
           <div key={`${group.date}-${groupIndex}`}>
-            {/* <DateSeparator date={group.date} /> */}
             {group.messages.map((message, messageIndex) => (
               <MessageBubble
                 conversation={conversation}

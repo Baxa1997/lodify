@@ -83,7 +83,7 @@ function AudioMessage({isOwn, content, fileInfo}) {
   if (!audioUrl) {
     return (
       <Box p="10px 14px">
-        <Text color={isOwn ? "#fff" : "#181D27"}>Audio not available</Text>
+        <Text color={isOwn ? "000" : "#181D27"}>Audio not available</Text>
       </Box>
     );
   }
@@ -91,10 +91,10 @@ function AudioMessage({isOwn, content, fileInfo}) {
   return (
     <>
       <Box
-        p={isOwn ? "6px 0px 6px 14px" : "6px 14px 6px 14px"}
+        p={isOwn ? "6px 14px 6px 14px" : "6px 14px 6px 14px"}
         borderRadius="12px"
-        bg={isOwn ? "transparent" : "#fff"}
-        color={isOwn ? "#fff" : "#181D27"}
+        bg={isOwn ? "transparent" : "#080707"}
+        color={isOwn ? "#080707" : "#181D27"}
         maxW="100%"
         minW="100%"
         cursor="pointer"
@@ -107,8 +107,8 @@ function AudioMessage({isOwn, content, fileInfo}) {
               e.stopPropagation();
               togglePlayPause();
             }}
-            bg={isOwn ? "rgba(255, 255, 255, 0.2)" : "#007AFF"}
-            color={isOwn ? "#fff" : "#fff"}
+            bg={isOwn ? "#fff" : "#007AFF"}
+            color={isOwn ? "#080707" : "#080707"}
             borderRadius="50%"
             w="36px"
             h="36px"
@@ -124,7 +124,7 @@ function AudioMessage({isOwn, content, fileInfo}) {
           <Box flex="1" minW="0">
             <HStack justify="space-between" mb="4px">
               <Text
-                color={isOwn ? "#fff" : "#181D27"}
+                color={isOwn ? "#080707" : "#181D27"}
                 fontWeight="600"
                 fontSize="14px"
                 noOfLines={1}>
@@ -133,7 +133,7 @@ function AudioMessage({isOwn, content, fileInfo}) {
                   : fileName}
               </Text>
               <Text
-                color={isOwn ? "rgba(255, 255, 255, 0.8)" : "#535862"}
+                color={isOwn ? "#080707" : "#535862"}
                 fontSize="12px"
                 fontWeight="500">
                 {formatTime(duration || audioDuration)}
@@ -143,12 +143,12 @@ function AudioMessage({isOwn, content, fileInfo}) {
             <Box position="relative" onClick={handleSeek} cursor="pointer">
               <Box
                 h="4px"
-                bg={isOwn ? "rgba(255, 255, 255, 0.3)" : "#E5E7EB"}
+                bg={isOwn ? "#fff" : "#E5E7EB"}
                 borderRadius="2px"
                 overflow="hidden">
                 <Box
                   h="100%"
-                  bg={isOwn ? "#fff" : "#007AFF"}
+                  bg={isOwn ? "#080707" : "#007AFF"}
                   borderRadius="2px"
                   width={`${duration ? (currentTime / duration) * 100 : 0}%`}
                   transition="width 0.1s ease"
@@ -156,23 +156,23 @@ function AudioMessage({isOwn, content, fileInfo}) {
               </Box>
             </Box>
 
-            {/* Time Display */}
             <HStack justify="space-between" mt="4px">
-              <Text
-                color={isOwn ? "rgba(255, 255, 255, 0.7)" : "#9CA3AF"}
-                fontSize="11px">
+              <Text color={isOwn ? "#080707" : "#9CA3AF"} fontSize="11px">
                 {formatTime(currentTime)}
               </Text>
-              <Text
+              {/* <Text
                 color={isOwn ? "rgba(255, 255, 255, 0.7)" : "#9CA3AF"}
                 fontSize="11px">
                 {formatTime(duration || audioDuration)}
-              </Text>
+              </Text> */}
             </HStack>
           </Box>
         </Flex>
 
         <audio
+          style={{
+            display: "none",
+          }}
           ref={audioRef}
           src={audioUrl}
           preload="metadata"

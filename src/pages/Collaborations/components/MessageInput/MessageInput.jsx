@@ -5,19 +5,17 @@ import {
   Box,
   Button,
   Flex,
-  Textarea,
   Input,
   IconButton,
   useToast,
   Text,
   HStack,
-  Progress,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
-import {AttachmentIcon, CloseIcon} from "@chakra-ui/icons";
 import fileService from "@services/fileService";
 import {FaMicrophone, FaStop, FaTrash, FaCheck} from "react-icons/fa";
 
-// Add CSS for waveform animation
 const waveformStyle = `
   @keyframes pulse {
     0%, 100% { opacity: 0.4; }
@@ -105,25 +103,8 @@ const MessageInput = ({
 
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
+
     if (file) {
-      console.log("File selected:", {
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      });
-
-      const maxSize = 10 * 1024 * 1024;
-      if (file.size > maxSize) {
-        toast({
-          title: "File too large",
-          description: "Maximum file size is 10MB",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-        return;
-      }
-
       setSelectedFile(file);
       setMessage(file.name);
       console.log("File ready for upload");
@@ -142,7 +123,6 @@ const MessageInput = ({
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      console.log("Uploading file to CDN...");
       const response = await fileService.folderUpload(formData, {
         folder_name: "chat",
       });
@@ -168,22 +148,14 @@ const MessageInput = ({
         fileInputRef.current.value = "";
       }
 
-      toast({
-        title: "File sent successfully",
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-      });
+      // toast({
+      //   title: "File sent successfully",
+      //   status: "success",
+      //   duration: 2000,
+      //   isClosable: true,
+      // });
     } catch (error) {
       console.error("File upload error:", error);
-
-      toast({
-        title: "Upload failed",
-        description: error?.message || "Could not send file. Please try again.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
     } finally {
       setIsUploading(false);
       console.log("Upload process completed");
@@ -239,22 +211,8 @@ const MessageInput = ({
       timerRef.current = setInterval(() => {
         setRecordingTime((prev) => prev + 1);
       }, 1000);
-
-      toast({
-        title: "Recording started",
-        status: "info",
-        duration: 2000,
-        isClosable: true,
-      });
     } catch (error) {
       console.error("Error starting recording:", error);
-      toast({
-        title: "Recording failed",
-        description: "Could not access microphone. Please check permissions.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
     }
   }
 
@@ -348,18 +306,18 @@ const MessageInput = ({
   };
 
   return (
-    <Box px="20px" mb="10px">
+    <Box>
       <style>{waveformStyle}</style>
       {(isRecording || audioUrl) && (
         <Box
+          mx="20px"
           mb="10px"
-          p="16px 20px"
+          p="4px 10px"
           bg="white"
           borderRadius="12px"
           border="1px solid #E2E8F0"
           boxShadow="0 2px 8px rgba(0, 0, 0, 0.1)">
           <Flex alignItems="center" gap="16px">
-            {/* Trash/Delete Button */}
             <IconButton
               size="sm"
               icon={<FaTrash />}
@@ -371,12 +329,10 @@ const MessageInput = ({
               _hover={{bg: "#F3F4F6"}}
             />
 
-            {/* Timer */}
             <Text fontWeight="600" fontSize="16px" color="#181D27" minW="50px">
               {formatRecordingTime(recordingTime)}
             </Text>
 
-            {/* Waveform Visualization */}
             <Box flex="1" position="relative">
               {isRecording ? (
                 <Box
@@ -385,20 +341,23 @@ const MessageInput = ({
                   alignItems="center"
                   gap="2px"
                   justifyContent="center">
-                  {Array.from({length: 20}, (_, i) => {
+                  {Array.from({length: 120}, (_, i) => {
                     const height = Math.sin(i * 0.5) * 8 + 12;
                     return (
-                      <Box
-                        key={i}
-                        w="3px"
-                        h={`${height}px`}
-                        bg="#9CA3AF"
-                        borderRadius="1.5px"
-                        animation="pulse 1s ease-in-out infinite"
-                        style={{
-                          animationDelay: `${i * 0.1}s`,
-                        }}
-                      />
+                      <>
+                        {" "}
+                        <Box
+                          key={i}
+                          w="3px"
+                          h={`${height}px`}
+                          bg="#9CA3AF"
+                          borderRadius="1.5px"
+                          animation="pulse 1s ease-in-out infinite"
+                          style={{
+                            animationDelay: `${i * 0.1}s`,
+                          }}
+                        />
+                      </>
                     );
                   })}
                 </Box>
@@ -414,7 +373,6 @@ const MessageInput = ({
               )}
             </Box>
 
-            {/* Control Buttons */}
             <HStack spacing="8px">
               {isRecording ? (
                 <IconButton
@@ -466,36 +424,73 @@ const MessageInput = ({
       )}
 
       <form onSubmit={handleSubmit} className={styles.form}>
-        <Box border="1px solid #D5D7DA" borderRadius="8px" pr="15px">
-          <Textarea
-            resize="none"
-            ref={inputRef}
-            value={message}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            placeholder={
-              selectedFile
-                ? "File selected - click Send"
-                : isConnected
-                ? "Send a message"
-                : "Connecting..."
-            }
-            border="none"
-            h="40px"
-            disabled={
-              disabled ||
-              !isConnected ||
-              selectedFile !== null ||
-              isRecording ||
-              audioUrl !== null
-            }
-            _focus={{
-              outline: "none",
-              boxShadow: "none",
+        <Flex p="16px 10px" borderTop="1px solid #E9EAEB">
+          <Button
+            onClick={() => {
+              console.log("attach");
+              fileInputRef.current?.click();
             }}
+            bg="none"
+            _hover={{bg: "none"}}
+            p="0">
+            <img src="/img/attach.svg" alt="" />
+          </Button>
+          <InputGroup>
+            <Input
+              ref={inputRef}
+              value={message}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              placeholder={
+                selectedFile
+                  ? "File selected - click Send"
+                  : isConnected
+                  ? "Send a message"
+                  : "Connecting..."
+              }
+              border="1px solid #D1D5DB"
+              borderRadius="25px"
+              h="40px"
+              disabled={
+                disabled ||
+                !isConnected ||
+                selectedFile !== null ||
+                isRecording ||
+                audioUrl !== null
+              }
+              _focus={{
+                outline: "none",
+                boxShadow: "none",
+              }}
+            />
+            <InputRightElement>
+              <Button
+                onClick={handleSubmit}
+                _hover={{bg: "none"}}
+                bg="none"
+                p="0">
+                <img src="/img/smile.svg" alt="" />
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+
+          <Button
+            onClick={isRecording ? stopRecording : startRecording}
+            bg="none"
+            _hover={{bg: "none"}}
+            p="0">
+            <img src="/img/microphone.svg" alt="" />
+          </Button>
+
+          <Input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            display="none"
+            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
           />
 
-          <Flex justifyContent="flex-end" alignItems="center" gap="6px">
+          {/* <Flex justifyContent="flex-end" alignItems="center" gap="6px">
             <Input
               type="file"
               ref={fileInputRef}
@@ -592,8 +587,8 @@ const MessageInput = ({
                 ? "Send"
                 : "Connecting..."}
             </Button>
-          </Flex>
-        </Box>
+          </Flex> */}
+        </Flex>
       </form>
     </Box>
   );

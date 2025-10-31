@@ -11,6 +11,7 @@ const ChatArea = ({
   isConnected,
   setIsAddRoomOpen = () => {},
   presence = {},
+  setConversation = () => {},
 }) => {
   if (!conversation?.id) {
     return (
@@ -62,6 +63,7 @@ const ChatArea = ({
         presence={presence}
         conversation={conversation}
         isConnected={isConnected}
+        setConversation={setConversation}
         setIsAddRoomOpen={setIsAddRoomOpen}
       />
       <MessagesList

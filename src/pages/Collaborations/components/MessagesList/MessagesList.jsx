@@ -14,6 +14,7 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   const loggedInUser = useSelector((state) => state.auth.user_data?.login);
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const prevMessageCountRef = useRef(0);
+  const isInitialLoadRef = useRef(false);
 
   const [pagination, setPagination] = useState({
     limit: 10,
@@ -23,7 +24,10 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   });
 
   const scrollToBottom = (behavior = "smooth") => {
-    messagesEndRef.current?.scrollIntoView({behavior});
+    // Use requestAnimationFrame to ensure DOM is updated
+    requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({behavior});
+    });
   };
 
   const deduplicateMessages = useCallback((existingMessages, newMessages) => {
@@ -81,6 +85,12 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   );
 
   useEffect(() => {
+    // Skip smooth scroll on initial load - that's handled by the initial load useEffect
+    if (isInitialLoadRef.current) {
+      prevMessageCountRef.current = localMessages.length;
+      return;
+    }
+
     if (localMessages.length > prevMessageCountRef.current) {
       setIsNewMessage(true);
       scrollToBottom("smooth");
@@ -90,31 +100,40 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     prevMessageCountRef.current = localMessages.length;
   }, [localMessages]);
 
+  // Scroll to bottom when conversation changes (but wait for messages to load)
   useEffect(() => {
-    scrollToBottom("auto");
+    // Reset the message count when conversation changes
+    prevMessageCountRef.current = 0;
+    isInitialLoadRef.current = true;
+    // Don't scroll here - wait for messages to load
   }, [conversation?.id]);
+
+  // Scroll to bottom after initial messages load
+  useEffect(() => {
+    if (isInitialLoadRef.current && localMessages.length > 0) {
+      // Use setTimeout to ensure DOM is fully rendered
+      setTimeout(() => {
+        scrollToBottom("auto");
+        isInitialLoadRef.current = false;
+      }, 100);
+    }
+  }, [localMessages.length]);
 
   useEffect(() => {
     if (!socket) return;
 
     const handleRoomHistory = (messages) => {
-      if (Array.isArray(messages)) {
-        setLocalMessages(messages);
+      const messagesToSet = Array.isArray(messages)
+        ? messages
+        : messages?.data && Array.isArray(messages.data)
+        ? messages.data
+        : null;
 
-        // setPagination((prev) => ({
-        //   ...prev,
-        //   offset: 0,
-        //   hasMoreMessages: messages.length >= prev.limit,
-        //   isLoadingMore: false,
-        // }));
-      } else if (messages?.data && Array.isArray(messages.data)) {
-        setLocalMessages(messages.data);
-        // setPagination((prev) => ({
-        //   ...prev,
-        //   offset: 0,
-        //   hasMoreMessages: messages.data.length >= prev.limit,
-        //   isLoadingMore: false,
-        // }));
+      if (messagesToSet) {
+        setLocalMessages(messagesToSet);
+        // Ensure scroll happens after messages are set
+        // Mark as initial load so the useEffect can handle scrolling
+        isInitialLoadRef.current = true;
       } else {
         console.warn("⚠️ Unexpected room history format:", messages);
       }
@@ -230,6 +249,8 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     if (!socket || !conversation?.id || !userId) return;
 
     setLocalMessages([]);
+    prevMessageCountRef.current = 0;
+    isInitialLoadRef.current = true;
 
     setPagination({
       limit: 10,

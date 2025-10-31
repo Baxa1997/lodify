@@ -1,8 +1,14 @@
 import React, {useMemo} from "react";
 import {Flex, Box, Text, Button} from "@chakra-ui/react";
 import {format} from "date-fns";
+import {ChevronLeftIcon} from "@chakra-ui/icons";
 
-const ChatHeader = ({conversation, isConnected, presence = {}}) => {
+const ChatHeader = ({
+  conversation,
+  isConnected,
+  presence = {},
+  setConversation = () => {},
+}) => {
   const {name, to_name, type, username, avatar, isGroup} = conversation;
 
   const activeLast = useMemo(() => {
@@ -21,6 +27,13 @@ const ChatHeader = ({conversation, isConnected, presence = {}}) => {
   return (
     <Flex p="10px 8px" alignItems="center" justifyContent="space-between">
       <Flex gap="12px" alignItems="center">
+        <Button
+          bg="none"
+          _hover={{bg: "none"}}
+          p="0"
+          onClick={() => setConversation(null)}>
+          <ChevronLeftIcon width="30px" height="30px" />
+        </Button>
         <Box
           w="40px"
           h="40px"

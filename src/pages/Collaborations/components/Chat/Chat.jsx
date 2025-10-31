@@ -310,6 +310,7 @@ const Chat = () => {
           isInitializing={isInitializing}
           tripId={tripId}
           presence={presence}
+          setConversation={setConversation}
         />
 
         <AddRoom

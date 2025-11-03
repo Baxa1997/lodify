@@ -16,7 +16,7 @@ import {calculateTimeDifference} from "@utils/timeUtils";
 
 const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
   const envId = useSelector((state) => state.auth.environmentId);
-  console.log("tripstrip", trip);
+
   const {
     data: detailedTripData = {},
     isLoading,
@@ -490,8 +490,8 @@ const TripDriverVerification = ({
   const getTruckImage = () => {
     let isVerified = false;
 
-    if (tripData?.current_index === pickUpindex) {
-      isVerified = trip?.is_truck_verified;
+    if (tripData?.current_index > pickUpindex) {
+      isVerified = true;
     } else if (tripData?.current_index > pickUpindex) {
       isVerified = true;
     } else {
@@ -522,7 +522,7 @@ const TripDriverVerification = ({
   };
 
   const isDriverVerified = getDriverVerifiedStatus();
-  console.log("trip?.driver_type?.[0].toLowerCase()", trip?.driver_type);
+
   return (
     <Flex gap="24px" alignItems="center">
       <Box w="22px" h="22px">

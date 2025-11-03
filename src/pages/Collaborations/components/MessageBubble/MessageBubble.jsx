@@ -1,10 +1,11 @@
-import React, {useMemo} from "react";
-import {Flex, Box, Text} from "@chakra-ui/react";
+import React, {useMemo, useState} from "react";
+import {Flex, Box, Text, Button} from "@chakra-ui/react";
 import TextMessage from "./TextMessage";
 import FileMessage from "./FileMessage";
 import ImageMessage from "./ImageMessage";
 import AudioMessage from "./AudioMessage";
 import VideoMessage from "./VideoMessage";
+import {BsReply} from "react-icons/bs";
 
 const MessageBubble = ({
   rooms = [],
@@ -13,7 +14,15 @@ const MessageBubble = ({
   conversation,
   showTime = true,
 }) => {
-  const {message: content, created_at, type, fileInfo, read_at} = message;
+  const [relyingMessage, setRelyingMessage] = useState(null);
+  const {
+    message: content,
+    created_at,
+    type,
+    fileInfo,
+    read_at,
+    parent_id,
+  } = message;
 
   const isRead = useMemo(() => {
     if (!isOwn) return false;
@@ -57,7 +66,7 @@ const MessageBubble = ({
   };
 
   const messageWidth = getMessageWidth();
-
+  console.log("replying message", relyingMessage);
   return isOwn ? (
     <Flex ml="auto" justifyContent="flex-end" p="6px 0" gap="12px">
       <Box maxW="500px" w={messageWidth}>
@@ -108,23 +117,41 @@ const MessageBubble = ({
           : sender?.to_name?.[0]}
       </Box>
 
-      <Box maxW="500px" w={messageWidth}>
-        <Flex justifyContent="space-between" alignItems="center"></Flex>
+      <Box alignItems="center" gap="6px" maxW="500px" w={messageWidth}>
+        <Flex
+          _hover={{"#reply-button": {display: "block"}}}
+          alignItems="center"
+          gap="6px">
+          <Box
+            bg="#E9EAED"
+            color="#181D27"
+            borderRadius="20px"
+            borderBottomLeftRadius="4px"
+            border="1px solid #E9EAEB"
+            w="100%">
+            <MessageComponent content={content} fileInfo={fileInfo} />
+          </Box>
 
-        <Box
-          bg="#E9EAED"
-          color="#181D27"
-          borderRadius="20px"
-          borderBottomLeftRadius="4px"
-          border="1px solid #E9EAEB"
-          w="100%">
-          <MessageComponent content={content} fileInfo={fileInfo} />
+          <Button
+            onClick={() => setRelyingMessage(message)}
+            display="none"
+            id="reply-button"
+            p="0"
+            h="20px"
+            bg="none"
+            border="none"
+            cursor="pointer"
+            _hover={{bg: "none"}}>
+            <BsReply />
+          </Button>
+        </Flex>
+        <Box>
+          {showTime && (
+            <Text mt="2px" fontWeight="400" color="#535862" fontSize="12px">
+              {messageTime}
+            </Text>
+          )}
         </Box>
-        {showTime && (
-          <Text mt="2px" fontWeight="400" color="#535862" fontSize="12px">
-            {messageTime}
-          </Text>
-        )}
       </Box>
     </Flex>
   );

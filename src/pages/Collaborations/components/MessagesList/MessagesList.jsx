@@ -3,6 +3,7 @@ import MessageBubble from "../MessageBubble/MessageBubble";
 import styles from "./MessagesList.module.scss";
 import {useSocket} from "@context/SocketProvider";
 import {useSelector} from "react-redux";
+import {FaReply} from "react-icons/fa6";
 
 const MessagesList = ({rooms = [], conversation, isConnected}) => {
   const socket = useSocket();
@@ -95,7 +96,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
       return;
     }
 
-    // Don't auto-scroll when loading older messages (pagination)
     if (isLoadingPaginationRef.current) {
       prevMessageCountRef.current = localMessages.length;
       isLoadingPaginationRef.current = false;

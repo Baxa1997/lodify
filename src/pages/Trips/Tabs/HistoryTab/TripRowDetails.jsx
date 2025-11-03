@@ -247,7 +247,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                       </Text>
                       <TripDriverVerification
                         tripData={tripData}
-                        trip={item}
+                        trip={trip}
                         pickUpindex={index}
                       />
                     </Flex>
@@ -479,7 +479,7 @@ const TripDriverVerification = ({
         bg={isDriverVerified ? "#DEFFEE" : "#EDEDED"}
         borderRadius="16px">
         <Box w="17px" h="17px">
-          {trip?.driver_type?.[0] === "Team" &&
+          {trip?.driver_type?.[0].toLowerCase() === "team" &&
             (isDriverVerified ? (
               <img
                 src="/img/unverifiedSecondDriver.svg"

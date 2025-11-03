@@ -370,7 +370,7 @@ const MessageInput = ({
               </Box>
             </Flex>
             <IconButton
-              size="lg"
+              size="md"
               icon={<MdClose />}
               onClick={onCancelReply}
               variant="ghost"

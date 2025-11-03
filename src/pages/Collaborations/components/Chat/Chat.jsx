@@ -18,6 +18,7 @@ const Chat = () => {
   const [presence, setPresence] = useState({});
   const [isInitializing, setIsInitializing] = useState(false);
   const [hasProcessedTripId, setHasProcessedTripId] = useState(false);
+  const [replyingTo, setReplyingTo] = useState(null);
   const loginName = useSelector((state) => state.auth.user_data?.login);
   const projectId = useSelector((state) => state.auth.projectId);
 
@@ -190,13 +191,27 @@ const Chat = () => {
       file: fileInfo?.url || "",
     };
 
+    if (replyingTo) {
+      messageData.parent_id = replyingTo.id || replyingTo._id;
+    }
+
     socket.emit("chat message", messageData, (response) => {
       if (response && response.error) {
         console.error("❌ Server error response:", response.error);
       } else {
         console.log("✅ Server success response:", response);
+
+        setReplyingTo(null);
       }
     });
+  };
+
+  const handleReply = (message) => {
+    setReplyingTo(message);
+  };
+
+  const handleCancelReply = () => {
+    setReplyingTo(null);
   };
 
   const handleConversationSelect = (selectedConversation) => {
@@ -311,6 +326,9 @@ const Chat = () => {
           tripId={tripId}
           presence={presence}
           setConversation={setConversation}
+          onReply={handleReply}
+          replyingTo={replyingTo}
+          onCancelReply={handleCancelReply}
         />
 
         <AddRoom

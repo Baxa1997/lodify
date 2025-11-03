@@ -1,11 +1,12 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import {Flex, Box, Text, Button} from "@chakra-ui/react";
+import {BsReply} from "react-icons/bs";
+import {MdReply} from "react-icons/md";
 import TextMessage from "./TextMessage";
 import FileMessage from "./FileMessage";
 import ImageMessage from "./ImageMessage";
 import AudioMessage from "./AudioMessage";
 import VideoMessage from "./VideoMessage";
-import {BsReply} from "react-icons/bs";
 
 const MessageBubble = ({
   rooms = [],
@@ -13,8 +14,9 @@ const MessageBubble = ({
   isOwn,
   conversation,
   showTime = true,
+  onReply,
+  allMessages = [],
 }) => {
-  const [relyingMessage, setRelyingMessage] = useState(null);
   const {
     message: content,
     created_at,
@@ -22,6 +24,7 @@ const MessageBubble = ({
     fileInfo,
     read_at,
     parent_id,
+    parent_message,
   } = message;
 
   const isRead = useMemo(() => {
@@ -66,10 +69,40 @@ const MessageBubble = ({
   };
 
   const messageWidth = getMessageWidth();
-  console.log("replying message", relyingMessage);
+
+  const parentMsg = useMemo(() => {
+    if (parent_message) return parent_message;
+    if (parent_id && allMessages.length > 0) {
+      return allMessages.find(
+        (msg) => msg.id === parent_id || msg._id === parent_id
+      );
+    }
+    return null;
+  }, [parent_id, parent_message, allMessages]);
+
   return isOwn ? (
     <Flex ml="auto" justifyContent="flex-end" p="6px 0" gap="12px">
       <Box maxW="500px" w={messageWidth}>
+        {parentMsg && (
+          <Flex
+            alignItems="center"
+            gap="8px"
+            mb="8px"
+            p="8px 12px"
+            bg="rgba(255, 255, 255, 0.5)"
+            borderRadius="12px"
+            borderLeft="3px solid #3B82F6">
+            <MdReply size={16} color="#3B82F6" />
+            <Box flex="1">
+              <Text fontSize="12px" fontWeight="600" color="#3B82F6">
+                Reply to {parentMsg.from || "User"}
+              </Text>
+              <Text fontSize="12px" color="#374151" noOfLines={1}>
+                {parentMsg.message || "File message"}
+              </Text>
+            </Box>
+          </Flex>
+        )}
         <Box
           bg="#E0F0FF"
           color="#080707"
@@ -118,6 +151,26 @@ const MessageBubble = ({
       </Box>
 
       <Box alignItems="center" gap="6px" maxW="500px" w={messageWidth}>
+        {parentMsg && (
+          <Flex
+            alignItems="center"
+            gap="8px"
+            mb="8px"
+            p="8px 12px"
+            bg="rgba(233, 234, 237, 0.5)"
+            borderRadius="12px"
+            borderLeft="3px solid #9CA3AF">
+            <MdReply size={16} color="#6B7280" />
+            <Box flex="1">
+              <Text fontSize="12px" fontWeight="600" color="#6B7280">
+                Reply to {parentMsg.from || "User"}
+              </Text>
+              <Text fontSize="12px" color="#374151" noOfLines={1}>
+                {parentMsg.message || "File message"}
+              </Text>
+            </Box>
+          </Flex>
+        )}
         <Flex
           _hover={{"#reply-button": {display: "block"}}}
           alignItems="center"
@@ -133,7 +186,7 @@ const MessageBubble = ({
           </Box>
 
           <Button
-            onClick={() => setRelyingMessage(message)}
+            onClick={() => onReply && onReply(message)}
             display="none"
             id="reply-button"
             p="0"
@@ -164,10 +217,14 @@ export default React.memo(MessageBubble, (prevProps, nextProps) => {
     prevProps.message?.id === nextProps.message?.id &&
     prevProps.message?.created_at === nextProps.message?.created_at &&
     prevProps.message?.read_at === nextProps.message?.read_at &&
+    prevProps.message?.parent_id === nextProps.message?.parent_id &&
     prevProps.isOwn === nextProps.isOwn &&
     prevProps.showTime === nextProps.showTime &&
+    prevProps.onReply === nextProps.onReply &&
     JSON.stringify(prevProps.message?.fileInfo) ===
-      JSON.stringify(nextProps.message?.fileInfo);
+      JSON.stringify(nextProps.message?.fileInfo) &&
+    JSON.stringify(prevProps.message?.parent_message) ===
+      JSON.stringify(nextProps.message?.parent_message);
 
   return isSame;
 });

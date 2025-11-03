@@ -3,9 +3,8 @@ import MessageBubble from "../MessageBubble/MessageBubble";
 import styles from "./MessagesList.module.scss";
 import {useSocket} from "@context/SocketProvider";
 import {useSelector} from "react-redux";
-import {FaReply} from "react-icons/fa6";
 
-const MessagesList = ({rooms = [], conversation, isConnected}) => {
+const MessagesList = ({rooms = [], conversation, isConnected, onReply}) => {
   const socket = useSocket();
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -421,6 +420,8 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
                     group.messages[messageIndex - 1].senderId !==
                       message.senderId
                   }
+                  onReply={onReply}
+                  allMessages={localMessages}
                 />
               );
             })}

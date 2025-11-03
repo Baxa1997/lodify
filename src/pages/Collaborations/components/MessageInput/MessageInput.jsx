@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import fileService from "@services/fileService";
 import {FaMicrophone, FaStop, FaTrash, FaCheck} from "react-icons/fa";
+import {MdClose, MdReply} from "react-icons/md";
 
 const waveformStyle = `
   @keyframes pulse {
@@ -33,6 +34,8 @@ const MessageInput = ({
   onSendMessage = () => {},
   isConnected = false,
   disabled = false,
+  replyingTo = null,
+  onCancelReply = () => {},
 }) => {
   const [message, setMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -86,6 +89,9 @@ const MessageInput = ({
       onSendMessage(message.trim(), "text");
       setMessage("");
       setTyping(currentUser?.id, false);
+      if (onCancelReply) {
+        onCancelReply();
+      }
     } else {
       console.warn("No file or message to send");
     }
@@ -174,6 +180,10 @@ const MessageInput = ({
 
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
+      }
+
+      if (onCancelReply) {
+        onCancelReply();
       }
     } catch (error) {
       console.error("File upload error:", error);
@@ -309,6 +319,10 @@ const MessageInput = ({
       setAudioUrl(null);
       setRecordingTime(0);
 
+      if (onCancelReply) {
+        onCancelReply();
+      }
+
       toast({
         title: "Voice message sent",
         status: "success",
@@ -340,6 +354,36 @@ const MessageInput = ({
   return (
     <Box>
       <style>{waveformStyle}</style>
+
+      {replyingTo && (
+        <Box p="4px 16px" bg="#F9FAFB" borderTop="1px solid #E2E8F0">
+          <Flex justifyContent="space-between" alignItems="center" gap="12px">
+            <Flex flex="1" alignItems="center" gap="8px">
+              <MdReply size={24} color="#6B7280" />
+              <Box>
+                <Text fontSize="12px" fontWeight="600" color="#6B7280">
+                  Replying to {replyingTo.from}
+                </Text>
+                <Text fontSize="14px" color="#374151" noOfLines={2}>
+                  {replyingTo.message || "File message"}
+                </Text>
+              </Box>
+            </Flex>
+            <IconButton
+              size="lg"
+              icon={<MdClose />}
+              onClick={onCancelReply}
+              variant="ghost"
+              aria-label="Cancel reply"
+              color="#6B7280"
+              _hover={{bg: "#F3F4F6"}}
+              minW="auto"
+              h="auto"
+            />
+          </Flex>
+        </Box>
+      )}
+
       {(isRecording || audioUrl) && (
         <Box
           mx="20px"
@@ -377,7 +421,6 @@ const MessageInput = ({
                     const height = Math.sin(i * 0.5) * 8 + 12;
                     return (
                       <>
-                        {" "}
                         <Box
                           key={i}
                           w="3px"

@@ -88,7 +88,6 @@ export const SocketProvider = ({children}) => {
     }
 
     return () => {
-      console.log("UNMOUNTING SOCKET");
       if (socketRef.current) {
         socketRef.current.off("connect");
         socketRef.current.off("disconnect");
@@ -106,7 +105,6 @@ export const SocketProvider = ({children}) => {
 
   useEffect(() => {
     if (socket && isConnected && userId) {
-      console.log("Connection 2");
       socket.emit("connected", {row_id: userId});
     }
   }, [socket, isConnected, userId]);

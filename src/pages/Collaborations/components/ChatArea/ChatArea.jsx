@@ -12,6 +12,9 @@ const ChatArea = ({
   setIsAddRoomOpen = () => {},
   presence = {},
   setConversation = () => {},
+  onReply = () => {},
+  replyingTo = null,
+  onCancelReply = () => {},
 }) => {
   if (!conversation?.id) {
     return (
@@ -70,11 +73,14 @@ const ChatArea = ({
         rooms={rooms}
         conversation={conversation}
         isConnected={isConnected}
+        onReply={onReply}
       />
       <MessageInput
         onSendMessage={onSendMessage}
         isConnected={isConnected}
         disabled={!isConnected}
+        replyingTo={replyingTo}
+        onCancelReply={onCancelReply}
       />
     </div>
   );

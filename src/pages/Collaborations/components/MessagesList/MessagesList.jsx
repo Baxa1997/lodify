@@ -14,9 +14,10 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const prevMessageCountRef = useRef(0);
   const isInitialLoadRef = useRef(false);
+  const isLoadingPaginationRef = useRef(false);
 
   const [pagination, setPagination] = useState({
-    limit: 10,
+    limit: 20,
     offset: 0,
     hasMoreMessages: true,
     isLoadingMore: false,
@@ -57,6 +58,12 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     setPagination((prev) => ({...prev, isLoadingMore: true}));
 
     const nextOffset = pagination.offset + pagination.limit;
+
+    socket.emit("room history", {
+      room_id: conversation.id,
+      limit: pagination.limit,
+      offset: nextOffset,
+    });
   }, [
     socket,
     conversation?.id,
@@ -85,6 +92,13 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   useEffect(() => {
     if (isInitialLoadRef.current) {
       prevMessageCountRef.current = localMessages.length;
+      return;
+    }
+
+    // Don't auto-scroll when loading older messages (pagination)
+    if (isLoadingPaginationRef.current) {
+      prevMessageCountRef.current = localMessages.length;
+      isLoadingPaginationRef.current = false;
       return;
     }
 
@@ -122,8 +136,48 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
         : null;
 
       if (messagesToSet) {
-        setLocalMessages(messagesToSet);
-        isInitialLoadRef.current = true;
+        if (pagination.isLoadingMore) {
+          const container = messagesContainerRef.current;
+          const prevScrollHeight = container?.scrollHeight || 0;
+          const prevScrollTop = container?.scrollTop || 0;
+
+          if (messagesToSet.length === 0) {
+            setPagination((prev) => ({
+              ...prev,
+              hasMoreMessages: false,
+              isLoadingMore: false,
+            }));
+            return;
+          }
+
+          isLoadingPaginationRef.current = true;
+
+          setLocalMessages((prevMessages) => {
+            const deduplicatedMessages = deduplicateMessages(
+              prevMessages,
+              messagesToSet
+            );
+            return deduplicatedMessages;
+          });
+
+          setPagination((prev) => ({
+            ...prev,
+            offset: prev.offset + prev.limit,
+            hasMoreMessages: messagesToSet.length >= prev.limit,
+            isLoadingMore: false,
+          }));
+
+          requestAnimationFrame(() => {
+            if (container) {
+              const newScrollHeight = container.scrollHeight;
+              container.scrollTop =
+                prevScrollTop + (newScrollHeight - prevScrollHeight);
+            }
+          });
+        } else {
+          setLocalMessages(messagesToSet);
+          isInitialLoadRef.current = true;
+        }
       } else {
         console.warn("⚠️ Unexpected room history format:", messages);
       }
@@ -155,50 +209,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
       }
     };
 
-    const handleMoreMessages = (response) => {
-      setPagination((prev) => ({...prev, isLoadingMore: false}));
-
-      if (response && Array.isArray(response)) {
-        if (response.length === 0) {
-          setPagination((prev) => ({...prev, hasMoreMessages: false}));
-          return;
-        }
-
-        setLocalMessages((prevMessages) => {
-          const deduplicatedMessages = deduplicateMessages(
-            prevMessages,
-            response
-          );
-          return deduplicatedMessages;
-        });
-
-        setPagination((prev) => ({
-          ...prev,
-          offset: prev.offset + prev.limit,
-          hasMoreMessages: response.length >= prev.limit,
-        }));
-      } else if (response?.data && Array.isArray(response.data)) {
-        if (response.data.length === 0) {
-          setPagination((prev) => ({...prev, hasMoreMessages: false}));
-          return;
-        }
-
-        setLocalMessages((prevMessages) => {
-          const deduplicatedMessages = deduplicateMessages(
-            prevMessages,
-            response.data
-          );
-          return deduplicatedMessages;
-        });
-
-        // setPagination((prev) => ({
-        //   ...prev,
-        //   offset: prev.offset + prev.limit,
-        //   hasMoreMessages: response.data.length >= prev.limit,
-        // }));
-      }
-    };
-
     const handleMessageRead = (response) => {
       if (response && response.room_id) {
         const roomId = response.room_id;
@@ -224,16 +234,21 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
     socket.on("room history", handleRoomHistory);
     socket.on("chat message", handleReceiveMessage);
-    socket.on("more messages", handleMoreMessages);
     socket.on("message.read", handleMessageRead);
 
     return () => {
       socket.off("room history", handleRoomHistory);
       socket.off("chat message", handleReceiveMessage);
-      socket.off("more messages", handleMoreMessages);
       socket.off("message.read", handleMessageRead);
     };
-  }, [socket, conversation?.id, deduplicateMessages, loggedInUser, userId]);
+  }, [
+    socket,
+    conversation?.id,
+    deduplicateMessages,
+    loggedInUser,
+    userId,
+    pagination.isLoadingMore,
+  ]);
 
   useEffect(() => {
     if (!socket || !conversation?.id || !userId) return;
@@ -241,9 +256,10 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     setLocalMessages([]);
     prevMessageCountRef.current = 0;
     isInitialLoadRef.current = true;
+    isLoadingPaginationRef.current = false;
 
     setPagination({
-      limit: 10,
+      limit: 20,
       offset: 0,
       hasMoreMessages: true,
       isLoadingMore: false,
@@ -252,6 +268,8 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     socket.emit("join room", {
       room_id: conversation.id,
       row_id: userId,
+      limit: 20,
+      offset: 0,
     });
     socket.emit("presence:get", {row_id: conversation.to_row_id});
   }, [socket, conversation?.id, userId]);

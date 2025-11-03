@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState, useCallback} from "react";
 import MessageBubble from "../MessageBubble/MessageBubble";
-import DateSeparator from "../DateSeparator/DateSeparator";
 import styles from "./MessagesList.module.scss";
 import {useSocket} from "@context/SocketProvider";
 import {useSelector} from "react-redux";
@@ -24,7 +23,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   });
 
   const scrollToBottom = (behavior = "smooth") => {
-    // Use requestAnimationFrame to ensure DOM is updated
     requestAnimationFrame(() => {
       messagesEndRef.current?.scrollIntoView({behavior});
     });
@@ -85,7 +83,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
   );
 
   useEffect(() => {
-    // Skip smooth scroll on initial load - that's handled by the initial load useEffect
     if (isInitialLoadRef.current) {
       prevMessageCountRef.current = localMessages.length;
       return;
@@ -100,18 +97,13 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
     prevMessageCountRef.current = localMessages.length;
   }, [localMessages]);
 
-  // Scroll to bottom when conversation changes (but wait for messages to load)
   useEffect(() => {
-    // Reset the message count when conversation changes
     prevMessageCountRef.current = 0;
     isInitialLoadRef.current = true;
-    // Don't scroll here - wait for messages to load
   }, [conversation?.id]);
 
-  // Scroll to bottom after initial messages load
   useEffect(() => {
     if (isInitialLoadRef.current && localMessages.length > 0) {
-      // Use setTimeout to ensure DOM is fully rendered
       setTimeout(() => {
         scrollToBottom("auto");
         isInitialLoadRef.current = false;
@@ -131,8 +123,6 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
       if (messagesToSet) {
         setLocalMessages(messagesToSet);
-        // Ensure scroll happens after messages are set
-        // Mark as initial load so the useEffect can handle scrolling
         isInitialLoadRef.current = true;
       } else {
         console.warn("⚠️ Unexpected room history format:", messages);
@@ -375,21 +365,47 @@ const MessagesList = ({rooms = [], conversation, isConnected}) => {
 
         {messageGroups.map((group, groupIndex) => (
           <div key={`${group.date}-${groupIndex}`}>
-            {group.messages.map((message, messageIndex) => (
-              <MessageBubble
-                conversation={conversation}
-                rooms={rooms}
-                key={`${message.id || message._id || messageIndex}-${
-                  message.type || "text"
-                }-${message.timestamp}`}
-                message={message}
-                isOwn={message.from === loggedInUser}
-                showAvatar={
-                  messageIndex === 0 ||
-                  group.messages[messageIndex - 1].senderId !== message.senderId
-                }
-              />
-            ))}
+            {group.messages.map((message, messageIndex) => {
+              const currentTime = new Date(
+                message.created_at
+              ).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              const nextMessage =
+                messageIndex < group.messages.length - 1
+                  ? group.messages[messageIndex + 1]
+                  : null;
+              const nextTime = nextMessage
+                ? new Date(nextMessage.created_at).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : null;
+
+              const showTime =
+                messageIndex === group.messages.length - 1 ||
+                nextMessage?.from !== message.from ||
+                currentTime !== nextTime;
+
+              return (
+                <MessageBubble
+                  conversation={conversation}
+                  rooms={rooms}
+                  key={`${message.id || message._id || messageIndex}-${
+                    message.type || "text"
+                  }-${message.timestamp}`}
+                  message={message}
+                  isOwn={message.from === loggedInUser}
+                  showTime={showTime}
+                  showAvatar={
+                    messageIndex === 0 ||
+                    group.messages[messageIndex - 1].senderId !==
+                      message.senderId
+                  }
+                />
+              );
+            })}
           </div>
         ))}
 

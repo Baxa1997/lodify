@@ -6,7 +6,13 @@ import ImageMessage from "./ImageMessage";
 import AudioMessage from "./AudioMessage";
 import VideoMessage from "./VideoMessage";
 
-const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
+const MessageBubble = ({
+  rooms = [],
+  message,
+  isOwn,
+  conversation,
+  showTime = true,
+}) => {
   const {message: content, created_at, type, fileInfo, read_at} = message;
 
   const isRead = useMemo(() => {
@@ -58,7 +64,7 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
         <Box
           bg="#E0F0FF"
           color="#080707"
-          borderRadius="8px"
+          borderRadius="25px"
           borderBottomRightRadius="0"
           w="100%">
           <Flex gap="8px" alignItems="flex-end" position="relative">
@@ -69,67 +75,20 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
                 fileInfo={fileInfo}
               />
             </Box>
-
-            {/* <Flex
-              gap="2px"
-              alignItems="center"
-              fontSize="14px"
-              color="#080707"
-              ml="4px">
-              <Text fontSize="12px" color="#080707" opacity={0.9} mr="4px">
-                {messageTime}
-              </Text>
-              {isRead ? (
-                <svg
-                  width="26"
-                  height="14"
-                  viewBox="0 0 16 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M0 6L5 11L11 1"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M6 6L11 11L16 1"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  width="16"
-                  height="12"
-                  viewBox="0 0 16 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M0 6L5 11L11 1"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
-            </Flex> */}
           </Flex>
         </Box>
-        <Flex
-          width="100%"
-          justifyContent="flex-end"
-          alignItems="center"
-          gap="4px">
-          {isRead && <img src="/img/doublecheck.svg" alt="read" />}
-          <Text fontWeight="400" color="#535862" fontSize="12px">
-            {messageTime}
-          </Text>
-        </Flex>
+        {showTime && (
+          <Flex
+            width="100%"
+            justifyContent="flex-end"
+            alignItems="center"
+            gap="4px">
+            {isRead && <img src="/img/doublecheck.svg" alt="read" />}
+            <Text fontWeight="400" color="#535862" fontSize="12px">
+              {messageTime}
+            </Text>
+          </Flex>
+        )}
       </Box>
     </Flex>
   ) : (
@@ -161,9 +120,11 @@ const MessageBubble = ({rooms = [], message, isOwn, conversation}) => {
           w="100%">
           <MessageComponent content={content} fileInfo={fileInfo} />
         </Box>
-        <Text mt="2px" fontWeight="400" color="#535862" fontSize="12px">
-          {messageTime}
-        </Text>
+        {showTime && (
+          <Text mt="2px" fontWeight="400" color="#535862" fontSize="12px">
+            {messageTime}
+          </Text>
+        )}
       </Box>
     </Flex>
   );
@@ -177,6 +138,7 @@ export default React.memo(MessageBubble, (prevProps, nextProps) => {
     prevProps.message?.created_at === nextProps.message?.created_at &&
     prevProps.message?.read_at === nextProps.message?.read_at &&
     prevProps.isOwn === nextProps.isOwn &&
+    prevProps.showTime === nextProps.showTime &&
     JSON.stringify(prevProps.message?.fileInfo) ===
       JSON.stringify(nextProps.message?.fileInfo);
 

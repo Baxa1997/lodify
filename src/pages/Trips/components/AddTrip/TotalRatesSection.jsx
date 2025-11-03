@@ -6,7 +6,9 @@ const TotalRatesSection = ({watch, control}) => {
   const totalRates = watch("accessorials");
 
   const getTotalAmount = () => {
-    return totalRates.reduce((total, field) => total + (field.amount || 0), 0);
+    return totalRates?.length > 0
+      ? totalRates?.reduce((total, field) => total + (field.amount || 0), 0)
+      : 0;
   };
 
   return (

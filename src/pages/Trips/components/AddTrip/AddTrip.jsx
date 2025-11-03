@@ -178,7 +178,10 @@ function AddTrip({tripData = {}}) {
   };
 
   useEffect(() => {
-    setValue("created_by", `${userData?.first_name} ${userData?.last_name}`);
+    setValue(
+      "created_by",
+      `${userData?.first_name ?? ""} ${userData?.last_name ?? ""}`
+    );
   }, []);
 
   useEffect(() => {

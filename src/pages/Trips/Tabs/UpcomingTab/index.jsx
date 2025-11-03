@@ -327,7 +327,11 @@ function UpcomingTab({tripType = ""}) {
                           <TripStatus
                             rowClick={handleRowClick}
                             onExpand={toggleRowExpansion}
-                            status={trip?.current_trip}
+                            status={
+                              trip?.current_trip === trip?.total_trips
+                                ? trip?.current_trip
+                                : trip?.current_trip + 1
+                            }
                             tripId={trip.id || trip.guid}
                           />
                         </Flex>

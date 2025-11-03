@@ -40,7 +40,11 @@ function AddTrip({tripData = {}}) {
     handleSubmit,
     formState: {errors},
     watch,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      generated_id: generateID(),
+    },
+  });
   const {data: rocFileData = {}, isLoading: isRocFileLoading} = useQuery({
     queryKey: ["TRIP_BY_ID", csvFile],
     queryFn: () =>
@@ -143,6 +147,7 @@ function AddTrip({tripData = {}}) {
         object_data: {
           main_trip: {
             ...data,
+            generated_id: generateID(),
             brokers_id: isBroker ? userData?.brokers_id : undefined,
             broker_users_id: isBroker ? userData?.guid : undefined,
             bold_pod: data.bold_pod?.[0],
@@ -173,7 +178,7 @@ function AddTrip({tripData = {}}) {
   };
 
   useEffect(() => {
-    setValue("generated_id", generateID());
+    setValue("created_by", `${userData?.first_name} ${userData?.last_name}`);
   }, []);
 
   useEffect(() => {
@@ -241,7 +246,7 @@ function AddTrip({tripData = {}}) {
           <ThirdSection control={control} />
 
           <PackageSection setValue={setValue} control={control} />
-          <TotalRatesSection control={control} />
+          <TotalRatesSection watch={watch} control={control} />
           <FourthSection control={control} />
           <AddressSection
             control={control}

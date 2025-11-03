@@ -16,7 +16,7 @@ import {calculateTimeDifference} from "@utils/timeUtils";
 
 const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
   const envId = useSelector((state) => state.auth.environmentId);
-
+  console.log("tripstrip", trip);
   const {
     data: detailedTripData = {},
     isLoading,
@@ -292,7 +292,7 @@ const TripRowDetails = ({trip = {}, handleRowClick, isExpanded = true}) => {
                       </Text>
                       <TripDriverVerification
                         tripData={tripData}
-                        trip={item}
+                        trip={trip}
                         pickUpindex={index}
                       />
                     </Flex>
@@ -522,7 +522,7 @@ const TripDriverVerification = ({
   };
 
   const isDriverVerified = getDriverVerifiedStatus();
-
+  console.log("trip?.driver_type?.[0].toLowerCase()", trip?.driver_type);
   return (
     <Flex gap="24px" alignItems="center">
       <Box w="22px" h="22px">
@@ -543,7 +543,7 @@ const TripDriverVerification = ({
         bg={isDriverVerified ? "#DEFFEE" : "#EDEDED"}
         borderRadius="16px">
         <Box w="17px" h="17px">
-          {trip?.driver_type?.[0] === "Team" &&
+          {trip?.driver_type?.[0].toLowerCase() === "team" &&
             (isDriverVerified ? (
               <img
                 src="/img/unverifiedSecondDriver.svg"

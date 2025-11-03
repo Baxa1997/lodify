@@ -114,7 +114,7 @@ function TenderInvitations({tripType = ""}) {
     setLoadingTripId(`accept-${trip.guid}`);
     const data = {
       data: {
-        companies_id: userId,
+        companies_id: companiesId,
         guid: trip?.guid,
       },
     };
@@ -137,7 +137,7 @@ function TenderInvitations({tripType = ""}) {
     setLoadingTripId(`reject-${trip.guid}`);
     const computedData = {
       data: {
-        companies_id: userId,
+        companies_id: companiesId,
         orders_id: trip?.guid,
         date_time: new Date().toISOString(),
       },
@@ -371,7 +371,11 @@ function TenderInvitations({tripType = ""}) {
                           </Tooltip>
                           <TripStatus
                             rowClick={handleRowClick}
-                            status={trip?.current_trip}
+                            status={
+                              trip?.current_trip === trip?.total_trips
+                                ? trip?.current_trip
+                                : trip?.current_trip + 1
+                            }
                             tripId={trip.id || trip.guid}
                           />
                         </Flex>

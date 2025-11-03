@@ -45,6 +45,9 @@ function AddTrip({tripData = {}}) {
       generated_id: generateID(),
     },
   });
+
+  const totalRates = watch("accessorials");
+
   const {data: rocFileData = {}, isLoading: isRocFileLoading} = useQuery({
     queryKey: ["TRIP_BY_ID", csvFile],
     queryFn: () =>
@@ -136,6 +139,12 @@ function AddTrip({tripData = {}}) {
     },
   });
 
+  const getTotalAmount = () => {
+    return totalRates?.length > 0
+      ? totalRates?.reduce((total, field) => total + (field.amount || 0), 0)
+      : 0;
+  };
+
   const onSubmit = (data) => {
     const isUpdate = Boolean(id);
     const dataToSend = {
@@ -147,6 +156,7 @@ function AddTrip({tripData = {}}) {
         object_data: {
           main_trip: {
             ...data,
+            total_rates: getTotalAmount() + (watch("service_fee") ?? 0),
             generated_id: generateID(),
             brokers_id: isBroker ? userData?.brokers_id : undefined,
             broker_users_id: isBroker ? userData?.guid : undefined,

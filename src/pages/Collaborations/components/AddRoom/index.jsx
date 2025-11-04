@@ -25,12 +25,12 @@ import {useSocket} from "@context/SocketProvider";
 import chatService from "@services/chatService";
 
 const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
+  const socket = useSocket();
   const [searchQuery, setSearchQuery] = useState("");
   const projectId = useSelector((state) => state.auth.projectId);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const loginName = useSelector((state) => state.auth.user_data?.login);
-  const socket = useSocket();
   const clientTypeId = useSelector((state) => state.auth?.clientType?.id);
   const environmentId = useSelector((state) => state.auth?.environmentId);
 
@@ -38,20 +38,20 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
     queryKey: ["contacts"],
     queryFn: () => {
       return chatService.getUsersList({
-        data: {
-          app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
-          environment_id: environmentId,
-          method: "get",
-          object_data: {
-            client_type_id: clientTypeId,
-            user_id: userId,
-          },
-          table: "users",
+        app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
+        environment_id: environmentId,
+        method: "get",
+        object_data: {
+          client_type_id: clientTypeId,
+          user_id: userId,
         },
+        table: "users",
       });
     },
     enabled: Boolean(isOpen),
-    select: (res) => res?.data?.data?.users || [],
+    select: (res) =>
+      res?.data?.response?.filter((user) => user?.user_id_auth !== userId) ||
+      [],
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     staleTime: 0,
@@ -82,10 +82,10 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
       project_id: projectId,
       row_id: userId,
       to_name: contact.login,
-      to_row_id: contact.id,
+      to_row_id: contact.user_id_auth,
       from_name: loginName,
     };
-
+    console.log("roomData", roomData);
     try {
       socket.emit("create room", {...roomData});
       onClose();

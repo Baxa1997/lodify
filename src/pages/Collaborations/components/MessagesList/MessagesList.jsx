@@ -45,17 +45,8 @@ const MessagesList = ({rooms = [], conversation, isConnected, onReply}) => {
       !conversation?.id ||
       pagination.isLoadingMore ||
       !pagination.hasMoreMessages
-    ) {
-      console.log("loadMoreMessages blocked:", {
-        noSocket: !socket,
-        noConversation: !conversation?.id,
-        isLoading: pagination.isLoadingMore,
-        noMoreMessages: !pagination.hasMoreMessages,
-      });
-      return;
-    }
-
-    setPagination((prev) => ({...prev, isLoadingMore: true}));
+    )
+      setPagination((prev) => ({...prev, isLoadingMore: true}));
 
     const nextOffset = pagination.offset + pagination.limit;
 
@@ -82,7 +73,6 @@ const MessagesList = ({rooms = [], conversation, isConnected, onReply}) => {
         pagination.hasMoreMessages &&
         !pagination.isLoadingMore
       ) {
-        console.log("Loading more messages...");
         loadMoreMessages();
       }
     },

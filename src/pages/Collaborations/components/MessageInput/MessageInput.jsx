@@ -538,7 +538,7 @@ const MessageInput = ({
                 boxShadow: "none",
               }}
             />
-            <InputRightElement>
+            {/* <InputRightElement>
               <Button
                 onClick={handleSubmit}
                 _hover={{bg: "none"}}
@@ -546,7 +546,7 @@ const MessageInput = ({
                 p="0">
                 <img src="/img/smile.svg" alt="" />
               </Button>
-            </InputRightElement>
+            </InputRightElement> */}
           </InputGroup>
 
           <Button

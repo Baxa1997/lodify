@@ -201,6 +201,9 @@ const MessageBubble = ({
         <Box>
           {showTime && (
             <Text mt="2px" fontWeight="400" color="#535862" fontSize="12px">
+              {conversation?.type === "group" && (
+                <span style={{fontWeight: "600"}}>{message?.from}</span>
+              )}{" "}
               {messageTime}
             </Text>
           )}

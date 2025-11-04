@@ -7,14 +7,14 @@ import styles from "./ChatArea.module.scss";
 const ChatArea = ({
   rooms = [],
   conversation,
-  onSendMessage = () => {},
   isConnected,
-  setIsAddRoomOpen = () => {},
   presence = {},
-  setConversation = () => {},
-  onReply = () => {},
   replyingTo = null,
+  onReply = () => {},
+  onSendMessage = () => {},
   onCancelReply = () => {},
+  setIsAddRoomOpen = () => {},
+  setConversation = () => {},
 }) => {
   if (!conversation?.id) {
     return (

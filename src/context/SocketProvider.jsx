@@ -82,7 +82,6 @@ export const SocketProvider = ({children}) => {
       });
 
       newSocket.on("reconnect_failed", () => {
-        console.error("❌ Reconnection failed");
         setConnectionError("Failed to reconnect to chat service");
       });
     }

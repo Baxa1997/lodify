@@ -22,7 +22,7 @@ import styles from "./AddRoom.module.scss";
 import {useSelector} from "react-redux";
 import {useQuery} from "@tanstack/react-query";
 import {useSocket} from "@context/SocketProvider";
-import axios from "axios";
+import chatService from "@services/chatService";
 
 const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,20 +31,24 @@ const AddRoom = ({isOpen, onClose, text = "Secret Chat"}) => {
   const userId = useSelector((state) => state.auth.userInfo?.id);
   const loginName = useSelector((state) => state.auth.user_data?.login);
   const socket = useSocket();
+  const clientTypeId = useSelector((state) => state.auth?.clientType?.id);
+  const environmentId = useSelector((state) => state.auth?.environmentId);
 
   const {data: users, isLoading} = useQuery({
     queryKey: ["contacts"],
     queryFn: () => {
-      return axios.get(
-        `https://api.auth.u-code.io/v2/user?client-type-id=706337d3-80dc-4aca-80b3-67fad16cd0d6&project-id=7380859b-8dac-4fe3-b7aa-1fdfcdb4f5c1&limit=10&offset=0`,
-        {
-          headers: {
-            authorization: "API-KEY",
-            "X-API-KEY": "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
-            "Content-Type": "application/json",
+      return chatService.getUsersList({
+        data: {
+          app_id: "P-oyMjPNZutmtcfQSnv1Lf3K55J80CkqyP",
+          environment_id: environmentId,
+          method: "get",
+          object_data: {
+            client_type_id: clientTypeId,
+            user_id: userId,
           },
-        }
-      );
+          table: "users",
+        },
+      });
     },
     enabled: Boolean(isOpen),
     select: (res) => res?.data?.data?.users || [],

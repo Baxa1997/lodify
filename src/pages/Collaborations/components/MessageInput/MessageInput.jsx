@@ -356,15 +356,22 @@ const MessageInput = ({
       <style>{waveformStyle}</style>
 
       {replyingTo && (
-        <Box p="4px 16px" bg="#F9FAFB" borderTop="1px solid #E2E8F0">
+        <Box
+          p="8px 16px"
+          bg="#EFF4FF"
+          borderRadius="20px"
+          margin="8px"
+          borderTop="1px solid #E2E8F0">
           <Flex justifyContent="space-between" alignItems="center" gap="12px">
             <Flex flex="1" alignItems="center" gap="8px">
-              <MdReply size={24} color="#6B7280" />
+              <Flex alignItems="center" justifyContent="center" w="24px">
+                <img src="/img/replyIcon.svg" alt="" />
+              </Flex>
               <Box>
-                <Text fontSize="12px" fontWeight="600" color="#6B7280">
-                  Replying to {replyingTo.from}
+                <Text fontSize="14px" fontWeight="400" color="#141414">
+                  Replying for {replyingTo.from}
                 </Text>
-                <Text fontSize="14px" color="#374151" noOfLines={2}>
+                <Text fontSize="14px" color="#727272" noOfLines={2}>
                   {replyingTo.message || "File message"}
                 </Text>
               </Box>

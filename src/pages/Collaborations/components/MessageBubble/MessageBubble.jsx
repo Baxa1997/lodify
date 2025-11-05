@@ -1,7 +1,15 @@
 import React, {useMemo} from "react";
-import {Flex, Box, Text, Button} from "@chakra-ui/react";
-import {BsReply} from "react-icons/bs";
-import {MdReply} from "react-icons/md";
+import {
+  Flex,
+  Box,
+  Text,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+} from "@chakra-ui/react";
+import {MdReply, MdDelete, MdMoreVert} from "react-icons/md";
 import TextMessage from "./TextMessage";
 import FileMessage from "./FileMessage";
 import ImageMessage from "./ImageMessage";
@@ -16,6 +24,7 @@ const MessageBubble = ({
   showTime = true,
   onReply,
   allMessages = [],
+  onDelete,
 }) => {
   const {
     message: content,
@@ -82,7 +91,46 @@ const MessageBubble = ({
 
   return isOwn ? (
     <Flex ml="auto" justifyContent="flex-end" p="6px 0" gap="12px">
-      <Box maxW="500px" w={messageWidth}>
+      <Menu>
+        <MenuButton
+          as={IconButton}
+          icon={<MdMoreVert />}
+          variant="ghost"
+          size="sm"
+          aria-label="Message options"
+          opacity={0}
+          _hover={{opacity: 1, bg: "gray.100"}}
+          alignSelf="center"
+          sx={{
+            ".message-wrapper-own:hover &": {
+              opacity: 1,
+            },
+          }}
+        />
+        <MenuList minW="150px" boxShadow="lg" borderRadius="12px" p="4px">
+          <MenuItem
+            icon={<MdReply size={18} />}
+            onClick={() => onReply && onReply(message)}
+            borderRadius="8px"
+            fontSize="14px"
+            _hover={{bg: "gray.100"}}>
+            Reply
+          </MenuItem>
+          {onDelete && (
+            <MenuItem
+              icon={<MdDelete size={18} />}
+              onClick={() => onDelete(message)}
+              borderRadius="8px"
+              fontSize="14px"
+              color="red.500"
+              _hover={{bg: "red.50"}}>
+              Delete
+            </MenuItem>
+          )}
+        </MenuList>
+      </Menu>
+
+      <Box maxW="500px" w={messageWidth} className="message-wrapper-own">
         {parentMsg && (
           <Flex
             alignItems="center"
@@ -150,7 +198,12 @@ const MessageBubble = ({
           : sender?.to_name?.[0]}
       </Box>
 
-      <Box alignItems="center" gap="6px" maxW="500px" w={messageWidth}>
+      <Box
+        alignItems="center"
+        gap="6px"
+        maxW="500px"
+        w={messageWidth}
+        className="message-wrapper">
         {parentMsg && (
           <Flex
             alignItems="center"
@@ -171,10 +224,7 @@ const MessageBubble = ({
             </Box>
           </Flex>
         )}
-        <Flex
-          _hover={{"#reply-button": {display: "block"}}}
-          alignItems="center"
-          gap="6px">
+        <Flex alignItems="center" gap="6px">
           <Box
             bg="#E9EAED"
             color="#181D27"
@@ -185,18 +235,44 @@ const MessageBubble = ({
             <MessageComponent content={content} fileInfo={fileInfo} />
           </Box>
 
-          <Button
-            onClick={() => onReply && onReply(message)}
-            display="none"
-            id="reply-button"
-            p="0"
-            h="20px"
-            bg="none"
-            border="none"
-            cursor="pointer"
-            _hover={{bg: "none"}}>
-            <BsReply />
-          </Button>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              icon={<MdMoreVert />}
+              variant="ghost"
+              size="sm"
+              aria-label="Message options"
+              opacity={0}
+              _hover={{opacity: 1, bg: "gray.100"}}
+              _groupHover={{opacity: 1}}
+              sx={{
+                ".message-wrapper:hover &": {
+                  opacity: 1,
+                },
+              }}
+            />
+            <MenuList minW="150px" boxShadow="lg" borderRadius="12px" p="4px">
+              <MenuItem
+                icon={<MdReply size={18} />}
+                onClick={() => onReply && onReply(message)}
+                borderRadius="8px"
+                fontSize="14px"
+                _hover={{bg: "gray.100"}}>
+                Reply
+              </MenuItem>
+              {onDelete && (
+                <MenuItem
+                  icon={<MdDelete size={18} />}
+                  onClick={() => onDelete(message)}
+                  borderRadius="8px"
+                  fontSize="14px"
+                  color="red.500"
+                  _hover={{bg: "red.50"}}>
+                  Delete
+                </MenuItem>
+              )}
+            </MenuList>
+          </Menu>
         </Flex>
         <Box>
           {showTime && (
@@ -224,6 +300,7 @@ export default React.memo(MessageBubble, (prevProps, nextProps) => {
     prevProps.isOwn === nextProps.isOwn &&
     prevProps.showTime === nextProps.showTime &&
     prevProps.onReply === nextProps.onReply &&
+    prevProps.onDelete === nextProps.onDelete &&
     JSON.stringify(prevProps.message?.fileInfo) ===
       JSON.stringify(nextProps.message?.fileInfo) &&
     JSON.stringify(prevProps.message?.parent_message) ===

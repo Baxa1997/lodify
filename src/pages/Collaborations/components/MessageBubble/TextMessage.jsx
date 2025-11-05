@@ -9,7 +9,8 @@ const TextMessage = ({isOwn, content}) => {
       maxW="100%"
       whiteSpace="pre-wrap"
       wordBreak="normal"
-      overflowWrap="break-word">
+      overflowWrap="break-word"
+      textAlign={isOwn ? "right" : "left"}>
       <Text
         fontSize="14px"
         lineHeight="1.4"

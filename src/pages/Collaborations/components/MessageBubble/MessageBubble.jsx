@@ -131,41 +131,37 @@ const MessageBubble = ({
       </Menu>
 
       <Box maxW="500px" w={messageWidth} className="message-wrapper-own">
-        {parentMsg && (
-          <Flex
-            alignItems="center"
-            gap="8px"
-            mb="8px"
-            p="8px 12px"
-            bg="rgba(255, 255, 255, 0.5)"
-            borderRadius="12px"
-            borderLeft="3px solid #3B82F6">
-            <MdReply size={16} color="#3B82F6" />
-            <Box flex="1">
-              <Text fontSize="12px" fontWeight="600" color="#3B82F6">
-                Reply to {parentMsg.from || "User"}
-              </Text>
-              <Text fontSize="12px" color="#374151" noOfLines={1}>
-                {parentMsg.message || "File message"}
-              </Text>
-            </Box>
-          </Flex>
-        )}
         <Box
           bg="#E0F0FF"
           color="#080707"
           borderRadius="25px"
           borderBottomRightRadius="0"
-          w="100%">
-          <Flex gap="8px" alignItems="flex-end" position="relative">
-            <Box flex="1">
-              <MessageComponent
-                isOwn={isOwn}
-                content={content}
-                fileInfo={fileInfo}
-              />
+          w="100%"
+          py="6px">
+          {parentMsg && (
+            <Box
+              p="8px 12px"
+              mb="8px"
+              mx="12px"
+              mt="12px"
+              bg="rgba(255, 255, 255, 0.7)"
+              borderRadius="8px"
+              borderLeft="3px solid #3B82F6">
+              <Text fontSize="12px" fontWeight="600" color="#3B82F6" mb="4px">
+                {parentMsg.from || "User"}
+              </Text>
+              <Text fontSize="13px" color="#374151" noOfLines={2}>
+                {parentMsg.message || "File message"}
+              </Text>
             </Box>
-          </Flex>
+          )}
+          <Box flex="1">
+            <MessageComponent
+              isOwn={isOwn}
+              content={content}
+              fileInfo={fileInfo}
+            />
+          </Box>
         </Box>
         {showTime && (
           <Flex
@@ -204,26 +200,6 @@ const MessageBubble = ({
         maxW="500px"
         w={messageWidth}
         className="message-wrapper">
-        {parentMsg && (
-          <Flex
-            alignItems="center"
-            gap="8px"
-            mb="8px"
-            p="8px 12px"
-            bg="rgba(233, 234, 237, 0.5)"
-            borderRadius="12px"
-            borderLeft="3px solid #9CA3AF">
-            <MdReply size={16} color="#6B7280" />
-            <Box flex="1">
-              <Text fontSize="12px" fontWeight="600" color="#6B7280">
-                Reply to {parentMsg.from || "User"}
-              </Text>
-              <Text fontSize="12px" color="#374151" noOfLines={1}>
-                {parentMsg.message || "File message"}
-              </Text>
-            </Box>
-          </Flex>
-        )}
         <Flex alignItems="center" gap="6px">
           <Box
             bg="#E9EAED"
@@ -232,6 +208,23 @@ const MessageBubble = ({
             borderBottomLeftRadius="4px"
             border="1px solid #E9EAEB"
             w="100%">
+            {parentMsg && (
+              <Box
+                p="8px 12px"
+                mb="8px"
+                mx="12px"
+                mt="12px"
+                bg="rgba(255, 255, 255, 0.8)"
+                borderRadius="8px"
+                borderLeft="3px solid #6B7280">
+                <Text fontSize="12px" fontWeight="600" color="#6B7280" mb="4px">
+                  {parentMsg.from || "User"}
+                </Text>
+                <Text fontSize="13px" color="#374151" noOfLines={2}>
+                  {parentMsg.message || "File message"}
+                </Text>
+              </Box>
+            )}
             <MessageComponent content={content} fileInfo={fileInfo} />
           </Box>
 

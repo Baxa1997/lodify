@@ -134,7 +134,7 @@ function ActionsNeeded() {
     ? Math.ceil(tripsData.total / pageSize)
     : 0;
   const trips = tripsData || [];
-
+  console.log("tripstripstrips", trips);
   return (
     <Box mt={"26px"}>
       <TripsFiltersComponent
@@ -336,14 +336,10 @@ function ActionsNeeded() {
                                   color="#181D27"
                                   cursor="pointer"
                                   _hover={{textDecoration: "underline"}}>
-                                  {`${trip.origin?.address ?? ""} / ${
-                                    trip?.origin?.address_2 ?? ""
-                                  }` || ""}
+                                  {`${trip.origin?.address ?? ""}` || ""}
                                 </Text>
                                 <Text h="20px">
-                                  {formatDate(
-                                    trip?.origin?.[0]?.depart_at ?? ""
-                                  )}
+                                  {formatDate(trip?.origin?.arrive_by ?? "")}
                                 </Text>
                               </>
                             </Tooltip>
@@ -391,13 +387,11 @@ function ActionsNeeded() {
                                   color="#181D27"
                                   cursor="pointer"
                                   _hover={{textDecoration: "underline"}}>
-                                  {`${trip.stop?.address ?? ""} / ${
-                                    trip?.stop?.address_2 ?? ""
-                                  }` || ""}
+                                  {`${trip.stop?.address ?? ""}` || ""}
                                 </Text>
                               </Tooltip>
                               <Text h="20px">
-                                {formatDate(trip?.stop?.[0]?.arrive_by ?? "")}
+                                {formatDate(trip?.stop?.arrive_by ?? "")}
                               </Text>
                             </Box>
                           </Flex>
@@ -407,8 +401,8 @@ function ActionsNeeded() {
                       <CTableTd>
                         <SimpleTimer
                           timeFromAPI={
-                            trip?.origin?.[0]?.arrive_by ||
-                            trip?.stop?.[0]?.arrive_by ||
+                            trip?.origin?.arrive_by ||
+                            trip?.stop?.arrive_by ||
                             trip?.deadline ||
                             "2025-10-08T12:33:00"
                           }

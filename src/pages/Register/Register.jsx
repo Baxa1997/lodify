@@ -211,6 +211,7 @@ const Register = () => {
         type: "login",
         client_type_id: data.client_type_id,
         role_id: data.role_id,
+        register_user_type: localStorage.getItem("register_user_type"),
       };
 
       const response = await authService.register(apiData);

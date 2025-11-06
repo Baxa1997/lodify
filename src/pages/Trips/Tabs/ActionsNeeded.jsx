@@ -7,7 +7,7 @@ import {
   Spinner,
   Center,
 } from "@chakra-ui/react";
-import SimpleTimer from "@components/SimpleTimer";
+
 import {
   CTable,
   CTableBody,
@@ -31,6 +31,7 @@ import {useNavigate} from "react-router-dom";
 import {sidebarActions} from "@store/sidebar";
 import {tableActionsNeeded} from "../components/mockElements";
 import TripsFiltersComponent from "../modules/TripsFiltersComponent";
+import TimeCounter from "@components/TimeCounter";
 
 function ActionsNeeded() {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ function ActionsNeeded() {
     ? Math.ceil(tripsData.total / pageSize)
     : 0;
   const trips = tripsData || [];
-  console.log("tripstripstrips", trips);
+
   return (
     <Box mt={"26px"}>
       <TripsFiltersComponent
@@ -399,18 +400,24 @@ function ActionsNeeded() {
                       </CTableTd>
 
                       <CTableTd>
-                        <SimpleTimer
-                          timeFromAPI={
-                            trip?.origin?.arrive_by ||
-                            trip?.stop?.arrive_by ||
-                            trip?.deadline ||
-                            "2025-10-08T12:33:00"
-                          }
+                        <TimeCounter
+                          arriveBy={trip?.stop?.arrive_by}
                           onTimeUp={() => {
                             console.log(`Timer finished for trip ${trip.id}`);
                           }}
                         />
                       </CTableTd>
+
+                      {/* <CTableTd>
+                        <ArrivalTimer
+                          arriveBy={trip?.stop?.arrive_by}
+                          onTimeUp={() => {
+                            console.log(
+                              `Arrival timer finished for trip ${trip.id}`
+                            );
+                          }}
+                        />
+                      </CTableTd> */}
 
                       <CTableTd>
                         <Tooltip

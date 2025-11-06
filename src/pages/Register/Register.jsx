@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { Flex, useToast } from "@chakra-ui/react";
+import React, {useState, useEffect} from "react";
+import {useNavigate, useLocation} from "react-router-dom";
+import {useForm} from "react-hook-form";
+import {Flex, useToast} from "@chakra-ui/react";
 import RegisterSidebar from "./components/RegisterSidebar";
 import RegisterForm from "./components/RegisterForm";
 import authService from "../../services/auth/authService";
@@ -20,7 +20,7 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
     watch,
     setValue,
     trigger,
@@ -51,6 +51,7 @@ const Register = () => {
       type: "phone",
       client_type_id: "706337d3-80dc-4aca-80b3-67fad16cd0d6",
       role_id: "abc236d0-8a9a-4b10-9f44-6b51fcb35e9f",
+      register_user_type: localStorage.getItem("register_user_type"),
     },
     mode: "onChange",
   });
@@ -68,7 +69,7 @@ const Register = () => {
       "country",
     ];
     const hasRequiredFields = requiredFields.every(
-      (field) => data[field] && data[field].trim() !== "",
+      (field) => data[field] && data[field].trim() !== ""
     );
 
     if (data.zip_code && !/^\d{5}(-\d{4})?$/.test(data.zip_code)) {
@@ -98,16 +99,16 @@ const Register = () => {
     const data = watch();
     const isValid = (() => {
       switch (step) {
-      case 1:
-        return validateStep1(data);
-      case 2:
-        return validateStep2(data);
-      case 3:
-        return validateStep3(data);
-      case 4:
-        return validateStep4(data);
-      default:
-        return false;
+        case 1:
+          return validateStep1(data);
+        case 2:
+          return validateStep2(data);
+        case 3:
+          return validateStep3(data);
+        case 4:
+          return validateStep4(data);
+        default:
+          return false;
       }
     })();
 
@@ -238,9 +239,7 @@ const Register = () => {
   }
 
   return (
-    <Flex
-      className={styles.multiStepContainer}
-      minHeight="100vh">
+    <Flex className={styles.multiStepContainer} minHeight="100vh">
       <RegisterSidebar
         steps={steps}
         currentStep={currentStep}
